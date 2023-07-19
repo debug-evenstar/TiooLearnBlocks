@@ -5,7 +5,7 @@ import Option from "../Option";
 
 function MultipleOptions() {
   return (
-    <div className="w-full max-w-[614px] p-[27px] rounded-[9px] bg-white flex items-center flex-col">
+    <div className="w-full p-[27px] rounded-[9px] bg-white flex items-center flex-col">
       <div className="flex justify-between w-full">
  
         <TextWithTooltips sentence="All living things are natural. Plants and animals are natural living things. Non-living things may be natural or man-made. The sun, moon, stars & rivers are natural non-living things. Things like fan, car, & basket are man-made non-living things. Can you identify the characteristics of non-living things?" />
@@ -21,7 +21,7 @@ function MultipleOptions() {
         <Option />
         <Option />
         <Option />
-        <Option />
+ 
       </div>
     </div>
   );

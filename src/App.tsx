@@ -1,13 +1,19 @@
 import React from "react";
-import TextImage from "./components/library/TextImage";
-import MultipleOptions from "./components/library/MultipleOptions";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import Editorial from "./pages/editorial";
 
 function App() {
   return (
-    <div className="h-screen bg-white">
-      <TextImage />
-      <MultipleOptions />
-    </div>
+
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={<Editorial />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
