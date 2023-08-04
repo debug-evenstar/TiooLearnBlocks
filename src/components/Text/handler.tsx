@@ -61,10 +61,6 @@ const formatText = (text : any) => {
     const identifiersPresent = identifiers.filter((key : any) => {
         const item = formatIdentifiers[key];
         return text.includes(item[0]);
-    }).sort((a , b) => {
-        var x = formatIdentifiers[a];
-        var y = formatIdentifiers[b];
-        return text.indexOf(x) > text.indexOf(y) ? -1 : 1;
     });
     const result =  recursiveFormatter(identifiersPresent, text, 0);
     return result;
