@@ -64,10 +64,6 @@ const formatText = (text : any) => {
         const item = formatIdentifiers[key];
         console.log(item);
         return text.includes(item[0]);
-    }).sort((a , b) => {
-        var x = formatIdentifiers[a];
-        var y = formatIdentifiers[b];
-        return text.indexOf(x) > text.indexOf(y) ? -1 : 1;
     });
     console.log(identifiersPresent, text);
 
