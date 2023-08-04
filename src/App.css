@@ -71,3 +71,10 @@
 .scrollbar::-ms-track {
   background-color: #f2f2f2; /* Adjust the track color as per your requirements */
 }
+
+.pointer{
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+}
+.pointer-2 {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}

@@ -3,9 +3,10 @@ import ImageComponent from "../components/Image";
 import { FormatText } from "../formatText/Text";
 import { processTextContent } from "../components/Text/handler";
 import TextComponent from "../components/Text/index";
+import ToolTipComponent from "../components/extensions/ToolTip";
 
 const RenderComponent = () => {
-  const data = "the white <++<!!<**man**>!!>++> started his journey early without <**troubles**>"
+  const data = "the white <++<!!<**man**>!!>++> started his <!!journey!!> early without <**troubles**>"
   return (
     <>
       <TextComponent
@@ -13,6 +14,7 @@ const RenderComponent = () => {
           content : data
         }}
       />
+      <ToolTipComponent/>
       {/* <div className="grid gap-5 w-[600px] h-[300px] overflow-y-auto mx-auto border-2 mt-24 p-6">
         <TextComponent
           children={<>I am a boy from a very low income state</>}

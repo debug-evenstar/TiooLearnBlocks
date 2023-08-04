@@ -58,15 +58,22 @@ const recursiveFormatter = (identifiers : any, text : string, index : number) =>
 
 const formatText = (text : any) => {
     const identifiers = Object.keys(formatIdentifiers);
+    console.log(identifiers);
+    
     const identifiersPresent = identifiers.filter((key : any) => {
         const item = formatIdentifiers[key];
+        console.log(item);
         return text.includes(item[0]);
     }).sort((a , b) => {
         var x = formatIdentifiers[a];
         var y = formatIdentifiers[b];
         return text.indexOf(x) > text.indexOf(y) ? -1 : 1;
     });
+    console.log(identifiersPresent, text);
+
     const result =  recursiveFormatter(identifiersPresent, text, 0);
+    console.log(result);
+    
     return result;
 }
 
@@ -77,6 +84,10 @@ const handleFormatting = (content : string) => {
     const listFormatIndentifiers = identifiers.map( pair => {
         return pair[0];
     })
+    console.log(spacingSplit);
+    
+    console.log(listFormatIndentifiers);
+    
     spacingSplit.forEach( (text) => {
         if( stringContainsAny( listFormatIndentifiers, text ) ) {
             formatted.push( formatText(text) );
@@ -84,6 +95,8 @@ const handleFormatting = (content : string) => {
             formatted.push( text );
         }
     });
+    console.log(formatted);
+    
     return formatted;
 }
 

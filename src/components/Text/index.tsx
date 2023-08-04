@@ -6,6 +6,8 @@ const TextComponent: FC<TextComponentProps> = ({
   data
 }) => {
   const processed = processTextContent(data.content);
+  console.log(processed);
+  
   return <>
     <div>
     {processed.map((item, index) => (
