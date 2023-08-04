@@ -21,13 +21,11 @@ export interface TextComponentProps {
 const formatIdentifiers : {[key : string] : any } = {
     bold : [ "<**" , "**>" ],
     italic : [ "<!!" , "!!>" ],
-    testcolor : [ "<++", "++>" ],
 }
 
 const formatMappings : {[key : string] : Function} = {
     bold : (text : string | React.ReactElement) => (<strong>{text}</strong>),
-    italic : (text : string | React.ReactElement) => (<i>{text}</i>),
-    testcolor : (text : string | React.ReactElement) => (<span className="text-blue-800">{text}</span>)
+    italic : (text : string | React.ReactElement) => (<i>{text}</i>)
 }
 
 const format = (key : string, text : string) => {
@@ -62,7 +60,7 @@ const formatText = (text : any) => {
         const item = formatIdentifiers[key];
         return text.includes(item[0]);
     });
-    const result =  recursiveFormatter(identifiersPresent, text, 0);
+    const result = recursiveFormatter(identifiersPresent, text, 0);
     return result;
 }
 

@@ -5,12 +5,15 @@ import { processTextContent } from "../components/Text/handler";
 import TextComponent from "../components/Text/index";
 
 const RenderComponent = () => {
-  const data = "the white <++<!!<**man**>!!>++> started his journey early without <**troubles**>"
+  const data = "the white <~man~> started his journey early without <**troubles**>"
   return (
     <>
       <TextComponent
         data={{
-          content : data
+          content : data,
+          tips : [
+            "Just a man"
+          ]
         }}
       />
       {/* <div className="grid gap-5 w-[600px] h-[300px] overflow-y-auto mx-auto border-2 mt-24 p-6">
