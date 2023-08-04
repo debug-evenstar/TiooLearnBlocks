@@ -1,5 +1,5 @@
 import React from "react";
-import TextComponent from "./Text";
+import TextComponent from "./OldText";
 
 interface TextWithTooltipsProps {
   sentence: string;
@@ -12,6 +12,7 @@ interface TooltipPattern {
 }
 
 // Define an array of tooltip patterns and their corresponding components
+
 const tooltipPatterns: TooltipPattern[] = [
   {
     pattern: /~([^~]+)~/g,
