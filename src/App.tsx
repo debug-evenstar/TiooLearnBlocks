@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Editorial from "./pages/editorial";
+import RenderComponent from "./pages/renderComp";
 
 function App() {
   return (
@@ -11,6 +12,12 @@ function App() {
         <Route
           path="/"
           element={<Editorial />}
+        />
+        <Route
+          path="/comp"
+          element={
+            <RenderComponent/>
+          }
         />
       </Routes>
     </BrowserRouter>
