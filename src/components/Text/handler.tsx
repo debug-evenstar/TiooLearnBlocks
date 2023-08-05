@@ -5,7 +5,7 @@ interface TextStyles {
     color?: string;
 }
 
-interface TextData {
+export interface TextData {
     content : string;
     tips? :  string[];
 }
