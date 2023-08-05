@@ -5,7 +5,7 @@ import { processTextContent } from "../components/Text/handler";
 import TextComponent from "../components/Text/index";
 
 const RenderComponent = () => {
-  const data = "the white <~man~> started his journey early without <**troubles**>"
+  const data = "the white <~man~> started his <~journey~> early without <**troubles**>"
   return (
     <>
       <div className="mt-[150px] ml-[150px]">
@@ -13,7 +13,8 @@ const RenderComponent = () => {
           data={{
             content : data,
             tips : [
-              "Just a man in a sentence"
+              "Just a man in a sentence driving",
+              "Just a man in a sentence driving, Just a man in a sentence driving"
             ]
           }}
         />
