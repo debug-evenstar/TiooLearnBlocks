@@ -13,11 +13,11 @@ const TextComponent: FC<TextComponentProps> = ({
   }
   return <>
     <div>
-    {processed.map((item, index) => (
+      {processed.map((item, index) => (
           <span key={index}>
             {(typeof item) == "string" ? ` ${item} ` : (item)}
           </span>
-        ))}
+      ))}
     </div>
   </>;
 };
