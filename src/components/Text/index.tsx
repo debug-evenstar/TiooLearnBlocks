@@ -5,9 +5,12 @@ import { TextFields } from "../extensions/TextFields";
 
 const TextComponent: FC<TextComponentProps> = ({
   styles,
-  data
+  data,
+  slide
 }) => {
+  
   const processed = processTextContent(data.content);
+
   // Handle TextFields
   if(data.answers || data.options) {
     TextFields(processed);

@@ -11,13 +11,15 @@ interface SlideManagerProps {
 const SlideManager: FC<SlideManagerProps> = ({slideData}) => {
 
   const SlideScope = LessonSlideScope();
-  
+
   return <>
     {
-        slideData.map((component ) => {
+        slideData.map((component, index) => {
             const Component = loadComponent(component);
-            return ( <Component 
+            return ( <Component
+                key={index}
                 data={component}
+                slide={SlideScope}
             />);
         })
     }
