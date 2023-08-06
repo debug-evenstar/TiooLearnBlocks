@@ -1,4 +1,5 @@
 import { randomString } from "../../../utilities/string";
+import TextFieldComponent from "./render";
 
 class TextFieldsHandler{
 
@@ -22,7 +23,7 @@ class TextFieldsHandler{
         const id = randomString(15);
         return {
             id : id,
-            element : (<></>)
+            element : (<TextFieldComponent />)
         }
     }
 

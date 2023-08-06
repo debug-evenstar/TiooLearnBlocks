@@ -9,7 +9,7 @@ const RenderComponent = () => {
   const slide  = [
     {
       component : "Text",
-      content : "the white <~man~> started his <~journey~> early without <**troubles**>",
+      content : "the white <~man~> started his <~journey~> early <?>without?> <**troubles**>",
       tips : [
         "Just a man in a sentence driving",
         "Just a man in a sentence driving, Just a man in a sentence driving"

@@ -78,3 +78,6 @@
 .pointer-2 {
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
+.input-style{
+  box-shadow: 4px 4px 10px 0.5px #4F46E54F inset;
+}
