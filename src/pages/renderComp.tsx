@@ -33,6 +33,7 @@ const RenderComponent = () => {
     display: "grid",
     justifyContent: "center",
     alignItems: "center",
+    overflow: "auto"
   };
   return (
     <>
