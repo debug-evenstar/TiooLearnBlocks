@@ -5,6 +5,9 @@ export interface LessonSlideInterface {
     answers? : string[];
     status? : boolean;
     complete? : boolean;
+    setAnswers : Function;
+    setOptions : Function;
+    setStatus: Function;
 }
 
 class LessonSlide implements LessonSlideInterface{

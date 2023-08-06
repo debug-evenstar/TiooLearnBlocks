@@ -1,11 +1,14 @@
 import React, {FC} from 'react'
 import ButtonComponent from '../Button/index'
+import { LessonSlideInterface } from '../SlideManager/handler';
 
-interface GroupProps{
-    data: any
-    manager?: any
+interface ButtonGroupProps{
+    data: any;
+    manager?: any;
+    slide : LessonSlideInterface
 }
-const ButtonGroupComponent:FC<GroupProps> = ({data, manager}) => {
+const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
+  slide.setAnswers(data);
   return (
     <>
         <div className='grid grid-cols-2 gap-6 w-5/12 mx-auto '>

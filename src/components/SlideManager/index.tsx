@@ -25,7 +25,7 @@ const SlideManager: FC<SlideManagerProps> = ({slideData}) => {
             />);
         })
     }
-    <ButtonGroupComponent data={data}/>
+    <ButtonGroupComponent data={data} slide={SlideScope}/>
   </>;
 };
 
