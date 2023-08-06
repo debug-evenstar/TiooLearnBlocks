@@ -5,10 +5,12 @@ class TextFieldsHandler{
 
     data : (string | React.ReactElement)[];
     fieldIds : string[]; 
+    fieldData : {[key: string]: string};
 
     constructor(data : any){
         this.data = data;
         this.fieldIds = [];
+        this.fieldData = {}
     }
 
     getIdentifier(){
@@ -19,11 +21,25 @@ class TextFieldsHandler{
         // Some Jsx returned
     }
 
+    setFieldValue(id : string , value : string) {
+        const newValue : {[key: string]: string}  = {};
+        newValue[id] = value;
+        this.fieldData = {
+            ...this.fieldData,
+            ...newValue
+        }
+    }
+
     formatTextField(){
         const id = randomString(15);
         return {
             id : id,
-            element : (<TextFieldComponent />)
+            element : (
+            <TextFieldComponent 
+                id={id}
+                manager={this}
+            />
+            )
         }
     }
 

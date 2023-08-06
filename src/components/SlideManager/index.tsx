@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { loadComponent } from "./handler";
 import { TextData } from "../Text/handler";
-import TextFieldComponent from "../extensions/TextFields/render";
 
 interface SlideManagerProps {
     slideData : (
@@ -19,7 +18,6 @@ const SlideManager: FC<SlideManagerProps> = ({slideData}) => {
             />);
         })
     }
-    <TextFieldComponent/>
   </>;
 };
 

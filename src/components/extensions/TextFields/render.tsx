@@ -1,13 +1,14 @@
 import React, { FC,  useState } from "react";
 interface TextFieldProps {
   id?: string;
-  manager?: string;
+  manager?: any;
 }
 
-const TextFieldComponent: FC<TextFieldProps> = ({id}) => {
+const TextFieldComponent: FC<TextFieldProps> = ({id, manager}) => {
   const [value, setValue] = useState("");
   const handleChange = (e: any) => {
     setValue(e.target.value);
+    manager.setFieldValue(id, e.target.value)
   };
 
   return (
