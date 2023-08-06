@@ -79,5 +79,5 @@
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 .input-style{
-  box-shadow: 4px 4px 10px 0.5px #4F46E54F inset;
+  box-shadow: 4px 4px 10px 0.5px rgba(79, 70, 229, 0.31) inset;
 }

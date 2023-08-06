@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { loadComponent } from "./handler";
+import { LessonSlideScope, loadComponent } from "./handler";
 import { TextData } from "../Text/handler";
 
 interface SlideManagerProps {
@@ -9,6 +9,9 @@ interface SlideManagerProps {
 }
 
 const SlideManager: FC<SlideManagerProps> = ({slideData}) => {
+
+  const SlideScope = LessonSlideScope();
+  
   return <>
     {
         slideData.map((component ) => {

@@ -1,15 +1,21 @@
 import React, { FC } from "react";
 import { TextComponentProps, processTextContent } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
+import { TextFields } from "../extensions/TextFields";
 
 const TextComponent: FC<TextComponentProps> = ({
   styles,
   data
 }) => {
   const processed = processTextContent(data.content);
+  // Handle TextFields
+  if(data.answers || data.options) {
+    TextFields(processed);
+  }
+
   // Handle tips
   if(data.tips){
-    const TipManager = ToolTips( ToolTipTypes.TEXT, processed, data.tips );
+    ToolTips( ToolTipTypes.TEXT, processed, data.tips );
   }
   return <>
     <div>

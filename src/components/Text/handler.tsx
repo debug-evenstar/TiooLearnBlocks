@@ -1,6 +1,8 @@
 
 /* -------------------------- COMPONENT INTERFACES -------------------------- */
 
+import { LessonSlideInterface } from "../SlideManager/handler";
+
 interface TextStyles {
     color?: string;
 }
@@ -8,11 +10,14 @@ interface TextStyles {
 export interface TextData {
     content : string;
     tips? :  string[];
+    answers? : string[];
+    options? : string[];
 }
 
 export interface TextComponentProps {
     styles? : TextStyles;
-    data : TextData
+    data : TextData;
+    slide : LessonSlideInterface;
 }
 
 

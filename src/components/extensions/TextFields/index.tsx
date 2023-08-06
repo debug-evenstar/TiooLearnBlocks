@@ -1,6 +1,7 @@
 import { randomString } from "../../../utilities/string";
 import TextFieldComponent from "./render";
 
+
 class TextFieldsHandler{
 
     data : (string | React.ReactElement)[];
@@ -11,6 +12,7 @@ class TextFieldsHandler{
         this.data = data;
         this.fieldIds = [];
         this.fieldData = {}
+        this.processTextFields();
     }
 
     getIdentifier(){
@@ -35,10 +37,10 @@ class TextFieldsHandler{
         return {
             id : id,
             element : (
-            <TextFieldComponent 
-                id={id}
-                manager={this}
-            />
+                <TextFieldComponent 
+                    id={id}
+                    manager={this}
+                />
             )
         }
     }
