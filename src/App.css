@@ -81,3 +81,9 @@
 .input-style{
   box-shadow: 4px 4px 10px 0.5px rgba(79, 70, 229, 0.31) inset;
 }
+.btn-style{
+  border-radius: 24px;
+border: 1px dashed var(--primary, #4F46E5);
+background: #E6E6FA;
+box-shadow: 0.5px 0.5px 4px 0.5px rgba(0, 0, 0, 0.31);
+}
