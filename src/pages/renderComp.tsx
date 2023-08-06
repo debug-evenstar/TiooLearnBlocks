@@ -1,45 +1,46 @@
 import React from "react";
 import ImageComponent from "../components/Image";
 import { FormatText } from "../formatText/Text";
-import { TextComponentProps, processTextContent } from "../components/Text/handler";
+import {
+  TextComponentProps,
+  processTextContent,
+} from "../components/Text/handler";
 import TextComponent from "../components/Text/index";
 import SlideManager from "../components/SlideManager";
 
 const RenderComponent = () => {
-  const slide  = [
+  const slide = [
     {
-      component : "Text",
-      content : "the white <~man~> started his <~journey~> <?> without <**troubles**>",
-      tips : [
+      component: "Text",
+      content:
+        "The very tall and bright white <~man~> immediately started his <~journey~> <?> without <**troubles**> or any hesitations",
+      tips: [
         "Just a man in a sentence driving",
-        "Just a man in a sentence driving, Just a man in a sentence driving"
+        "Just a man in a sentence driving, Just a man in a sentence driving",
       ],
-      answers : [
-        "early"
-      ]
-    }
+      answers: ["early"],
+    },
   ];
+  const containerStyle = {
+    background:
+      "url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png')",
+    backgroundSize: "100% 100%",
+    width: "800px",
+    height: "400px",
+    margin: "0 auto",
+    padding: "10px 30px",
+    color: "white",
+    display: "grid",
+    justifyContent: "center",
+    alignItems: "center",
+  };
   return (
     <>
-      <div className="mt-[150px] ml-[150px]">
-        <SlideManager
-          slideData={slide}
-        />
+      <div className="w-full h-screen text-center grid place-content-center">
+        <div style={containerStyle}>
+          <SlideManager slideData={slide} />
+        </div>
       </div>
-      {/* <div className="grid gap-5 w-[600px] h-[300px] overflow-y-auto mx-auto border-2 mt-24 p-6">
-        <TextComponent
-          children={<>I am a boy from a very low income state</>}
-        />
-        <ImageComponent
-          src="https://res.cloudinary.com/dic7regoe/image/upload/v1689279991/praxeum/image_14_jeqsjo.png"
-          alt="comp"
-          width="w-full"
-          height="h-[200px]"
-        />
-        <TextComponent
-          children={<>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorem illo excepturi sed sequi expedita porro enim, vero maxime perspiciatis amet nam ea assumenda, libero commodi, consectetur quaerat deleniti error aspernatur?</>}
-        />
-      </div> */}
     </>
   );
 };

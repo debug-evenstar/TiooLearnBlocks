@@ -17,7 +17,7 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager}) => {
         type="text"
         name="value"
         id={id}
-        className="border border-[#4F46E5] px-3 mx-2 input-style w-24 rounded-[20px] "
+        className="bg-white border border-[#4F46E5] px-3 mx-2 input-style w-24 rounded-[20px] "
         onChange={handleChange}
         disabled
       />
