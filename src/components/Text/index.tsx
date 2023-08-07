@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { TextComponentProps, processTextContent } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
 import { TextFields } from "../extensions/TextFields";
@@ -8,18 +8,28 @@ const TextComponent: FC<TextComponentProps> = ({
   data,
   slide
 }) => {
-  
-  const processed = processTextContent(data.content);
+
+  const [processed , setProcessed] = useState<any[]>(
+    processTextContent(data.content)
+  );
 
   // Handle TextFields
-  if(data.answers || data.options) {
-    TextFields(processed);
+  if(processed.includes("<?>") ){
+
+    var textFields : any = TextFields(processed);
+    slide.addFields(textFields);
+    slide.setFunction("selectAnswer", ( index : number, value : string )=>{
+      const updateProcessed = textFields.fieldReplacementFill(index, value, processed);
+      setProcessed(() => updateProcessed);
+    });
+    
   }
 
   // Handle tips
   if(data.tips){
     ToolTips( ToolTipTypes.TEXT, processed, data.tips );
   }
+
   return <>
     <div>
       {processed.map((item, index) => (

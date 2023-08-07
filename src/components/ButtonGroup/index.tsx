@@ -1,20 +1,24 @@
-import React, {FC} from 'react'
+import React, {FC, useEffect} from 'react'
 import ButtonComponent from '../Button/index'
 import { LessonSlideInterface } from '../SlideManager/handler';
+import { ButtonGroupData } from './handler';
 
 interface ButtonGroupProps{
-    data: any;
+    data: ButtonGroupData;
     manager?: any;
     slide : LessonSlideInterface
 }
 const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
-  slide.setAnswers(data);
+  useEffect(()=>{
+    slide.setAnswers(data.answers);
+  },[]);
+
   return (
     <>
         <div className='grid grid-cols-2 gap-6 w-5/12 mx-auto '>
         {
-            !!data.length && data.map((item:any, index:number) => (
-                <ButtonComponent onClick={() => false} title={item} index={index}/>
+            !!data.answers.length && data.answers.map((item:any, index:number) => (
+                <ButtonComponent onClick={() => slide.selectAnswer( index, item )} title={item} index={index}/>
             ))
         }
         </div>

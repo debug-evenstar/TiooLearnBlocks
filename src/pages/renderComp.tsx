@@ -12,14 +12,21 @@ const RenderComponent = () => {
   const slide = [
     {
       component: "Text",
-      content:
-        "The very tall and bright white <~man~> immediately started his <~journey~> <?> without <**troubles**> or any hesitations",
-      tips: [
-        "Just a man in a sentence driving",
-        "Just a man in a sentence driving, Just a man in a sentence driving",
-      ],
-      answers: ["early"],
+      content: "Nouns are naming words. A noun is a word that names a person, animal, place, thing, event, feeling or idea. ",
     },
+    {
+      component: "Text",
+      content: "There are two important types of nouns, namely ",
+    },
+    {
+      component: "Text",
+      content: "<?> noun and <?> noun",
+    },
+    {
+      component : "ButtonGroup",
+      answers : ["Concrete", "Abstract"]
+    }
+    
   ];
   const containerStyle = {
     background:

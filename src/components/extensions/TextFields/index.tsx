@@ -1,12 +1,18 @@
 import { randomString } from "../../../utilities/string";
 import TextFieldComponent from "./render";
 
-
-class TextFieldsHandler{
-
+export interface TextFieldsInterface {
     data : (string | React.ReactElement)[];
     fieldIds : string[]; 
     fieldData : {[key: string]: string};
+    fieldReplacementFill : Function;
+}
+
+class TextFieldsHandler implements TextFieldsInterface{
+
+    data : (string | React.ReactElement)[];
+    fieldIds : string[]; 
+    fieldData : {[key: string]: any};
 
     constructor(data : any){
         this.data = data;
@@ -24,12 +30,21 @@ class TextFieldsHandler{
     }
 
     setFieldValue(id : string , value : string) {
-        const newValue : {[key: string]: string}  = {};
-        newValue[id] = value;
+        const newValue : {[key: string]: any}  = {};
+        newValue[id] = {
+            ...(this.fieldData[id] ?? {}),
+            value : value
+        };
         this.fieldData = {
             ...this.fieldData,
             ...newValue
         }
+    }
+
+    fieldReplacementFill(index : number, value : string, data : any[]){
+        const fieldIndex = Object.values(this.fieldData)[index].index;
+        data[fieldIndex] = (<span className="text-green-500 font-semibold text-[18px]">{value}</span>);
+        return [...data];
     }
 
     formatTextField(){
@@ -54,9 +69,13 @@ class TextFieldsHandler{
                     const field = this.formatTextField();
                     this.fieldIds.push(field.id);
                     textContent[index] = field.element;
+                    this.fieldData[field.id] = {
+                        index : index
+                    }
                 }
             }
         })
+        this.data = textContent;
         return textContent;
     }
 }
