@@ -3,6 +3,8 @@ import { LessonSlideScope, loadComponent } from "./handler";
 import { TextData } from "../Text/handler";
 import ButtonGroupComponent from "../ButtonGroup";
 import { ButtonGroupData } from "../ButtonGroup/handler";
+import ImageComponent from "../Image/index";
+import SliderComponent from "../Slider";
 
 interface SlideManagerProps {
     slideData : (
@@ -14,7 +16,9 @@ const SlideManager: FC<SlideManagerProps> = ({slideData}) => {
 
   const SlideScope = LessonSlideScope();
 
-  return <>
+  const data = ["hello", "areyou", "there"]
+  const url = 'https://res.cloudinary.com/dic7regoe/image/upload/v1691358759/praxeum/image_25_xshh7o.png'
+  return <div className="grid gap-y-5 my-5">
     {
         slideData.map((component, index) => {
             const Component = loadComponent(component);
@@ -25,7 +29,9 @@ const SlideManager: FC<SlideManagerProps> = ({slideData}) => {
             />);
         })
     }
-  </>;
+    {/* <SliderComponent/> */}
+    <ImageComponent url={url}/>
+  </div>;
 };
 
 export default SlideManager;
