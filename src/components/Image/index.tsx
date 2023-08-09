@@ -1,12 +1,10 @@
 import React, {FC} from 'react'
+import { ImageComponentProps } from './handler'
 
-interface Props {
-    url: string
-}
-const ImageComponent:FC<Props> = ({url}) => {
+const ImageComponent : FC<ImageComponentProps> = ({data, slide}) => {
   return (
     <>
-        <img src={url} alt='image' className='w-8/12 mx-auto rounded-lg'/>
+        <img src={data.url} alt='images' className='w-8/12 mx-auto rounded-lg'/>
     </>
   )
 }

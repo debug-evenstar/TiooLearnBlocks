@@ -1,5 +1,5 @@
 import React from "react";
-import ImageComponent from "../Image";
+import ImageComponent from "../OldImage";
 import image from "../../img/image.png";
 import { FiEdit } from "react-icons/fi";
 import TextWithTooltips from "../TextWithTooltips";

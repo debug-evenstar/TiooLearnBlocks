@@ -1,4 +1,7 @@
 import ButtonGroupComponent from "../ButtonGroup";
+import FlashCardsComponent from "../FlashCards";
+import ImageComponent from "../Image";
+import SliderComponent from "../Slider";
 import TextComponent from "../Text"
 import { TextFieldsInterface } from "../extensions/TextFields";
 
@@ -14,6 +17,7 @@ export interface LessonSlideInterface {
     addFields : Function;
     selectAnswer : Function;
     setFunction : Function;
+    triggerFeedback : Function;
     functions? : {[key : string] : Function};
     progress : number
 }
@@ -48,19 +52,66 @@ class LessonSlide implements LessonSlideInterface{
         }
     }
 
-    selectAnswer( index : number, value : string) {
+    selectAnswer( index : number, value : string, callback : Function) {
+        if( this.options ) {
+            this.selectOptionAnswer(index, value, callback);
+            return;
+        }
         if ( this.answers ) {
-            
             if( /*index > this.progress  ||*/ this.answers[index] !== value ) {
                 alert("Wrong Answer");
+                this.triggerFeedback()
             } else {
                 this.functions?.selectAnswer( index, value );
+                alert("Correct");
+                this.triggerFeedback()
                 this.progress++;
                 if(this.progress === this.answers.length) {
                     this.complete = true;
+                    this.functions?.allowProceed();
+                    //Move slider component (if present)
+                    if(this.functions?.moveSlide){
+                        this.functions?.moveSlide(1);
+                    }
                 }
             }
 
+        }
+    }
+
+    selectOptionAnswer( index : number, value : string, callback : Function ) {
+        if( this.answers ) {
+            const answer = this.answers[this.progress];
+            if( answer === value ) {
+                this.progress++;
+                alert("Correct");
+                if(this.progress === this.answers.length) {
+                    this.complete = true;
+                    this.functions?.allowProceed();
+                }
+                setTimeout(()=>{
+                    this.callComponentFunctions(value);
+                    callback();
+                },400)
+                this.triggerFeedback();
+            }else{
+                alert("Wrong");
+            }
+        }
+    }
+
+    callComponentFunctions( value : string) {
+        // Select text field answer (if present)
+        if( this.functions?.selectAnswer ){
+            this.functions?.selectAnswer( 0, value );
+        }
+        //Move slider component (if present)
+        if(this.functions?.moveSlide){
+            this.functions?.moveSlide(1);
+        }
+        //Move flash card (if present)
+        if(this.functions?.removeCard){
+            this.functions?.removeCard();
         }
     }
 
@@ -71,6 +122,10 @@ class LessonSlide implements LessonSlideInterface{
             this.functions = {};
             this.functions[functionName] = handler;
         }
+    }
+
+    triggerFeedback() {
+
     }
     
     eventManager() {
@@ -96,7 +151,10 @@ export const LessonSlideScope = () => ( new LessonSlide() );
 
 const keyToComponentMapper : {[key : string] : any} = {
     "Text" : TextComponent,
-    "ButtonGroup" : ButtonGroupComponent
+    "ButtonGroup" : ButtonGroupComponent,
+    "Image" : ImageComponent,
+    "Slider" : SliderComponent,
+    "FlashCards" : FlashCardsComponent
 }
 
 

@@ -1,34 +1,54 @@
-import React from "react";
-import SwiperCore from "../../utilities/swiperCore";
+import React, { FC, useState } from "react";
+import chevronRight from "../../img/chevron-right.svg";
+import chevronLeft from "../../img/chevron-left.svg";
+import { SliderComponentProps } from "./hander";
+import { loadComponent } from "../SlideManager/handler";
 
-const SliderComponent = () => {
-  const rawData = [
-    {
-      quest: "icarry money come them follow onboard",
-    },
-    {
-      quest: "icarry money come them follow onboard two",
-    },
-    {
-      quest: "icarry money come them follow onboard three",
-    },
-    {
-      quest: "icarry money come them follow onboard four",
-    },
-  ];
+const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
+  const [activeSection, setActiveSection] = useState<any>(data.slides[0]);
+  const [activeSectionIndex, setActiveSectionIndex] = useState<number>(0);
+
+  const moveSlide = (direction: number) => {
+    if (
+      activeSectionIndex + direction >= 0 &&
+      activeSectionIndex + direction < data.slides.length
+    ) {
+      setActiveSection(() => data.slides[activeSectionIndex + direction]);
+      setActiveSectionIndex(() => activeSectionIndex + direction);
+    }
+  };
+
+  slide.setFunction('moveSlide', moveSlide);
+
+  const componentLoader = (component : any) => {
+    const Component = loadComponent(component);
+    return <Component data={component} slide={slide} />;
+  }
+
   return (
     <>
-      <div className="py-6">
-      <div className="w-full absolute">
-        <SwiperCore
-          items={rawData.map((item) => (
-            <div key={item.quest}>{item.quest}</div>
-          ))}
-          navigation
-          slidesPerView={1}
-          className="w-full h-full text-center"
-        />
-      </div>
+      <div className="w-full flex flex-row justify-center">
+        <div className="w-3/5 py-6 flex flex-row justify-between items-center">
+          <img
+            src={chevronRight}
+            onClick={() => {}}
+            alt="images"
+            className={`cursor-pointer h-[40px] ${
+              data.slides.indexOf(activeSection) === 0 ? "hidden" : ""
+            }`}
+          />
+          <div className="py-8 px-4 mx-[40px] bg-[#F6ECEC] text-black grow rounded-lg">
+            {componentLoader(data.slides[activeSectionIndex])}
+          </div>
+          <img
+            alt="images"
+            onClick={() => {}}
+            src={chevronLeft}
+            className={`cursor-pointer h-[40px] ${
+              data.slides.indexOf(activeSection) === data.slides.length - 1 ? "hidden" : ""
+            }`}
+          />
+        </div>
       </div>
     </>
   );

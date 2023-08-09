@@ -1,37 +1,50 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { LessonSlideScope, loadComponent } from "./handler";
 import { TextData } from "../Text/handler";
-import ButtonGroupComponent from "../ButtonGroup";
 import { ButtonGroupData } from "../ButtonGroup/handler";
-import ImageComponent from "../Image/index";
-import SliderComponent from "../Slider";
+import { SliderData } from "../Slider/hander";
+import { ImageData } from "../Image/handler";
+import { FlashCardData } from "../FlashCards/handler";
 
 interface SlideManagerProps {
-    slideData : (
-        TextData | ButtonGroupData
-    )[];
+  lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData)[][];
+  canProceed : Function;
+  ref: any;
 }
 
-const SlideManager: FC<SlideManagerProps> = ({slideData}) => {
-
+const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed }, ref) => {
   const SlideScope = LessonSlideScope();
+  const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
+  const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
 
-  const data = ["hello", "areyou", "there"]
-  const url = 'https://res.cloudinary.com/dic7regoe/image/upload/v1691358759/praxeum/image_25_xshh7o.png'
-  return <div className="grid gap-y-5 my-5">
-    {
-        slideData.map((component, index) => {
-            const Component = loadComponent(component);
-            return ( <Component
-                key={index}
-                data={component}
-                slide={SlideScope}
-            />);
-        })
+  const navigateSlide = (direction: number) => {
+    if (
+      lessonSlides.length > activeSlideIndex + direction &&
+      activeSlideIndex + direction >= 0
+    ) {
+        setActiveSlide(() => lessonSlides[activeSlideIndex + direction]);
+        setActiveSlideIndex(() => activeSlideIndex + direction);
     }
-    {/* <SliderComponent/> */}
-    <ImageComponent url={url}/>
-  </div>;
-};
+  };
+
+  useImperativeHandle(ref, ()=> ({
+    navigator(direction : number) {
+      navigateSlide(direction);
+      SlideScope.progress = 0;
+    }
+  }));
+
+  SlideScope.setFunction('navigateSlide', navigateSlide);
+  SlideScope.setFunction('allowProceed', () => canProceed(true));
+
+  return (
+    <div className="mx-auto w-10/12 grid gap-y-5 my-5">
+      {activeSlide.map((component: any, index: number) => {
+        const Component = loadComponent(component);
+        return <Component key={index} data={component} slide={SlideScope} />;
+      })}
+    </div>
+  );
+});
 
 export default SlideManager;

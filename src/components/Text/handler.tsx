@@ -26,11 +26,13 @@ export interface TextComponentProps {
 const formatIdentifiers : {[key : string] : any } = {
     bold : [ "<**" , "**>" ],
     italic : [ "<!!" , "!!>" ],
+    keyword : [ "<(" , ")>" ],
 }
 
 const formatMappings : {[key : string] : Function} = {
-    bold : (text : string | React.ReactElement) => (<strong>{text}</strong>),
-    italic : (text : string | React.ReactElement) => (<i>{text}</i>)
+    bold : (text : string | React.ReactElement) => (<strong>{` `}{text}{` `}</strong>),
+    italic : (text : string | React.ReactElement) => (<i>{` `}{text}{` `}</i>),
+    keyword : (text : string | React.ReactElement) => (<span className="text-green-500">{` `}{text}{` `}</span>)
 }
 
 const format = (key : string, text : string) => {
@@ -69,21 +71,59 @@ const formatText = (text : any) => {
     return result;
 }
 
-const handleFormatting = (content : string) => {
+const collectFormattingIndices  = (list : any[], index : number = 0) => {
     const identifiers = Object.values(formatIdentifiers);
-    const spacingSplit = content.split(" ");
-    const formatted : any[] = [];
-    const listFormatIndentifiers = identifiers.map( pair => {
-        return pair[0];
-    })
-    spacingSplit.forEach( (text) => {
-        if( stringContainsAny( listFormatIndentifiers, text ) ) {
-            formatted.push( formatText(text) );
-        }else{
-            formatted.push( text );
+    const keys = Object.keys(formatIdentifiers);
+    const pair = identifiers[index];
+    const indices : any = {};
+    let track = false;
+    for (let i = 0; i < list.length; i++) {
+        const text = list[i];
+        if( text.includes(pair[0]) ) {
+            track = true;
+            list[i] = list[i].replace(pair[0], "");
         }
-    });
-    return formatted;
+        if (track) {
+            const key = keys[index];
+            if ( indices[key] ) {
+                indices[key].push(i);
+            } else {
+                indices[key] = [i];
+            }
+        }
+        if (text.includes(pair[1])) {
+            track = false;
+            list[i] = list[i].replace(pair[1], "");
+        }
+    }
+
+    if( identifiers.length > (index + 1)){
+        const next : any = collectFormattingIndices(list, index + 1);
+        return {
+            list : next.list,
+            indices : {
+                ...indices,
+                ...next.indices
+            }
+        }
+    }
+    return {
+        list : list,
+        indices : indices
+    };
+
+}
+
+const handleFormatting = (content : string) => {
+    const list = content.split(" ");
+    const collect = collectFormattingIndices(list);
+    for(const key in collect.indices) {
+        const indicesToFormat : any[] = collect.indices[key];
+        indicesToFormat.forEach((index) => {
+            collect.list[index] = format(key, collect.list[index]);
+        });
+    }
+    return collect.list;
 }
 
 

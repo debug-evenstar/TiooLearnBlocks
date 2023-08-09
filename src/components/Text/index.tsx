@@ -15,20 +15,25 @@ const TextComponent: FC<TextComponentProps> = ({
 
   // Handle TextFields
   if(processed.includes("<?>") ){
-
     var textFields : any = TextFields(processed);
     slide.addFields(textFields);
     slide.setFunction("selectAnswer", ( index : number, value : string )=>{
       const updateProcessed = textFields.fieldReplacementFill(index, value, processed);
       setProcessed(() => updateProcessed);
     });
-    
+
   }
 
   // Handle tips
   if(data.tips){
     ToolTips( ToolTipTypes.TEXT, processed, data.tips );
   }
+
+  useEffect(()=>{
+    setProcessed(
+      processTextContent(data.content)
+    )
+  },[data]);
 
   return <>
     <div>

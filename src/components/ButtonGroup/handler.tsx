@@ -1,3 +1,4 @@
 export interface ButtonGroupData {
-    answers : string[]
+    answers : string[];
+    options? : string[][];
 }
