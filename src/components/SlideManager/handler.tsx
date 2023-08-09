@@ -3,6 +3,7 @@ import FlashCardsComponent from "../FlashCards";
 import ImageComponent from "../Image";
 import SliderComponent from "../Slider";
 import TextComponent from "../Text"
+import VideoComponent from "../Video";
 import { TextFieldsInterface } from "../extensions/TextFields";
 
 export interface LessonSlideInterface {
@@ -154,7 +155,8 @@ const keyToComponentMapper : {[key : string] : any} = {
     "ButtonGroup" : ButtonGroupComponent,
     "Image" : ImageComponent,
     "Slider" : SliderComponent,
-    "FlashCards" : FlashCardsComponent
+    "FlashCards" : FlashCardsComponent,
+    "Video" : VideoComponent
 }
 
 

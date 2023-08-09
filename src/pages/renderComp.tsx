@@ -99,8 +99,6 @@ const RenderComponent = () => {
         ]
       },
     ],
-  ];
-  const slide2 = [
     [
       {
         component : "Text",
@@ -138,9 +136,21 @@ const RenderComponent = () => {
           "Concrete", "Concrete", "Abstract", "Abstract", "Concrete", "Abstract"
         ]
       },
+    ],
+  ];
+  const slide2 = [
+    [
+      {
+        component : "Text",
+        content : "Now that we have learnt what concrete and abstract nouns are, let's show off 😁 🤗 by identifying if the nouns shown in these images are either concrete or abstract nouns. 🚀"
+      },
+      {
+        component: "Video",
+        url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+      },
     ]
   ]
-  const [canProceed, setCanProceed] = useState<boolean>(true);
+  const [canProceed, setCanProceed] = useState<boolean>(false);
   const handleContinue = () => {
     slideManagerRef?.current?.navigator(1)
     setCanProceed(false);

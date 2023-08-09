@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { FlashCardComponentProps } from "./handler";
+import { FlashCardComponentProps, rotationClasses } from "./handler";
 import { ImageData } from "../Image/handler";
 
 const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
@@ -8,6 +8,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
             (item, index) => data.cards[data.cards.length - 1 - index]
         )
     );
+
     const imgContainerRef = useRef<any>(null);
 
     const handleCardTransition = () => {
@@ -25,42 +26,33 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
             setCardImages(() => [...newCards]);
         },1200);
     };
+    
 
-
-    const imageStyles = [
-        "w-full h-auto absolute rounded-lg transform rotate-[3deg]",
-        "w-full h-auto absolute rounded-lg transform rotate-[-2deg]",
-        "w-full h-auto absolute rounded-lg transform rotate-[1deg]",
-        "w-full h-auto absolute rounded-lg transform rotate-[-5deg]",
-        "w-full h-auto absolute rounded-lg transform rotate-[3deg]",
-        "w-full h-auto absolute rounded-lg transform transition linear duration-[0.8s]"
-    ]
 
     useEffect(() => {
         slide.setFunction("removeCard", removeCard);
     }, []);
 
+
     return (
         <>
             <div className="w-10/12 h-[300px] mx-auto relative" ref={imgContainerRef}>
-                {cardImages.map((image: ImageData, index: number) => {
-                    const randomInt = (Math.floor(Math.random() * 6) + 1) + 1;
-                    const sInt = randomInt * ((index + 1) % 2 === 0 ? 1 : -1);
-                    const imgClass = `
-                    ${
-                        index !== cardImages.length - 1
-                            ? ("rotate-"+randomInt) //"rotate-[" + sInt + "deg]"
-                            : "transition linear duration-[0.8s] "
-                    }`;
-                    return (
-                        <img
-                            key={index}
-                            src={image.url}
-                            alt="images"
-                            className={imgClass}
-                        />
-                    );
-                })}
+                    {cardImages.map((image: ImageData, index: number) => {
+                        const randomInt = (Math.floor(Math.random() * 6) + 1) + 1;
+                        console.log(randomInt);
+                        const sInt = randomInt * ((index + 1) % 2 === 0 ? 1 : -1);
+                        return (
+                            <img
+                                key={index}
+                                src={image.url}
+                                alt="images"
+                                className={index == cardImages.length - 1 
+                                    ? "w-full h-auto absolute rounded-lg transform transition linear duration-[0.8s]"
+                                    : rotationClasses[sInt.toString()]
+                                }
+                            />
+                        );
+                    })}
             </div>
         </>
     );
