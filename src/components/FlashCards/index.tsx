@@ -59,7 +59,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
                             key={index}
                             className={
                                 index == cardData.length - 1
-                                    ? "w-full h-full px-[20px] py-[20px] flex justify-center items-center absolute rounded-lg transform bg-white text-black transition linear duration-[0.8s]"
+                                    ? "w-full h-full px-[20px] py-[20px] flex justify-center items-center absolute rounded-lg transform bg-white text-black border border-gray-200 transition linear duration-[0.8s]"
                                     : rotationClassesWords[sInt.toString()]
                             }
                         >
