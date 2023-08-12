@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import TextComponent from "../components/Text/index";
 import SlideManager from "../components/SlideManager";
 
 const RenderComponent = () => {
@@ -139,15 +138,114 @@ const RenderComponent = () => {
     ],
   ];
   const slide2 = [
+    // [
+    //   {
+    //     component : "Text",
+    //     content : "Now that we have learnt what concrete and abstract nouns are, let's show off 😁 🤗 by identifying if the nouns shown in these images are either concrete or abstract nouns. 🚀"
+    //   },
+    //   {
+    //     component: "Video",
+    //     url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    //   },
+    // ],
+    // [
+    //   {
+    //     component : "Text",
+    //     content : "Now that we have learnt what concrete and abstract nouns are, let's show off 😁 🤗 by identifying if the nouns shown in these images are either concrete or abstract nouns. 🚀"
+    //   },
+    //   {
+    //     component : "FlashCards",
+    //     cards : [
+    //       {
+    //         url : "https://i.ibb.co/5jKXLTk/Frame-1000004281-1.png"
+    //       },
+    //       {
+    //         url : "https://i.ibb.co/fNrj85L/Frame-1000004281.png"
+    //       },
+    //       {
+    //         url : "https://i.ibb.co/vqKpXWd/Frame-1000004281-2.png"
+    //       },
+    //       {
+    //         url : "https://i.ibb.co/5jKXLTk/Frame-1000004281-1.png"
+    //       },
+    //       {
+    //         url : "https://i.ibb.co/fNrj85L/Frame-1000004281.png"
+    //       },
+    //       {
+    //         url : "https://i.ibb.co/vqKpXWd/Frame-1000004281-2.png"
+    //       }
+    //     ]
+    //   },
+    // ],
     [
       {
         component : "Text",
         content : "Now that we have learnt what concrete and abstract nouns are, let's show off 😁 🤗 by identifying if the nouns shown in these images are either concrete or abstract nouns. 🚀"
       },
       {
-        component: "Video",
-        url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        component : "FlashCards",
+        cards : [
+          {
+            content : "Hello"
+          },
+          {
+            content : "World"
+          },
+          {
+            content : "Lets"
+          },
+          {
+            content : "Get"
+          },
+          {
+            content : "Engaged"
+          },
+          {
+            content : "Here"
+          }
+        ]
       },
+      {
+        component: "ButtonGroup",
+        options: [
+          [ "Concrete", "Abstract" ],
+        ],
+        answers : [
+          "Concrete", "Concrete", "Abstract", "Abstract", "Concrete", "Abstract"
+        ]
+      },
+    ]
+  ]
+  const slide3 = [
+    [
+      {
+        component : "Text",
+        content : "Now that we have learnt what concrete and abstract nouns are, let's show off 😁 🤗 by identifying if the nouns shown in these images are either concrete or abstract nouns. 🚀"
+      },
+      {
+        component : "Options",
+        options : [
+          "Non-living things can talk",
+          "Non-living things do not have life",
+          "Non-living things can’t breathe",
+          "Non-living things can grow",
+          "Non-living things do not require nutrition"
+        ],
+        answers : [
+          "Non-living things do not have life",
+          "Non-living things can’t breathe",
+          "Non-living things do not require nutrition"
+        ]
+      }
+      // {
+      //   component: "WordMatch",
+      //   options : ["Concrete Nouns", "Abstract Nouns", "Nouns"],
+      //   answers : [
+      //     "They are things we can see, touch, hear, taste, or smell.",
+      //     "They are things we think about or feel, but cannot touch physically",
+      //     "A word that names a person, animal, place, thing, feeling, idea, etc"
+      //   ]
+      // },
     ]
   ]
   const [canProceed, setCanProceed] = useState<boolean>(false);

@@ -1,9 +1,11 @@
 import ButtonGroupComponent from "../ButtonGroup";
 import FlashCardsComponent from "../FlashCards";
 import ImageComponent from "../Image";
+import OptionsComponent from "../Options";
 import SliderComponent from "../Slider";
 import TextComponent from "../Text"
 import VideoComponent from "../Video";
+import WordMatchComponent from "../WordMatch";
 import { TextFieldsInterface } from "../extensions/TextFields";
 
 export interface LessonSlideInterface {
@@ -156,7 +158,9 @@ const keyToComponentMapper : {[key : string] : any} = {
     "Image" : ImageComponent,
     "Slider" : SliderComponent,
     "FlashCards" : FlashCardsComponent,
-    "Video" : VideoComponent
+    "Video" : VideoComponent,
+    "WordMatch" : WordMatchComponent,
+    "Options" : OptionsComponent
 }
 
 
