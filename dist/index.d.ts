@@ -25,6 +25,7 @@ interface LessonSlideInterface {
     selectAnswer: Function;
     setFunction: Function;
     triggerFeedback: Function;
+    updateProgress: Function;
     functions?: {
         [key: string]: Function;
     };

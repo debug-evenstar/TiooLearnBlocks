@@ -37,7 +37,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
     return (
         <>
             <div
-                className="w-10/12 h-[300px] mx-auto relative"
+                className="w-10/12 h-[300px] mx-auto my-[20px] relative"
                 ref={imgContainerRef}
             >
                 {cardData.map((item: any, index: number) => {

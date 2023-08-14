@@ -17,8 +17,7 @@ interface SlideManagerProps {
 }
 
 const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback }, ref) => {
-  const [SlideScope , setSlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
-  console.log(SlideScope);
+  const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
 

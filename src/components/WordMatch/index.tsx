@@ -23,7 +23,8 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
       const correctAnswer = data.answers[activeOptionIndex];
       const selectedAnswer = answersList[index];
       if( selectedAnswer === correctAnswer ) {
-        alert("Correct");
+        slide.triggerFeedback("success",activeOptionIndex);
+        slide.updateProgress();
         setAnsweredList((previous) => [
           ...previous,
           answeredList.length
@@ -41,7 +42,8 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
         setAnswersList(() => [...newAnswers]);
       }
       else{
-        alert("Wrong");
+        slide.triggerFeedback("failure",activeOptionIndex);
+        slide.updateProgress();
       }
     }
 

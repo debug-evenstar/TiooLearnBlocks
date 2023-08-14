@@ -23,6 +23,7 @@ export interface LessonSlideInterface {
     selectAnswer : Function;
     setFunction : Function;
     triggerFeedback : Function;
+    updateProgress : Function;
     functions? : {[key : string] : Function};
     progress : number
 }
@@ -71,10 +72,8 @@ class LessonSlide implements LessonSlideInterface{
         }
         if ( this.answers ) {
             if( index > this.progress  || this.answers[index] !== value ) {
-                alert("wrong");
                 this.triggerFeedback(this.FAILURE_FEEDBACK);
             } else {
-                alert("correct");
                 this.functions?.selectAnswer( index, value );
                 this.triggerFeedback(this.SUCCESS_FEEDBACK);
                 this.progress++;
@@ -101,21 +100,31 @@ class LessonSlide implements LessonSlideInterface{
                     this.complete = true;
                     this.functions?.allowProceed();
                 }
+                // Select text field answer (if present)
+                if( this.functions?.selectAnswer ) {
+                    this.functions?.selectAnswer( 0, value );
+                }
                 setTimeout(()=>{
                     this.callComponentFunctions(value);
                     callback();
-                },400)
+                },800);
             }else{
                 this.triggerFeedback(this.FAILURE_FEEDBACK);
             }
         }
     }
 
-    callComponentFunctions( value : string) {
-        // Select text field answer (if present)
-        if( this.functions?.selectAnswer ){
-            this.functions?.selectAnswer( 0, value );
+    updateProgress(){
+        if(this.answers) {
+            this.progress++;
+            if(this.progress === this.answers.length) {
+                this.complete = true;
+                this.functions?.allowProceed();
+            }
         }
+    }
+
+    callComponentFunctions( value : string) {
         //Move slider component (if present)
         if(this.functions?.moveSlide){
             this.functions?.moveSlide(1);
@@ -140,10 +149,13 @@ class LessonSlide implements LessonSlideInterface{
             ? list[0] : list[1];
     }
 
-    triggerFeedback(feedbackType : string) {
+    triggerFeedback(feedbackType : string, index: number = -1) {
+        if(index === -1){
+            index = this.progress;
+        }
         if(this.feedbacks) {
             const feedbackMessage = this.feedbacks.length > 2
-                ? this.feedbackMessage(feedbackType, this.feedbacks[this.progress])
+                ? this.feedbackMessage(feedbackType, this.feedbacks[index])
                 : this.feedbackMessage(feedbackType, this.feedbacks);
 
             this.functions?.triggerFeedback(feedbackMessage , feedbackType);
