@@ -39,14 +39,25 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
   SlideScope.setFunction('navigateSlide', navigateSlide);
   SlideScope.setFunction('allowProceed', () => canProceed(true));
-  // justifyContent: "center",
-  // alignItems: "center",
+
+  const containerStyle = {
+    width: "100%",
+    margin: "0 auto",
+    padding: "10px 30px",
+    color: "white",
+    display: "grid",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "visible",
+  };
   return (
-    <div className="w-full px-[20px] py-[10px] text-white mx-auto w-10/12 grid gap-y-5 my-5">
-      {activeSlide.map((component: any, index: number) => {
-        const Component = loadComponent(component);
-        return <Component key={index} data={component} slide={SlideScope} />;
-      })}
+    <div style={containerStyle}>
+        <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
+          {activeSlide.map((component: any, index: number) => {
+            const Component = loadComponent(component);
+            return <Component key={index} data={component} slide={SlideScope} />;
+          })}
+        </div>
     </div>
   );
 });
