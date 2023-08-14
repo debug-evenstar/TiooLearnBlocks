@@ -9,13 +9,15 @@ import WordMatchComponent from "../WordMatch";
 import { TextFieldsInterface } from "../extensions/TextFields";
 
 export interface LessonSlideInterface {
-    options? : string[];
+    options? : any[];
     answers? : string[];
+    feedbacks? : any[];
     status? : boolean;
     complete? : boolean;
     textFields? : TextFieldsInterface[];
     setAnswers : Function;
     setOptions : Function;
+    setFeedbacks : Function;
     setStatus: Function;
     addFields : Function;
     selectAnswer : Function;
@@ -27,13 +29,16 @@ export interface LessonSlideInterface {
 
 class LessonSlide implements LessonSlideInterface{
 
-    options? : string[];
+    options? : any[];
     answers? : string[];
+    feedbacks? : any[];
     status? : boolean;
     complete? : boolean;
     textFields? : TextFieldsInterface[];
     functions? : {[key : string] : Function};
-    progress : number = 0
+    progress : number = 0;
+    SUCCESS_FEEDBACK : string = "success";
+    FAILURE_FEEDBACK : string = "failure";
 
     setOptions(options : string[]) {
         this.options =  options;
@@ -41,6 +46,10 @@ class LessonSlide implements LessonSlideInterface{
 
     setAnswers(answers : string[]) {
         this.answers = answers;
+    }
+
+    setFeedbacks(feedbacks : any[]) {
+        this.feedbacks = feedbacks;
     }
 
     setStatus( status : boolean) {
@@ -61,13 +70,11 @@ class LessonSlide implements LessonSlideInterface{
             return;
         }
         if ( this.answers ) {
-            if( /*index > this.progress  ||*/ this.answers[index] !== value ) {
-                alert("Wrong Answer");
-                this.triggerFeedback()
+            if( index > this.progress  || this.answers[index] !== value ) {
+                this.triggerFeedback(this.FAILURE_FEEDBACK);
             } else {
                 this.functions?.selectAnswer( index, value );
-                alert("Correct");
-                this.triggerFeedback()
+                this.triggerFeedback(this.SUCCESS_FEEDBACK);
                 this.progress++;
                 if(this.progress === this.answers.length) {
                     this.complete = true;
@@ -86,8 +93,8 @@ class LessonSlide implements LessonSlideInterface{
         if( this.answers ) {
             const answer = this.answers[this.progress];
             if( answer === value ) {
+                this.triggerFeedback(this.SUCCESS_FEEDBACK);
                 this.progress++;
-                alert("Correct");
                 if(this.progress === this.answers.length) {
                     this.complete = true;
                     this.functions?.allowProceed();
@@ -96,9 +103,8 @@ class LessonSlide implements LessonSlideInterface{
                     this.callComponentFunctions(value);
                     callback();
                 },400)
-                this.triggerFeedback();
             }else{
-                alert("Wrong");
+                this.triggerFeedback(this.FAILURE_FEEDBACK);
             }
         }
     }
@@ -127,7 +133,19 @@ class LessonSlide implements LessonSlideInterface{
         }
     }
 
-    triggerFeedback() {
+    feedbackMessage(type : string, list : any[]){
+        return type === this.SUCCESS_FEEDBACK 
+            ? list[0] : list[1];
+    }
+
+    triggerFeedback(feedbackType : string) {
+        if(this.feedbacks) {
+            const feedbackMessage = this.feedbacks.length > 2
+                ? this.feedbackMessage(feedbackType, this.feedbacks[this.progress])
+                : this.feedbackMessage(feedbackType, this.feedbacks);
+
+            this.functions?.triggerFeedback(feedbackMessage , feedbackType);
+        }
 
     }
     

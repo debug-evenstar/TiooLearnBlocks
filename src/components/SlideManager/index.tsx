@@ -12,10 +12,11 @@ import { OptionData } from "../Options/handler";
 interface SlideManagerProps {
   lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
   canProceed : Function;
+  handleFeedback : Function;
   ref: any;
 }
 
-const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed }, ref) => {
+const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback }, ref) => {
   const SlideScope = LessonSlideScope();
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
@@ -39,6 +40,8 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
   SlideScope.setFunction('navigateSlide', navigateSlide);
   SlideScope.setFunction('allowProceed', () => canProceed(true));
+  SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
+  
 
   const containerStyle = {
     width: "100%",

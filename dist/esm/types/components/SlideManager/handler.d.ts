@@ -1,12 +1,14 @@
 import { TextFieldsInterface } from "../extensions/TextFields";
 export interface LessonSlideInterface {
-    options?: string[];
+    options?: any[];
     answers?: string[];
+    feedbacks?: any[];
     status?: boolean;
     complete?: boolean;
     textFields?: TextFieldsInterface[];
     setAnswers: Function;
     setOptions: Function;
+    setFeedbacks: Function;
     setStatus: Function;
     addFields: Function;
     selectAnswer: Function;
@@ -18,8 +20,9 @@ export interface LessonSlideInterface {
     progress: number;
 }
 declare class LessonSlide implements LessonSlideInterface {
-    options?: string[];
+    options?: any[];
     answers?: string[];
+    feedbacks?: any[];
     status?: boolean;
     complete?: boolean;
     textFields?: TextFieldsInterface[];
@@ -27,15 +30,19 @@ declare class LessonSlide implements LessonSlideInterface {
         [key: string]: Function;
     };
     progress: number;
+    SUCCESS_FEEDBACK: string;
+    FAILURE_FEEDBACK: string;
     setOptions(options: string[]): void;
     setAnswers(answers: string[]): void;
+    setFeedbacks(feedbacks: any[]): void;
     setStatus(status: boolean): void;
     addFields(textFieldInstance: TextFieldsInterface): void;
     selectAnswer(index: number, value: string, callback: Function): void;
     selectOptionAnswer(index: number, value: string, callback: Function): void;
     callComponentFunctions(value: string): void;
     setFunction(functionName: string, handler: Function): void;
-    triggerFeedback(): void;
+    feedbackMessage(type: string, list: any[]): any;
+    triggerFeedback(feedbackType: string): void;
     eventManager(): {
         on: (eventName: string, callback: any) => void;
         action: (eventName: string, data: any) => void;

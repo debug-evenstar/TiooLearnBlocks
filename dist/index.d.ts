@@ -11,13 +11,15 @@ interface TextFieldsInterface {
 }
 
 interface LessonSlideInterface {
-    options?: string[];
+    options?: any[];
     answers?: string[];
+    feedbacks?: any[];
     status?: boolean;
     complete?: boolean;
     textFields?: TextFieldsInterface[];
     setAnswers: Function;
     setOptions: Function;
+    setFeedbacks: Function;
     setStatus: Function;
     addFields: Function;
     selectAnswer: Function;
@@ -47,6 +49,7 @@ interface TextComponentProps {
 interface ButtonGroupData {
     answers: string[];
     options?: string[][];
+    feedbacks?: any[];
 }
 
 interface SliderData {
@@ -102,6 +105,7 @@ interface OptionsComponentProps {
 interface SlideManagerProps {
     lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
     canProceed: Function;
+    handleFeedback: Function;
     ref: any;
 }
 declare const SlideManager: FC<SlideManagerProps>;

@@ -10,6 +10,7 @@ import { OptionData } from "../Options/handler";
 interface SlideManagerProps {
     lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
     canProceed: Function;
+    handleFeedback: Function;
     ref: any;
 }
 declare const SlideManager: FC<SlideManagerProps>;
