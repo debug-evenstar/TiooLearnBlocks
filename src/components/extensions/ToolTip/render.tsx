@@ -40,7 +40,7 @@ const ToolTipComponent: FC<ToolTipProps> = ({ label, content }) => {
   return (
     <>
       <div
-        className="relative cursor-pointer underline inline-block text-center"
+        className="relative cursor-pointer inline-block underline text-center"
         onClick={() => showTip()}
         ref={ref}
       >
