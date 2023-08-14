@@ -1,5 +1,5 @@
 {
-  "name": "learnblocks",
+  "name": "@Praxeum-ai/LearnBlocks",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -27,9 +27,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "rollup -c --bundleConfigAsCjs",
+    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "rollup": "rollup -c --bundleConfigAsCjs"
   },
   "eslintConfig": {
     "extends": [
@@ -61,7 +62,9 @@
     "rollup": "^3.0.0",
     "rollup-plugin-dts": "^5.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-terser": "^7.0.2",
-    "tsup": "^7.2.0"
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/Praxeum-ai"
   }
 }

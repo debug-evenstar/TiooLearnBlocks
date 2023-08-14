@@ -1,10 +1,10 @@
-export * from "./ButtonGroup";
-export * from "./Button";
-export * from "./FlashCards";
-export * from "./Image"
-export * from "./Options"
-export * from "./SlideManager"
-export * from "./Slider"
-export * from "./Text"
-export * from "./Video"
-export * from "./WordMatch"
+export { default as SlideManager } from "./SlideManager"
+export { default as ButtonGroup } from "./ButtonGroup"
+export { default as Button } from "./Button"
+export { default as FlashCards } from "./FlashCards"
+export { default as Image } from "./Image"
+export { default as Options } from "./Options"
+export { default as Slider } from "./Slider"
+export { default as Text } from "./Text"
+export { default as Video } from "./Video"
+export { default as WordMatch } from "./WordMatch"
