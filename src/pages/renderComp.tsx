@@ -248,7 +248,7 @@ const RenderComponent = () => {
       // },
     ]
   ]
-  const [canProceed, setCanProceed] = useState<boolean>(false);
+  const [canProceed, setCanProceed] = useState<boolean>(true);
   const handleContinue = () => {
     slideManagerRef?.current?.navigator(1)
     setCanProceed(false);
@@ -273,7 +273,7 @@ const RenderComponent = () => {
       <div className="w-full h-screen text-center grid place-content-center">
         <div style={containerStyle}>
           <SlideManager
-            lessonSlides={slide2}
+            lessonSlides={slides}
             ref={slideManagerRef}
             canProceed={(val: boolean) => setCanProceed(val)}
           />
