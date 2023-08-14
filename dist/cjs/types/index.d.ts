@@ -1,2 +1,1 @@
-declare const Components: any;
-export default Components;
+export * from "./components";
