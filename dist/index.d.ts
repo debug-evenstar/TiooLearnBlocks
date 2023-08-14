@@ -88,6 +88,7 @@ interface VideoComponentProps {
 interface WordMatchData {
     answers: string[];
     options: string[];
+    feedbacks: any[];
 }
 interface WordMatchComponentProps {
     data: WordMatchData;

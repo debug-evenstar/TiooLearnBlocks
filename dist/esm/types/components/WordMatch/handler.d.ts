@@ -2,6 +2,7 @@ import { LessonSlideInterface } from "../SlideManager/handler";
 export interface WordMatchData {
     answers: string[];
     options: string[];
+    feedbacks: any[];
 }
 export interface WordMatchComponentProps {
     data: WordMatchData;
