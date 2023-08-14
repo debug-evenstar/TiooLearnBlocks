@@ -254,30 +254,14 @@ const RenderComponent = () => {
     setCanProceed(false);
   }
 
-  const containerStyle = {
-    background:
-      "url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png')",
-    backgroundSize: "100% 100%",
-    width: "800px",
-    maxHeight: "550px",
-    margin: "0 auto",
-    padding: "10px 30px",
-    color: "white",
-    display: "grid",
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "visible",
-  };
   return (
     <>
       <div className="w-full h-screen text-center grid place-content-center">
-        <div style={containerStyle}>
           <SlideManager
             lessonSlides={slides}
             ref={slideManagerRef}
             canProceed={(val: boolean) => setCanProceed(val)}
           />
-        </div>
         {
           canProceed && <button
             className="mx-auto mt-[20px] py-[10px] w-[150px] text-white rounded-[15px] bg-sky-500 hover:bg-sky-700"
