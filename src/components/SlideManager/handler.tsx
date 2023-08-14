@@ -65,9 +65,7 @@ class LessonSlide implements LessonSlideInterface{
     }
 
     selectAnswer( index : number, value : string, callback : Function) {
-        console.log("Slide Select Answer")
         if( this.options && this.options.length ) {
-            console.log(this.options);
             this.selectOptionAnswer(index, value, callback);
             return;
         }
@@ -143,7 +141,6 @@ class LessonSlide implements LessonSlideInterface{
     }
 
     triggerFeedback(feedbackType : string) {
-        console.log(this.feedbacks);
         if(this.feedbacks) {
             const feedbackMessage = this.feedbacks.length > 2
                 ? this.feedbackMessage(feedbackType, this.feedbacks[this.progress])

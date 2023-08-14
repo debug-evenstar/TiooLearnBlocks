@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useImperativeHandle, useState } from "react";
+import React, { FC, forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { LessonSlideScope, loadComponent } from "./handler";
 import { TextData } from "../Text/handler";
 import { ButtonGroupData } from "../ButtonGroup/handler";
@@ -18,6 +18,7 @@ interface SlideManagerProps {
 
 const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback }, ref) => {
   const SlideScope = LessonSlideScope();
+  console.log(SlideScope);
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
 
@@ -38,9 +39,13 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     }
   }));
 
-  SlideScope.setFunction('navigateSlide', navigateSlide);
-  SlideScope.setFunction('allowProceed', () => canProceed(true));
-  SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
+
+  useEffect(()=>{
+    SlideScope.setFunction('navigateSlide', navigateSlide);
+    SlideScope.setFunction('allowProceed', () => canProceed(true));
+    SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
+  },[]);
+
   
 
   const containerStyle = {
