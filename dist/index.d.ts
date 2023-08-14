@@ -1,2 +1,3 @@
+declare const Components: any;
 
-export { }
+export { Components as default };
