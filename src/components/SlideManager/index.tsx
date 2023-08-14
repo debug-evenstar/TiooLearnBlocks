@@ -1,5 +1,5 @@
 import React, { FC, forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { LessonSlideScope, loadComponent } from "./handler";
+import { LessonSlideInterface, LessonSlideScope, loadComponent } from "./handler";
 import { TextData } from "../Text/handler";
 import { ButtonGroupData } from "../ButtonGroup/handler";
 import { SliderData } from "../Slider/hander";
@@ -17,7 +17,7 @@ interface SlideManagerProps {
 }
 
 const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback }, ref) => {
-  const SlideScope = LessonSlideScope();
+  const [SlideScope , setSlideScope] = useState<LessonSlideInterface|any>(null);
   console.log(SlideScope);
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
@@ -41,6 +41,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
 
   useEffect(()=>{
+    setSlideScope(LessonSlideScope())
     SlideScope.setFunction('navigateSlide', navigateSlide);
     SlideScope.setFunction('allowProceed', () => canProceed(true));
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
@@ -63,12 +64,12 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   };
   return (
     <div style={containerStyle}>
-        <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
+        {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
           {activeSlide.map((component: any, index: number) => {
             const Component = loadComponent(component);
             return <Component key={index} data={component} slide={SlideScope} />;
           })}
-        </div>
+        </div>}
     </div>
   );
 });
