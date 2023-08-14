@@ -47,6 +47,7 @@ const RenderComponent = () => {
       {
         component: "ButtonGroup",
         answers: ["Concrete", "Abstract"],
+        feedbacks : ["Hello", "Hi"]
       },
     ],
     [
@@ -95,6 +96,10 @@ const RenderComponent = () => {
         ],
         answers : [
           "Father", "Leaves", "Lions", "Authority", "Cleanliness", "Joy"
+        ],
+        feedbacks : [
+          "Hello Two",
+          "Hi Two"
         ]
       },
     ],
@@ -254,6 +259,11 @@ const RenderComponent = () => {
     setCanProceed(false);
   }
 
+  const triggerFeedback = (text: string, type: string) => {
+
+  };
+
+
   return (
     <>
       <div className="w-full h-screen text-center grid place-content-center">
@@ -261,6 +271,7 @@ const RenderComponent = () => {
             lessonSlides={slides}
             ref={slideManagerRef}
             canProceed={(val: boolean) => setCanProceed(val)}
+            handleFeedback={triggerFeedback}
           />
         {
           canProceed && <button

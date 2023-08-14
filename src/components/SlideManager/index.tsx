@@ -44,6 +44,9 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   
 
   const containerStyle = {
+  //   background:
+  //   "url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png')",
+  // backgroundSize: "100% 100%",
     width: "100%",
     margin: "0 auto",
     padding: "10px 30px",

@@ -65,14 +65,18 @@ class LessonSlide implements LessonSlideInterface{
     }
 
     selectAnswer( index : number, value : string, callback : Function) {
-        if( this.options ) {
+        console.log("Slide Select Answer")
+        if( this.options && this.options.length ) {
+            console.log(this.options);
             this.selectOptionAnswer(index, value, callback);
             return;
         }
         if ( this.answers ) {
             if( index > this.progress  || this.answers[index] !== value ) {
+                alert("wrong");
                 this.triggerFeedback(this.FAILURE_FEEDBACK);
             } else {
+                alert("correct");
                 this.functions?.selectAnswer( index, value );
                 this.triggerFeedback(this.SUCCESS_FEEDBACK);
                 this.progress++;
@@ -139,6 +143,7 @@ class LessonSlide implements LessonSlideInterface{
     }
 
     triggerFeedback(feedbackType : string) {
+        console.log(this.feedbacks);
         if(this.feedbacks) {
             const feedbackMessage = this.feedbacks.length > 2
                 ? this.feedbackMessage(feedbackType, this.feedbacks[this.progress])
