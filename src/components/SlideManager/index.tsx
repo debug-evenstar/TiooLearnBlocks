@@ -39,9 +39,10 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
   SlideScope.setFunction('navigateSlide', navigateSlide);
   SlideScope.setFunction('allowProceed', () => canProceed(true));
-
+  // justifyContent: "center",
+  // alignItems: "center",
   return (
-    <div className="mx-auto w-10/12 grid gap-y-5 my-5">
+    <div className="w-full px-[20px] py-[10px] text-white mx-auto w-10/12 grid gap-y-5 my-5">
       {activeSlide.map((component: any, index: number) => {
         const Component = loadComponent(component);
         return <Component key={index} data={component} slide={SlideScope} />;
