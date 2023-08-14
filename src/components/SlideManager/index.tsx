@@ -17,7 +17,7 @@ interface SlideManagerProps {
 }
 
 const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback }, ref) => {
-  const [SlideScope , setSlideScope] = useState<LessonSlideInterface|any>(null);
+  const [SlideScope , setSlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   console.log(SlideScope);
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
@@ -41,7 +41,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
 
   useEffect(()=>{
-    setSlideScope(LessonSlideScope())
     SlideScope.setFunction('navigateSlide', navigateSlide);
     SlideScope.setFunction('allowProceed', () => canProceed(true));
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
