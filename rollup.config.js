@@ -4,20 +4,20 @@ import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
 import { terser } from "rollup-plugin-terser";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import svgr from '@svgr/rollup'
+import url from '@rollup/plugin-url'
 
-const packageJson = require("./package.json");
-
-const Config =  [
+const Config = [
     {
         input: "src/index.ts",
         output: [
             {
-                file: packageJson.main,
+                file: "dist/cjs/index.js",
                 format: "cjs",
                 sourcemap: true,
             },
             {
-                file: packageJson.module,
+                file: "dist/esm/index.js",
                 format: "esm",
                 sourcemap: true,
             },
@@ -28,14 +28,17 @@ const Config =  [
             commonjs(),
             typescript({ tsconfig: "./tsconfig.json" }),
             terser(),
+            url(), svgr({ icon: true }),
         ],
         external: ["react", "react-dom", "styled-components"],
     },
     {
         input: "src/index.ts",
         output: [{ file: "dist/types.d.ts", format: "es" }],
-        plugins: [dts.default()],
+        plugins: [
+            dts.default(),
+        ],
     },
 ];
 
-export default Config
+export default Config;
