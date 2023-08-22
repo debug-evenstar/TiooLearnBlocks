@@ -14,7 +14,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
 
   const selectAnswer = (index : number, item : string) => {
     slide.selectAnswer( index, item, () => {
-      if ( data.options ) {
+      if ( data.options && data.options.length > 0) {
         if(data.options.length > activeOptionGroupIndex + 1 ) {
           setButtonLabels( data.options[ activeOptionGroupIndex + 1] );
           setActiveOptionGroupIndex(activeOptionGroupIndex + 1);
