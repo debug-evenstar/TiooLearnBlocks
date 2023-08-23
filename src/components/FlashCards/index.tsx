@@ -37,7 +37,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
     return (
         <>
             <div
-                className="w-10/12 h-[300px] mx-auto my-[20px] relative"
+                className="w-10/12 h-[300px] mx-auto my-[20px] relative flex justify-center"
                 ref={imgContainerRef}
             >
                 {cardData.map((item: any, index: number) => {
@@ -50,7 +50,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
                             alt="images"
                             className={
                                 index == cardData.length - 1
-                                    ? "w-full h-auto absolute rounded-lg transform transition linear duration-[0.8s]"
+                                    ? "w-auto max-w-[100%] h-auto max-h-[100%] absolute rounded-lg transform transition linear duration-[0.8s]"
                                     : rotationClassesImages[sInt.toString()]
                             }
                         />
