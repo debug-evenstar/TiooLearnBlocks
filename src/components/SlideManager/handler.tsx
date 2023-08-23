@@ -71,7 +71,7 @@ class LessonSlide implements LessonSlideInterface{
             return;
         }
         if ( this.answers ) {
-            if( index > this.progress  || this.answers[index] !== value ) {
+            if( /*index > this.progress  ||*/ this.answers[index] !== value ) {
                 this.triggerFeedback(this.FAILURE_FEEDBACK);
             } else {
                 this.functions?.selectAnswer( index, value );
@@ -104,12 +104,13 @@ class LessonSlide implements LessonSlideInterface{
                 if( this.functions?.selectAnswer ) {
                     this.functions?.selectAnswer( 0, value );
                 }
+                callback(true);
                 setTimeout(()=>{
                     this.callComponentFunctions(value);
-                    callback();
                 },800);
             }else{
                 this.triggerFeedback(this.FAILURE_FEEDBACK);
+                callback(false);
             }
         }
     }
@@ -145,8 +146,10 @@ class LessonSlide implements LessonSlideInterface{
     }
 
     feedbackMessage(type : string, list : any[]){
-        return type === this.SUCCESS_FEEDBACK 
-            ? list[0] : list[1];
+        return !this.options || this.options.length == 0 
+            ? list[this.progress]
+            : type === this.SUCCESS_FEEDBACK 
+                ? list[0] : list[1];
     }
 
     triggerFeedback(feedbackType : string, index: number = -1) {

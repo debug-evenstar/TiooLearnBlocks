@@ -11,17 +11,56 @@ interface ButtonGroupProps{
 const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
   const [buttonLabels , setButtonLabels]  = useState<string[]>([]);
   const [activeOptionGroupIndex , setActiveOptionGroupIndex] = useState<number>(0);
+  const [buttonStatuses, setButtonStatuses] = useState<string[]>([]);
 
   const selectAnswer = (index : number, item : string) => {
-    slide.selectAnswer( index, item, () => {
+    if( !data.options || data.options.length === 0){
+      setButtonStatus(index,"success");
+    }
+    slide.selectAnswer( index, item, (success : boolean) => {
       if ( data.options && data.options.length > 0) {
-        if(data.options.length > activeOptionGroupIndex + 1 ) {
-          setButtonLabels( data.options[ activeOptionGroupIndex + 1] );
-          setActiveOptionGroupIndex(activeOptionGroupIndex + 1);
+        if(success){
+          setButtonStatus(index,"success");
+          setTimeout(()=>{
+            nextButtonGroup();
+          },800)
+        }else{
+          setButtonStatus(index, "failure");
         }
       }
     })
   }
+
+  const initStatuses = () => {
+    const statuses : string[] = [];
+    const opts = data.options && data.options.length 
+      ? data.options[activeOptionGroupIndex]
+      : data.answers;
+    opts.forEach((option, index) => {
+      statuses[index] = "default"; // Move to static class properties
+    });
+    setButtonStatuses(statuses);
+  }
+
+
+  const nextButtonGroup = () => {
+    if(data.options){
+      if(data.options.length > activeOptionGroupIndex + 1 ) {
+        setButtonLabels( data.options[ activeOptionGroupIndex + 1] );
+        setActiveOptionGroupIndex(activeOptionGroupIndex + 1);
+        initStatuses();
+      }
+    }
+  }
+  const setButtonStatus = (index: number, status : string) => {
+    const previous = buttonStatuses;
+    previous[index] = status; // Move to static class properties
+    setButtonStatuses(() => [...previous]);
+  }
+
+  useEffect(()=>{
+    initStatuses();
+  },[])
 
   useEffect(()=>{
     slide.setAnswers(data.answers);
@@ -40,8 +79,8 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
     <>
         <div className='grid grid-cols-2 gap-6 w-5/12 mx-auto mt-[30px]'>
         {
-            !!buttonLabels.length && buttonLabels.map((item:any, index:number) => (
-                <ButtonComponent key={index} onClick={() => selectAnswer(index , item)} title={item} index={index}/>
+            (!!buttonLabels.length && !!buttonStatuses.length) && buttonLabels.map((item:any, index:number) => (
+                <ButtonComponent key={index} status={buttonStatuses[index]} onClick={() => selectAnswer(index , item)} title={item} index={index}/>
             ))
         }
         </div>
