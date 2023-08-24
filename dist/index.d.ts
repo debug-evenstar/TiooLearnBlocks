@@ -124,6 +124,7 @@ interface ButtonProps {
     onClick?: React$1.MouseEventHandler<HTMLButtonElement> | undefined;
     disabled?: boolean;
     index: number;
+    status?: string;
 }
 declare const ButtonComponent: React$1.FC<ButtonProps>;
 

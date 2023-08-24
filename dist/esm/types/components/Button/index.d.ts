@@ -4,6 +4,7 @@ interface ButtonProps {
     onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
     disabled?: boolean;
     index: number;
+    status?: string;
 }
 declare const ButtonComponent: React.FC<ButtonProps>;
 export default ButtonComponent;

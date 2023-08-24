@@ -16,5 +16,6 @@ export declare const optionStyles: {
 export declare const anwserStyles: {
     inactive: string;
     answered: string;
+    failed: string;
 };
 export declare const shuffleAnswers: (answers: string[]) => string[];
