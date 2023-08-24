@@ -28,8 +28,23 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     ) {
         setActiveSlide(() => lessonSlides[activeSlideIndex + direction]);
         setActiveSlideIndex(() => activeSlideIndex + direction);
+        if( checkSlideCanProceed(lessonSlides[activeSlideIndex + direction]) ) {
+          canProceed(true);
+        }
     }
   };
+
+
+  const checkSlideCanProceed = (slide : any) => {
+    let activate = true;
+    const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
+    slide.forEach((data : any) => {
+      if(data && blockProceed.includes(data.component)){
+        activate = false;
+      }
+    })
+    return activate;
+  }
 
   useImperativeHandle(ref, ()=> ({
     navigator(direction : number) {
