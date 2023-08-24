@@ -26,9 +26,10 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
       lessonSlides.length > activeSlideIndex + direction &&
       activeSlideIndex + direction >= 0
     ) {
-        setActiveSlide(() => lessonSlides[activeSlideIndex + direction]);
+        const nextSlide = lessonSlides[activeSlideIndex + direction];
+        setActiveSlide(() => nextSlide);
         setActiveSlideIndex(() => activeSlideIndex + direction);
-        if( checkSlideCanProceed(lessonSlides[activeSlideIndex + direction]) ) {
+        if( checkSlideCanProceed(nextSlide) ) {
           canProceed(true);
         }
     }
@@ -38,11 +39,12 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   const checkSlideCanProceed = (slide : any) => {
     let activate = true;
     const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
-    slide.forEach((data : any) => {
+    for (let i = 0; i < slide.length; i++) {
+      const data = slide[i];
       if(data && blockProceed.includes(data.component)){
         activate = false;
       }
-    });
+    }
     return activate;
   }
 
