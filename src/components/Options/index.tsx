@@ -10,13 +10,13 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
     const selectOption = (index : number) => {
         setSelectedOption(() => index);
         if(answers.includes(options[index])){
-            alert("correct");
+            slide.triggerFeedback("success");
             setAnsweredList((previous) => [
                 ...previous,
                 index
             ]);
         } else {
-            alert("wrong");
+            slide.triggerFeedback("failure");
         }
     }
 

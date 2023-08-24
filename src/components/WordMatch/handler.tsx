@@ -25,7 +25,8 @@ export const optionStyles = {
 export const anwserStyles = {
     inactive:
     "w-[60%] border-[2px] rounded-[6px] border-[#86A94B] bg-white text-[#87909E] py-[10px] px-[15px] cursor-pointer",
-    answered : "w-[60%] border-[2px] rounded-[6px] border-[#86A94B] bg-[#66803C] py-[10px] px-[15px] cursor-pointer"
+    answered : "w-[60%] border-[2px] rounded-[6px] border-[#86A94B] bg-[#66803C] py-[10px] px-[15px] cursor-pointer",
+    failed : "w-[60%] border-[2px] rounded-[6px] border-white bg-[#F17B0C] py-[10px] px-[15px] cursor-pointer"
 };
 
 export const shuffleAnswers = (answers: string[]) => {

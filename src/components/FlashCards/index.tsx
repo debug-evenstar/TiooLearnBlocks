@@ -47,7 +47,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
     useEffect(() => {
         slide.setFunction("removeCard", removeCard);
         refreshButtons();
-    }, []);
+    },[]);
 
     return (
         <>
@@ -64,7 +64,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
                             src={item.url}
                             alt="images"
                             className={
-                                index == cardData.length - 1
+                                index === cardData.length - 1
                                     ? "w-auto max-w-[100%] h-auto max-h-[100%] absolute rounded-lg transform transition linear duration-[0.8s]"
                                     : rotationClassesImages[sInt.toString()]
                             }
@@ -73,7 +73,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
                         <div
                             key={index}
                             className={
-                                index == cardData.length - 1
+                                index === cardData.length - 1
                                     ? "w-full h-full px-[20px] py-[20px] flex justify-center items-center absolute rounded-lg transform bg-white text-black border border-gray-200 transition linear duration-[0.8s]"
                                     : rotationClassesWords[sInt.toString()]
                             }

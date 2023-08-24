@@ -10,41 +10,50 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
     const [activeOptionIndex, setActiveOptionIndex] = useState<number>(-1);
     const [optionsList, setOptionsList] = useState<any[]>([]);
     const [answersList, setAnswersList] = useState<any[]>([]);
-    const [answeredList, setAnsweredList] = useState<number[]>([])
+    const [answeredList, setAnsweredList] = useState<number[]>([]);
+    const [failedIndex, setFailedIndex] = useState<number>(-1);
 
     const selectOption = (index : number) => {
       if(!answeredList.includes(index)) {
         setActiveOptionIndex(() => index);
+        setFailedIndex(-1);
       }
     }
 
     const matchOption = (index : number) => {
-      // const selectedOption = optionsList[activeOptionIndex];
-      const correctAnswer = data.answers[activeOptionIndex];
+      const selectedOption = optionsList[activeOptionIndex];
+      const selectedOptionIndex = data.options.indexOf(selectedOption);
+      const correctAnswer = data.answers[selectedOptionIndex];
       const selectedAnswer = answersList[index];
-      if( selectedAnswer === correctAnswer ) {
-        slide.triggerFeedback("success",activeOptionIndex);
-        slide.updateProgress();
-        setAnsweredList((previous) => [
-          ...previous,
-          answeredList.length
-        ]);
-        // Move the answered question option to top
-        const sorted = optionsList;
-        const tempTop = optionsList[answeredList.length];
-        sorted[answeredList.length] = optionsList[activeOptionIndex];
-        sorted[activeOptionIndex] = tempTop;
-        setOptionsList(() => [...sorted]);
-        //Move answer also
-        const newAnswers = answersList;
-        newAnswers[index] = answersList[answeredList.length]
-        newAnswers[answeredList.length] = correctAnswer;
-        setAnswersList(() => [...newAnswers]);
+      if(activeOptionIndex !== -1) {
+        if( selectedAnswer === correctAnswer ) {
+          slide.triggerFeedback("success",activeOptionIndex);
+          slide.updateProgress();
+          setAnsweredList((previous) => [
+            ...previous,
+            answeredList.length
+          ]);
+          // Move the answered question option to top
+          const sorted = optionsList;
+          const tempTop = optionsList[answeredList.length];
+          sorted[answeredList.length] = optionsList[activeOptionIndex];
+          sorted[activeOptionIndex] = tempTop;
+          setOptionsList(() => [...sorted]);
+          //Move answer also
+          const newAnswers = answersList;
+          newAnswers[index] = answersList[answeredList.length]
+          newAnswers[answeredList.length] = correctAnswer;
+          setAnswersList(() => [...newAnswers]);
+          //Deselect active option
+          setActiveOptionIndex(-1);
+        }
+        else{
+          slide.triggerFeedback("failure",activeOptionIndex);
+          setActiveOptionIndex(-1);
+          setFailedIndex(index);
+        }
       }
-      else{
-        slide.triggerFeedback("failure",activeOptionIndex);
-        slide.updateProgress();
-      }
+
     }
 
     const loadStyles = (index : number) => {
@@ -56,7 +65,7 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
     }
 
     useEffect(() => {
-        setOptionsList(() => data.options);
+        setOptionsList(() => [...data.options]);
         setAnswersList(() => shuffleAnswers(data.answers));
     }, [data]);
 
@@ -93,7 +102,9 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
                                   className={
                                     answeredList.includes(index) 
                                       ? anwserStyles.answered
-                                      : anwserStyles.inactive
+                                      : failedIndex === index 
+                                        ? anwserStyles.failed
+                                        : anwserStyles.inactive
                                     }
                                   onClick={() => matchOption(index)}
                                 >
