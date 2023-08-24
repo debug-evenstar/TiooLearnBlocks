@@ -42,7 +42,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
       if(data && blockProceed.includes(data.component)){
         activate = false;
       }
-    })
+    });
     return activate;
   }
 
