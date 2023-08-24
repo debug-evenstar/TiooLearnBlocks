@@ -107,7 +107,7 @@ class LessonSlide implements LessonSlideInterface{
                 callback(true);
                 setTimeout(()=>{
                     this.callComponentFunctions(value);
-                },800);
+                },600);
             }else{
                 this.triggerFeedback(this.FAILURE_FEEDBACK);
                 callback(false);

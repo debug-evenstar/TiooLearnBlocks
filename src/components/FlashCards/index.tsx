@@ -21,23 +21,38 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
         cardToSlide.style.opacity = 0;
     };
 
+    const refreshButtons = () => {
+        try{
+            if (slide.functions?.initButtonStatuses) {
+                slide.functions.initButtonStatuses();
+            }
+        }catch(e){}
+    }
+
     const removeCard = () => {
         handleCardTransition();
         const newCards = cardData;
         newCards.pop();
         setTimeout(() => {
             setCardData(() => [...newCards]);
+            if(newCards.length === 0){
+                imgContainerRef.current.style.display = "none";
+                slide.functions?.hideButtonGroup();
+            }
+            refreshButtons();
         }, 1200);
+
     };
 
     useEffect(() => {
         slide.setFunction("removeCard", removeCard);
+        refreshButtons();
     }, []);
 
     return (
         <>
             <div
-                className="w-10/12 h-[300px] mx-auto my-[20px] relative flex justify-center"
+                className="w-10/12 h-[350px] mx-auto my-[20px] relative flex justify-center"
                 ref={imgContainerRef}
             >
                 {cardData.map((item: any, index: number) => {

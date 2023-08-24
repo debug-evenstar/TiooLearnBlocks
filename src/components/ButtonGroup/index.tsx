@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react'
+import React, {FC, useEffect, useRef, useState} from 'react'
 import ButtonComponent from '../Button/index'
 import { LessonSlideInterface } from '../SlideManager/handler';
 import { ButtonGroupData } from './handler';
@@ -12,6 +12,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
   const [buttonLabels , setButtonLabels]  = useState<string[]>([]);
   const [activeOptionGroupIndex , setActiveOptionGroupIndex] = useState<number>(0);
   const [buttonStatuses, setButtonStatuses] = useState<string[]>([]);
+  const buttonContainerRef = useRef<any>(null);
 
   const selectAnswer = (index : number, item : string) => {
     if( !data.options || data.options.length === 0){
@@ -23,7 +24,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
           setButtonStatus(index,"success");
           setTimeout(()=>{
             nextButtonGroup();
-          },800)
+          },600)
         }else{
           setButtonStatus(index, "failure");
         }
@@ -42,6 +43,8 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
     setButtonStatuses(statuses);
   }
 
+  
+
 
   const nextButtonGroup = () => {
     if(data.options){
@@ -49,13 +52,20 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
         setButtonLabels( data.options[ activeOptionGroupIndex + 1] );
         setActiveOptionGroupIndex(activeOptionGroupIndex + 1);
         initStatuses();
+      }else{
+        setActiveOptionGroupIndex(0);
       }
     }
   }
+
   const setButtonStatus = (index: number, status : string) => {
     const previous = buttonStatuses;
     previous[index] = status; // Move to static class properties
     setButtonStatuses(() => [...previous]);
+  }
+
+  const hideButton = () => {
+    buttonContainerRef.current.style.display = "none";
   }
 
   useEffect(()=>{
@@ -71,13 +81,15 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
     }else{
       setButtonLabels(data.answers);
     }
+    slide.setFunction('initButtonStatuses', initStatuses);
+    slide.setFunction('hideButtonGroup', hideButton);
   },[data]);
 
 
 
   return (
     <>
-        <div className='grid grid-cols-2 gap-6 w-5/12 mx-auto mt-[30px]'>
+        <div className='grid grid-cols-2 gap-6 w-5/12 mx-auto mt-[30px]' ref={buttonContainerRef}>
         {
             (!!buttonLabels.length && !!buttonStatuses.length) && buttonLabels.map((item:any, index:number) => (
                 <ButtonComponent key={index} status={buttonStatuses[index]} onClick={() => selectAnswer(index , item)} title={item} index={index}/>
