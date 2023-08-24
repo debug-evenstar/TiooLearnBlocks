@@ -159,7 +159,7 @@ class LessonSlide implements LessonSlideInterface{
         if(this.feedbacks) {
             const feedbackMessage = this.feedbacks.length > 2
                 ? this.feedbackMessage(feedbackType, this.feedbacks[index])
-                : this.feedbackMessage(feedbackType, this.feedbacks);
+                : this.feedbackMessage(feedbackType, this.feedbacks[0]);
 
             this.functions?.triggerFeedback(feedbackMessage , feedbackType);
         }
