@@ -156,7 +156,7 @@ class LessonSlide implements LessonSlideInterface{
         if(index === -1){
             index = this.progress;
         }
-        if(this.feedbacks && this.feedbacks.length) {
+        if(this.feedbacks && this.feedbacks.length > 0) {
             const feedbackMessage = this.feedbacks.length > 2
                 ? this.feedbackMessage(feedbackType, this.feedbacks[index])
                 : this.feedbackMessage(feedbackType, this.feedbacks[0]);
