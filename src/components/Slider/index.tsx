@@ -28,7 +28,7 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
   return (
     <>
       <div className="w-full flex flex-row justify-center">
-        <div className="w-3/5 py-6 flex flex-row justify-between items-center">
+        <div className="w-9/12 py-6 flex flex-row justify-between items-center">
           <img
             src={chevronRight}
             onClick={() => {}}
