@@ -74,7 +74,7 @@ class LessonSlide implements LessonSlideInterface{
             if( /*index > this.progress  ||*/ this.answers[index] !== value ) {
                 this.triggerFeedback(this.FAILURE_FEEDBACK);
             } else {
-                this.functions?.selectAnswer( index, value );
+                this.functions?.selectAnswer( this.progress, value );
                 this.triggerFeedback(this.SUCCESS_FEEDBACK);
                 this.progress++;
                 if(this.progress === this.answers.length) {
@@ -145,9 +145,9 @@ class LessonSlide implements LessonSlideInterface{
         }
     }
 
-    feedbackMessage(type : string, list : any[]){
+    feedbackMessage(type : string, list : any[], index : number = this.progress){
         return !this.options || this.options.length == 0 
-            ? list[this.progress]
+            ? list[index]
             : type === this.SUCCESS_FEEDBACK 
                 ? list[0] : list[1];
     }
@@ -161,7 +161,7 @@ class LessonSlide implements LessonSlideInterface{
                 ? this.feedbackMessage(feedbackType, this.feedbacks[index])
                 : this.feedbackMessage(feedbackType, this.feedbacks[0]);
 
-            this.functions?.triggerFeedback(feedbackMessage , feedbackType);
+            this.functions?.triggerFeedback(feedbackMessage , feedbackType, index);
         }
 
     }

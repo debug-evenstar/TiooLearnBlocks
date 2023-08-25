@@ -12,7 +12,7 @@ const TextComponent: FC<TextComponentProps> = ({
   const [processed , setProcessed] = useState<any[]>(
     processTextContent(data.content)
   );
-  
+
   // Handle tips
   if(data.tips){
     ToolTips( ToolTipTypes.TEXT, processed, data.tips );
@@ -40,7 +40,7 @@ const TextComponent: FC<TextComponentProps> = ({
   return <>
     <div className="text-center text-font">
       {processed.map((item, index) => (
-          <span key={index}>
+          <span className="text-font" key={index}>
             {(typeof item) == "string" ? ` ${item} ` : (item)}
           </span>
       ))}
