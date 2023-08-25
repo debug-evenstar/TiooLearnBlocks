@@ -45,19 +45,37 @@ class ToolTipsHandler{
     processDataTips(){
         const identifiers = this.getIdentifiers();
         const start = identifiers[0], end = identifiers[1];
-        const textContent = this.data;
+        const textContent = [ ...this.data ];
         let tipIndex = 0;
+        let withinTip = false
+        let currentTipIndex = -1;
+        let activeTipable : string[] = [];
         textContent.forEach((item : any, index : number)=>{
             if(typeof item == "string"){
-                if( item.includes(start) ){
-                    const extracted = item.replace(start,"").replace(end,"");
-                    const formattedTip = this.formatToolTip(extracted, this.tips[tipIndex]);
-                    textContent[index] = formattedTip.element;
-                    tipIndex++;
+                if( item.includes(start) || withinTip || item.includes(end)){
+                    if( item.includes(start) ) {
+                        withinTip = true;
+                        currentTipIndex = index;
+                    }
+                    if( withinTip ){
+                        const extracted = item.replace(start,"").replace(end,"");
+                        activeTipable.push(extracted);
+                        if(currentTipIndex !== index){
+                            this.data.splice(index, 1);
+                        }
+                    }
+                    if( item.includes(end) ){
+                        const extracted = activeTipable.join(" ");
+                        const formattedTip = this.formatToolTip(extracted, this.tips[tipIndex]);
+                        this.data[currentTipIndex] = formattedTip.element;
+                        currentTipIndex = -1;
+                        withinTip = false;
+                        tipIndex++;
+                    }
                 }
             }
         })
-        return textContent;
+        return this.data;
     }
 }
 

@@ -12,6 +12,11 @@ const TextComponent: FC<TextComponentProps> = ({
   const [processed , setProcessed] = useState<any[]>(
     processTextContent(data.content)
   );
+  
+  // Handle tips
+  if(data.tips){
+    ToolTips( ToolTipTypes.TEXT, processed, data.tips );
+  }
 
   // Handle TextFields
   if(processed.includes("<?>") ){
@@ -24,10 +29,7 @@ const TextComponent: FC<TextComponentProps> = ({
 
   }
 
-  // Handle tips
-  if(data.tips){
-    ToolTips( ToolTipTypes.TEXT, processed, data.tips );
-  }
+
 
   useEffect(()=>{
     setProcessed(
