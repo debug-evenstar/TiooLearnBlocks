@@ -43,7 +43,7 @@ declare class LessonSlide implements LessonSlideInterface {
     updateProgress(): void;
     callComponentFunctions(value: string): void;
     setFunction(functionName: string, handler: Function): void;
-    feedbackMessage(type: string, list: any[]): any;
+    feedbackMessage(type: string, list: any[], index?: number): any;
     triggerFeedback(feedbackType: string, index?: number): void;
     eventManager(): {
         on: (eventName: string, callback: any) => void;
