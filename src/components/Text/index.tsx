@@ -36,7 +36,7 @@ const TextComponent: FC<TextComponentProps> = ({
   },[data]);
 
   return <>
-    <div className="text-center">
+    <div className="text-center text-font">
       {processed.map((item, index) => (
           <span key={index}>
             {(typeof item) == "string" ? ` ${item} ` : (item)}
