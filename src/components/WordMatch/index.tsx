@@ -29,6 +29,7 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
         if( selectedAnswer === correctAnswer ) {
           slide.triggerFeedback("success",activeOptionIndex);
           slide.updateProgress();
+          setActiveOptionIndex(answeredList.length + 1);
           setAnsweredList((previous) => [
             ...previous,
             answeredList.length
@@ -44,13 +45,14 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
           newAnswers[index] = answersList[answeredList.length]
           newAnswers[answeredList.length] = correctAnswer;
           setAnswersList(() => [...newAnswers]);
-          //Deselect active option
-          setActiveOptionIndex(-1);
         }
         else{
           slide.triggerFeedback("failure",activeOptionIndex);
           setActiveOptionIndex(-1);
           setFailedIndex(index);
+          setTimeout(()=>{
+            setFailedIndex(-1);
+          },800);
         }
       }
 

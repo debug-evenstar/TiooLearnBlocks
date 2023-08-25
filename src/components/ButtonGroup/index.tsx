@@ -27,6 +27,9 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
           },600)
         }else{
           setButtonStatus(index, "failure");
+          setTimeout(()=>{
+            setButtonStatus(index, "default");
+          },800);
         }
       }
     })
