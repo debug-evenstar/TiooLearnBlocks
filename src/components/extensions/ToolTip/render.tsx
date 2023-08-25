@@ -41,7 +41,8 @@ const ToolTipComponent: FC<ToolTipProps> = ({ label, content }) => {
     <>
       <div
         className="relative cursor-pointer inline-block underline text-center"
-        onClick={() => showTip()}
+        onMouseEnter={() => showTip()}
+        onMouseLeave={() => setTooltip(false)}
         ref={ref}
       >
         {toolTip && (
