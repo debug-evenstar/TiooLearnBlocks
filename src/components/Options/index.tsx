@@ -15,6 +15,7 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
                 ...previous,
                 index
             ]);
+            setSelectedOption(-1);
         } else {
             slide.triggerFeedback("failure");
         }
@@ -22,7 +23,7 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
 
     const loadOptionStyle = (index : number) => {
         return  selectedOption === index 
-                ? (answers.includes(options[index]) ? optionStyles.correct : optionStyles.wrong)
+                ? (answers.includes(options[index]) ? optionStyles.correct : ( answeredList.length !== answers.length ? optionStyles.wrong : optionStyles.inactive ))
                 : answeredList.includes(index) 
                     ? optionStyles.answered
                     : optionStyles.inactive
