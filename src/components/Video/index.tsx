@@ -4,7 +4,9 @@ import { VideoComponentProps } from "./handler";
 const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
     const videoRef = useRef<any>(null);
     const endVideo = () => {
-        slide?.functions?.allowProceed();
+        if( !slide.answers || slide.answers.length === 0 ) {
+            slide?.functions?.allowProceed();
+        }
     }
     return (
         <>
