@@ -23,6 +23,9 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
 
   const navigateSlide = (direction: number, slideIndex : any = null) => {
+    console.log("Navv");
+    console.log(direction);
+    console.log(slideIndex);
     if(slideIndex && lessonSlides.length > slideIndex && slideIndex >= 0) {
       performSlideChange(slideIndex);
       return;
@@ -63,6 +66,8 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
   useImperativeHandle(ref, ()=> ({
     navigator(direction : number, slideIndex: number) {
+      console.log(direction);
+      console.log(slideIndex);
       navigateSlide(direction, slideIndex);
       SlideScope.progress = 0;
     }
