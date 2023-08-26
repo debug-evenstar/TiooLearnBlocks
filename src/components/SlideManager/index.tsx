@@ -46,6 +46,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
         canProceed(true);
       },1500)
     }
+    SlideScope.resetData();
   }
 
 

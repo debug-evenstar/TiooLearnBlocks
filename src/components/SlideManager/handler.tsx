@@ -25,7 +25,8 @@ export interface LessonSlideInterface {
     triggerFeedback : Function;
     updateProgress : Function;
     functions? : {[key : string] : Function};
-    progress : number
+    progress : number;
+    resetData : Function;
 }
 
 class LessonSlide implements LessonSlideInterface{
@@ -164,6 +165,14 @@ class LessonSlide implements LessonSlideInterface{
             this.functions?.triggerFeedback(feedbackMessage , feedbackType);
         }
 
+    }
+
+    resetData() {
+        this.options = []
+        this.answers = [];
+        this.feedbacks = [];
+        this.complete = false
+        this.progress = 0;
     }
     
     eventManager() {
