@@ -272,6 +272,7 @@ const RenderComponent = () => {
             ref={slideManagerRef}
             canProceed={(val: boolean) => setCanProceed(val)}
             handleFeedback={triggerFeedback}
+            updateActiveSlide={()=>{}}
           />
         {
           canProceed && <button

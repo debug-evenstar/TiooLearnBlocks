@@ -11,6 +11,7 @@ interface SlideManagerProps {
     lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
     canProceed: Function;
     handleFeedback: Function;
+    updateActiveSlide: Function;
     ref: any;
 }
 declare const SlideManager: FC<SlideManagerProps>;
