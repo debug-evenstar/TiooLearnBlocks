@@ -12,26 +12,26 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
     const [answeredList, setAnsweredList] = useState<number[]>([]);
 
     const selectOption = (index: number) => {
-        setSelectedOption(() => index);
-        if (answers.includes(options[index])) {
-            slide.triggerFeedback("success");
-            setAnsweredList((previous) => [...previous, index]);
-            setSelectedOption(-1);
-        } else {
-            slide.triggerFeedback("failure");
+        if(answers.length !== answeredList.length) {
+            setSelectedOption(() => index);
+            if (answers.includes(options[index])) {
+                slide.triggerFeedback("success");
+                setAnsweredList((previous) => [...previous, index]);
+                setTimeout(()=>{
+                    setSelectedOption(-1);
+                },1000);
+            } else {
+                slide.triggerFeedback("failure");
+            }
         }
     };
 
     const loadOptionStyle = (index: number) => {
-        return selectedOption === index
-            ? answers.includes(options[index])
-                ? optionStyles.correct
-                : answeredList.length !== answers.length
-                    ? optionStyles.wrong
+        return  selectedOption === index 
+                ? (answers.includes(options[index]) ? optionStyles.correct : optionStyles.wrong)
+                : answeredList.includes(index) 
+                    ? optionStyles.answered
                     : optionStyles.inactive
-            : answeredList.includes(index)
-            ? optionStyles.answered
-            : optionStyles.inactive;
     };
 
     useEffect(() => {
