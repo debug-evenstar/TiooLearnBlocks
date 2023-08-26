@@ -19,6 +19,7 @@ export interface LessonSlideInterface {
         [key: string]: Function;
     };
     progress: number;
+    resetData: Function;
 }
 declare class LessonSlide implements LessonSlideInterface {
     options?: any[];
@@ -45,6 +46,7 @@ declare class LessonSlide implements LessonSlideInterface {
     setFunction(functionName: string, handler: Function): void;
     feedbackMessage(type: string, list: any[], index?: number): any;
     triggerFeedback(feedbackType: string, index?: number): void;
+    resetData(): void;
     eventManager(): {
         on: (eventName: string, callback: any) => void;
         action: (eventName: string, data: any) => void;

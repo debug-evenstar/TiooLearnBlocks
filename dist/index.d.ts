@@ -30,6 +30,7 @@ interface LessonSlideInterface {
         [key: string]: Function;
     };
     progress: number;
+    resetData: Function;
 }
 
 interface TextStyles {
