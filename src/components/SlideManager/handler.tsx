@@ -74,7 +74,6 @@ class LessonSlide implements LessonSlideInterface{
             if( /*index > this.progress  ||*/ this.answers[index] !== value ) {
                 this.triggerFeedback(this.FAILURE_FEEDBACK, index);
             } else {
-                console.log(index)
                 this.functions?.selectAnswer( this.progress, value );
                 this.triggerFeedback(this.SUCCESS_FEEDBACK, index);
                 this.progress++;
@@ -157,7 +156,6 @@ class LessonSlide implements LessonSlideInterface{
         if(index === -1){
             index = this.progress;
         }
-        console.log(index);
         if(this.feedbacks && this.feedbacks.length > 0) {
             const feedbackMessage = this.feedbacks.length > 2
                 ? this.feedbackMessage(feedbackType, this.feedbacks[index])

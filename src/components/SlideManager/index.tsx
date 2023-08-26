@@ -62,8 +62,8 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }
 
   useImperativeHandle(ref, ()=> ({
-    navigator(direction : number) {
-      navigateSlide(direction);
+    navigator(direction : number, slideIndex: number) {
+      navigateSlide(direction, slideIndex);
       SlideScope.progress = 0;
     }
   }));
