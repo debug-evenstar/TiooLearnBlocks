@@ -66,6 +66,12 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     navigator(direction : number, slideIndex: number) {
       navigateSlide(direction, slideIndex);
       SlideScope.progress = 0;
+    },
+    activeSlide() {
+      return activeSlide;
+    },
+    activeSlideIndex() {
+      return activeSlideIndex;
     }
   }));
 
