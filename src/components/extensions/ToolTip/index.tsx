@@ -50,9 +50,9 @@ class ToolTipsHandler{
         let withinTip = false
         let currentTipIndex = -1;
         let activeTipable : string[] = [];
+        this.data.splice(0,this.data.length)
         textContent.forEach((item : any, index : number)=>{
-            if(typeof item == "string"){
-                if( item.includes(start) || withinTip || item.includes(end)){
+                if(typeof item == "string" && (item.includes(start) || withinTip || item.includes(end))){
                     if( item.includes(start) ) {
                         withinTip = true;
                         currentTipIndex = index;
@@ -60,20 +60,20 @@ class ToolTipsHandler{
                     if( withinTip ){
                         const extracted = item.replace(start,"").replace(end,"");
                         activeTipable.push(extracted);
-                        if(currentTipIndex !== index){
-                            this.data.splice(index, 1);
-                        }
                     }
                     if( item.includes(end) ){
                         const extracted = activeTipable.join(" ");
                         const formattedTip = this.formatToolTip(extracted, this.tips[tipIndex]);
-                        this.data[currentTipIndex] = formattedTip.element;
+                        this.data.push(formattedTip.element);
                         currentTipIndex = -1;
+                        activeTipable = [];
                         withinTip = false;
                         tipIndex++;
                     }
+                }else{
+                    this.data.push(item);
                 }
-            }
+
         })
         return this.data;
     }
