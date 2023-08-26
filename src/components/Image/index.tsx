@@ -4,7 +4,7 @@ import { ImageComponentProps } from './handler'
 const ImageComponent : FC<ImageComponentProps> = ({data, slide}) => {
   return (
     <>
-        <img src={data.url} alt='images' className='w-8/12 mx-auto rounded-lg'/>
+        <img src={data.url} alt='images' className='w-[320px] mx-auto rounded-lg'/>
     </>
   )
 }
