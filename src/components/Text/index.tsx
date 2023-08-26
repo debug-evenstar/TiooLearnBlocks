@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { TextComponentProps, processTextContent } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
 import { TextFields } from "../extensions/TextFields";
@@ -12,6 +12,7 @@ const TextComponent: FC<TextComponentProps> = ({
   const [processed , setProcessed] = useState<any[]>(
     processTextContent(data.content)
   );
+  const textContainerRef = useRef<any>(null);
 
   // Handle tips
   if(data.tips){
@@ -29,16 +30,21 @@ const TextComponent: FC<TextComponentProps> = ({
 
   }
 
+  const hideText = () => {
+    textContainerRef.current.style.display = "none";
+  }
+
 
 
   useEffect(()=>{
     setProcessed(
       processTextContent(data.content)
     )
+    slide.setFunction("hideText", hideText)
   },[data]);
 
   return <>
-    <div className="text-center text-font">
+    <div className="text-center text-font" ref={textContainerRef}>
       {processed.map((item, index) => (
           <span className="text-font" key={index}>
             {(typeof item) == "string" ? ` ${item} ` : (item)}

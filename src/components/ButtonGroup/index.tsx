@@ -71,6 +71,18 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
     buttonContainerRef.current.style.display = "none";
   }
 
+  const restartButtonGroup = () => {
+    buttonContainerRef.current.style.display = "block";
+    initStatuses();
+    setActiveOptionGroupIndex(0);
+    if (data.options && data.options.length > 0) {
+      setButtonLabels(data.options[0]);
+    }else{
+      setButtonLabels(data.answers);
+    }
+    slide.progress = 0;
+  }
+
   useEffect(()=>{
     initStatuses();
   },[])
@@ -86,13 +98,14 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
     }
     slide.setFunction('initButtonStatuses', initStatuses);
     slide.setFunction('hideButtonGroup', hideButton);
+    slide.setFunction('restartButtonGroup', restartButtonGroup);
   },[data]);
 
 
 
   return (
     <>
-        <div className='grid grid-cols-2 gap-6 w-5/12 mx-auto mt-[30px]' ref={buttonContainerRef}>
+        <div className='grid grid-cols-2 gap-6 w-9/12 mx-auto mt-[30px]' ref={buttonContainerRef}>
         {
             (!!buttonLabels.length && !!buttonStatuses.length) && buttonLabels.map((item:any, index:number) => (
                 <ButtonComponent key={index} status={buttonStatuses[index]} onClick={() => selectAnswer(index , item)} title={item} index={index}/>

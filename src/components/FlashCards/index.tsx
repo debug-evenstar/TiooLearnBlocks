@@ -4,8 +4,12 @@ import {
     rotationClassesImages,
     rotationClassesWords,
 } from "./handler";
+import MedalImage from "../../img/medal.svg"
+import Clap from "../../img/clap.svg"
+import Rewind from "../../img/undo.svg"
 
 const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
+    const [finished, setFinished] = useState(false);
     const [cardData, setCardData] = useState<any[]>(
         data.cards.map(
             (item, index) => data.cards[data.cards.length - 1 - index]
@@ -38,11 +42,21 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
             if(newCards.length === 0){
                 imgContainerRef.current.style.display = "none";
                 slide.functions?.hideButtonGroup();
+                slide.functions?.hideText();
+                setFinished(true)
             }
             refreshButtons();
         }, 1200);
 
     };
+
+    const rewindCards = () => {
+        imgContainerRef.current.style.display = "block";
+        setCardData(data.cards.map(
+            (item, index) => data.cards[data.cards.length - 1 - index]
+        ));
+        slide.functions?.restartButtonGroup();
+    }
 
     useEffect(() => {
         slide.setFunction("removeCard", removeCard);
@@ -52,7 +66,7 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
     return (
         <>
             <div
-                className="w-10/12 h-[350px] mx-auto my-[20px] relative flex justify-center"
+                className="w-10/12 h-[350px] mx-auto mt-[15px] mb-[5px] relative flex justify-center"
                 ref={imgContainerRef}
             >
                 {cardData.map((item: any, index: number) => {
@@ -83,6 +97,32 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
                     );
                 })}
             </div>
+
+            {finished && (<div className="w-full h-[400px] flex flex-col justify-center items-center relative">
+                <img
+                    className="w-20 my-[15px]"
+                    src={MedalImage}
+                    alt=""
+                />
+                <div className="flex items-center">
+                    <p className="text-font text-center">You’ve done well. Keep it up!</p>
+                    <img
+                        src={Clap}
+                        alt=""
+                    />
+                </div>
+                <div 
+                    className="flex flex-col justify-center items-center absolute bottom-[10px] cursor-pointer hidden"
+                    onClick={() => rewindCards()}
+                >
+                    <img
+                        className=""
+                        src={Rewind}
+                        alt=""
+                    />
+                    <p className="text-font text-center">Rewind</p>
+                </div>
+            </div>)}
         </>
     );
 };
