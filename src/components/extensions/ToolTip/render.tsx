@@ -48,7 +48,7 @@ const ToolTipComponent: FC<ToolTipProps> = ({ label, content }) => {
         {toolTip && (
             <RenderTip item={content} />
         )}
-        <span>{label}</span>
+        <span className="text-font">{label}</span>
       </div>
     </>
   );

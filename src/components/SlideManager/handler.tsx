@@ -72,10 +72,10 @@ class LessonSlide implements LessonSlideInterface{
         }
         if ( this.answers ) {
             if( /*index > this.progress  ||*/ this.answers[index] !== value ) {
-                this.triggerFeedback(this.FAILURE_FEEDBACK);
+                this.triggerFeedback(this.FAILURE_FEEDBACK, index);
             } else {
                 this.functions?.selectAnswer( this.progress, value );
-                this.triggerFeedback(this.SUCCESS_FEEDBACK);
+                this.triggerFeedback(this.SUCCESS_FEEDBACK, index);
                 this.progress++;
                 if(this.progress === this.answers.length) {
                     this.complete = true;

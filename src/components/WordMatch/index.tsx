@@ -7,7 +7,7 @@ import {
 } from "./handler";
 
 const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
-    const [activeOptionIndex, setActiveOptionIndex] = useState<number>(-1);
+    const [activeOptionIndex, setActiveOptionIndex] = useState<number>(0);
     const [optionsList, setOptionsList] = useState<any[]>([]);
     const [answersList, setAnswersList] = useState<any[]>([]);
     const [answeredList, setAnsweredList] = useState<number[]>([]);
@@ -29,7 +29,9 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
         if( selectedAnswer === correctAnswer ) {
           slide.triggerFeedback("success",activeOptionIndex);
           slide.updateProgress();
-          setActiveOptionIndex(answeredList.length + 1);
+          setTimeout(()=>{
+            setActiveOptionIndex(answeredList.length + 1);
+          },1000);
           setAnsweredList((previous) => [
             ...previous,
             answeredList.length
