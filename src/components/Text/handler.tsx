@@ -30,7 +30,7 @@ const formatIdentifiers : {[key : string] : any } = {
 }
 
 const formatMappings : {[key : string] : Function} = {
-    bold : (text : string | React.ReactElement) => (<strong>{` `}{text}{` `}</strong>),
+    bold : (text : string | React.ReactElement) => (<strong className="text-font">{` `}{text}{` `}</strong>),
     italic : (text : string | React.ReactElement) => (<i>{` `}{text}{` `}</i>),
     keyword : (text : string | React.ReactElement) => (<span className="text-green-500">{` `}{text}{` `}</span>)
 }
