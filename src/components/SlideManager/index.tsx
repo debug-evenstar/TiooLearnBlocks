@@ -13,30 +13,40 @@ interface SlideManagerProps {
   lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
   canProceed : Function;
   handleFeedback : Function;
+  updateActiveSlide : Function;
   ref: any;
 }
 
-const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback }, ref) => {
+const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback, updateActiveSlide}, ref) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
 
-  const navigateSlide = (direction: number) => {
+  const navigateSlide = (direction: number, slideIndex : any = null) => {
+    if(slideIndex && lessonSlides.length > slideIndex && slideIndex >= 0) {
+      performSlideChange(slideIndex);
+      return;
+    }
+
     if (
       lessonSlides.length > activeSlideIndex + direction &&
       activeSlideIndex + direction >= 0
     ) {
-        const nextSlide = lessonSlides[activeSlideIndex + direction];
-        setActiveSlide(() => nextSlide);
-        setActiveSlideIndex(() => activeSlideIndex + direction);
-        if( checkSlideCanProceed(nextSlide) ) {
-          setTimeout(()=>{
-            console.log("Setting can proceed");
-            canProceed(true);
-          },1500)
-        }
+      performSlideChange(activeSlideIndex + direction);
     }
   };
+
+  const performSlideChange = (index : number) => {
+    const nextSlide = lessonSlides[index];
+    setActiveSlide(() => nextSlide);
+    setActiveSlideIndex(() => index);
+    updateActiveSlide(index);
+    if( checkSlideCanProceed(nextSlide) ) {
+      setTimeout(()=>{
+        canProceed(true);
+      },1500)
+    }
+  }
 
 
   const checkSlideCanProceed = (slide : any) => {
@@ -44,7 +54,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
     for (let i = 0; i < slide.length; i++) {
       const data = slide[i];
-      console.log(data);
       if(data && blockProceed.includes(data.component)){
         activate = false;
       }
