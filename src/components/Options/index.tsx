@@ -22,6 +22,9 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
                 },1000);
             } else {
                 slide.triggerFeedback("failure");
+                setTimeout(()=>{
+                    setSelectedOption(-1);
+                },1000);
             }
         }
     };
