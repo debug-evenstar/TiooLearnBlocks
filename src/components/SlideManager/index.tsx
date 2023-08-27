@@ -56,9 +56,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     for (let i = 0; i < slide.length; i++) {
       const data = slide[i];
       if(data && blockProceed.includes(data.component)){        
-        console.log(SlideScope.answers);
-        console.log(SlideScope.progress);
-        console.log(SlideScope.video);
         activate = false;
         if( strict ){ 
           // Check for progress match answers
@@ -89,15 +86,16 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     }
   }));
 
-  const proceed = () => {
-    if ( checkSlideCanProceed(activeSlide, true) ){
+  const proceed = (slide : any) => {
+    console.log(slide);
+    if ( checkSlideCanProceed(slide , true) ){
       canProceed(true);
     }
   }
 
   useEffect(()=>{
     SlideScope.setFunction('navigateSlide', navigateSlide);
-    SlideScope.setFunction('allowProceed', () => proceed());
+    SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
   },[]);
 
