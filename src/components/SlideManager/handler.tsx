@@ -26,6 +26,8 @@ export interface LessonSlideInterface {
     updateProgress : Function;
     functions? : {[key : string] : Function};
     progress : number;
+    video : any;
+    setVideo : Function;
     resetData : Function;
 }
 
@@ -39,6 +41,7 @@ class LessonSlide implements LessonSlideInterface{
     textFields? : TextFieldsInterface[];
     functions? : {[key : string] : Function};
     progress : number = 0;
+    video : any = null;
     SUCCESS_FEEDBACK : string = "success";
     FAILURE_FEEDBACK : string = "failure";
 
@@ -56,6 +59,10 @@ class LessonSlide implements LessonSlideInterface{
 
     setStatus( status : boolean) {
         this.status = status;
+    }
+
+    setVideo( video : any) {
+        this.video = video;
     }
 
     addFields( textFieldInstance : TextFieldsInterface ) {
@@ -173,6 +180,7 @@ class LessonSlide implements LessonSlideInterface{
         this.feedbacks = [];
         this.complete = false
         this.progress = 0;
+        this.video = null;
     }
     
     eventManager() {

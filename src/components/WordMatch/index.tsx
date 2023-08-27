@@ -32,7 +32,7 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
           const nextIndex = answeredList.length + 1;
           setTimeout(()=>{
             setActiveOptionIndex(nextIndex);
-          },1000);
+          },600);
           setAnsweredList((previous) => [
             ...previous,
             answeredList.length
@@ -55,7 +55,7 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
           setFailedIndex(index);
           setTimeout(()=>{
             setFailedIndex(-1);
-          },800);
+          },600);
         }
       }
 

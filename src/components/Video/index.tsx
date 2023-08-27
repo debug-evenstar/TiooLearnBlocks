@@ -4,11 +4,18 @@ import { VideoComponentProps } from "./handler";
 const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
     const videoRef = useRef<any>(null);
     const endVideo = () => {
-        console.log(slide)
-        if( !slide.answers || slide.answers.length === 0 ) {
+        if( 
+            !slide.answers || 
+            slide.answers.length === 0 ||
+            slide.answers.length === slide.progress
+        ) {
             slide?.functions?.allowProceed();
         }
+        slide.setVideo({ ended : true});
     }
+    useEffect(()=>{
+        slide.setVideo({ ended : false });
+    });
     return (
         <>
             <div className="w-full">

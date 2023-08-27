@@ -16,15 +16,16 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
             setSelectedOption(() => index);
             if (answers.includes(options[index])) {
                 slide.triggerFeedback("success");
+                slide.updateProgress();
                 setAnsweredList((previous) => [...previous, index]);
                 setTimeout(()=>{
                     setSelectedOption(-1);
-                },1000);
+                },600);
             } else {
                 slide.triggerFeedback("failure");
                 setTimeout(()=>{
                     setSelectedOption(-1);
-                },1000);
+                },600);
             }
         }
     };
@@ -40,6 +41,8 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
     useEffect(() => {
         setOptions(() => data.options);
         setAnswers(() => data.answers);
+        slide.setOptions(data.options);
+        slide.setOptions(data.answers);
     }, [data.answers, data.options]);
 
     useEffect(() => {
