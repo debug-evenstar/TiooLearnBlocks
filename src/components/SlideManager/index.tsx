@@ -87,7 +87,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }));
 
   const proceed = (slide : any) => {
-    console.log(slide);
     if ( checkSlideCanProceed(slide , true) ){
       canProceed(true);
     }
@@ -97,7 +96,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     SlideScope.setFunction('navigateSlide', navigateSlide);
     SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
-  },[]);
+  },[activeSlide]);
 
   
 
