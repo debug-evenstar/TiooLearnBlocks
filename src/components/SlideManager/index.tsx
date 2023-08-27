@@ -50,24 +50,27 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }
 
 
-  const checkSlideCanProceed = (slide : any) => {
+  const checkSlideCanProceed = (slide : any, strict : boolean = false) => {
     let activate = true;
     const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
     for (let i = 0; i < slide.length; i++) {
       const data = slide[i];
-      if(data && blockProceed.includes(data.component)){
-        activate = false;
+      if(data && blockProceed.includes(data.component)){        
         console.log(SlideScope.answers);
         console.log(SlideScope.progress);
         console.log(SlideScope.video);
-        // Check for progress match answers
-        if(SlideScope.answers && SlideScope.answers.length > 0 && (SlideScope.progress === SlideScope.answers.length)){
-          activate = true;
+        activate = false;
+        if( strict ){ 
+          // Check for progress match answers
+          if(SlideScope.answers && SlideScope.answers.length > 0 && (SlideScope.progress === SlideScope.answers.length)){
+            activate = true;
+          }
+          // Check for video ended
+          if (SlideScope.video && SlideScope.video.ended) {
+            activate = true;
+          }
         }
-        // Check for video ended
-        if (SlideScope.video && SlideScope.video.ended) {
-          activate = true;
-        }
+
       }
     }
     return activate;
