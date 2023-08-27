@@ -55,7 +55,8 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
     for (let i = 0; i < slide.length; i++) {
       const data = slide[i];
-      if(data && blockProceed.includes(data.component)){        
+      if(data && blockProceed.includes(data.component)){     
+        activate = false;
         if( strict ){ 
           // Check for progress match answers
           if(SlideScope.answers && SlideScope.answers.length > 0) {
