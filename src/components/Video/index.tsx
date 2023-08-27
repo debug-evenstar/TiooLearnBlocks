@@ -4,6 +4,7 @@ import { VideoComponentProps } from "./handler";
 const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
     const videoRef = useRef<any>(null);
     const endVideo = () => {
+        slide.setVideo({ ended : true});
         if( 
             !slide.answers || 
             slide.answers.length === 0 ||
@@ -11,7 +12,6 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
         ) {
             slide?.functions?.allowProceed();
         }
-        slide.setVideo({ ended : true});
     }
     useEffect(()=>{
         slide.setVideo({ ended : false });

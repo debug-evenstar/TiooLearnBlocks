@@ -56,18 +56,16 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     for (let i = 0; i < slide.length; i++) {
       const data = slide[i];
       if(data && blockProceed.includes(data.component)){        
-        activate = false;
         if( strict ){ 
           // Check for progress match answers
-          if(SlideScope.answers && SlideScope.answers.length > 0 && (SlideScope.progress === SlideScope.answers.length)){
-            activate = true;
+          if(SlideScope.answers && SlideScope.answers.length > 0) {
+            activate = (SlideScope.progress === SlideScope.answers.length);
           }
           // Check for video ended
-          if (SlideScope.video && SlideScope.video.ended) {
-            activate = true;
+          if (SlideScope.video) {
+            activate = SlideScope.video.ended;
           }
         }
-
       }
     }
     return activate;
@@ -87,7 +85,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }));
 
   const proceed = (slide : any) => {
-    console.log(slide);
     if ( checkSlideCanProceed(slide , true) ){
       canProceed(true);
     }
@@ -99,9 +96,8 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   },[]);
 
   useEffect(()=>{
-    console.log(activeSlide);
     SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
-  },[activeSlide])
+  },[ activeSlide ])
 
 
 
