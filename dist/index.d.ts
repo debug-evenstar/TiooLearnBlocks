@@ -30,6 +30,8 @@ interface LessonSlideInterface {
         [key: string]: Function;
     };
     progress: number;
+    video: any;
+    setVideo: Function;
     resetData: Function;
 }
 

@@ -19,6 +19,8 @@ export interface LessonSlideInterface {
         [key: string]: Function;
     };
     progress: number;
+    video: any;
+    setVideo: Function;
     resetData: Function;
 }
 declare class LessonSlide implements LessonSlideInterface {
@@ -32,12 +34,14 @@ declare class LessonSlide implements LessonSlideInterface {
         [key: string]: Function;
     };
     progress: number;
+    video: any;
     SUCCESS_FEEDBACK: string;
     FAILURE_FEEDBACK: string;
     setOptions(options: string[]): void;
     setAnswers(answers: string[]): void;
     setFeedbacks(feedbacks: any[]): void;
     setStatus(status: boolean): void;
+    setVideo(video: any): void;
     addFields(textFieldInstance: TextFieldsInterface): void;
     selectAnswer(index: number, value: string, callback: Function): void;
     selectOptionAnswer(index: number, value: string, callback: Function): void;
