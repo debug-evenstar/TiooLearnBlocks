@@ -90,7 +90,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }));
 
   const proceed = () => {
-    if ( checkSlideCanProceed(activeSlide) ){
+    if ( checkSlideCanProceed(activeSlide, true) ){
       canProceed(true);
     }
   }
