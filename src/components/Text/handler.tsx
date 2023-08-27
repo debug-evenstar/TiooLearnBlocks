@@ -25,12 +25,14 @@ export interface TextComponentProps {
 
 const formatIdentifiers : {[key : string] : any } = {
     bold : [ "<**" , "**>" ],
+    heading : [ "<*-" , "-*>" ],
     italic : [ "<!!" , "!!>" ],
     keyword : [ "<(" , ")>" ],
 }
 
 const formatMappings : {[key : string] : Function} = {
-    bold : (text : string | React.ReactElement) => (<strong className="text-font">{` `}{text}{` `}</strong>),
+    bold : (text : string | React.ReactElement) => (<strong className="text-font heading">{` `}{text}{` `}</strong>),
+    heading : (text : string | React.ReactElement) => (<strong className="text-font">{` `}{text}{` `}</strong>),
     italic : (text : string | React.ReactElement) => (<i>{` `}{text}{` `}</i>),
     keyword : (text : string | React.ReactElement) => (<span className="text-green-500">{` `}{text}{` `}</span>)
 }
