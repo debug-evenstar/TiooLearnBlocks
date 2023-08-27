@@ -19,7 +19,7 @@ const ButtonComponent: React.FC<ButtonProps> = ({
     let base = {
       color:"black",
       fontSize: "15px",
-      padding: "5px 0px",
+      padding: "5px 15px",
       borderRadius: "24px",
       border: " 1px dashed var(--primary, #4F46E5)",
       background: "#E6E6FA",

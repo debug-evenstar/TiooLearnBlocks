@@ -105,7 +105,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
 
   return (
     <>
-        <div className='grid grid-cols-2 gap-6 w-9/12 mx-auto mt-[30px]' ref={buttonContainerRef}>
+        <div className='flex gap-6 mx-auto mt-[30px]' ref={buttonContainerRef}>
         {
             (!!buttonLabels.length && !!buttonStatuses.length) && buttonLabels.map((item:any, index:number) => (
                 <ButtonComponent key={index} status={buttonStatuses[index]} onClick={() => selectAnswer(index , item)} title={item} index={index}/>
