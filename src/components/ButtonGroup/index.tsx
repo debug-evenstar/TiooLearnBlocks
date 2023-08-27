@@ -26,10 +26,12 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
             nextButtonGroup();
           },600)
         }else{
-          setButtonStatus(index, "failure");
-          setTimeout(()=>{
-            setButtonStatus(index, "default");
-          },800);
+          if( slide.progress < data.answers.length){
+            setButtonStatus(index, "failure");
+            setTimeout(()=>{
+              setButtonStatus(index, "default");
+            },800);
+          }
         }
       }
     })

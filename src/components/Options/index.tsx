@@ -42,7 +42,7 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
         setOptions(() => data.options);
         setAnswers(() => data.answers);
         slide.setOptions(data.options);
-        slide.setOptions(data.answers);
+        slide.setAnswers(data.answers);
     }, [data.answers, data.options]);
 
     useEffect(() => {
