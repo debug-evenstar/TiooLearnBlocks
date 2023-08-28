@@ -91,9 +91,20 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     }
   }
 
+  const preloadImages = (slides : any[]) => {
+    slides.forEach((slide) => {
+      slide.forEach((componentData : any) => {
+        if(componentData.component === "Image"){
+          (new Image()).src = componentData.url;
+        }
+      })
+    });
+  }
+
   useEffect(()=>{
     SlideScope.setFunction('navigateSlide', navigateSlide);
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
+    preloadImages(lessonSlides);
   },[]);
 
   useEffect(()=>{
