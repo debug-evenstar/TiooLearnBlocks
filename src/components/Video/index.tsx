@@ -16,12 +16,27 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
     useEffect(()=>{
         slide.setVideo({ ended : false });
     });
+
+    const isYoutubeUrl = () => {
+        return data.url.includes("youtube") || data.url.includes("youtu.be");
+    };
+
     return (
         <>
             <div className="w-full">
-                <video className="w-full" controls autoPlay={true} ref={videoRef} onEnded={() => endVideo()}>
+                {!isYoutubeUrl() && (<video className="w-full" controls autoPlay={true} ref={videoRef} onEnded={() => endVideo()}>
                     <source src={data.url} type="video/mp4"></source>
-                </video>
+                </video>)}
+                {isYoutubeUrl() && (
+                    <div className="w-full">
+                        <iframe 
+                            title="Youtube Video"
+                            className="w-full h-full"
+                            src={data.url}
+                        >
+                        </iframe>
+                    </div>
+                )}
             </div>
         </>
     );
