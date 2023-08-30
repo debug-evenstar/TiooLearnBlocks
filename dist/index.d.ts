@@ -33,6 +33,7 @@ interface LessonSlideInterface {
     video: any;
     setVideo: Function;
     resetData: Function;
+    youtubeInit: Function;
 }
 
 interface TextStyles {
@@ -142,6 +143,11 @@ declare const SliderComponent: FC<SliderComponentProps>;
 
 declare const TextComponent: FC<TextComponentProps>;
 
+declare global {
+    interface Window {
+        YT: any;
+    }
+}
 declare const VideoComponent: FC<VideoComponentProps>;
 
 declare const WordMatchComponent: FC<WordMatchComponentProps>;

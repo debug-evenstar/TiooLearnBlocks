@@ -22,6 +22,7 @@ export interface LessonSlideInterface {
     video: any;
     setVideo: Function;
     resetData: Function;
+    youtubeInit: Function;
 }
 declare class LessonSlide implements LessonSlideInterface {
     options?: any[];
@@ -55,6 +56,9 @@ declare class LessonSlide implements LessonSlideInterface {
         on: (eventName: string, callback: any) => void;
         action: (eventName: string, data: any) => void;
     };
+    youtubeInit(): void;
+    pageContainsYoutubeScript(): boolean;
+    insertYoutubeApiScript(): void;
 }
 export declare const LessonSlideScope: () => LessonSlide;
 export declare const loadComponent: (componentData: any) => any;
