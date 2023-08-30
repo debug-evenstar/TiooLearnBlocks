@@ -29,6 +29,7 @@ export interface LessonSlideInterface {
     video : any;
     setVideo : Function;
     resetData : Function;
+    youtubeInit : Function
 }
 
 class LessonSlide implements LessonSlideInterface{
@@ -194,6 +195,29 @@ class LessonSlide implements LessonSlideInterface{
                 const event = new CustomEvent(eventName, { detail : data});
                 window.dispatchEvent(event);
             }
+        }
+    }
+
+    youtubeInit() {
+        if( !this.pageContainsYoutubeScript() ){
+            this.insertYoutubeApiScript()
+        }
+    }
+
+    pageContainsYoutubeScript() {
+        const script = document.getElementById('youtube-iframe');
+        return script ? true : false;
+    }
+
+    insertYoutubeApiScript() {
+        var tag = document.createElement('script');
+        tag.id = 'youtube-iframe';
+        tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag : HTMLScriptElement = document.getElementsByTagName('script')[0];
+        if( firstScriptTag ) {
+            firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+        }else{
+            document.body.appendChild(tag);
         }
     }
 

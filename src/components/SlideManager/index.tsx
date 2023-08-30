@@ -102,16 +102,16 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }
 
   useEffect(()=>{
-    SlideScope.setFunction('navigateSlide', navigateSlide);
-    SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
-    preloadImages(lessonSlides);
-  },[]);
-
-  useEffect(()=>{
     SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
   },[ activeSlide ])
 
-
+  // Core effects
+  useEffect(()=>{
+    SlideScope.setFunction('navigateSlide', navigateSlide);
+    SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
+    preloadImages(lessonSlides);
+    SlideScope.youtubeInit();
+  },[]);
 
   
 
