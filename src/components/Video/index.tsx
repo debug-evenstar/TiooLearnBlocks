@@ -28,14 +28,12 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
                     <source src={data.url} type="video/mp4"></source>
                 </video>)}
                 {isYoutubeUrl() && (
-                    <div className="w-full">
-                        <iframe 
-                            title="Youtube Video"
-                            className="w-full h-full"
-                            src={data.url}
-                        >
-                        </iframe>
-                    </div>
+                    <iframe 
+                        title="Youtube Video"
+                        className="w-full aspect-video"
+                        src={data.url}
+                    >
+                    </iframe>
                 )}
             </div>
         </>
