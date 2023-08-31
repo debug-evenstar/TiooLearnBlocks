@@ -15,9 +15,10 @@ interface SlideManagerProps {
   handleFeedback : Function;
   updateActiveSlide : Function;
   ref: any;
+  altHeaderStyle?: string
 }
 
-const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback, updateActiveSlide}, ref) => {
+const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback, updateActiveSlide, altHeaderStyle}, ref) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
@@ -132,7 +133,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
         {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
           {activeSlide.map((component: any, index: number) => {
             const Component = loadComponent(component);
-            return <Component key={index} data={component} slide={SlideScope} />;
+            return <Component key={index} data={component} slide={SlideScope} altHeaderStyle={altHeaderStyle} />;
           })}
         </div>}
     </div>
