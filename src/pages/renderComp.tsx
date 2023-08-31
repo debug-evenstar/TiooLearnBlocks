@@ -270,7 +270,6 @@ const RenderComponent = () => {
           <SlideManager
             lessonSlides={slides}
             ref={slideManagerRef}
-            canProceed={(val: boolean) => setCanProceed(val)}
             handleFeedback={triggerFeedback}
             updateActiveSlide={()=>{}}
           />

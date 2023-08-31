@@ -18,3 +18,4 @@ import './index.css';
 // // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 // reportWebVitals();
 export * from "./components"
+export {default as SlideBus} from "./utilities/bus"

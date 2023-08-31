@@ -14,22 +14,6 @@ const TextComponent: FC<TextComponentProps> = ({
   );
   const textContainerRef = useRef<any>(null);
 
-  // Handle tips
-  if(data.tips){
-    ToolTips( ToolTipTypes.TEXT, processed, data.tips );
-  }
-
-  // Handle TextFields
-  if(processed.includes("<?>") ){
-    var textFields : any = TextFields(processed);
-    slide.addFields(textFields);
-    slide.setFunction("selectAnswer", ( index : number, value : string )=>{
-      const updateProcessed = textFields.fieldReplacementFill(index, value, processed);
-      setProcessed(() => updateProcessed);
-    });
-
-  }
-
   const hideText = () => {
     textContainerRef.current.style.display = "none";
   }
@@ -37,11 +21,30 @@ const TextComponent: FC<TextComponentProps> = ({
 
 
   useEffect(()=>{
-    setProcessed(
-      processTextContent(data.content)
-    )
+    // setProcessed(
+    //   processTextContent(data.content)
+    // )
+    let initial = processTextContent(data.content);
+
+    // Handle tips
+    if(data.tips){
+      const tips = ToolTips( ToolTipTypes.TEXT, initial, data.tips );
+      initial = tips.data;
+    }
+
+    // Handle TextFields
+    if(processed.includes("<?>") ){
+      var textFields : any = TextFields(initial);
+      slide.addFields(textFields);
+      slide.setFunction("selectAnswer", ( index : number, value : string )=>{
+        const updateProcessed = textFields.fieldReplacementFill(index, value, initial);
+        setProcessed(() => updateProcessed);
+      });
+    }
+
+    setProcessed(() => initial);
     slide.setFunction("hideText", hideText)
-  },[data]);
+  },[data, slide]);
 
   return <>
     <div className="text-center text-font" ref={textContainerRef}>

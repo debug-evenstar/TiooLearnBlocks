@@ -1,3 +1,4 @@
+import { elementIndexInParent } from "utilities/element";
 import ButtonGroupComponent from "../ButtonGroup";
 import FlashCardsComponent from "../FlashCards";
 import ImageComponent from "../Image";
@@ -29,7 +30,7 @@ export interface LessonSlideInterface {
     video : any;
     setVideo : Function;
     resetData : Function;
-    youtubeInit : Function
+    checkSlideCanProceed : Function;
 }
 
 class LessonSlide implements LessonSlideInterface{
@@ -175,6 +176,28 @@ class LessonSlide implements LessonSlideInterface{
 
     }
 
+    checkSlideCanProceed (slide : any, strict : boolean = false) {
+        let activate = true;
+        const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
+        for (let i = 0; i < slide.length; i++) {
+          const data = slide[i];
+          if(data && blockProceed.includes(data.component)){     
+            activate = false;
+            if( strict ){ 
+              // Check for progress match answers
+              if(this.answers && this.answers.length > 0) {
+                activate = (this.progress === this.answers.length);
+              }
+              // Check for video ended
+              if (this.video) {
+                activate = this.video.ended;
+              }
+            }
+          }
+        }
+        return activate;
+    }
+
     resetData() {
         this.options = []
         this.answers = [];
@@ -198,18 +221,16 @@ class LessonSlide implements LessonSlideInterface{
         }
     }
 
-    youtubeInit() {
-        if( !this.pageContainsYoutubeScript() ){
-            this.insertYoutubeApiScript()
-        }
-    }
+}
 
-    pageContainsYoutubeScript() {
+export const youtubeInit = () => {
+
+    const pageContainsYoutubeScript = () =>{
         const script = document.getElementById('youtube-iframe');
         return script ? true : false;
     }
-
-    insertYoutubeApiScript() {
+    
+    const insertYoutubeApiScript = () => {
         var tag = document.createElement('script');
         tag.id = 'youtube-iframe';
         tag.src = 'https://www.youtube.com/iframe_api';
@@ -221,11 +242,36 @@ class LessonSlide implements LessonSlideInterface{
         }
     }
 
-
-
+    if( !pageContainsYoutubeScript() ){
+        insertYoutubeApiScript();
+    }
 }
 
-export const LessonSlideScope = () => ( new LessonSlide() );
+
+export const handleSlideTransition = (callback : Function) => {
+    const currentSlide = document.getElementsByClassName("slide-current")[0];
+    currentSlide.classList.remove("slide-current");
+    const nextSlide  = document.getElementsByClassName("slide-next")[0];
+    nextSlide.classList.remove("slide-next");
+    const previousSlide  = document.getElementsByClassName("slide-previous")[0];
+    previousSlide.classList.remove("slide-previous");
+
+    // Add new slide classes
+    nextSlide.classList.add("slide-current");
+    previousSlide.classList.add("slide-next");
+    currentSlide.classList.add("slide-previous");
+
+
+    const list = {
+        current : elementIndexInParent(nextSlide),
+        next : elementIndexInParent(previousSlide),
+        previous : elementIndexInParent(currentSlide)
+    }
+
+    setTimeout(()=>{
+        callback(list);
+    },600);
+}
 
 
 const keyToComponentMapper : {[key : string] : any} = {
@@ -239,7 +285,13 @@ const keyToComponentMapper : {[key : string] : any} = {
     "Options" : OptionsComponent
 }
 
-
 export const loadComponent = ( componentData : any ) => {
     return keyToComponentMapper[componentData.component];
 }
+
+export const LessonSlideScope = () => ( new LessonSlide() );
+
+
+
+
+
