@@ -23,13 +23,13 @@ const datas = [
     text: "Soil",
   },
 ];
-function RightSidebar() {
+const  RightSidebar = ({data}:any) => {
   const Item = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [isActive, setIsActive] = useState(1);
     return (
       <div className="w-full my-5">
-        <h3 className="text-[12px] text-[#87909E] font-medium">Chapter 1</h3>
+        <h3 className="text-[12px] text-[#87909E] font-medium">First Term</h3>
         <div className="w-full flex items-center justify-between">
           <h3
             className="text-[#030036] text-[13px] font-medium w-[137px] opacity-70 cursor-pointer py-[8px]"

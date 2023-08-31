@@ -15,6 +15,12 @@ function Header() {
           Back
         </div>
         <div>
+          <h3 className="text-center text-[#030036] opacity-70 text-[18px]">
+            {/* <span className="font-semibold ">Lesson 3:</span> <br /> */}
+            <span className="font-normal"> Slide 1</span>
+          </h3>
+        </div>
+        <div>
           <div className="flex items-center cursor-pointer">
             <span className="flex items-center cursor-pointer h-[50px] w-[50px]">
               <img

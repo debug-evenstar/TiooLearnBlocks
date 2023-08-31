@@ -122,7 +122,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     width: "100%",
     margin: "0 auto",
     padding: "10px 30px",
-    color: "white",
+    // color: "white",
     display: "grid",
     justifyContent: "center",
     alignItems: "center",
