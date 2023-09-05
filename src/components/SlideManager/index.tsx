@@ -64,7 +64,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
           }
           // Check for video ended
           if (SlideScope.video) {
-            activate = SlideScope.video.ended;
+            // activate = SlideScope.video.ended;
           }
         }
       }
