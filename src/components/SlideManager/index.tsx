@@ -1,8 +1,8 @@
 import React, { FC, forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { LessonSlideInterface, LessonSlideScope, loadComponent } from "./handler";
+import { LessonSlideInterface, LessonSlideScope, loadComponent, youtubeInit } from "./handler";
 import { TextData } from "../Text/handler";
 import { ButtonGroupData } from "../ButtonGroup/handler";
-import { SliderData } from "../Slider/hander";
+import { SliderData } from "../Slider/handler";
 import { ImageData } from "../Image/handler";
 import { FlashCardData } from "../FlashCards/handler";
 import { VideoData } from "../Video/handler";
@@ -21,6 +21,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
+  const [hintIsActive, setHintIsActive] = useState<boolean>(false);
 
   const navigateSlide = (direction: number, slideIndex : any = null) => {
     if(slideIndex !== null && lessonSlides.length > slideIndex && slideIndex >= 0) {
@@ -52,7 +53,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
   const checkSlideCanProceed = (slide : any, strict : boolean = false) => {
     let activate = true;
-    const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider"/*,"Video"*/,"Options"];
+    const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
     for (let i = 0; i < slide.length; i++) {
       const data = slide[i];
       if(data && blockProceed.includes(data.component)){     
@@ -64,7 +65,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
           }
           // Check for video ended
           if (SlideScope.video) {
-            // activate = SlideScope.video.ended;
+            activate = SlideScope.video.ended;
           }
         }
       }
@@ -109,8 +110,8 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   useEffect(()=>{
     SlideScope.setFunction('navigateSlide', navigateSlide);
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
+    SlideScope.setFunction('setHint', (val:boolean) => setHintIsActive(val));
     preloadImages(lessonSlides);
-    SlideScope.youtubeInit();
   },[]);
 
   
@@ -135,8 +136,21 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
             return <Component key={index} data={component} slide={SlideScope} />;
           })}
         </div>}
+        {hintIsActive && (
+          <div className="w-full h-[30px] mt-[50px] mb-[10px] flex justify-end">
+            <div 
+              className="h-full cursor-pointer bg-[#86A94B] text-white text-font px-[20px] rounded-[5px]"
+              onClick={() => SlideScope.fillWithHint()}
+            >
+                Give me a hint
+            </div>
+          </div>
+        )}
     </div>
   );
 });
+
+// Run before component mount
+youtubeInit();
 
 export default SlideManager;

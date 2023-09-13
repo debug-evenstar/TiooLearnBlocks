@@ -10,8 +10,10 @@ declare global {
 const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
     const videoRef = useRef<any>(null);
     const [videoId, setvideoId] = useState<string>("");
+    const [videoEnded, setVideoEnded] = useState<boolean>(false);
     const endVideo = () => {
         slide.setVideo({ ended : true});
+        setVideoEnded(() => true);
         if( 
             !slide.answers || 
             slide.answers.length === 0 ||
@@ -21,6 +23,10 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
         }
     }
 
+    const isYoutubeUrl = () => {
+        return data.url.includes("youtube") || data.url.includes("youtu.be");
+    };
+
     const onPlayerReady = (event : any) => {
         console.log(event);
     }
@@ -29,6 +35,17 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
         if (event.data === 0) {
             endVideo();
         }
+    }
+
+    const fallbackVideoCheck = (instance : any) => {
+        const fallbackCheck = setInterval(()=>{
+            if(instance.playerInfo.playerState === 0){
+                if(!videoEnded){
+                    endVideo();
+                }
+                clearInterval(fallbackCheck);
+            }
+        },2000);
     }
 
     let videoInit = false;
@@ -48,14 +65,12 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
                         ? 'https://www.youtube.com' 
                         : 'https://youtube.com'
                 };
-                new window.YT.Player(vidId, playerOptions);
+                const instance = new window.YT.Player(vidId, playerOptions);
+                fallbackVideoCheck(instance);
             }, 1000);
         }
     },[]);
 
-    const isYoutubeUrl = () => {
-        return data.url.includes("youtube") || data.url.includes("youtu.be");
-    };
 
     return (
         <>

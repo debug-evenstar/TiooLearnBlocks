@@ -10,7 +10,7 @@ interface TextStyles {
 export interface TextData {
     content : string;
     tips? :  string[];
-    answers? : string[];
+    answers? : any[];
     options? : string[];
 }
 
@@ -133,6 +133,6 @@ export const processTextStyles = () =>{
     // Some Data Here
 }
 
-export const processTextContent = (content : string) => {
+export const formatTextContent = (content : string) => {
     return handleFormatting(content);
 }
