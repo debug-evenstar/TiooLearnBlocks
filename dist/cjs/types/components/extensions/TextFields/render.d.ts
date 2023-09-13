@@ -1,7 +1,10 @@
 import { FC } from "react";
+import { TextFieldsInterface } from ".";
 interface TextFieldProps {
     id?: string;
-    manager?: any;
+    manager?: TextFieldsInterface;
+    allowInput?: boolean;
+    answer?: any;
 }
 declare const TextFieldComponent: FC<TextFieldProps>;
 export default TextFieldComponent;
