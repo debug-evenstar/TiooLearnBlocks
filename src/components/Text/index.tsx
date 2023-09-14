@@ -62,10 +62,10 @@ const TextComponent: FC<TextComponentProps> = ({
   },[data]);
 
   useEffect(()=>{
-    let processText : any[] = [];
+    let processText : any[] = formatted;
     // Handle tips
     if(data.tips){
-      processText = ToolTips( ToolTipTypes.TEXT, formatted, data.tips ).data;
+      processText = ToolTips( ToolTipTypes.TEXT, processText, data.tips ).data;
     }
 
     // Handle TextFields
