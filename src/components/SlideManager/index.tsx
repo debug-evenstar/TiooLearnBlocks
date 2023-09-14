@@ -53,7 +53,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
   const checkSlideCanProceed = (slide : any, strict : boolean = false) => {
     let activate = true;
-    const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
+    const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options","Text"];
     for (let i = 0; i < slide.length; i++) {
       const data = slide[i];
       if(data && blockProceed.includes(data.component)){     
