@@ -25,14 +25,14 @@ const TextComponent: FC<TextComponentProps> = ({
       for (let i = 0; i < data.answers.length; i++) {
         const ans = data.answers[i];
         if ( typeof ans == "string" ){
-          if(answer === ans){
+          if(answer.toLowerCase() === ans.toLowerCase()){
             return false;
           }
         }else{
           // If answer is list of answers
           for (let j = 0; j < ans.length; j++) {
             const item = ans[j];
-            if(item === answer){
+            if(item.toLowerCase() === answer.toLowerCase()){
               return false;
             }
           }

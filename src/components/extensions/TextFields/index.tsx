@@ -125,12 +125,12 @@ class TextFieldsHandler implements TextFieldsInterface{
 
     inputAnswerMatch(input : string, answer : string|string[] ){
         if( typeof answer == "string" ){
-            return answer.substring(0, input.length) === input;
+            return answer.substring(0, input.length).toLowerCase() === input.toLowerCase();
         }else{
             let state = false;
             for (let i = 0; i < answer.length; i++) {
                 const item = answer[i];
-                if( item.substring(0, input.length) === input ){
+                if( item.substring(0, input.length).toLowerCase() === input.toLowerCase() ){
                     state = true;
                 }
             }
