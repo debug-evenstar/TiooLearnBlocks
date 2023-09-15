@@ -27,6 +27,12 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
         return data.url.includes("youtube") || data.url.includes("youtu.be");
     };
 
+    const generateEmbedUrl = () => {
+        const s = data.url.split("/");
+        const UVC = (s[s.length-1]).trim(); // Unique Video Code
+        return `https://www.youtube.com/embed/${UVC}?enablejsapi=1`;
+    }
+
     const onPlayerReady = (event : any) => {
         console.log(event);
     }
@@ -61,9 +67,7 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
                       'onReady': onPlayerReady,
                       'onStateChange': onPlayerStateChange
                     },
-                    host: data.url.includes("www") 
-                        ? 'https://www.youtube.com' 
-                        : 'https://youtube.com'
+                    host: 'https://www.youtube.com'
                 };
                 const instance = new window.YT.Player(vidId, playerOptions);
                 fallbackVideoCheck(instance);
@@ -83,7 +87,7 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
                         id={videoId}
                         title="Youtube video"
                         className="w-full aspect-video"
-                        src={`${data.url}?enablejsapi=1`}
+                        src={generateEmbedUrl()}
                     >
                     </iframe>
                 )}
