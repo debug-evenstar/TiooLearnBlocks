@@ -112,12 +112,13 @@ class TextFieldsHandler implements TextFieldsInterface{
     }
 
     simulateAnswerWidth(answer : string|string[]){
+        let fieldAnswer = answer;
         const textElement = document.createElement("p");
         textElement.className = "text-font";
         textElement.style.opacity = "0";
-        textElement.innerHTML = typeof answer === "string"
-            ? answer
-            : answer.sort((a,b) => a.length > b.length ? -1 : 1)[0];
+        textElement.innerHTML = typeof fieldAnswer === "string"
+            ? fieldAnswer
+            : fieldAnswer.sort((a,b) => a.length > b.length ? -1 : 1)[0];
         textElement.style.display = "inline-block";
         document.body.appendChild(textElement);
         const textWidth = textElement.offsetWidth + 30;
