@@ -48,7 +48,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
         canProceed(true);
       },1500)
     }
-
     setHintIsActive(false);
   }
 
@@ -95,6 +94,8 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   const proceed = (slide : any) => {
     if ( checkSlideCanProceed(slide , true) ){
       canProceed(true);
+    } else {
+      canProceed(false);
     }
   }
 
