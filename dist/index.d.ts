@@ -35,6 +35,7 @@ interface LessonSlideInterface {
     dispatch: Function;
     fillWithHint: Function;
     verifySubjectiveAnswer: Function;
+    registerSlideData: Function;
 }
 
 interface TextStyles {
