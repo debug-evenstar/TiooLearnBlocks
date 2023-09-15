@@ -169,7 +169,7 @@ class LessonSlide implements LessonSlideInterface{
     }
 
     selectOptionAnswer( index : number, value : string, callback : Function ) {
-        if( this.answers ) {
+        if( this.answers && this.progress < this.answers.length ) {
             const answer = this.answers[this.progress];
             if( answer === value ) {
                 this.triggerFeedback(this.SUCCESS_FEEDBACK);
