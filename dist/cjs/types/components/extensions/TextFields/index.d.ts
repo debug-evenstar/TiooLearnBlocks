@@ -33,7 +33,7 @@ declare class TextFieldsHandler implements TextFieldsInterface {
         element: import("react/jsx-runtime").JSX.Element;
     };
     processTextFields(): (string | import("react").ReactElement<any, string | import("react").JSXElementConstructor<any>>)[];
-    simulateAnswerWidth(answer: string): number;
+    simulateAnswerWidth(answer: string | string[]): number;
     inputAnswerMatch(input: string, answer: string | string[]): boolean;
     slideScopeIndex(answer: string | string[]): number | undefined;
 }
