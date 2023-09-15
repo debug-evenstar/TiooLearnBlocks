@@ -47,6 +47,10 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
       setTimeout(()=>{
         canProceed(true);
       },1500)
+    }else {
+      setTimeout(()=>{
+        canProceed(false);
+      },500)
     }
     setHintIsActive(false);
   }
