@@ -42,12 +42,13 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     setActiveSlide(() => nextSlide);
     setActiveSlideIndex(() => index);
     updateActiveSlide(index);
+    SlideScope.registerSlideData(nextSlide);
     if( checkSlideCanProceed(nextSlide) ) {
       setTimeout(()=>{
         canProceed(true);
       },1500)
     }
-    SlideScope.resetData();
+
     setHintIsActive(false);
   }
 
@@ -70,6 +71,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
           }
         }
       }
+
       if(data && data.component === "Text" && data.answers && SlideScope.answers){
         activate = (SlideScope.progress === SlideScope.answers.length);
       }

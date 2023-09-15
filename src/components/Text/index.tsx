@@ -51,14 +51,7 @@ const TextComponent: FC<TextComponentProps> = ({
       formatTextContent(data.content)
     )
     slide.setFunction("hideText", hideText)
-    // Handle subjective based answers
-    if( data.answers ){
-      // Spread into previous answers
-      slide.setAnswers([
-        ...slide.answers ?? [],
-        ...data.answers.filter((a:any) => !slide.answers?.includes(a))
-      ]);
-    }
+
   },[data]);
 
   useEffect(()=>{

@@ -41,6 +41,7 @@ export interface LessonSlideInterface {
     dispatch : Function;
     fillWithHint : Function;
     verifySubjectiveAnswer : Function;
+    registerSlideData : Function;
 }
 
 class LessonSlide implements LessonSlideInterface{
@@ -242,6 +243,15 @@ class LessonSlide implements LessonSlideInterface{
 
             this.functions?.triggerFeedback(feedbackMessage , feedbackType);
         }
+    }
+
+    registerSlideData(slide : any) {
+        this.resetData();
+        slide.forEach((component : any)=>{
+            this.answers = [ ...( this.answers ?? [] ), ...(component.answers ?? []) ];
+            this.options = [ ...(this.options ?? []), ...(component.options ?? [])];
+            this.feedbacks = [ ...(this.feedbacks ?? []), ...(component.feedbacks ?? [])];
+        });
     }
 
     resetData() {
