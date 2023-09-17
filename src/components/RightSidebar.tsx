@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import PromptBox from "./editorailComps/promptBox";
 
 const datas = [
   {
@@ -23,7 +24,34 @@ const datas = [
     text: "Soil",
   },
 ];
-const  RightSidebar = ({data}:any) => {
+interface Props {
+  data: any;
+  showComp: boolean;
+  activeSlide: number;
+  slides: any;
+}
+const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide }) => {
+  const compTypes = [
+    "Text",
+    "Image",
+    "Video",
+    "Multi Choice",
+    "Flash Card",
+    "Dual Choice",
+  ];
+  const activeSlid = slides && slides[activeSlide];
+  const [comps, setComps] = useState<any[]>();
+  const scrRef = useRef<any>(null);
+  const getActiveComps = () => {
+    const comps = activeSlid.map((item: any) => item.component);
+    setComps(comps);
+  };
+  useEffect(() => {
+    getActiveComps();
+  }, [activeSlid]);
+  const scroll = (scrollOffset: any) => {
+    scrRef.current.scrollTop += scrollOffset;
+  };
   const Item = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [isActive, setIsActive] = useState(1);
@@ -70,12 +98,46 @@ const  RightSidebar = ({data}:any) => {
   return (
     <div className="border-l bg-white border-[#030036] border-opacity-10 shadow relative w-full h-screen max-w-[20%] overflow-auto pt-5 px-[29px] ">
       <div className="w-full h-full ">
-        <Item />
-        {/* <Item />
-        <Item /> */}
+        {!showComp && <Item />}
+        {showComp && (
+          <div className="w-full">
+            <h3 className="text-[15px] mt-6 text-[#87909E] font-medium">
+              Components
+            </h3>
+            <div className="mt-8 text-[14px]">
+              <FaAngleUp
+                className="text-xl text-gray-500  mb-4 mx-auto cursor-pointer"
+                onClick={() => scroll(-30)}
+              />
+              <div
+                className="grid gap-4 border-y border-gray-400 py-3 h-[250px] overflow-y-scroll hide-scroll"
+                ref={scrRef}
+              >
+                {compTypes.map((item) => (
+                  <div
+                    className={`${comps && comps.includes(item)
+                      ? "compactive"
+                      : "compinactive"} cursor-pointer mx-1 hover:scale-y-105 duration-100`
+                      
+                    }
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+              <FaAngleDown
+                className="text-xl text-gray-500 mx-auto mt-2 cursor-pointer"
+                onClick={() => scroll(30)}
+              />
+            </div>
+            <div className="mt-12">
+              <PromptBox/>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default RightSidebar;

@@ -1,6 +1,9 @@
-import React from "react";
+import React, {FC} from "react";
 
-function Header() {
+interface Props {
+  activeSlide: number
+}
+export const  Header:FC<Props> = ({activeSlide}) => {
   const truncateString = (str: string, maxLength: number) => {
     if (str.length <= maxLength) {
       return str;
@@ -17,7 +20,7 @@ function Header() {
         <div>
           <h3 className="text-center text-[#030036] opacity-70 text-[18px]">
             {/* <span className="font-semibold ">Lesson 3:</span> <br /> */}
-            <span className="font-normal"> Slide 1</span>
+            <span className="font-normal"> Slide {activeSlide + 1}</span>
           </h3>
         </div>
         <div>
