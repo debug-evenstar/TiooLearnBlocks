@@ -90,9 +90,6 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
   },[])
 
   useEffect(()=>{
-    slide.setAnswers(data.answers);
-    slide.setOptions(data.options);
-    slide.setFeedbacks(data.feedbacks);
     if (data.options && data.options.length > 0) {
       setButtonLabels(data.options[0]);
     }else{

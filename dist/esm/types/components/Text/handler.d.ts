@@ -5,7 +5,7 @@ interface TextStyles {
 export interface TextData {
     content: string;
     tips?: string[];
-    answers?: string[];
+    answers?: any[];
     options?: string[];
 }
 export interface TextComponentProps {
@@ -14,5 +14,5 @@ export interface TextComponentProps {
     slide: LessonSlideInterface;
 }
 export declare const processTextStyles: () => void;
-export declare const processTextContent: (content: string) => any;
+export declare const formatTextContent: (content: string) => any;
 export {};

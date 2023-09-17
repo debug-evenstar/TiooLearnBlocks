@@ -80,11 +80,6 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
       }
     },[answeredList, answersList, slide]);
 
-    useEffect(()=>{
-      slide.setOptions(data.options);
-      slide.setAnswers(data.answers);
-      slide.setFeedbacks(data.feedbacks);
-    },[]);
 
     return (
         <>

@@ -7,14 +7,21 @@ import TextComponent from "../Text"
 import VideoComponent from "../Video";
 import WordMatchComponent from "../WordMatch";
 import { TextFieldsInterface } from "../extensions/TextFields";
+import { GlobalEventStorage, SlideEvents } from "./events";
+
+declare global {
+    interface Window {
+      SlideEventListener: any;
+    }
+}
 
 export interface LessonSlideInterface {
     options? : any[];
-    answers? : string[];
+    answers? : any[];
     feedbacks? : any[];
     status? : boolean;
     complete? : boolean;
-    textFields? : TextFieldsInterface[];
+    textFields? : any[];
     setAnswers : Function;
     setOptions : Function;
     setFeedbacks : Function;
@@ -25,10 +32,16 @@ export interface LessonSlideInterface {
     triggerFeedback : Function;
     updateProgress : Function;
     functions? : {[key : string] : Function};
+    attributes : {[key : string] : any};
     progress : number;
     video : any;
     setVideo : Function;
     resetData : Function;
+    on : Function;
+    dispatch : Function;
+    fillWithHint : Function;
+    verifySubjectiveAnswer : Function;
+    registerSlideData : Function;
 }
 
 class LessonSlide implements LessonSlideInterface{
@@ -38,12 +51,15 @@ class LessonSlide implements LessonSlideInterface{
     feedbacks? : any[];
     status? : boolean;
     complete? : boolean;
-    textFields? : TextFieldsInterface[];
+    textFields? : any[];
     functions? : {[key : string] : Function};
+    attributes: { [key: string]: any; } = {};
     progress : number = 0;
     video : any = null;
+    answered : any[] = [];
     SUCCESS_FEEDBACK : string = "success";
     FAILURE_FEEDBACK : string = "failure";
+    eventsStorage : any = GlobalEventStorage
 
     setOptions(options : string[]) {
         this.options =  options;
@@ -65,11 +81,64 @@ class LessonSlide implements LessonSlideInterface{
         this.video = video;
     }
 
-    addFields( textFieldInstance : TextFieldsInterface ) {
+    addFields( textFieldInstance : any ) {
         if( this.textFields ) {
             this.textFields.push(textFieldInstance);
         }else{
             this.textFields = [ textFieldInstance ]
+        }
+    }
+
+    fillWithHint() {
+        if( this.answers && this.textFields && this.progress < this.answers.length){
+            let answer : any = this.answers[this.progress];
+            // Check if text exists in field
+            const field = this.textFields[this.progress];
+            const fieldElement = document.getElementById(field.id) as HTMLInputElement;
+            const fieldValue = fieldElement.value;
+            const matchingAnswer = () => answer.filter((a : any) => a.includes(fieldValue));
+            answer = typeof answer !== "string" 
+                ? fieldValue === "" || !matchingAnswer().length ? answer[0] : matchingAnswer()[0]
+                : answer;
+            if( answer.substr(0,fieldValue.length) === fieldValue) {
+                const hint = answer.substr(fieldValue.length, 1);
+                fieldElement.value += hint;
+            }else{
+                const hint = answer.substr(0, 1);
+                fieldElement.value = hint;
+            }
+            formatTextColor(fieldElement, true);
+            if( fieldElement.value === answer) {
+                this.verifySubjectiveAnswer( field.index , fieldElement.value, answer);
+            }
+        }
+    }
+
+    verifySubjectiveAnswer( index : number, input: string , answer : string|string[]){
+        if( typeof answer == "string" && input.toLowerCase() === answer.toLowerCase()){
+            this.functions?.selectAnswer(index, answer);
+            this.updateProgress();
+            //Focus on next TextField
+            this.activateNextField();
+        }else if( typeof answer == "object"){
+            answer.forEach(ans => {
+                if (ans.toLowerCase() === input.toLowerCase()){
+                    this.functions?.selectAnswer(index, ans);
+                    this.updateProgress();
+                    //Focus on next TextField
+                    this.activateNextField();
+                }
+            });
+        }
+    }
+
+    activateNextField(){
+        if( this.textFields && this.progress < this.textFields.length ){
+            const nextField = this.textFields[this.progress];
+            const element = document.getElementById(nextField.id);
+            setTimeout(()=>{
+                element?.focus();
+            },200);
         }
     }
 
@@ -78,11 +147,12 @@ class LessonSlide implements LessonSlideInterface{
             this.selectOptionAnswer(index, value, callback);
             return;
         }
-        if ( this.answers ) {
+        if ( this.answers && !this.answered.includes(value)) {
             if( /*index > this.progress  ||*/ this.answers[index] !== value ) {
                 this.triggerFeedback(this.FAILURE_FEEDBACK, index);
             } else {
                 this.functions?.selectAnswer( this.progress, value );
+                this.answered.push(value);
                 this.triggerFeedback(this.SUCCESS_FEEDBACK, index);
                 this.progress++;
                 if(this.progress === this.answers.length) {
@@ -99,7 +169,7 @@ class LessonSlide implements LessonSlideInterface{
     }
 
     selectOptionAnswer( index : number, value : string, callback : Function ) {
-        if( this.answers ) {
+        if( this.answers && this.progress < this.answers.length ) {
             const answer = this.answers[this.progress];
             if( answer === value ) {
                 this.triggerFeedback(this.SUCCESS_FEEDBACK);
@@ -129,7 +199,9 @@ class LessonSlide implements LessonSlideInterface{
             if(this.progress === this.answers.length) {
                 this.complete = true;
                 this.functions?.allowProceed();
+                this.functions?.setHint(false)
             }
+            this.dispatch(SlideEvents.PROGRESS_UPDATE);
         }
     }
 
@@ -171,7 +243,15 @@ class LessonSlide implements LessonSlideInterface{
 
             this.functions?.triggerFeedback(feedbackMessage , feedbackType);
         }
+    }
 
+    registerSlideData(slide : any) {
+        this.resetData();
+        slide.forEach((component : any)=>{
+            this.answers = [ ...( this.answers ?? [] ), ...(component.answers ?? []) ];
+            this.options = [ ...(this.options ?? []), ...(component.options ?? [])];
+            this.feedbacks = [ ...(this.feedbacks ?? []), ...(component.feedbacks ?? [])];
+        });
     }
 
     resetData() {
@@ -181,25 +261,65 @@ class LessonSlide implements LessonSlideInterface{
         this.complete = false
         this.progress = 0;
         this.video = null;
+        this.textFields = [];
     }
     
     eventManager() {
         return {
             on: (eventName : string, callback : any) => {
-                window.addEventListener(eventName, (data : any)=>{
-                    callback(data.detail);
-                });
+                if( !window.SlideEventListener ) {
+                    window.SlideEventListener = window.addEventListener(eventName, (data : any)=>{
+                        this.eventsStorage.callEventFunctions(eventName, data);
+                    });
+                }
+                this.eventsStorage.addFunctionToStore(eventName, callback);
             },
-            action : (eventName : string, data : any) => {
+            trigger : (eventName : string, data : any) => {
                 const event = new CustomEvent(eventName, { detail : data});
                 window.dispatchEvent(event);
             }
         }
     }
 
-
+    on(eventName : string, callback : any){ return this.eventManager().on(eventName, callback) }
+    dispatch(eventName : string, data : any = {}){ this.eventManager().trigger(eventName, data) }
 
 }
+
+export const formatTextColor = (target : any, status : boolean) => {
+    if(status){
+      target.classList.remove("text-orange-500");
+      target.classList.add("text-green-500");
+    }else{
+      target.classList.remove("text-green-500");
+      target.classList.add("text-orange-500");
+    }
+  }
+
+export const youtubeInit = () => {
+
+    const pageContainsYoutubeScript = () =>{
+        const script = document.getElementById('youtube-iframe');
+        return script ? true : false;
+    }
+    
+    const insertYoutubeApiScript = () => {
+        var tag = document.createElement('script');
+        tag.id = 'youtube-iframe';
+        tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag : HTMLScriptElement = document.getElementsByTagName('script')[0];
+        if( firstScriptTag ) {
+            firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+        }else{
+            document.body.appendChild(tag);
+        }
+    }
+
+    if( !pageContainsYoutubeScript() ){
+        insertYoutubeApiScript();
+    }
+}
+
 
 export const LessonSlideScope = () => ( new LessonSlide() );
 

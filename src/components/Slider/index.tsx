@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import chevronRight from "../../img/chevron-right.svg";
 import chevronLeft from "../../img/chevron-left.svg";
-import { SliderComponentProps } from "./hander";
+import { SliderComponentProps } from "./handler";
 import { loadComponent } from "../SlideManager/handler";
 
 const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {

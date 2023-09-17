@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { TextComponentProps, processTextContent } from "./handler";
+import { TextComponentProps, formatTextContent } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
 import { TextFields } from "../extensions/TextFields";
 
@@ -10,39 +10,81 @@ const TextComponent: FC<TextComponentProps> = ({
   altHeaderStyle,
 }) => {
 
-  const [processed , setProcessed] = useState<any[]>(
-    processTextContent(data.content)
-  );
+  const [processed , setProcessed] = useState<any[]>([]);
+
+  const [formatted, setFormatted] = useState<any[]>([]);
+
   const textContainerRef = useRef<any>(null);
-
-  // Handle tips
-  if(data.tips){
-    ToolTips( ToolTipTypes.TEXT, processed, data.tips );
-  }
-
-  // Handle TextFields
-  if(processed.includes("<?>") ){
-    var textFields : any = TextFields(processed);
-    slide.addFields(textFields);
-    slide.setFunction("selectAnswer", ( index : number, value : string )=>{
-      const updateProcessed = textFields.fieldReplacementFill(index, value, processed);
-      setProcessed(() => updateProcessed);
-    });
-
-  }
 
   const hideText = () => {
     textContainerRef.current.style.display = "none";
   }
 
-
+  // Needs to be refactored later // No time right now // 
+  const answerBelongsToPrevious = (answer : string) => {
+    if( data.answers ){ 
+      for (let i = 0; i < data.answers.length; i++) {
+        const ans = data.answers[i];
+        if ( typeof ans == "string" ){
+          if(answer.toLowerCase() === ans.toLowerCase()){
+            return false;
+          }
+        }else{
+          // If answer is list of answers
+          for (let j = 0; j < ans.length; j++) {
+            const item = ans[j];
+            if(item.toLowerCase() === answer.toLowerCase()){
+              return false;
+            }
+          }
+        }
+      }
+    }else{
+      // Yet to be handled for option based
+      return false;
+    }
+    return true;
+  }
 
   useEffect(()=>{
-    setProcessed(
-      processTextContent(data.content)
+    // Handle initial text formatting
+    setFormatted(
+      formatTextContent(data.content)
     )
     slide.setFunction("hideText", hideText)
+
   },[data]);
+
+  useEffect(()=>{
+    let processText : any[] = formatted;
+    // Handle tips
+    if(data.tips){
+      processText = ToolTips( ToolTipTypes.TEXT, processText, data.tips ).data;
+    }
+
+    // Handle TextFields
+    if(formatted.includes("<?>") ){
+      var textFields : any = TextFields(processText, slide, (data.answers ?? []));
+      processText = textFields.data;
+      const selectAnswer : any = slide.functions?.selectAnswer;
+      // Function to select answer and fill field
+      slide.setFunction("selectAnswer", ( index : number, value : string )=>{
+        if( selectAnswer && answerBelongsToPrevious( value ) ){
+          selectAnswer(index, value);
+          return;
+        }
+        const updateProcessed = textFields.fieldReplacementFill(index, value, processText);
+        setProcessed(() => updateProcessed);
+      });
+    }
+    setProcessed(() => processText);
+    if( data.answers ) {
+      slide.attributes["hasSubjective"] = true;
+      if (slide.functions && slide.functions.setHint){
+        slide.functions?.setHint(true);
+      }
+    }
+  },[formatted]);
 
   return <>
     <div className="text-center text-font" ref={textContainerRef}>

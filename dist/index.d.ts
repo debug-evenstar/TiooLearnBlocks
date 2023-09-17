@@ -1,22 +1,17 @@
-/// <reference types="react" />
-import React$1, { FC } from 'react';
+import React, { FC } from 'react';
 
-interface TextFieldsInterface {
-    data: (string | React.ReactElement)[];
-    fieldIds: string[];
-    fieldData: {
-        [key: string]: string;
-    };
-    fieldReplacementFill: Function;
+declare global {
+    interface Window {
+        SlideEventListener: any;
+    }
 }
-
 interface LessonSlideInterface {
     options?: any[];
-    answers?: string[];
+    answers?: any[];
     feedbacks?: any[];
     status?: boolean;
     complete?: boolean;
-    textFields?: TextFieldsInterface[];
+    textFields?: any[];
     setAnswers: Function;
     setOptions: Function;
     setFeedbacks: Function;
@@ -29,10 +24,18 @@ interface LessonSlideInterface {
     functions?: {
         [key: string]: Function;
     };
+    attributes: {
+        [key: string]: any;
+    };
     progress: number;
     video: any;
     setVideo: Function;
     resetData: Function;
+    on: Function;
+    dispatch: Function;
+    fillWithHint: Function;
+    verifySubjectiveAnswer: Function;
+    registerSlideData: Function;
 }
 
 interface TextStyles {
@@ -41,7 +44,7 @@ interface TextStyles {
 interface TextData {
     content: string;
     tips?: string[];
-    answers?: string[];
+    answers?: any[];
     options?: string[];
 }
 interface TextComponentProps {
@@ -125,23 +128,28 @@ declare const ButtonGroupComponent: FC<ButtonGroupProps>;
 
 interface ButtonProps {
     title: string | JSX.Element;
-    onClick?: React$1.MouseEventHandler<HTMLButtonElement> | undefined;
+    onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
     disabled?: boolean;
     index: number;
     status?: string;
 }
-declare const ButtonComponent: React$1.FC<ButtonProps>;
+declare const ButtonComponent: React.FC<ButtonProps>;
 
 declare const FlashCardsComponent: FC<FlashCardComponentProps>;
 
 declare const ImageComponent: FC<ImageComponentProps>;
 
-declare const OptionsComponent: React$1.FC<OptionsComponentProps>;
+declare const OptionsComponent: React.FC<OptionsComponentProps>;
 
 declare const SliderComponent: FC<SliderComponentProps>;
 
 declare const TextComponent: FC<TextComponentProps>;
 
+declare global {
+    interface Window {
+        YT: any;
+    }
+}
 declare const VideoComponent: FC<VideoComponentProps>;
 
 declare const WordMatchComponent: FC<WordMatchComponentProps>;

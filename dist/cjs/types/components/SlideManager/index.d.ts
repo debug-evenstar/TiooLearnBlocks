@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { TextData } from "../Text/handler";
 import { ButtonGroupData } from "../ButtonGroup/handler";
-import { SliderData } from "../Slider/hander";
+import { SliderData } from "../Slider/handler";
 import { ImageData } from "../Image/handler";
 import { FlashCardData } from "../FlashCards/handler";
 import { VideoData } from "../Video/handler";
