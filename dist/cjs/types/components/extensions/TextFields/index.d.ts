@@ -10,6 +10,7 @@ export interface TextFieldsInterface {
     slide: LessonSlideInterface;
     setFieldValue: Function;
     answers: any[];
+    options: any[];
     simulateAnswerWidth: Function;
     inputAnswerMatch: Function;
     slideScopeIndex: Function;
@@ -22,7 +23,8 @@ declare class TextFieldsHandler implements TextFieldsInterface {
     };
     slide: LessonSlideInterface;
     answers: any[];
-    constructor(data: any, slide: LessonSlideInterface, answers?: any[]);
+    options: any[];
+    constructor(data: any, slide: LessonSlideInterface, answers?: any[], options?: any[]);
     getIdentifier(): string;
     generateToolTip(content: string): void;
     setFieldValue(id: string, value: string): void;
@@ -35,7 +37,7 @@ declare class TextFieldsHandler implements TextFieldsInterface {
     processTextFields(): (string | import("react").ReactElement<any, string | import("react").JSXElementConstructor<any>>)[];
     simulateAnswerWidth(answer: string | string[]): number;
     inputAnswerMatch(input: string, answer: string | string[]): boolean;
-    slideScopeIndex(answer: string | string[]): number | undefined;
+    slideScopeIndex(id: string, answer: string | string[]): number;
 }
-export declare const TextFields: (data: any, slide: LessonSlideInterface, answers: any[]) => TextFieldsHandler;
+export declare const TextFields: (data: any, slide: LessonSlideInterface, answers: any[], options: any[]) => TextFieldsHandler;
 export {};

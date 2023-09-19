@@ -1,4 +1,9 @@
 import React, { FC } from 'react';
+import { ImageData as ImageData$1 } from 'components/Image/handler';
+import { OptionData as OptionData$1 } from 'components/Options/handler';
+import { VideoData as VideoData$1 } from 'components/Video/handler';
+import { FlashCardData as FlashCardData$1 } from 'components/FlashCards/handler';
+import { WordMatchData as WordMatchData$1 } from 'components/WordMatch/handler';
 
 declare global {
     interface Window {
@@ -42,10 +47,11 @@ interface TextStyles {
     color?: string;
 }
 interface TextData {
+    component: string;
     content: string;
     tips?: string[];
     answers?: any[];
-    options?: string[];
+    options?: string[][];
 }
 interface TextComponentProps {
     styles?: TextStyles;
@@ -60,7 +66,7 @@ interface ButtonGroupData {
 }
 
 interface SliderData {
-    slides: (TextData)[];
+    slides: (TextData | ImageData$1 | OptionData$1 | VideoData$1 | FlashCardData$1 | WordMatchData$1)[];
 }
 interface SliderComponentProps {
     data: SliderData;
@@ -68,6 +74,7 @@ interface SliderComponentProps {
 }
 
 interface ImageData {
+    component: string;
     url: string;
 }
 interface ImageComponentProps {
@@ -76,6 +83,7 @@ interface ImageComponentProps {
 }
 
 interface FlashCardData {
+    component: string;
     cards: any[];
 }
 interface FlashCardComponentProps {
@@ -84,6 +92,7 @@ interface FlashCardComponentProps {
 }
 
 interface VideoData {
+    component: string;
     url: string;
 }
 interface VideoComponentProps {
@@ -92,6 +101,7 @@ interface VideoComponentProps {
 }
 
 interface WordMatchData {
+    component: string;
     answers: string[];
     options: string[];
     feedbacks: any[];
@@ -102,6 +112,7 @@ interface WordMatchComponentProps {
 }
 
 interface OptionData {
+    component: string;
     options: string[];
     answers: string[];
 }
