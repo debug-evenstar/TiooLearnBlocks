@@ -5,15 +5,22 @@ import LeftSidebar from "../components/LeftSidebar";
 
 interface MainLayoutProps {
   children: React.ReactElement;
+  slides: any
+  changeTo: (index:number) => void
+  active: number
+  showComp: boolean
+  back: () => void
+  lessonlist: any
+  name: string
 }
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, slides, changeTo, active, showComp, back, lessonlist, name }) => {
   return (
     <div className="h-screen w-full top-0 overflow-hidden relative">
-      <Header />
+      <Header activeSlide={active} back={back} name={name}/>
       <div className="w-full h-full flex">
-        <LeftSidebar />
-        <div className="w-full">{children}</div>
-        <RightSidebar />
+        <LeftSidebar slides={slides} changeTo={changeTo}/>
+        <div className="w-full overflow-y-auto">{children}</div>
+        <RightSidebar lessonlist={lessonlist} slides={slides} data={''} showComp={showComp} activeSlide={active}/>
       </div>
     </div>
   );
