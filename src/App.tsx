@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, } from "react-router-dom";
 import axios from "axios";
 
-import Editorial from "./pages/editorial";
+// import Editorial from "./pages/editorial";
 import RenderComponent from "./pages/renderComp";
+import { Editorial } from "components";
 
 function App() {
   // const datas = {
@@ -87,6 +88,8 @@ function App() {
   // const handleBack = () => {
   //   // navigate('/')
   // }
+  // console.log(date);
+  
   return (
     <BrowserRouter>
       <Routes>
