@@ -11,7 +11,7 @@ interface TextFieldProps {
 
 const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true, answer}) => {
   const [slideScopeIndex, setSlideScopeIndex] = useState<number>(
-    manager?.slideScopeIndex(answer)
+    manager?.slideScopeIndex(id, answer)
   );
 
   const [inputIsDisabled, setInputIsDisabled] = useState<boolean>(!allowInput);
@@ -40,7 +40,7 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
       setInputIsDisabled(() => (
         allowInput 
           ? manager?.slide.progress !== slideScopeIndex
-          : false
+          : true
       ));
     }
   }

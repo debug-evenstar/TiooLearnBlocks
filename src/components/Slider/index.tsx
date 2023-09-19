@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import chevronRight from "../../img/chevron-right.svg";
 import chevronLeft from "../../img/chevron-left.svg";
-import { SliderComponentProps } from "./handler";
+import { SliderComponentProps, sliderComponentStyles } from "./handler";
 import { loadComponent } from "../SlideManager/handler";
 
 const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
@@ -13,10 +13,20 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
       activeSectionIndex + direction >= 0 &&
       activeSectionIndex + direction < data.slides.length
     ) {
-      setActiveSection(() => data.slides[activeSectionIndex + direction]);
+      const nextActive = data.slides[activeSectionIndex + direction];
+      setActiveSection(() => nextActive);
       setActiveSectionIndex(() => activeSectionIndex + direction);
+      if(!("answers" in nextActive) || "options" in nextActive){
+        slide.functions?.setHint(false);
+      }
     }
   };
+
+  const manualTransition = (direction : number) => {
+    if(!slide.answers || slide.answers.length === 0 || !activeSection.answers){
+      moveSlide(direction);
+    }
+  }
 
   slide.setFunction('moveSlide', moveSlide);
 
@@ -25,30 +35,51 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
     return <Component data={component} slide={slide} />;
   }
 
+  const generateButtons = () => {
+    return {
+      component : "ButtonGroup",
+      options : activeSection.options ?? [],
+      answers : activeSection.answers ?? [],
+      feedbacks : activeSection.feedbacks ?? []
+    }
+  }
+
   return (
     <>
-      <div className="w-full flex flex-row justify-center">
-        <div className="w-9/12 py-6 flex flex-row justify-between items-center">
+      <div className="w-full flex flex-col items-center">
+        <div className="w-10/12 py-4 flex flex-row justify-between items-center">
           <img
             src={chevronRight}
-            onClick={() => {}}
+            onClick={() => {manualTransition(-1)}}
             alt="images"
             className={`cursor-pointer h-[40px] ${
               data.slides.indexOf(activeSection) === 0 ? "hidden" : ""
             }`}
           />
-          <div className="py-8 px-4 mx-[40px] bg-[#F6ECEC] text-black grow rounded-lg">
+          <div className={sliderComponentStyles[data.slides[activeSectionIndex].component]}>
             {componentLoader(data.slides[activeSectionIndex])}
           </div>
           <img
             alt="images"
-            onClick={() => {}}
+            onClick={() => {manualTransition(1)}}
             src={chevronLeft}
             className={`cursor-pointer h-[40px] ${
               data.slides.indexOf(activeSection) === data.slides.length - 1 ? "hidden" : ""
             }`}
           />
         </div>
+        <div className="w-full flex flex-row justify-center">
+          {data.slides.map((slide, index) => (
+            <span className={`h-[10px] mx-[2px] border-[1px] border-white aspect-square block rounded-[10px] 
+            ${index === activeSectionIndex ? 'bg-white' : ''}`}
+            ></span>
+          ))}
+        </div>
+        {activeSection.options && (
+          <div className="w-full flex justify-center">
+            {componentLoader(generateButtons())}
+          </div>
+        )}
       </div>
     </>
   );

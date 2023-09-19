@@ -122,6 +122,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     SlideScope.setFunction('navigateSlide', navigateSlide);
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
     SlideScope.setFunction('setHint', (val:boolean) => setHintIsActive(val));
+    SlideScope.registerSlideData(activeSlide);
     preloadImages(lessonSlides);
   },[]);
 

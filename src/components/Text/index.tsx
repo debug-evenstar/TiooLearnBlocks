@@ -63,7 +63,7 @@ const TextComponent: FC<TextComponentProps> = ({
 
     // Handle TextFields
     if(formatted.includes("<?>") ){
-      var textFields : any = TextFields(processText, slide, (data.answers ?? []));
+      var textFields : any = TextFields(processText, slide, (data.answers ?? []), (data.options ?? []));
       processText = textFields.data;
       const selectAnswer : any = slide.functions?.selectAnswer;
       // Function to select answer and fill field
@@ -77,7 +77,7 @@ const TextComponent: FC<TextComponentProps> = ({
       });
     }
     setProcessed(() => processText);
-    if( data.answers ) {
+    if( data.answers && !data.options) {
       slide.attributes["hasSubjective"] = true;
       if (slide.functions && slide.functions.setHint){
         slide.functions?.setHint(true);

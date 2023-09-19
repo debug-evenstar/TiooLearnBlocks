@@ -11,6 +11,7 @@ export interface TextFieldsInterface {
     slide : LessonSlideInterface;
     setFieldValue : Function;
     answers : any[];
+    options : any[];
     simulateAnswerWidth : Function;
     inputAnswerMatch : Function;
     slideScopeIndex : Function;
@@ -23,13 +24,15 @@ class TextFieldsHandler implements TextFieldsInterface{
     fieldData : {[key: string]: any};
     slide : LessonSlideInterface;
     answers : any[];
+    options: any[];
 
-    constructor(data : any, slide : LessonSlideInterface, answers : any[] = []){
+    constructor(data : any, slide : LessonSlideInterface, answers : any[] = [], options : any[] = []){
         this.data = data;
         this.fieldIds = [];
         this.fieldData = {}
         this.slide = slide;
         this.answers = answers;
+        this.options = options;
         this.processTextFields();
     }
 
@@ -72,7 +75,7 @@ class TextFieldsHandler implements TextFieldsInterface{
         let answer : (number|null) = answerIndex !== -1
             ? this.answers[answerIndex]
             : null;
-
+        let options = this.options && this.options.length ? true : false;
         return {
             id : id,
             index : answerIndex,
@@ -80,7 +83,7 @@ class TextFieldsHandler implements TextFieldsInterface{
                 <TextFieldComponent 
                     id={id}
                     manager={this}
-                    allowInput={!!answer}
+                    allowInput={!!answer && !options}
                     answer={answer}
                 />
             )
@@ -147,9 +150,19 @@ class TextFieldsHandler implements TextFieldsInterface{
     }
 
     // Use field answers to determine slide scope index
-    slideScopeIndex( answer : string|string[] ){
-        const slideAnswers = this.slide.answers;
-        const index = slideAnswers?.indexOf(answer);
+    slideScopeIndex( id : string, answer : string|string[] ){
+        const slideFields = this.slide.textFields;
+        let index = 0;
+        if(slideFields){
+            for (let i = 0; i < slideFields.length; i++) {
+                const field = slideFields[i];
+                if(field.id === id) {
+                    return index;
+                }else{
+                    index++
+                }
+            }
+        }
         return index;
     }
 }
@@ -157,5 +170,6 @@ class TextFieldsHandler implements TextFieldsInterface{
 export const TextFields = (
     data : any,
     slide : LessonSlideInterface,
-    answers : any[]
-) => ( new TextFieldsHandler(data, slide, answers) );
+    answers : any[],
+    options : any[]
+) => ( new TextFieldsHandler(data, slide, answers, options) );

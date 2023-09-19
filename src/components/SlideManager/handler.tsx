@@ -120,6 +120,7 @@ class LessonSlide implements LessonSlideInterface{
             this.updateProgress();
             //Focus on next TextField
             this.activateNextField();
+            this.callComponentFunctions(answer);
         }else if( typeof answer == "object"){
             answer.forEach(ans => {
                 if (ans.toLowerCase() === input.toLowerCase()){
@@ -127,6 +128,7 @@ class LessonSlide implements LessonSlideInterface{
                     this.updateProgress();
                     //Focus on next TextField
                     this.activateNextField();
+                    this.callComponentFunctions(ans);
                 }
             });
         }
@@ -248,9 +250,24 @@ class LessonSlide implements LessonSlideInterface{
     registerSlideData(slide : any) {
         this.resetData();
         slide.forEach((component : any)=>{
-            this.answers = [ ...( this.answers ?? [] ), ...(component.answers ?? []) ];
-            this.options = [ ...(this.options ?? []), ...(component.options ?? [])];
-            this.feedbacks = [ ...(this.feedbacks ?? []), ...(component.feedbacks ?? [])];
+            const childrenSlides = (key: string) => component.slides 
+                ? component.slides.map((s:any)=> s[key] ?? [])
+                : [];
+            this.answers = [ 
+                ...( this.answers ?? [] ), 
+                ...(component.answers ?? []), 
+                ...([].concat(...childrenSlides("answers")))
+            ];
+            this.options = [ 
+                ...(this.options ?? []), 
+                ...(component.options ?? []),
+                ...([].concat(...childrenSlides("options")))
+            ];
+            this.feedbacks = [ 
+                ...(this.feedbacks ?? []), 
+                ...(component.feedbacks ?? []),
+                ...([].concat(...childrenSlides("feedbacks")))
+            ];
         });
     }
 

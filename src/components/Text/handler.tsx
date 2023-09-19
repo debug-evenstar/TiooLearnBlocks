@@ -12,7 +12,7 @@ export interface TextData {
     content : string;
     tips? :  string[];
     answers? : any[];
-    options? : string[];
+    options? : string[][];
 }
 
 export interface TextComponentProps {
