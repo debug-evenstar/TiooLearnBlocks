@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import chevronRight from "../../img/chevron-right.svg";
 import chevronLeft from "../../img/chevron-left.svg";
 import { SliderComponentProps, sliderComponentStyles } from "./handler";
@@ -7,6 +7,7 @@ import { loadComponent } from "../SlideManager/handler";
 const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
   const [activeSection, setActiveSection] = useState<any>(data.slides[0]);
   const [activeSectionIndex, setActiveSectionIndex] = useState<number>(0);
+  const [buttonGroupComponent, setButtonGroupComponent] = useState<any>();
 
   const moveSlide = (direction: number) => {
     if (
@@ -35,14 +36,14 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
     return <Component data={component} slide={slide} />;
   }
 
-  const generateButtons = () => {
-    return {
+  useEffect(() => {
+    setButtonGroupComponent(() => ({
       component : "ButtonGroup",
       options : activeSection.options ?? [],
       answers : activeSection.answers ?? [],
       feedbacks : activeSection.feedbacks ?? []
-    }
-  }
+    }));
+  },[activeSection]);
 
   return (
     <>
@@ -75,9 +76,9 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
             ></span>
           ))}
         </div>
-        {activeSection.options && (
+        {activeSection.options && buttonGroupComponent && (
           <div className="w-full flex justify-center">
-            {componentLoader(generateButtons())}
+            {componentLoader(buttonGroupComponent)}
           </div>
         )}
       </div>

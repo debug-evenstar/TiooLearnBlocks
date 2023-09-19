@@ -28,7 +28,7 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
   };
 
   const setInitialInputWidth = () => {
-    if ( id && answer ) {
+    if ( id && answer && allowInput ) {
       const element : any =  document.getElementById(id);
       const width = manager?.simulateAnswerWidth(answer);
       element.style.width = `${width}px`;

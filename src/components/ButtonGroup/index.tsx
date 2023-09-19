@@ -26,7 +26,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
             nextButtonGroup();
           },600)
         }else{
-          if( slide.progress < data.answers.length){
+          if(slide.answers && slide.progress < slide.answers.length){
             setButtonStatus(index, "failure");
             setTimeout(()=>{
               setButtonStatus(index, "default");
@@ -87,7 +87,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
 
   useEffect(()=>{
     initStatuses();
-  },[])
+  },[data])
 
   useEffect(()=>{
     if (data.options && data.options.length > 0) {
