@@ -8,6 +8,7 @@ interface TextStyles {
 }
 
 export interface TextData {
+    component : string;
     content : string;
     tips? :  string[];
     answers? : any[];

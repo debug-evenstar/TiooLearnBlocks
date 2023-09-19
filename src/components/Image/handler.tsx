@@ -5,6 +5,7 @@ export interface TextStyles {
 }
 
 export interface ImageData {
+    component : string;
     url : string
 }
 export interface ImageComponentProps {

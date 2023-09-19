@@ -1,6 +1,7 @@
 import { LessonSlideInterface } from "../SlideManager/handler";
 
 export interface FlashCardData {
+    component : string;
     cards : any[];
 }
 export interface FlashCardComponentProps {
