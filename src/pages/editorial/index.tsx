@@ -100,4 +100,7 @@ const  Editorial:FC<Props> = ({data, lessons, changeFile, back, lessonlist, name
   );
 }
 
-export default Editorial;
+export  default Editorial;
+// export {default as MainEditorial} from '../../layouts/MainLayout'
+// export {default as SlideView} from "components/editorailComps/slideView"
+// export {default as ActiveSlide} from "components/editorailComps/activeEditSlide"
