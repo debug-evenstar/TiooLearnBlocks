@@ -15,13 +15,14 @@ interface Props {
   slides: any;
   data: any;
   showEdit: () => void;
+  changeFile: (file:any, payload:any, id:any) => void
 }
-const ActiveEditSlide: FC<Props> = ({ active, slides, data, showEdit }) => {
+const ActiveEditSlide: FC<Props> = ({ active, slides, data, showEdit, changeFile }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   const [activeSlide, setActiveSlide] = useState<any[]>();
   const [slideId, setSlideId] = useState("");
   const [delFile, setDelFile] = useState(false);
-  const [seletedImage, setSelectedImage] = useState();
+  const [seletedImage, setSelectedImage] = useState<any>();
   const [previewImage, setPreviewImage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [previewSlide, setPreviewSlide] = useState(false);
@@ -125,21 +126,10 @@ const ActiveEditSlide: FC<Props> = ({ active, slides, data, showEdit }) => {
     }
   };
   const editFile = () => {
-    const fd = new FormData();
-    fd.append("image", previewImage);
-    const config = {
-        method: "PUT", // *GET, POST, PUT, DELETE, etc.
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: fd
-      }
-    fetch(`https://api.hellotioo.com/lesson/templateimage/${active}`, config)
-      .then((res: any) => {
-        if (res.error) {
-          console.log(res);
-        } else console.log(res);
-      });
+    const payload = [
+      ...activeSlid
+    ]
+    changeFile(seletedImage, payload, slideId)
   }
   return (
     <div>
@@ -160,7 +150,8 @@ const ActiveEditSlide: FC<Props> = ({ active, slides, data, showEdit }) => {
           </div>
           <div className="mt-12 relative p-6 py-12 dasheds">
             <div className="flex absolute top-5 right-10 gap-x-4">
-              <div className="w-6 relative overflow-hidden !cursor-pointer">
+              {
+                delFile && <div className="w-6 relative overflow-hidden !cursor-pointer">
                 <FiUploadCloud className="text-2xl cursor-pointer" />
                 {checkFile("Video") && (
                   <input
@@ -179,6 +170,7 @@ const ActiveEditSlide: FC<Props> = ({ active, slides, data, showEdit }) => {
                   />
                 )}
               </div>
+              }
               <BiCrop className="text-2xl cursor-pointer" />
               <RiDeleteBin5Line
                 className="text-2xl cursor-pointer"
@@ -214,7 +206,7 @@ const ActiveEditSlide: FC<Props> = ({ active, slides, data, showEdit }) => {
       </div>
       <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">
         <div className="w-full h-[50px] flex items-center justify-between">
-          <div className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold">
+          <div className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold" onClick={editFile}>
             Save
           </div>
           <div
