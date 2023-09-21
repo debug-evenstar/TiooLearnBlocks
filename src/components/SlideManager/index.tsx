@@ -16,10 +16,11 @@ interface SlideManagerProps {
   updateActiveSlide : Function;
   ref: any;
   altHeaderStyle?: string
+  parent? : any;
 }
 
-const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback, updateActiveSlide, altHeaderStyle}, ref) => {
-  const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
+const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback, updateActiveSlide, altHeaderStyle, parent}, ref) => {
+  const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope(parent));
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
   const [hintIsActive, setHintIsActive] = useState<boolean>(false);
@@ -46,11 +47,11 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     SlideScope.registerSlideData(nextSlide);
     if( checkSlideCanProceed(nextSlide) ) {
       setTimeout(()=>{
-        canProceed(true);
+        canProceed(true, 0);
       },1500)
     }else {
       setTimeout(()=>{
-        canProceed(false);
+        canProceed(false, 0);
       },500)
     }
     setHintIsActive(false);
@@ -59,7 +60,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
   const checkSlideCanProceed = (slide : any, strict : boolean = false) => {
     let activate = true;
-    const blockProceed = ["ButtonGroup", "FlashCards","WordMatch","Slider","Video","Options"];
+    const blockProceed = ["ButtonGroup", "FlashCards","Slider","WordMatch","Video","Options"];
     for (let i = 0; i < slide.length; i++) {
       const data = slide[i];
       if(data && blockProceed.includes(data.component)){     
@@ -75,7 +76,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
           }
         }
       }
-
       if(data && data.component === "Text" && data.answers && SlideScope.answers){
         activate = (SlideScope.progress === SlideScope.answers.length);
       }
@@ -96,26 +96,33 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     }
   }));
 
-  const proceed = (slide : any) => {
+  const proceed = (slide : any, state : number = 1) => {
     if ( checkSlideCanProceed(slide , true) ){
-      canProceed(true);
+      canProceed(true, state);
     } else {
-      canProceed(false);
+      canProceed(false, state);
     }
   }
 
   const preloadImages = (slides : any[]) => {
-    slides.forEach((slide) => {
-      slide.forEach((componentData : any) => {
+    for (let i = 0; i < slides.length; i++) {
+      const slide : any= slides[i];
+      for (let j = 0; j < slide.length; j++) {
+        const componentData = slide[j];
         if(componentData.component === "Image"){
           (new Image()).src = componentData.url;
         }
-      })
-    });
+        if(componentData.component === "Slider"){
+          preloadImages(componentData.slides);
+        }
+      }
+    }
   }
 
   useEffect(()=>{
     SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
+    SlideScope.setFunction('canProceed', canProceed);
+    proceed(activeSlide, 0);
   },[ activeSlide ])
 
   // Core effects

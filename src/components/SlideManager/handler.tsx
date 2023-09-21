@@ -6,7 +6,6 @@ import SliderComponent from "../Slider";
 import TextComponent from "../Text"
 import VideoComponent from "../Video";
 import WordMatchComponent from "../WordMatch";
-import { TextFieldsInterface } from "../extensions/TextFields";
 import { GlobalEventStorage, SlideEvents } from "./events";
 
 declare global {
@@ -21,6 +20,7 @@ export interface LessonSlideInterface {
     feedbacks? : any[];
     status? : boolean;
     complete? : boolean;
+    parent : any;
     textFields? : any[];
     setAnswers : Function;
     setOptions : Function;
@@ -60,6 +60,11 @@ class LessonSlide implements LessonSlideInterface{
     SUCCESS_FEEDBACK : string = "success";
     FAILURE_FEEDBACK : string = "failure";
     eventsStorage : any = GlobalEventStorage
+    parent: any;
+
+    constructor(parent : any = null){
+        this.parent = parent;
+    }
 
     setOptions(options : string[]) {
         this.options =  options;
@@ -250,25 +255,22 @@ class LessonSlide implements LessonSlideInterface{
     registerSlideData(slide : any) {
         this.resetData();
         slide.forEach((component : any)=>{
-            const childrenSlides = (key: string) => component.slides 
-                ? component.slides.map((s:any)=> s[key] ?? [])
-                : [];
             this.answers = [ 
                 ...( this.answers ?? [] ), 
                 ...(component.answers ?? []), 
-                ...([].concat(...childrenSlides("answers")))
             ];
             this.options = [ 
                 ...(this.options ?? []), 
                 ...(component.options ?? []),
-                ...([].concat(...childrenSlides("options")))
             ];
             this.feedbacks = [ 
                 ...(this.feedbacks ?? []), 
                 ...(component.feedbacks ?? []),
-                ...([].concat(...childrenSlides("feedbacks")))
             ];
         });
+        if (this.parent) {
+            // Can be improved later
+        }
     }
 
     resetData() {
@@ -338,7 +340,7 @@ export const youtubeInit = () => {
 }
 
 
-export const LessonSlideScope = () => ( new LessonSlide() );
+export const LessonSlideScope = (parent : any) => ( new LessonSlide(parent) );
 
 
 const keyToComponentMapper : {[key : string] : any} = {
