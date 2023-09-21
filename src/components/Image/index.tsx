@@ -3,12 +3,17 @@ import { ImageComponentProps } from "./handler";
 
 const ImageComponent: FC<ImageComponentProps> = ({ data, slide }) => {
     const [previewImage, setPreviewImage] = useState<boolean>(false);
+    
     return (
         <>
             <img
                 src={data.url}
                 alt="images"
-                className="w-[320px] mx-auto rounded-lg cursor-pointer"
+                className={
+                    slide.parent 
+                        ? "w-[350px] mx-auto rounded-lg cursor-pointer"
+                        : "w-[320px] mx-auto rounded-lg cursor-pointer"
+                }
                 onClick={() => setPreviewImage(!previewImage)}
             />
             {previewImage && (

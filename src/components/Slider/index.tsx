@@ -1,86 +1,105 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import chevronRight from "../../img/chevron-right.svg";
 import chevronLeft from "../../img/chevron-left.svg";
 import { SliderComponentProps, sliderComponentStyles } from "./handler";
-import { loadComponent } from "../SlideManager/handler";
+import SlideManager from "components/SlideManager";
 
 const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
-  const [activeSection, setActiveSection] = useState<any>(data.slides[0]);
-  const [activeSectionIndex, setActiveSectionIndex] = useState<number>(0);
-  const [buttonGroupComponent, setButtonGroupComponent] = useState<any>();
+  const sliderRef = useRef<any>();
+  const [activeSlide, setActiveSlide] = useState<number>(0);
+  const [canProceed, setCanProceed] = useState<boolean>(true);
 
-  const moveSlide = (direction: number) => {
-    if (
-      activeSectionIndex + direction >= 0 &&
-      activeSectionIndex + direction < data.slides.length
-    ) {
-      const nextActive = data.slides[activeSectionIndex + direction];
-      setActiveSection(() => nextActive);
-      setActiveSectionIndex(() => activeSectionIndex + direction);
-      if(!("answers" in nextActive) || "options" in nextActive){
-        slide.functions?.setHint(false);
+  const handleContinue = () => {
+      const currentSlideIndex = sliderRef?.current?.activeSlideIndex();
+      if( currentSlideIndex === (data.slides.length - 1) ) {
+        // Last slide
+        if(slide && slide.functions){
+          slide.functions.canProceed(true);
+        }
+      } else {
+        if(canProceed){
+          sliderRef?.current?.navigator(1);
+          //setCanProceed(false);
+          // Disable feedbacks
+        }
+      }
+  };
+
+  const handlePrevious = () => {
+      sliderRef?.current?.navigator(-1);
+      // Disable feedbacks
+  };
+
+  const proceed = (val: boolean, state : number) => {
+    setCanProceed(() => val);
+    if(val){
+      if(state === 1){
+        handleContinue();
       }
     }
   };
 
-  const manualTransition = (direction : number) => {
-    if(!slide.answers || slide.answers.length === 0 || !activeSection.answers){
-      moveSlide(direction);
-    }
-  }
+  //Register slide data to parent slide
+  useEffect(()=>{
+    // let answers : any[] = [];
+    // let options : any[] = [];
+    // let feedbacks : any[] = [];
+    // data.slides.forEach((slide)=>{
+    //   slide.forEach((component : any)=>{
+    //     answers = component.answers && component.answers.length 
+    //       ? [...answers, ...component.answers]
+    //       : answers
+    //     options = component.options && component.options.length 
+    //     ? [...options, ...component.options]
+    //     : options
+    //     feedbacks = component.feedbacks && component.feedbacks.length 
+    //     ? [...feedbacks, ...component.feedbacks]
+    //     : feedbacks
+    //   });
+    // })
+    // slide.setAnswers([...(slide.answers ?? []), ...answers]);
+    // slide.setOptions([...(slide.options ?? []), ...options]);
+    // slide.setFeedbacks([...(slide.feedbacks ?? []), ...feedbacks]);
+  },[])
 
-  slide.setFunction('moveSlide', moveSlide);
-
-  const componentLoader = (component : any) => {
-    const Component = loadComponent(component);
-    return <Component data={component} slide={slide} />;
-  }
-
-  useEffect(() => {
-    setButtonGroupComponent(() => ({
-      component : "ButtonGroup",
-      options : activeSection.options ?? [],
-      answers : activeSection.answers ?? [],
-      feedbacks : activeSection.feedbacks ?? []
-    }));
-  },[activeSection]);
 
   return (
     <>
-      <div className="w-full flex flex-col items-center">
-        <div className="w-10/12 py-4 flex flex-row justify-between items-center">
+      <div className="w-full py-4 flex flex-row justify-between items-center">
           <img
             src={chevronRight}
-            onClick={() => {manualTransition(-1)}}
+            onClick={() => {handlePrevious()}}
             alt="images"
-            className={`cursor-pointer h-[40px] ${
-              data.slides.indexOf(activeSection) === 0 ? "hidden" : ""
+            className={`h-[40px] ${
+              activeSlide === 0 ? "opacity-0" : "cursor-pointer"
             }`}
           />
-          <div className={sliderComponentStyles[data.slides[activeSectionIndex].component]}>
-            {componentLoader(data.slides[activeSectionIndex])}
-          </div>
+          <SlideManager
+            lessonSlides={data.slides}
+            canProceed={(val: boolean, state : number) => proceed(val, state)}
+            handleFeedback={(text: string, type: string)=>{
+              slide.functions && slide.functions.triggerFeedback(text, type)
+            }}
+            updateActiveSlide={(i:number) => setActiveSlide(i)}
+            ref={sliderRef}
+            parent={slide}
+          />
           <img
             alt="images"
-            onClick={() => {manualTransition(1)}}
+            onClick={() => {handleContinue()}}
             src={chevronLeft}
-            className={`cursor-pointer h-[40px] ${
-              data.slides.indexOf(activeSection) === data.slides.length - 1 ? "hidden" : ""
+            className={`h-[40px] ${
+              activeSlide === data.slides.length - 1 ? "opacity-0" : "cursor-pointer"
             }`}
           />
-        </div>
-        <div className="w-full flex flex-row justify-center">
-          {data.slides.map((slide, index) => (
-            <span className={`h-[10px] mx-[2px] border-[1px] border-white aspect-square block rounded-[10px] 
-            ${index === activeSectionIndex ? 'bg-white' : ''}`}
-            ></span>
-          ))}
-        </div>
-        {activeSection.options && buttonGroupComponent && (
-          <div className="w-full flex justify-center">
-            {componentLoader(buttonGroupComponent)}
-          </div>
-        )}
+      </div>
+
+      <div className="w-full flex flex-row justify-center">
+        {data.slides.map((slide, index) => (
+          <span className={`h-[10px] mx-[2px] border-[1px] border-white aspect-square block rounded-[10px] 
+          ${index === activeSlide ? 'bg-white' : ''}`}
+          ></span>
+        ))}
       </div>
     </>
   );
