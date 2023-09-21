@@ -9,6 +9,7 @@ export interface LessonSlideInterface {
     feedbacks?: any[];
     status?: boolean;
     complete?: boolean;
+    parent: any;
     textFields?: any[];
     setAnswers: Function;
     setOptions: Function;
@@ -54,6 +55,8 @@ declare class LessonSlide implements LessonSlideInterface {
     SUCCESS_FEEDBACK: string;
     FAILURE_FEEDBACK: string;
     eventsStorage: any;
+    parent: any;
+    constructor(parent?: any);
     setOptions(options: string[]): void;
     setAnswers(answers: string[]): void;
     setFeedbacks(feedbacks: any[]): void;
@@ -81,6 +84,6 @@ declare class LessonSlide implements LessonSlideInterface {
 }
 export declare const formatTextColor: (target: any, status: boolean) => void;
 export declare const youtubeInit: () => void;
-export declare const LessonSlideScope: () => LessonSlide;
+export declare const LessonSlideScope: (parent: any) => LessonSlide;
 export declare const loadComponent: (componentData: any) => any;
 export {};

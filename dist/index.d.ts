@@ -4,6 +4,7 @@ import { OptionData as OptionData$1 } from 'components/Options/handler';
 import { VideoData as VideoData$1 } from 'components/Video/handler';
 import { FlashCardData as FlashCardData$1 } from 'components/FlashCards/handler';
 import { WordMatchData as WordMatchData$1 } from 'components/WordMatch/handler';
+import { ButtonGroupData as ButtonGroupData$1 } from 'components/ButtonGroup/handler';
 
 declare global {
     interface Window {
@@ -16,6 +17,7 @@ interface LessonSlideInterface {
     feedbacks?: any[];
     status?: boolean;
     complete?: boolean;
+    parent: any;
     textFields?: any[];
     setAnswers: Function;
     setOptions: Function;
@@ -66,7 +68,7 @@ interface ButtonGroupData {
 }
 
 interface SliderData {
-    slides: (TextData | ImageData$1 | OptionData$1 | VideoData$1 | FlashCardData$1 | WordMatchData$1)[];
+    slides: (TextData | ButtonGroupData$1 | ImageData$1 | FlashCardData$1 | VideoData$1 | WordMatchData$1 | OptionData$1)[][];
 }
 interface SliderComponentProps {
     data: SliderData;
@@ -127,6 +129,7 @@ interface SlideManagerProps {
     handleFeedback: Function;
     updateActiveSlide: Function;
     ref: any;
+    parent?: any;
 }
 declare const SlideManager: FC<SlideManagerProps>;
 
