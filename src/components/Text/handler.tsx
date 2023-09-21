@@ -19,6 +19,7 @@ export interface TextComponentProps {
     styles? : TextStyles;
     data : TextData;
     slide : LessonSlideInterface;
+    altHeaderStyle: string;
 }
 
 

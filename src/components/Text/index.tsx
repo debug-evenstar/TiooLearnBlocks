@@ -6,7 +6,8 @@ import { TextFields } from "../extensions/TextFields";
 const TextComponent: FC<TextComponentProps> = ({
   styles,
   data,
-  slide
+  slide,
+  altHeaderStyle,
 }) => {
 
   const [processed , setProcessed] = useState<any[]>([]);

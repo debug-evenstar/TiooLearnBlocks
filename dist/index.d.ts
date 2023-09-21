@@ -57,6 +57,7 @@ interface TextComponentProps {
     styles?: TextStyles;
     data: TextData;
     slide: LessonSlideInterface;
+    altHeaderStyle: string;
 }
 
 interface ButtonGroupData {
@@ -127,6 +128,7 @@ interface SlideManagerProps {
     handleFeedback: Function;
     updateActiveSlide: Function;
     ref: any;
+    altHeaderStyle?: string;
 }
 declare const SlideManager: FC<SlideManagerProps>;
 
@@ -165,4 +167,14 @@ declare const VideoComponent: FC<VideoComponentProps>;
 
 declare const WordMatchComponent: FC<WordMatchComponentProps>;
 
-export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, FlashCardsComponent as FlashCards, ImageComponent as Image, OptionsComponent as Options, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };
+interface Props {
+    data?: any;
+    lessons?: any;
+    changeFile: (file: any, payload: any, id: any) => void;
+    back: () => void;
+    lessonlist: any;
+    name: string;
+}
+declare const Editorial: FC<Props>;
+
+export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Editorial, FlashCardsComponent as FlashCards, ImageComponent as Image, OptionsComponent as Options, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };

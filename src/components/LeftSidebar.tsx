@@ -1,26 +1,43 @@
-import React from "react";
+import React, { FC, useState } from "react";
+import {
+  LessonSlideInterface,
+  LessonSlideScope,
+  loadComponent,
+} from "./SlideManager/handler";
 
-function LeftSidebar() {
-  const Item = () => {
-    return (
-      <div className="w-full h-[130px] flex gap-2 mb-[14px] cursor-pointer">
-        <h6 className="text-[10px] text-black pointer-events-none">1</h6>
-        <div className="h-full w-full border-[1.5px] border-[#4F46E5] rounded-[3px]"></div>
-      </div>
-    );
-  };
+interface Props {
+  slides: any;
+  changeTo: (index: number) => void;
+}
+const LeftSidebar: FC<Props> = ({ slides, changeTo }) => {
+  console.log(slides);
+  
+  const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   return (
-    <div className="border-r bg-white border-[#030036] border-opacity-10 shadow relative w-full h-screen max-w-[20%] overflow-auto   pl-[53px] pr-[20px] overflow-y-auto  scrollbar">
+    <div className="bg-white shadow relative w-full max-w-[20%] overflow-auto mb-20  pl-[33px] pr-[20px] overflow-y-auto  scrollbar">
       <h2 className="text-center pt-[35px] text-base text-[#87909E] font-normal">
-        5 Slides
+        {slides.length} Slides
       </h2>
-      <div className="w-full h-full mt-[64px] ">
-        <Item />
-        <Item />
-        <Item />
+      <div className="w-full h-full mt-[44px] mb-12">
+        {slides.map((item: any, index: number) => (
+          <div className="relative" onClick={() => changeTo(index)} key={index}>
+            <p className="absolute text-[#030036BD] text-sm -top-1 -left-[14px]">
+              {index + 1}
+            </p>
+            <div className="text-preview relative z-0 border-[0.25px] border-[#4F46E5] shadow mb-5 p-2 py-3 h-[208px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
+              {item.map((component: any, index: number) => {
+                const Component = loadComponent(component);
+                return (
+                  <Component key={index} data={component} slide={SlideScope} />
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        <div className="pt-16"></div>
       </div>
     </div>
   );
-}
+};
 
 export default LeftSidebar;
