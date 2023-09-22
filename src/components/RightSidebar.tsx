@@ -72,7 +72,7 @@ const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide, lessonli
                       : `w-full p-[9px] text-[#87909E] text-[11px] font-normal cursor-pointer`
                   }`}
                 >
-                  Lesson {data.id}: {data.text}
+                  Lesson {index + 1}: {data.topic}
                 </div>
               );
             })}
