@@ -29,8 +29,8 @@ const ActiveEditSlide: FC<Props> = ({
   isBusy,
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
-  const [checkText, setCheckText] = useState([]);
-  const [checkFiles, setCheckFiles] = useState([]);
+  // const [checkText, setCheckText] = useState([]);
+  // const [checkFiles, setCheckFiles] = useState([]);
   const [activeSlide, setActiveSlide] = useState<any[]>();
   const [slideId, setSlideId] = useState("");
   const [delFile, setDelFile] = useState(false);
@@ -128,8 +128,6 @@ const ActiveEditSlide: FC<Props> = ({
       };
       setCards(newArr);
     }
-    console.log(changedIndex);
-    
   };
 
   const delCardFile = (index: number) => {
@@ -241,7 +239,7 @@ const ActiveEditSlide: FC<Props> = ({
   };
   const editFile = () => {
     const payload = [...activeSlid];
-    if(!!cards.length){
+    if(!!cards?.length){
       changeCard(changedCards, payload, slideId, cards.length, changedIndex)
       setTimeout(() => {
         setChangedCards([])
