@@ -51,8 +51,7 @@ const TextComponent: FC<TextComponentProps> = ({
       formatTextContent(data.content)
     )
     slide.setFunction("hideText", hideText)
-
-  },[data]);
+  },[data.content, slide]);
 
   useEffect(()=>{
     let processText : any[] = formatted;

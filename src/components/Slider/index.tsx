@@ -41,25 +41,6 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
 
   //Register slide data to parent slide
   useEffect(()=>{
-    // let answers : any[] = [];
-    // let options : any[] = [];
-    // let feedbacks : any[] = [];
-    // data.slides.forEach((slide)=>{
-    //   slide.forEach((component : any)=>{
-    //     answers = component.answers && component.answers.length 
-    //       ? [...answers, ...component.answers]
-    //       : answers
-    //     options = component.options && component.options.length 
-    //     ? [...options, ...component.options]
-    //     : options
-    //     feedbacks = component.feedbacks && component.feedbacks.length 
-    //     ? [...feedbacks, ...component.feedbacks]
-    //     : feedbacks
-    //   });
-    // })
-    // slide.setAnswers([...(slide.answers ?? []), ...answers]);
-    // slide.setOptions([...(slide.options ?? []), ...options]);
-    // slide.setFeedbacks([...(slide.feedbacks ?? []), ...feedbacks]);
   },[])
 
 

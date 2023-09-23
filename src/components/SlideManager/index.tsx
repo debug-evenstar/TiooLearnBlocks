@@ -8,6 +8,7 @@ import { FlashCardData } from "../FlashCards/handler";
 import { VideoData } from "../Video/handler";
 import { WordMatchData } from "../WordMatch/handler";
 import { OptionData } from "../Options/handler";
+import CarouselEffect from "components/CarouselEffect";
 
 interface SlideManagerProps {
   lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
@@ -16,10 +17,12 @@ interface SlideManagerProps {
   updateActiveSlide : Function;
   ref: any;
   parent? : any;
+  altHeaderStyle?: string
 }
 
-const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback, updateActiveSlide, parent}, ref) => {
+const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProceed, handleFeedback, updateActiveSlide, parent, altHeaderStyle}, ref) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope(parent));
+  const [FalseScope] = useState<LessonSlideInterface>(LessonSlideScope(parent));
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
   const [hintIsActive, setHintIsActive] = useState<boolean>(false);
@@ -149,11 +152,31 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   };
   return (
     <div style={containerStyle}>
-        {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
+        {/* {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
           {activeSlide.map((component: any, index: number) => {
             const Component = loadComponent(component);
             return <Component key={index} data={component} slide={SlideScope} />;
           })}
+        </div>} */}
+
+        {SlideScope && <div className="mx-auto w-10/12 grid gap-y-5 my-5">
+          <CarouselEffect activeSlideIndex={activeSlideIndex}>
+            {lessonSlides.map((slide : any, slideIndex : number) => (
+              <div className="w-auto h-auto grid gap-y-5 my-5">
+                {slide.map((component: any, index: number) => {
+                  const Component = loadComponent(component);
+                  return (
+                    <Component 
+                      key={index} 
+                      data={component} 
+                      slide={slideIndex === activeSlideIndex ? SlideScope : FalseScope} 
+                      altHeaderStyle={altHeaderStyle} 
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </CarouselEffect>
         </div>}
         {hintIsActive && (
           <div className="w-full h-[30px] mt-[50px] mb-[10px] flex justify-end">

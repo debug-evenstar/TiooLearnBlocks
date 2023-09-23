@@ -286,11 +286,14 @@ class LessonSlide implements LessonSlideInterface{
     eventManager() {
         return {
             on: (eventName : string, callback : any) => {
-                if( !window.SlideEventListener ) {
-                    window.SlideEventListener = window.addEventListener(eventName, (data : any)=>{
+                if( !window.SlideEventListener || !window.SlideEventListener[eventName]) {
+                    window.SlideEventListener = window.SlideEventListener ?? {};
+                    window.SlideEventListener[eventName] = true;
+                    window.addEventListener(eventName, (data : any)=>{
                         this.eventsStorage.callEventFunctions(eventName, data);
                     });
                 }
+                console.log(window.SlideEventListener)
                 this.eventsStorage.addFunctionToStore(eventName, callback);
             },
             trigger : (eventName : string, data : any) => {
@@ -315,12 +318,11 @@ export const formatTextColor = (target : any, status : boolean) => {
     }
   }
 
+export const pageContainsYoutubeScript = () =>{
+    const script = document.getElementById('youtube-iframe');
+    return script ? true : false;
+}
 export const youtubeInit = () => {
-
-    const pageContainsYoutubeScript = () =>{
-        const script = document.getElementById('youtube-iframe');
-        return script ? true : false;
-    }
     
     const insertYoutubeApiScript = () => {
         var tag = document.createElement('script');
@@ -340,7 +342,7 @@ export const youtubeInit = () => {
 }
 
 
-export const LessonSlideScope = (parent : any) => ( new LessonSlide(parent) );
+export const LessonSlideScope = (parent : any = null) => ( new LessonSlide(parent) );
 
 
 const keyToComponentMapper : {[key : string] : any} = {
