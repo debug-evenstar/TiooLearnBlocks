@@ -130,6 +130,7 @@ interface SlideManagerProps {
     updateActiveSlide: Function;
     ref: any;
     parent?: any;
+    altHeaderStyle?: string;
 }
 declare const SlideManager: FC<SlideManagerProps>;
 

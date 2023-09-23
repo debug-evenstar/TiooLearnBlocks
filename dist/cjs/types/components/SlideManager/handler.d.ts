@@ -83,7 +83,8 @@ declare class LessonSlide implements LessonSlideInterface {
     dispatch(eventName: string, data?: any): void;
 }
 export declare const formatTextColor: (target: any, status: boolean) => void;
+export declare const pageContainsYoutubeScript: () => boolean;
 export declare const youtubeInit: () => void;
-export declare const LessonSlideScope: (parent: any) => LessonSlide;
+export declare const LessonSlideScope: (parent?: any) => LessonSlide;
 export declare const loadComponent: (componentData: any) => any;
 export {};
