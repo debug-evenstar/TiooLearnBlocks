@@ -13,6 +13,7 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
     const [videoId, setvideoId] = useState<string>("");
     const [videoEnded, setVideoEnded] = useState<boolean>(false);
     const [youtubePluginReady, setYoutubePluginReady] = useState<boolean>(pageContainsYoutubeScript());
+    
     const endVideo = () => {
         slide.setVideo({ ended : true});
         setVideoEnded(() => true);
@@ -56,34 +57,40 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
         },2000);
     }
 
-    let videoInit = false;
+
+    const loadYoutubeInstance = (videoId : string) => {
+        try{
+            const playerOptions = {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                },
+                host: 'https://www.youtube.com'
+            };
+            const instance = new window.YT.Player(videoId, playerOptions);
+            fallbackVideoCheck(instance);
+        }catch(e){
+            setTimeout(() => loadYoutubeInstance(videoId),1000);
+        }
+    }
+
     useEffect(()=>{
-        if(youtubePluginReady) {
+        // Verify slide is not false slide before initializing
+        if(youtubePluginReady && slide?.functions?.allowProceed) {
             slide.setVideo({ ended : false });
-            if(videoId === "" && !videoInit) {
+            if(videoId === "") {
                 const vidId = `ytb-${(new Date()).getTime()}`;
                 setvideoId(() => vidId);
-                videoInit = true;
-                setTimeout(()=>{
-                    const playerOptions = {
-                        events: {
-                          'onReady': onPlayerReady,
-                          'onStateChange': onPlayerStateChange
-                        },
-                        host: 'https://www.youtube.com'
-                    };
-                    const instance = new window.YT.Player(vidId, playerOptions);
-                    fallbackVideoCheck(instance);
-                }, 1000);
+                setTimeout(() => loadYoutubeInstance(vidId), 1000);
             }
         }
-    },[youtubePluginReady]);
+    },[youtubePluginReady, slide]);
 
     useEffect(()=>{
         if(!pageContainsYoutubeScript) {
             youtubeInit();
         }
-        setYoutubePluginReady(()=>true);
+        setYoutubePluginReady(() => true);
     },[]);
 
 

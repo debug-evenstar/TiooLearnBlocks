@@ -148,7 +148,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     color: "white",
     justifyContent: "center",
     alignItems: "center",
-    overflow: "visible",
+    overflow: "visible"
   };
   return (
     <div style={containerStyle}>
@@ -159,8 +159,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
           })}
         </div>} */}
 
-        {SlideScope && <div className="mx-auto w-10/12 grid gap-y-5 my-5">
-          <CarouselEffect activeSlideIndex={activeSlideIndex}>
+        {SlideScope && <CarouselEffect activeSlideIndex={activeSlideIndex}>
             {lessonSlides.map((slide : any, slideIndex : number) => (
               <div className="w-auto h-auto grid gap-y-5 my-5">
                 {slide.map((component: any, index: number) => {
@@ -176,8 +175,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
                 })}
               </div>
             ))}
-          </CarouselEffect>
-        </div>}
+          </CarouselEffect>}
         {hintIsActive && (
           <div className="w-full h-[30px] mt-[50px] mb-[10px] flex justify-end">
             <div 

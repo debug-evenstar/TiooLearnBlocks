@@ -293,7 +293,6 @@ class LessonSlide implements LessonSlideInterface{
                         this.eventsStorage.callEventFunctions(eventName, data);
                     });
                 }
-                console.log(window.SlideEventListener)
                 this.eventsStorage.addFunctionToStore(eventName, callback);
             },
             trigger : (eventName : string, data : any) => {

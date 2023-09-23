@@ -64,10 +64,17 @@ body {
 .text-font{
   font-family: "Comic Neue";
   font-weight: 600;
+  white-space: wrap;
   font-size: 20px;
+  
 }
 
 .heading{
   font-size: 24px;
   font-weight: 800;
+}
+
+.slide-transition {
+  transition: opacity 0.3s, left 0.3s;
+  transition-timing-function: linear;
 }

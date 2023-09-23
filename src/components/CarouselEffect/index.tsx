@@ -16,8 +16,8 @@ const CarouselEffect = (props : any) => {
     },[activeSlideIndex]);
     return (
         <>
-            <div className="w-full h-auto mx-auto overflow-x-hidden">
-                <div id={uniqueId} ref={carouselRef} className="w-auto h-auto overflow-x-visible relative whitespace-nowrap left-0 slide-transition">
+            <div className="w-full h-auto mx-auto">
+                <div id={uniqueId} ref={carouselRef} className="w-auto h-auto whitespace-nowrap relative left-0 slide-transition">
                     {(children instanceof Array) && children?.map((child : any, index : number) => (
                         <div 
                             className={`w-full h-auto inline-block slide-transition px-[10px]
