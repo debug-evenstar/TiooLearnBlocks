@@ -148,7 +148,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     color: "white",
     justifyContent: "center",
     alignItems: "center",
-    overflow: "visible"
   };
   return (
     <div style={containerStyle}>

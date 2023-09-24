@@ -74,7 +74,44 @@ body {
   font-weight: 800;
 }
 
-.slide-transition {
-  transition: opacity 0.3s, left 0.3s;
-  transition-timing-function: linear;
+.slide-transition{
+  transition: opacity 0.4s, left 0.4s;
 }
+.slide-box{
+  height : fit-content;
+}
+
+.slide-box-clip {
+  clip-path : polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
+}
+
+@keyframes slide-transition-left-in {
+  0%   {width:0px; opacity: 0; left : 0; height:0; padding-left : unset; padding-right : unset;}
+  1%   {width : 100%; height : 100%; opacity: 0; left : 0; padding-left : 10px; padding-right : 10px;}
+  100% {width : 100%; height : 100%; opacity: 1; left : -100%; padding-left : 10px; padding-right : 10px;}
+}
+
+@keyframes slide-transition-right-in {
+  0%   {width:0px; height : 0; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
+  1%   {width : 0px; height : 0; opacity: 0; left : -100%; padding-left : 10px; padding-right : 10px;}
+  2%   {width : 0px; height : 0; opacity: 0; left : -100%; padding-left : 10px; padding-right : 10px;}
+  60% {width : 100%; height : 0; opacity: 0.3; left : 0; padding-left : 10px; padding-right : 10px;}
+  100% {width : 100%; height: 100%; opacity: 1; left : 0; padding-left : 10px; padding-right : 10px;}
+}
+
+.slide-left-in {
+  animation-name: slide-transition-left-in;
+  animation-timing-function: linear;
+  animation-duration: 0.4s;
+  animation-delay: 0s;
+  animation-fill-mode: forwards;
+}
+
+.slide-right-in {
+  animation-name: slide-transition-right-in;
+  animation-timing-function: linear;
+  animation-duration: 0.4s;
+  animation-delay: 0s;
+  animation-fill-mode: forwards;
+}
+
