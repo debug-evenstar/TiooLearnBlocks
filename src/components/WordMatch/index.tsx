@@ -83,7 +83,7 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
 
     return (
         <>
-            <div>
+            <div className="whitespace-normal">
                 {optionsList.length &&
                     optionsList.map((option, index) => {
                         return (

@@ -19,6 +19,10 @@ const TextComponent: FC<TextComponentProps> = ({
     textContainerRef.current.style.display = "none";
   }
 
+  const showText = () => {
+    textContainerRef.current.style.display = "block";
+  }
+
   // Needs to be refactored later // No time right now // 
   const answerBelongsToPrevious = (answer : string) => {
     if( data.answers ){ 
@@ -50,7 +54,8 @@ const TextComponent: FC<TextComponentProps> = ({
     setFormatted(
       formatTextContent(data.content)
     )
-    slide.setFunction("hideText", hideText)
+    slide.setFunction("hideText", hideText);
+    slide.setFunction("showText", showText)
   },[data.content, slide]);
 
   useEffect(()=>{

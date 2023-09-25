@@ -98,7 +98,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
     slide.setFunction('initButtonStatuses', initStatuses);
     slide.setFunction('hideButtonGroup', hideButton);
     slide.setFunction('restartButtonGroup', restartButtonGroup);
-  },[data]);
+  },[data, slide]);
 
 
 

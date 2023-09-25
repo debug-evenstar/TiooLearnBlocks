@@ -56,17 +56,21 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
             (item, index) => data.cards[data.cards.length - 1 - index]
         ));
         slide.functions?.restartButtonGroup();
+        setFinished(false);
+        slide.functions?.showText();
     }
 
     useEffect(() => {
         slide.setFunction("removeCard", removeCard);
-        refreshButtons();
-    },[]);
+        if(slide.functions?.restartButtonGroup){
+            rewindCards();
+        }
+    },[data, slide]);
 
     return (
         <>
             <div
-                className="w-10/12 h-[350px] mx-auto mt-[15px] mb-[5px] relative flex justify-center"
+                className="w-9/12 h-[350px] mx-auto mt-[15px] mb-[5px] relative flex justify-center"
                 ref={imgContainerRef}
             >
                 {cardData.map((item: any, index: number) => {

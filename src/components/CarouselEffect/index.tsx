@@ -1,7 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import React, { FC, ReactElement, useEffect, useRef, useState } from "react";
 import { randomString } from "utilities/string";
-
-const CarouselEffect = (props : any) => {
+interface CarouselEffectProps {
+    children : ReactElement[];
+    activeSlideIndex : number
+}
+const CarouselEffect : FC<CarouselEffectProps> = (props : any) => {
     const { children , activeSlideIndex} = props;
     const [activeIndex, setActiveIndex] = useState<number>(activeSlideIndex);
     const [uniqueId, setUniqueId] = useState<string>(randomString(5));
@@ -48,6 +51,7 @@ const CarouselEffect = (props : any) => {
     //         },10);
     //     }
     // }
+
     const gotoIndex = (index : number) => {
         if(index !== activeIndex && index >= 0) {
             const children = carouselRef.current.children;
@@ -56,8 +60,8 @@ const CarouselEffect = (props : any) => {
                 children[activeIndex].style.opacity = "0";
                 setTimeout(()=>{
                     children[activeIndex].style.removeProperty("opacity");
-                    setActiveIndex(() => index)
-                },800)
+                    setActiveIndex(() => index);
+                },1000);
             }else{
                 children[index].classList.add("slide-right-in");
                 children[activeIndex].style.opacity = "0";
@@ -66,7 +70,7 @@ const CarouselEffect = (props : any) => {
                     children[activeIndex].style.removeProperty("opacity");
                     children[activeIndex].style.removeProperty("left");
                     setActiveIndex(() => index);
-                },800)
+                },1000);
             }
 
         }
@@ -82,7 +86,7 @@ const CarouselEffect = (props : any) => {
                 <div id={uniqueId} ref={carouselRef} className="w-auto whitespace-nowrap relative">
                     {(children instanceof Array) && children?.map((child : any, index : number) => (
                         <div 
-                            className={`inline-block relative box-border left-0
+                            className={`inline-block relative box-border left-0 align-top
                                 ${activeIndex === index ? "slide-transition slide-box w-full h-auto opacity-100 px-[10px]" : "slide-box-clip opacity-0 w-0 h-0"}
                             `}
                         >

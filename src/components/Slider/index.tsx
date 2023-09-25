@@ -18,12 +18,23 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
         }
       } else {
         if(canProceed){
+          hideButtonsDuringTransition();
           sliderRef?.current?.navigator(1);
           //setCanProceed(false);
           // Disable feedbacks
         }
       }
   };
+  
+  const hideButtonsDuringTransition = () => {
+    const btns = document.querySelectorAll(".slider-nav-btn");
+    btns.forEach((element : any) => { 
+      element.style.display = "none";
+      setTimeout(()=>{
+        element.style.removeProperty("display");
+      },1200)
+    });
+  }
 
   const handlePrevious = () => {
       sliderRef?.current?.navigator(-1);
@@ -41,7 +52,7 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
 
   //Register slide data to parent slide
   useEffect(()=>{
-  },[])
+  },[slide, activeSlide])
 
 
   return (
@@ -51,8 +62,8 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
             src={chevronRight}
             onClick={() => {handlePrevious()}}
             alt="images"
-            className={`h-[40px] ${
-              activeSlide === 0 ? "opacity-0" : "cursor-pointer"
+            className={`h-[40px] slider-nav-btn ${
+              activeSlide === 0 ? "opacity-0" : "cursor-pointer opacity-100"
             }`}
           />
           <SlideManager
@@ -69,8 +80,8 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
             alt="images"
             onClick={() => {handleContinue()}}
             src={chevronLeft}
-            className={`h-[40px] ${
-              activeSlide === data.slides.length - 1 ? "opacity-0" : "cursor-pointer"
+            className={`h-[40px] slider-nav-btn ${
+              activeSlide === data.slides.length - 1 ? "opacity-0" : "cursor-pointer opacity-100"
             }`}
           />
       </div>

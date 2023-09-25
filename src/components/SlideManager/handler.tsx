@@ -254,6 +254,7 @@ class LessonSlide implements LessonSlideInterface{
 
     registerSlideData(slide : any) {
         this.resetData();
+        
         slide.forEach((component : any)=>{
             this.answers = [ 
                 ...( this.answers ?? [] ), 
