@@ -17,7 +17,13 @@ interface Props {
   isBusy: boolean;
   showEdit: () => void;
   changeFile: (file: any, payload: any, id: any) => void;
-  changeCard: (file:any,payload:any, id:any, length:number, changedIndex:any) => void
+  changeCard: (
+    file: any,
+    payload: any,
+    id: any,
+    length: number,
+    changedIndex: any
+  ) => void;
 }
 const ActiveEditSlide: FC<Props> = ({
   active,
@@ -30,7 +36,7 @@ const ActiveEditSlide: FC<Props> = ({
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   // const [checkText, setCheckText] = useState([]);
-  // const [checkFiles, setCheckFiles] = useState([]);
+  const [checkFiles, setCheckFiles] = useState<any>();
   const [activeSlide, setActiveSlide] = useState<any[]>();
   const [slideId, setSlideId] = useState("");
   const [delFile, setDelFile] = useState(false);
@@ -48,6 +54,15 @@ const ActiveEditSlide: FC<Props> = ({
     getId();
   }, []);
   const activeSlid = slides && slides[active];
+  useEffect(() => {
+    const flashComp =
+      activeSlid &&
+      activeSlid.filter(
+        (where: any) =>
+          where.component === "Image" || where.component === "Video"
+      );
+    setCheckFiles(flashComp[0]);
+  }, [activeSlid]);
   const checkFile = (file: any) => {
     const textComp =
       activeSlid && activeSlid.filter((where: any) => where.component === file);
@@ -95,8 +110,8 @@ const ActiveEditSlide: FC<Props> = ({
   const [selectedCardImage, setSelectedCardImage] = useState<any>();
   const [cardPreviewImage, setCardPreviewImage] = useState<any>();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [changedCards, setChangedCards] = useState<any[]>([])
-  const [changedIndex, setChangedIndex] = useState<any[]>([])
+  const [changedCards, setChangedCards] = useState<any[]>([]);
+  const [changedIndex, setChangedIndex] = useState<any[]>([]);
   const nextSlide = () => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % cards.length);
   };
@@ -120,8 +135,8 @@ const ActiveEditSlide: FC<Props> = ({
       const imageUrl = URL.createObjectURL(selectedFile);
       setSelectedCardImage(selectedFile);
       setCardPreviewImage(imageUrl);
-      setChangedCards([...changedCards, selectedFile])
-      setChangedIndex([...changedIndex, index])
+      setChangedCards([...changedCards, selectedFile]);
+      setChangedIndex([...changedIndex, index]);
       const newArr = [...cards];
       newArr[index] = {
         url: imageUrl,
@@ -141,6 +156,9 @@ const ActiveEditSlide: FC<Props> = ({
   const RenderCard = () => {
     return (
       <div className="relative pt-3">
+        <p className="relative -top-7 left-2">
+          {currentSlide + 1} / {cards.length}
+        </p>
         <div className="relative w-8/12 mx-auto h-[300px]">
           {cards &&
             !!cards.length &&
@@ -182,6 +200,36 @@ const ActiveEditSlide: FC<Props> = ({
           onClick={nextSlide}
           className="absolute right-0 top-[130px] slick-next"
         ></button>
+      </div>
+    );
+  };
+  const RenderCardPreview = () => {
+    const textComp =
+      activeSlid &&
+      activeSlid.filter((where: any) => where.component === "Text");
+    const fileComp =
+      activeSlid &&
+      activeSlid.filter((where: any) => where.component !== "Text");
+    return (
+      <div className="pt-12">
+        <div>
+          {textComp.map((component: any, index: number) => {
+            const Component = loadComponent(component);
+            return (
+              <Component key={index} data={component} slide={SlideScope} />
+            );
+          })}
+        </div>
+        <div className="pt-">
+          {!showPreview &&
+            fileComp.map((component: any, index: number) => {
+              const Component = loadComponent(component);
+              return (
+                <Component key={index} data={component} slide={SlideScope} />
+              );
+            })}
+        </div>
+        <div></div>
       </div>
     );
   };
@@ -239,12 +287,12 @@ const ActiveEditSlide: FC<Props> = ({
   };
   const editFile = () => {
     const payload = [...activeSlid];
-    if(!!cards?.length){
-      changeCard(changedCards, payload, slideId, cards.length, changedIndex)
+    if (!!cards?.length) {
+      changeCard(changedCards, payload, slideId, cards.length, changedIndex);
       setTimeout(() => {
-        setChangedCards([])
+        setChangedCards([]);
       }, 400);
-    }else{
+    } else {
       changeFile(seletedImage, payload, slideId);
     }
   };
@@ -263,11 +311,11 @@ const ActiveEditSlide: FC<Props> = ({
         </div>
         <div className="w-full pr-5">
           {/* {!!checkText.length && ( */}
-            <div className="p-6 py-12 dasheds">
-              <RenderText />
-            </div>
+          <div className="p-6 py-12 dasheds">
+            <RenderText />
+          </div>
           {/* )} */}
-          {/* {!!checkFiles.length && ( */}
+          {checkFiles && (
             <div className="mt-12 relative p-6 py-12 dasheds">
               <div className="flex absolute top-5 right-10 gap-x-4">
                 {delFile && (
@@ -323,8 +371,8 @@ const ActiveEditSlide: FC<Props> = ({
                   </video>
                 ))}
             </div>
-          {/* )} */}
-          {!!cards && (
+          )}
+          {!!cards?.length && (
             <div className="mt-12 relative p-6 py-12 dasheds">
               <RenderCard />
             </div>
@@ -352,7 +400,7 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0 bg-preview">
           <div className="mt-4 w-6/12 bgcomps text-white bg-cover rounded-lg min-h-[70vh] px-5 flex justify-center items-center fw-600">
             <div>
-              <RenderPreview />
+              {!!cards?.length ? <RenderCardPreview /> : <RenderPreview />}
             </div>
           </div>
           <FaTimes
