@@ -51,7 +51,7 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
     manager?.slide.on(SlideEvents.PROGRESS_UPDATE,(data : any)=>{
       changeInputActiveState();
     });
-  },[]);
+  },[manager]);
 
 
   return (

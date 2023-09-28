@@ -13,6 +13,8 @@ const TextComponent: FC<TextComponentProps> = ({
 
   const [formatted, setFormatted] = useState<any[]>([]);
 
+  const [isHeading, setIsHeading] = useState<boolean>(false);
+
   const textContainerRef = useRef<any>(null);
 
   const hideText = () => {
@@ -50,6 +52,10 @@ const TextComponent: FC<TextComponentProps> = ({
   }
 
   useEffect(()=>{
+    if(data.content.includes("<*-") 
+    && data.content.includes("-*>")){
+      setIsHeading(() => true);
+    }
     // Handle initial text formatting
     setFormatted(
       formatTextContent(data.content)
@@ -84,13 +90,15 @@ const TextComponent: FC<TextComponentProps> = ({
     if( data.answers && !data.options) {
       slide.attributes["hasSubjective"] = true;
       if (slide.functions && slide.functions.setHint){
-        slide.functions?.setHint(true);
+        setTimeout(()=>{
+          slide.functions?.setHint(true);
+        },1000);
       }
     }
   },[formatted]);
 
   return <>
-    <div className="text-center text-font" ref={textContainerRef}>
+    <div className={`${isHeading ? "text-center" : "text-left"} text-font`} ref={textContainerRef}>
       {processed.map((item, index) => (
           <span className="text-font" key={index}>
             {(typeof item) == "string" ? ` ${item} ` : (item)}
