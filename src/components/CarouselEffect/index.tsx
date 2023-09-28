@@ -9,84 +9,50 @@ const CarouselEffect : FC<CarouselEffectProps> = (props : any) => {
     const [activeIndex, setActiveIndex] = useState<number>(activeSlideIndex);
     const [uniqueId, setUniqueId] = useState<string>(randomString(5));
     const carouselRef = useRef<any>();
-    // const gotoIndex = (index : number) => {
-    //     if(index !== activeSlideIndex) {
-    //         carouselRef.current.style.overflowX = "hidden";
-    //         const children = carouselRef.current.children;
-    //         // Remove slide transition effect on slide to show
-    //         // Set width to full
-    //         // children[index].classList.remove("slide-transition");
-    //         children[index].style.width = "760px";
-    //         // children[index].classList.add("slide-transition");
-    //         // // Set active index width to 0
-    //         // children[activeSlideIndex].style.width = "0px";
-    //         const calculatedWidth = carouselRef.current.offsetWidth;
-    //         // carouselRef.current.style.left = `-${index * calculatedWidth}px`;
-    //         setActiveIndex(() => index)
-    //     }
-    // }
-    // const gotoIndex = (index : number) => {
-    //     if(index !== activeIndex) {
-    //         const children = carouselRef.current.children;
-    //         // Remove slide transition effect on slide to show
-    //         // Set width to full
-    //         children[index].classList.remove("slide-transition");
-    //         children[index].style.width = "100%";
-    //         // children[index].classList.add("slide-transition");
-    //         // // Set active index width to 0
-    //         const calculatedWidth = carouselRef.current.offsetWidth;
-    //         // Manually simulate transition
-    //         children[activeIndex].style.opacity = "0";
-    //         setTimeout(()=>{
-    //             children[index].classList.add("slide-transition");
-    //             children[index].style.left = `-${calculatedWidth}px`;
-    //             children[index].style.opacity = "1";
-    //             children[index].classList.add("px-[10px]");
-    //             setTimeout(()=>{
-    //                 children[index].style.removeProperty("left");
-    //                 children[index].style.removeProperty("opacity");
-    //                 children[activeIndex].style.removeProperty("opacity");
-    //                 setActiveIndex(() => index)
-    //             },500);
-    //         },10);
-    //     }
-    // }
+    const carouselContainerRef = useRef<any>();
 
     const gotoIndex = (index : number) => {
         if(index !== activeIndex && index >= 0) {
             const children = carouselRef.current.children;
             if(index > activeIndex){
+                carouselContainerRef.current.style.overflowX = "hidden";
                 children[index].classList.add("slide-left-in");
-                children[activeIndex].style.opacity = "0";
+                children[activeIndex].classList.add("slide-right-out");
                 setTimeout(()=>{
-                    children[activeIndex].style.removeProperty("opacity");
+                    carouselContainerRef.current.style.removeProperty("overflow-x");
                     setActiveIndex(() => index);
-                },1000);
+                },1500);
             }else{
+                carouselContainerRef.current.style.overflowX = "hidden";
                 children[index].classList.add("slide-right-in");
-                children[activeIndex].style.opacity = "0";
-                children[activeIndex].style.left = "100%";
+                children[activeIndex].classList.add("slide-left-out");
                 setTimeout(()=>{
-                    children[activeIndex].style.removeProperty("opacity");
-                    children[activeIndex].style.removeProperty("left");
+                    carouselContainerRef.current.style.removeProperty("overflow-x");
                     setActiveIndex(() => index);
-                },1000);
+                },1500);
             }
 
         }
     }
 
+    const internalStyles = {
+        slideBox : {
+            verticalAlign : "top"
+        }
+    };
+
     useEffect(()=>{
         gotoIndex(activeSlideIndex);
-    },[activeSlideIndex, activeIndex]);
+    }, [activeSlideIndex, activeIndex]);
 
     return (
         <>
-            <div className="w-full mx-auto">
+            <div ref={carouselContainerRef} className="w-full mx-auto">
                 <div id={uniqueId} ref={carouselRef} className="w-auto whitespace-nowrap relative">
                     {(children instanceof Array) && children?.map((child : any, index : number) => (
                         <div 
-                            className={`inline-block relative box-border left-0 align-top
+                            style={internalStyles.slideBox}
+                            className={`inline-block relative box-border left-0
                                 ${activeIndex === index ? "slide-transition slide-box w-full h-auto opacity-100 px-[10px]" : "slide-box-clip opacity-0 w-0 h-0"}
                             `}
                         >
