@@ -87,7 +87,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
 
   useEffect(()=>{
     initStatuses();
-  },[data])
+  },[data, slide])
 
   useEffect(()=>{
     if (data.options && data.options.length > 0) {
