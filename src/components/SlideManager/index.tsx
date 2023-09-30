@@ -110,7 +110,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
     SlideScope.setFunction('canProceed', canProceed);
     SlideScope.setFunction('navigateSlide', navigateSlide);
-    SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
     SlideScope.setFunction('setHint', (val:boolean) => setHintIsActive(val));
     SlideScope.registerSlideData(activeSlide);
     proceed(activeSlide, 0);
@@ -119,6 +118,10 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
       setPageTheme(compWithTheme.length ? compWithTheme[0].theme : null);
     }
   },[ activeSlide ])
+
+  useEffect(()=>{
+    SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
+  },[ parent ])
 
   // Core effects
   useEffect(()=>{
