@@ -48,6 +48,12 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
     if(val){
       if(state === 1){
         handleContinue();
+      } else {
+        if( slide && slide.functions && slide.functions.canProceed ) {
+          setTimeout(()=>{
+            slide.functions?.canProceed(val, 0);
+          },500);
+        }
       }
     }
   };
