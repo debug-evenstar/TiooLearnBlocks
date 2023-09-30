@@ -1,3 +1,4 @@
+import GridSteps from "components/GridSteps";
 import ButtonGroupComponent from "../ButtonGroup";
 import FlashCardsComponent from "../FlashCards";
 import ImageComponent from "../Image";
@@ -42,6 +43,7 @@ export interface LessonSlideInterface {
     fillWithHint : Function;
     verifySubjectiveAnswer : Function;
     registerSlideData : Function;
+    checkSlideCanProceed : Function;
 }
 
 class LessonSlide implements LessonSlideInterface{
@@ -233,7 +235,7 @@ class LessonSlide implements LessonSlideInterface{
     }
 
     feedbackMessage(type : string, list : any[], index : number = this.progress){
-        return !this.options || this.options.length == 0 
+        return (!this.options || this.options.length === 0) && (this.answers && this.answers.length > 1)
             ? list[index]
             : type === this.SUCCESS_FEEDBACK 
                 ? list[0] : list[1];
@@ -244,10 +246,9 @@ class LessonSlide implements LessonSlideInterface{
             index = this.progress;
         }
         if(this.feedbacks && this.feedbacks.length > 0) {
-            const feedbackMessage = this.feedbacks.length > 2
+            const feedbackMessage = this.feedbacks.length > 1 // Not sure of this change yet - Revert if issues arise
                 ? this.feedbackMessage(feedbackType, this.feedbacks[index])
                 : this.feedbackMessage(feedbackType, this.feedbacks[0], index);
-
             this.functions?.triggerFeedback(feedbackMessage , feedbackType);
         }
     }
@@ -306,6 +307,52 @@ class LessonSlide implements LessonSlideInterface{
     on(eventName : string, callback : any){ return this.eventManager().on(eventName, callback) }
     dispatch(eventName : string, data : any = {}){ this.eventManager().trigger(eventName, data) }
 
+    checkSlideCanProceed = (slide : any, strict : boolean = false) => {
+        let activate = true;
+        const strictComponents = ["ButtonGroup", "FlashCards","Slider","WordMatch","Video","Options"];
+        const mildComponents = ["GridSteps","Text"];
+        for (let i = 0; i < slide.length; i++) {
+          const data = slide[i];
+          if(data && strictComponents.includes(data.component)){     
+            activate = false;
+            if( strict ){ 
+              // Check for progress match answers
+              if(this.answers && this.answers.length > 0) {
+                activate = (this.progress === this.answers.length);
+              }
+              // Check for video ended
+              if (this.video) {
+                activate = this.video.ended;
+              }
+            }
+          }
+          if(data && mildComponents.includes(data.component)) {
+            if(data.answers && this.answers && data.answers.length > 0){
+              activate = (this.progress === this.answers.length);
+            }
+          }
+    
+        }
+        return activate;
+    }
+}
+
+export const setPageTheme = (theme? : string) => {
+    const page = document.getElementById("LessonPage");
+    if( page ){
+        //Remove previous bg
+        page.classList.forEach((className : any) => {
+            if(className.includes("lesson-bg")){
+                page.classList.remove(className);
+            }
+        });
+        if( theme ) {
+            page.classList.add(`lesson-bg-${theme}`);
+        } else {
+            page.classList.add(`lesson-bg-default`);
+        }
+    }
+
 }
 
 export const formatTextColor = (target : any, status : boolean) => {
@@ -316,7 +363,7 @@ export const formatTextColor = (target : any, status : boolean) => {
       target.classList.remove("text-green-500");
       target.classList.add("text-orange-500");
     }
-  }
+}
 
 export const pageContainsYoutubeScript = () =>{
     const script = document.getElementById('youtube-iframe');
@@ -353,7 +400,8 @@ const keyToComponentMapper : {[key : string] : any} = {
     "FlashCards" : FlashCardsComponent,
     "Video" : VideoComponent,
     "WordMatch" : WordMatchComponent,
-    "Options" : OptionsComponent
+    "Options" : OptionsComponent,
+    "GridSteps" : GridSteps
 }
 
 

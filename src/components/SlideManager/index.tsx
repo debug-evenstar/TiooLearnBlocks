@@ -1,5 +1,5 @@
-import React, { FC, forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { LessonSlideInterface, LessonSlideScope, loadComponent, youtubeInit } from "./handler";
+import React, { FC, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { LessonSlideInterface, LessonSlideScope, loadComponent, setPageTheme, youtubeInit } from "./handler";
 import { TextData } from "../Text/handler";
 import { ButtonGroupData } from "../ButtonGroup/handler";
 import { SliderData } from "../Slider/handler";
@@ -9,9 +9,12 @@ import { VideoData } from "../Video/handler";
 import { WordMatchData } from "../WordMatch/handler";
 import { OptionData } from "../Options/handler";
 import CarouselEffect from "components/CarouselEffect";
+import { GridStepsData } from "components/GridSteps/handler";
 
 interface SlideManagerProps {
-  lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
+  lessonSlides: (
+    TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | 
+    VideoData | WordMatchData | OptionData | GridStepsData)[][];
   canProceed : Function;
   handleFeedback : Function;
   updateActiveSlide : Function;
@@ -26,6 +29,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   const [activeSlide, setActiveSlide] = useState<any>(lessonSlides[0]);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
   const [hintIsActive, setHintIsActive] = useState<boolean>(false);
+  const hintRef = useRef<any>();
 
   const navigateSlide = (direction: number, slideIndex : any = null) => {
     if(slideIndex !== null && lessonSlides.length > slideIndex && slideIndex >= 0) {
@@ -47,7 +51,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     setActiveSlideIndex(() => index);
     updateActiveSlide(index);
     SlideScope.registerSlideData(nextSlide);
-    if( checkSlideCanProceed(nextSlide) ) {
+    if( SlideScope.checkSlideCanProceed(nextSlide) ) {
       setTimeout(()=>{
         canProceed(true, 0);
       },1500)
@@ -57,32 +61,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
       },500)
     }
     setHintIsActive(false);
-  }
-
-
-  const checkSlideCanProceed = (slide : any, strict : boolean = false) => {
-    let activate = true;
-    const blockProceed = ["ButtonGroup", "FlashCards","Slider","WordMatch","Video","Options"];
-    for (let i = 0; i < slide.length; i++) {
-      const data = slide[i];
-      if(data && blockProceed.includes(data.component)){     
-        activate = false;
-        if( strict ){ 
-          // Check for progress match answers
-          if(SlideScope.answers && SlideScope.answers.length > 0) {
-            activate = (SlideScope.progress === SlideScope.answers.length);
-          }
-          // Check for video ended
-          if (SlideScope.video) {
-            activate = SlideScope.video.ended;
-          }
-        }
-      }
-      if(data && data.component === "Text" && data.answers && SlideScope.answers){
-        activate = (SlideScope.progress === SlideScope.answers.length);
-      }
-    }
-    return activate;
   }
 
   useImperativeHandle(ref, ()=> ({
@@ -99,7 +77,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }));
 
   const proceed = (slide : any, state : number = 1) => {
-    if ( checkSlideCanProceed(slide , true) ){
+    if ( SlideScope.checkSlideCanProceed(slide , true) ){
       canProceed(true, state);
     } else {
       canProceed(false, state);
@@ -124,17 +102,29 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   useEffect(()=>{
     SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
     SlideScope.setFunction('canProceed', canProceed);
-    proceed(activeSlide, 0);
-  },[ activeSlide ])
-
-  // Core effects
-  useEffect(()=>{
     SlideScope.setFunction('navigateSlide', navigateSlide);
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
     SlideScope.setFunction('setHint', (val:boolean) => setHintIsActive(val));
     SlideScope.registerSlideData(activeSlide);
+    proceed(activeSlide, 0);
+    if( !parent ) {
+      const compWithTheme = activeSlide.filter((c:any) => c.theme)
+      setPageTheme(compWithTheme.length ? compWithTheme[0].theme : null);
+    }
+  },[ activeSlide, parent])
+
+  // Core effects
+  useEffect(()=>{
     preloadImages(lessonSlides);
   },[]);
+
+  useEffect(()=>{
+    if(hintIsActive && hintRef?.current ){
+      setTimeout(()=>{
+        hintRef.current.classList.remove("opacity-0");
+      },700);
+    } 
+  },[hintIsActive]);
 
   
 
@@ -142,15 +132,9 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   //   background:
   //   "url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png')",
   // backgroundSize: "100% 100%",
-    width: "100%",
-    margin: "0 auto",
-    padding: "10px 30px",
-    color: "white",
-    justifyContent: "center",
-    alignItems: "center",
   };
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} className="w-full h-full mx-auto my-0 py-[10px] flex flex-col">
         {/* {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
           {activeSlide.map((component: any, index: number) => {
             const Component = loadComponent(component);
@@ -160,7 +144,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
         {SlideScope && <CarouselEffect activeSlideIndex={activeSlideIndex}>
             {lessonSlides.map((slide : any, slideIndex : number) => (
-              <div className="w-auto h-auto grid gap-y-5 my-5">
+              <div className="w-auto h-auto grid gap-y-4 my-5">
                 {slide.map((component: any, index: number) => {
                   const Component = loadComponent(component);
                   return (
@@ -176,7 +160,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
             ))}
           </CarouselEffect>}
         {hintIsActive && (
-          <div className="w-full h-[30px] mt-[50px] mb-[10px] flex justify-end">
+          <div ref={hintRef} className="w-full h-[30px] mt-[50px] mb-[10px] flex justify-end opacity-0 slide-transition">
             <div 
               className="h-full cursor-pointer bg-[#86A94B] text-white text-font px-[20px] rounded-[5px]"
               onClick={() => SlideScope.fillWithHint()}
