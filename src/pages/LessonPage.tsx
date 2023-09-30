@@ -8,91 +8,11 @@ interface LessonPageProps {
     className : string;
     title : string;
     slides : any[];
+    back : Function;
 }
-const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides}) => {
+const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, back}) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const sl = [
-    [
-        {
-            tips: [],
-            content: "<*-Rotation of the sun-*>",
-            component: "Text",
-        },
-        {
-            tips: ["This imaginary line is called the earth's axis."],
-            content:
-                "The earth rotates from the West to the East as if it is being turned on an <~imaginary line~> passing through its centre.",
-            component: "Text",
-        },
-        {
-            content:
-                "The <?> is not ready",
-            component: "Text",
-            answers: [
-                "Test",
-            ],
-        },
-        {
-            answers: [
-                ["Day", "Night"],
-                ["Night", "Day"],
-            ],
-            content:
-                "This rotation of the earth about its axis causes <?> and <?> .",
-            component: "Text",
-        },
-        {
-            content:
-                "The earth makes one complete rotation about its axis in <(<**twenty-four hours**>)>.",
-            component: "Text",
-        },
-    ],
-    [
-        {
-            component : "Text",
-            content : "The robot needs to get to the cookie. We would write a program to help the robot reach the box with the cookie.",
-        },
-        {
-            component: "GridSteps",
-            start : "1X1",
-            end : "4X1",
-            size : "4X4",
-            steps : 3,
-            example : true,
-            answers : ["4X1"],
-            theme : "white",
-            feedbacks : [
-                ["Cool!. Now let's try out some exercises"]
-            ]
-        },
-    ],
-    [
-        {
-            component: "GridSteps",
-            start : "1X1",
-            end : "4X3",
-            size : "4X4",
-            steps : 5,
-            answers : ["4X3"],
-            theme : "white",
-            feedbacks : [
-                ["Yayy", "Try Again"]
-            ]
-        },
-    ],
-    [
-        {
-            component: "GridSteps",
-            start : "3X4",
-            end : "1X2",
-            size : "4X4",
-            steps : 4,
-            answers : ["4X3"],
-            theme : "white"
-        },
-    ],
-  ];
   return (
     <>
       <div id="LessonPage" className="lesson-bg-default lg:bg-cover bg-fixed nue w-full h-screen overflow-y-auto pb-24 lg:pb-0 px-3 lg:px-6 xl:px-6 flex flex-col">
@@ -155,7 +75,7 @@ const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides}) =
           </div>
         </div>
         <div className="lg:mt-16 w-full grow">
-          {sl && sl.length && (<RenderComponent slides={sl} back={()=>{}}/>)}
+          {slides && slides.length && (<RenderComponent slides={slides} back={()=>back()}/>)}
         </div>
       </div>
     </>
