@@ -65,7 +65,7 @@ class TextFieldsHandler implements TextFieldsInterface{
 
     fieldReplacementFill(index : number, value : string, data : any[]){
         const fieldIndex = Object.values(this.fieldData)[index].index;
-        data[fieldIndex] = (<span className="text-green-500 font-semibold text-[17px] text-font">{value}</span>);
+        data[fieldIndex] = (<span className="!text-green-500 font-semibold text-[17px] text-font">{value}</span>);
         return [...data];
     }
 

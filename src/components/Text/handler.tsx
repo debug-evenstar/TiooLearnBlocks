@@ -35,7 +35,7 @@ const formatMappings : {[key : string] : Function} = {
     bold : (text : string | React.ReactElement) => (<strong className="text-font">{` `}{text}{` `}</strong>),
     heading : (text : string | React.ReactElement) => (<strong className="w-full text-center text-font heading">{` `}{text}{` `}</strong>),
     italic : (text : string | React.ReactElement) => (<i>{` `}{text}{` `}</i>),
-    keyword : (text : string | React.ReactElement) => (<span className="text-green-500">{` `}{text}{` `}</span>)
+    keyword : (text : string | React.ReactElement) => (<span className="!text-green-500">{` `}{text}{` `}</span>)
 }
 
 const format = (key : string, text : string) => {
