@@ -11,15 +11,13 @@ interface LessonPageProps {
     back : Function;
 }
 const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, back}) => {
-  const { id } = useParams();
-  const navigate = useNavigate();
   return (
     <>
       <div id="LessonPage" className="lesson-bg-default lg:bg-cover bg-fixed nue w-full h-screen overflow-y-auto pb-24 lg:pb-0 px-3 lg:px-6 xl:px-6 flex flex-col">
         <div className="">
         <div className="hidden lg:flex text-white justify-between">
           <div className="exit-box lg:w-3/12 pt-6">
-            <div className="flex gap-x-2 item-center cursor-pointer" onClick={() => navigate(-1)}>
+            <div className="flex gap-x-2 item-center cursor-pointer" onClick={()=>back()}>
               <MdArrowBack className="text-4xl" />
               <span className="fw-600 text-2xl mt-1">EXIT</span>
             </div>
