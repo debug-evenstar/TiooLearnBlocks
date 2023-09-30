@@ -85,7 +85,7 @@ const DesktopComponent: FC<ComponentSlides> = ({ slides , back}) => {
                     className={"w-[120px] mb-[15px]"}
                     onClick={() => handleContinue()}
                 >
-                    {canProceed && (<ContinueBtn title="Continue" />)}
+                    {canProceed && !SuccessFeed && (<ContinueBtn title="Continue" />)}
                 </div>
             </div>
             <div>

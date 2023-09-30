@@ -82,7 +82,7 @@ export const PreviousBtn: React.FC<Props> = ({
     <div className={disabled? "opacity-75 " : "min-h-[80px]"}>
       <div className="relative polygon-clip-prev flex">
         <div className=""></div>
-      <button className={` fw-600 cursor-pointer pl-4 text-`} onClick={onClick ? onClick : undefined} disabled={disabled}>
+      <button className={` fw-600 cursor-pointer pl-4 !text-black`} onClick={onClick ? onClick : undefined} disabled={disabled}>
       {isBusy ? (
           "loading"
         ) : capitalizeTitle ? (
