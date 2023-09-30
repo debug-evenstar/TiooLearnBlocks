@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import { MdArrowBack } from "react-icons/md";
-import { Link, useNavigate, useParams } from "react-router-dom";
 import RenderComponent from "./renderComp";
 
 interface LessonPageProps {
@@ -50,10 +49,10 @@ const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, ba
         </div>
         <div className="lg:hidden text-white">
           <div className="flex items-center justify-between pt-4">
-            <Link to="/home" className="flex gap-x-2 item-center">
+            <div onClick={()=>back()} className="flex gap-x-2 item-center cursor-pointer">
               <MdArrowBack className="text-3xl" />
               <span className="fw-600 text-2xl mt-1">EXIT</span>
-            </Link>
+            </div>
             {subject && className && (<p className="w-7/12 text-end">{subject}: {className}</p>)}
           </div>
           <div>
