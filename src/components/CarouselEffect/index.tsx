@@ -51,6 +51,7 @@ const CarouselEffect : FC<CarouselEffectProps> = (props : any) => {
                 <div id={uniqueId} ref={carouselRef} className="w-auto whitespace-nowrap relative">
                     {(children instanceof Array) && children?.map((child : any, index : number) => (
                         <div 
+                            key={index}
                             style={internalStyles.slideBox}
                             className={`inline-block relative box-border left-0
                                 ${activeIndex === index ? "slide-transition slide-box w-full h-auto opacity-100 px-[10px]" : "slide-box-clip opacity-0 w-0 h-0"}

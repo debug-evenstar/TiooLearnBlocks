@@ -99,6 +99,13 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     }
   }
 
+  const loadSlideManager = (slideIndex : number) => {
+    if ( slideIndex === activeSlideIndex ) {
+      return SlideScope;
+    }
+    return FalseScope;
+  }
+
   useEffect(()=>{
     SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
     SlideScope.setFunction('canProceed', canProceed);
@@ -111,7 +118,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
       const compWithTheme = activeSlide.filter((c:any) => c.theme)
       setPageTheme(compWithTheme.length ? compWithTheme[0].theme : null);
     }
-  },[ activeSlide, parent])
+  },[ activeSlide ])
 
   // Core effects
   useEffect(()=>{
@@ -125,6 +132,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
       },700);
     } 
   },[hintIsActive]);
+
 
   
 
@@ -144,15 +152,16 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
         {SlideScope && <CarouselEffect activeSlideIndex={activeSlideIndex}>
             {lessonSlides.map((slide : any, slideIndex : number) => (
-              <div className="w-auto h-auto grid gap-y-4 my-5">
+              <div key={slideIndex} className="w-auto h-auto grid gap-y-4 my-5">
                 {slide.map((component: any, index: number) => {
                   const Component = loadComponent(component);
                   return (
                     <Component 
                       key={index} 
                       data={component} 
-                      slide={slideIndex === activeSlideIndex ? SlideScope : FalseScope} 
-                      altHeaderStyle={altHeaderStyle} 
+                      slide={loadSlideManager(slideIndex)} 
+                      altHeaderStyle={altHeaderStyle}
+                      activeSlideIndex={activeSlideIndex}
                     />
                   );
                 })}

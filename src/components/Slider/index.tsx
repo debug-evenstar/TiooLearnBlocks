@@ -3,11 +3,13 @@ import chevronRight from "../../img/chevron-right.svg";
 import chevronLeft from "../../img/chevron-left.svg";
 import { SliderComponentProps, sliderComponentStyles } from "./handler";
 import SlideManager from "components/SlideManager";
+import { LessonSlideInterface } from "components/SlideManager/handler";
 
 const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
   const sliderRef = useRef<any>();
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [canProceed, setCanProceed] = useState<boolean>(true);
+  const [parentSlideScope, setParentSlideScope] = useState<LessonSlideInterface>(slide);
 
   const handleContinue = () => {
       const currentSlideIndex = sliderRef?.current?.activeSlideIndex();
@@ -52,6 +54,7 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
 
   //Register slide data to parent slide
   useEffect(()=>{
+    setParentSlideScope(slide);
   },[slide, activeSlide])
 
 
@@ -66,16 +69,16 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
               activeSlide === 0 ? "opacity-0" : "cursor-pointer opacity-100"
             }`}
           />
-          <SlideManager
+          {parentSlideScope && <SlideManager
             lessonSlides={data.slides}
             canProceed={(val: boolean, state : number) => proceed(val, state)}
             handleFeedback={(text: string, type: string)=>{
-              slide.functions && slide.functions.triggerFeedback(text, type)
+              parentSlideScope.functions && parentSlideScope.functions.triggerFeedback(text, type)
             }}
             updateActiveSlide={(i:number) => setActiveSlide(i)}
             ref={sliderRef}
-            parent={slide}
-          />
+            parent={parentSlideScope}
+          />}
           <img
             alt="images"
             onClick={() => {handleContinue()}}
@@ -88,7 +91,7 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
 
       <div className="w-full flex flex-row justify-center">
         {data.slides.map((slide, index) => (
-          <span className={`h-[10px] mx-[2px] border-[1px] border-white aspect-square block rounded-[10px] 
+          <span key={index} className={`h-[10px] mx-[2px] border-[1px] border-white aspect-square block rounded-[10px] 
           ${index === activeSlide ? 'bg-white' : ''}`}
           ></span>
         ))}

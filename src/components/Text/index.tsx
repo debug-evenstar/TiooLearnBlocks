@@ -6,9 +6,9 @@ import { TextFields } from "../extensions/TextFields";
 const TextComponent: FC<TextComponentProps> = ({
   styles,
   data,
-  slide
+  slide,
 }) => {
-
+  
   const [processed , setProcessed] = useState<any[]>([]);
 
   const [formatted, setFormatted] = useState<any[]>([]);
@@ -95,10 +95,13 @@ const TextComponent: FC<TextComponentProps> = ({
         },1000);
       }
     }
-  },[formatted]);
+    // console.log(slide);
+  },[formatted, data.content, slide]);
+
+
 
   return <>
-    <div className={`${isHeading ? "text-center" : "text-left"} text-font`} ref={textContainerRef}>
+    <div className={`${isHeading || slide.parent ? "text-center" : "text-left"} text-font`} ref={textContainerRef}>
       {processed.map((item, index) => (
           <span className="text-font" key={index}>
             {(typeof item) == "string" ? ` ${item} ` : (item)}

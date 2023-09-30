@@ -22,8 +22,6 @@ const GridSteps: React.FC<GridStepsComponentProps>= ({ data, slide }) => {
         if( !isSolved() ) {
             setIsProcessing(() => true);
             handleSubmit(selectedSteps , setTargetPosition, size, () => {
-                console.log("kkl");
-                
                 setIsProcessing(() => false);
             });
         }
