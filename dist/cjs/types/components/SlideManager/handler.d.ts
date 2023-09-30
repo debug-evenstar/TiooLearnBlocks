@@ -35,6 +35,7 @@ export interface LessonSlideInterface {
     fillWithHint: Function;
     verifySubjectiveAnswer: Function;
     registerSlideData: Function;
+    checkSlideCanProceed: Function;
 }
 declare class LessonSlide implements LessonSlideInterface {
     options?: any[];
@@ -81,7 +82,9 @@ declare class LessonSlide implements LessonSlideInterface {
     };
     on(eventName: string, callback: any): void;
     dispatch(eventName: string, data?: any): void;
+    checkSlideCanProceed: (slide: any, strict?: boolean) => boolean;
 }
+export declare const setPageTheme: (theme?: string) => void;
 export declare const formatTextColor: (target: any, status: boolean) => void;
 export declare const pageContainsYoutubeScript: () => boolean;
 export declare const youtubeInit: () => void;

@@ -7,8 +7,9 @@ import { FlashCardData } from "../FlashCards/handler";
 import { VideoData } from "../Video/handler";
 import { WordMatchData } from "../WordMatch/handler";
 import { OptionData } from "../Options/handler";
+import { GridStepsData } from "components/GridSteps/handler";
 interface SlideManagerProps {
-    lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
+    lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData | GridStepsData)[][];
     canProceed: Function;
     handleFeedback: Function;
     updateActiveSlide: Function;
