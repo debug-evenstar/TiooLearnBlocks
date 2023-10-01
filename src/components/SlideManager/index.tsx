@@ -105,7 +105,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     }
     return FalseScope;
   }
-  
+
   // Core effects
   useEffect(()=>{
     SlideScope.registerSlideData(activeSlide);
@@ -127,8 +127,14 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   },[ activeSlide ])
 
   useEffect(()=>{
+    setActiveSlide(() => lessonSlides[0]);
+    setActiveSlideIndex(() => 0);
+  },[ parent ]);
+
+  useEffect(()=>{
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
   },[ activeSlide, parent ])
+
 
   useEffect(()=>{
     if(hintIsActive && hintRef?.current ){

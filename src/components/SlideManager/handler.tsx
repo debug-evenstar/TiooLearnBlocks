@@ -8,6 +8,7 @@ import TextComponent from "../Text"
 import VideoComponent from "../Video";
 import WordMatchComponent from "../WordMatch";
 import { GlobalEventStorage, SlideEvents } from "./events";
+import { simulateWidth } from "components/extensions/TextFields";
 
 declare global {
     interface Window {
@@ -114,6 +115,11 @@ class LessonSlide implements LessonSlideInterface{
                 const hint = answer.substr(0, 1);
                 fieldElement.value = hint;
             }
+            // Added to expand input width on add text
+            const width = simulateWidth(answer);
+            const setWidth = (fieldElement.value.length/answer.length * width) + 30;
+            fieldElement.style.width = `${setWidth}px`;
+
             formatTextColor(fieldElement, true);
             if( fieldElement.value === answer) {
                 this.verifySubjectiveAnswer( field.index , fieldElement.value, answer);

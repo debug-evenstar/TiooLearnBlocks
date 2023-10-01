@@ -115,23 +115,7 @@ class TextFieldsHandler implements TextFieldsInterface{
     }
 
     simulateAnswerWidth(answer : string|string[]){
-        let fieldAnswer : string = "";
-        const textElement = document.createElement("p");
-        textElement.className = "text-font";
-        textElement.style.opacity = "0";
-        if(typeof answer === "string"){
-            fieldAnswer = answer;
-        }else{
-            answer.forEach(item => {
-                fieldAnswer = item.length > fieldAnswer.length ? item : fieldAnswer;
-            })
-        }
-        textElement.innerHTML = fieldAnswer;
-        textElement.style.display = "inline-block";
-        document.body.appendChild(textElement);
-        const textWidth = textElement.offsetWidth + 30;
-        document.body.removeChild(textElement);
-        return textWidth;
+        return simulateWidth(answer);
     }
 
     inputAnswerMatch(input : string, answer : string|string[] ){
@@ -165,6 +149,26 @@ class TextFieldsHandler implements TextFieldsInterface{
         }
         return index;
     }
+}
+
+export const simulateWidth = (answer : string|string[]) => {
+    let fieldAnswer : string = "";
+    const textElement = document.createElement("p");
+    textElement.className = "text-font";
+    textElement.style.opacity = "0";
+    if(typeof answer === "string"){
+        fieldAnswer = answer;
+    }else{
+        answer.forEach(item => {
+            fieldAnswer = item.length > fieldAnswer.length ? item : fieldAnswer;
+        })
+    }
+    textElement.innerHTML = fieldAnswer;
+    textElement.style.display = "inline-block";
+    document.body.appendChild(textElement);
+    const textWidth = textElement.offsetWidth + 30;
+    document.body.removeChild(textElement);
+    return textWidth;
 }
 
 export const TextFields = (

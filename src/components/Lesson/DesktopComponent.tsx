@@ -58,14 +58,14 @@ const DesktopComponent: FC<ComponentSlides> = ({ slides , back}) => {
 
     return (
         <>
-            <div className="h-full flex grow justify-between items-end">
+            <div className="h-full flex grow justify-between items-end relative overflow-y-scroll">
                 <div className="w-[120px] h-full mb-[15px] relative" onClick={() => handlePrevious()}>
                     <div className="fixed w-full bottom-5">
                         {activeSlide > 0 && ( <PreviousBtn title="Previous" prev />)}
                     </div>
                 </div>
                 
-                <div className="h-full lg:w-[calc(100%_-_300px)] flex flex-col pb-[20px] overflow-y-scroll">
+                <div className="h-full lg:w-[calc(100%_-_300px)] flex flex-col pb-[20px]">
                     <SlideIndicator
                         num={slides.length}
                         active={activeSlide}

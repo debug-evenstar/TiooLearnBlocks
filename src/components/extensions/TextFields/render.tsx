@@ -22,16 +22,19 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
         e.target,
         manager?.inputAnswerMatch(e.target.value, answer)
       );
+
     }
     // Set value
     manager?.setFieldValue(id, e.target.value)
+    setInputWidth();
   };
 
-  const setInitialInputWidth = () => {
+  const setInputWidth = () => {
     if ( id && answer && allowInput ) {
       const element : any =  document.getElementById(id);
       const width = manager?.simulateAnswerWidth(answer);
-      element.style.width = `${width}px`;
+      const setWidth = (element.value.length/answer.length * width) + 30;
+      element.style.width = `${setWidth}px`;
     }
   }
 
@@ -46,7 +49,7 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
   }
 
   useEffect(()=>{
-    setInitialInputWidth();
+    // setInitialInputWidth();
     changeInputActiveState();
     manager?.slide.on(SlideEvents.PROGRESS_UPDATE,(data : any)=>{
       changeInputActiveState();
@@ -60,7 +63,7 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
         type="text"
         name="value"
         id={id}
-        className="bg-white text-center text-black h-[22px] border border-[#4F46E5] px-3 mx-2 input-style w-20 rounded-[20px]"
+        className={`bg-white text-center text-black h-[22px] border border-[#4F46E5] px-3 mx-2 input-style w-20 rounded-[20px]`}
         onChange={handleChange}
         disabled={inputIsDisabled}
       />
