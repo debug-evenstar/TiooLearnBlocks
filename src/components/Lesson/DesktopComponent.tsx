@@ -59,11 +59,13 @@ const DesktopComponent: FC<ComponentSlides> = ({ slides , back}) => {
     return (
         <>
             <div className="h-full flex grow justify-between items-end">
-                <div className="w-[120px] mb-[15px]" onClick={() => handlePrevious()}>
-                    {activeSlide > 0 && ( <PreviousBtn title="Previous" prev />)}
+                <div className="w-[120px] h-full mb-[15px] relative" onClick={() => handlePrevious()}>
+                    <div className="fixed w-full bottom-5">
+                        {activeSlide > 0 && ( <PreviousBtn title="Previous" prev />)}
+                    </div>
                 </div>
                 
-                <div className="h-full lg:w-[calc(100%_-_300px)] flex flex-col">
+                <div className="h-full lg:w-[calc(100%_-_300px)] flex flex-col pb-[20px] overflow-y-scroll">
                     <SlideIndicator
                         num={slides.length}
                         active={activeSlide}
@@ -82,10 +84,12 @@ const DesktopComponent: FC<ComponentSlides> = ({ slides , back}) => {
                     </div>
                 </div>
                 <div
-                    className={"w-[120px] mb-[15px]"}
+                    className={"w-[120px] h-full mb-[15px] relative"}
                     onClick={() => handleContinue()}
                 >
-                    {canProceed && !SuccessFeed && (<ContinueBtn title="Continue" />)}
+                    <div className="fixed w-full bottom-5">
+                        {canProceed && !SuccessFeed && (<ContinueBtn title="Continue" />)}
+                    </div>
                 </div>
             </div>
             <div>

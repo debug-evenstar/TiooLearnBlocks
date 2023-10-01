@@ -74,7 +74,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
   }
 
   const restartButtonGroup = () => {
-    buttonContainerRef.current.style.display = "block";
+    buttonContainerRef.current.style.display = "flex";
     initStatuses();
     setActiveOptionGroupIndex(0);
     if (data.options && data.options.length > 0) {

@@ -54,7 +54,7 @@ export const ContinueBtn: React.FC<Props> = ({
 }) => {
   return (
     <div className={disabled? "opacity-75 " : ""}>
-      <div className="relative">
+      <div className="!relative">
         <div className=""></div>
       <button className={` fw-600 cursor-pointer pr-4 text-white bg-[#86A94B] polygon-clip-next`} onClick={onClick ? onClick : undefined} disabled={disabled}>
       {isBusy ? (
@@ -79,8 +79,8 @@ export const PreviousBtn: React.FC<Props> = ({
   prev
 }) => {
   return (
-    <div className={disabled? "opacity-75 " : "min-h-[80px]"}>
-      <div className="relative polygon-clip-prev flex">
+    <div className={disabled? "opacity-75 " : "relative h-auto"}>
+      <div className="!relative polygon-clip-prev flex">
         <div className=""></div>
       <button className={` fw-600 cursor-pointer pl-4 !text-black`} onClick={onClick ? onClick : undefined} disabled={disabled}>
       {isBusy ? (

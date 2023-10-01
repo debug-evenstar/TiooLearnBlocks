@@ -12,7 +12,7 @@ interface LessonPageProps {
 const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, back}) => {
   return (
     <>
-      <div id="LessonPage" className="lesson-bg-default lg:bg-cover bg-fixed nue w-full h-screen overflow-y-auto pb-24 lg:pb-0 px-3 lg:px-6 xl:px-6 flex flex-col">
+      <div id="LessonPage" className="lesson-bg-default lg:bg-cover bg-fixed nue w-full h-screen overflow-y-hidden pb-24 lg:pb-0 px-3 lg:px-6 xl:px-6 flex flex-col">
         <div className="">
         <div className="hidden lg:flex text-white justify-between">
           <div className="exit-box lg:w-3/12 pt-6">
@@ -71,7 +71,7 @@ const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, ba
             </div>
           </div>
         </div>
-        <div className="lg:mt-16 w-full grow">
+        <div className="lg:pt-16 w-full grow overflow-y-hidden">
           {slides && slides.length && (<RenderComponent slides={slides} back={()=>back()}/>)}
         </div>
       </div>
