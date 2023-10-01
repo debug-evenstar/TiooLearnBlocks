@@ -65,13 +65,13 @@ const DesktopComponent: FC<ComponentSlides> = ({ slides , back}) => {
                     </div>
                 </div>
                 
-                <div className="h-full lg:w-[calc(100%_-_300px)] flex flex-col pb-[20px]">
+                <div className="h-full lg:w-[calc(100%_-_300px)] flex flex-col pb-[20px] no-scrollbar">
                     <SlideIndicator
                         num={slides.length}
                         active={activeSlide}
                         changeSlide={changeSlide}
                     />
-                    <div className="mt-4 w-full bg-cover rounded-lg min-h-[70vh] place-center grow fw-600">
+                    <div className="mt-4 w-full bg-cover rounded-lg min-h-[70vh] place-center grow fw-600 no-scrollbar">
                         <SlideManager
                             lessonSlides={slides}
                             ref={slideManagerRef}

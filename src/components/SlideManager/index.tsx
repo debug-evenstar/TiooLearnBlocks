@@ -153,7 +153,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   // backgroundSize: "100% 100%",
   };
   return (
-    <div style={containerStyle} className="w-full h-full mx-auto my-0 py-[10px] flex flex-col">
+    <div style={containerStyle} className="w-full h-full mx-auto my-0 py-[10px] flex flex-col no-scrollbar">
         {/* {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
           {activeSlide.map((component: any, index: number) => {
             const Component = loadComponent(component);
