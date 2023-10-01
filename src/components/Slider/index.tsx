@@ -21,7 +21,9 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
       } else {
         if(canProceed){
           hideButtonsDuringTransition();
-          sliderRef?.current?.navigator(1);
+          setTimeout(()=>{
+            sliderRef?.current?.navigator(1);
+          },800)
           //setCanProceed(false);
           // Disable feedbacks
         }
