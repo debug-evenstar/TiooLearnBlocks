@@ -107,11 +107,11 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }
 
   useEffect(()=>{
+    // SlideScope.registerSlideData(activeSlide); // Removed because it happens on slide change already
     SlideScope.setFunction('allowProceed', () => proceed(activeSlide));
     SlideScope.setFunction('canProceed', canProceed);
     SlideScope.setFunction('navigateSlide', navigateSlide);
     SlideScope.setFunction('setHint', (val:boolean) => setHintIsActive(val));
-    SlideScope.registerSlideData(activeSlide);
     proceed(activeSlide, 0);
     if( !parent ) {
       const compWithTheme = activeSlide.filter((c:any) => c.theme)
@@ -121,7 +121,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
 
   useEffect(()=>{
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
-  },[ parent ])
+  },[ activeSlide, parent ])
 
   // Core effects
   useEffect(()=>{

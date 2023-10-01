@@ -283,6 +283,7 @@ class LessonSlide implements LessonSlideInterface{
         this.progress = 0;
         this.video = null;
         this.textFields = [];
+        this.functions = {};
     }
     
     eventManager() {

@@ -42,7 +42,6 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
             if(newCards.length === 0){
                 imgContainerRef.current.style.display = "none";
                 slide.functions?.hideButtonGroup();
-                slide.functions?.hideText();
                 setFinished(true)
             }
             refreshButtons();
