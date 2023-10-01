@@ -39,5 +39,6 @@ declare class TextFieldsHandler implements TextFieldsInterface {
     inputAnswerMatch(input: string, answer: string | string[]): boolean;
     slideScopeIndex(id: string, answer: string | string[]): number;
 }
+export declare const simulateWidth: (answer: string | string[]) => number;
 export declare const TextFields: (data: any, slide: LessonSlideInterface, answers: any[], options: any[]) => TextFieldsHandler;
 export {};
