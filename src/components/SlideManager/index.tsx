@@ -105,6 +105,13 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
     }
     return FalseScope;
   }
+  
+  // Core effects
+  useEffect(()=>{
+    SlideScope.registerSlideData(activeSlide);
+    preloadImages(lessonSlides);
+  },[]);
+
 
   useEffect(()=>{
     // SlideScope.registerSlideData(activeSlide); // Removed because it happens on slide change already
@@ -122,11 +129,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   useEffect(()=>{
     SlideScope.setFunction('triggerFeedback', (message: string, type : string) => handleFeedback(message, type));
   },[ activeSlide, parent ])
-
-  // Core effects
-  useEffect(()=>{
-    preloadImages(lessonSlides);
-  },[]);
 
   useEffect(()=>{
     if(hintIsActive && hintRef?.current ){
