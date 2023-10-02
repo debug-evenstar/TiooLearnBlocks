@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import chevronRight from "../../img/chevron-right.svg";
 import chevronLeft from "../../img/chevron-left.svg";
+import chevronRightBlack from "../../img/chevron-right-black.svg";
+import chevronLeftBlack from "../../img/chevron-left-black.svg";
 import { SliderComponentProps, sliderComponentStyles } from "./handler";
 import SlideManager from "components/SlideManager";
 import { LessonSlideInterface } from "components/SlideManager/handler";
@@ -54,7 +56,7 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
         if( slide && slide.functions && slide.functions.canProceed ) {
           setTimeout(()=>{
             slide.functions?.canProceed(val, 0);
-          },500);
+          },1000);
         }
       }
     }
@@ -65,7 +67,7 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
     setParentSlideScope(slide);
   },[slide, activeSlide])
 
-
+  // Need to optimize dynamic image handling
   return (
     <>
       <div className="w-full py-4 flex flex-row justify-between items-center">
@@ -73,7 +75,15 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
             src={chevronRight}
             onClick={() => {handlePrevious()}}
             alt="images"
-            className={`h-[40px] slider-nav-btn ${
+            className={`h-[40px] slider-nav-btn theme-default ${
+              activeSlide === 0 ? "opacity-0" : "cursor-pointer opacity-100"
+            }`}
+          />
+          <img
+            src={chevronRightBlack}
+            onClick={() => {handlePrevious()}}
+            alt="images"
+            className={`h-[40px] slider-nav-btn theme-white ${
               activeSlide === 0 ? "opacity-0" : "cursor-pointer opacity-100"
             }`}
           />
@@ -91,7 +101,15 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
             alt="images"
             onClick={() => {handleContinue()}}
             src={chevronLeft}
-            className={`h-[40px] slider-nav-btn ${
+            className={`h-[40px] slider-nav-btn theme-default ${
+              activeSlide === data.slides.length - 1 ? "opacity-0" : "cursor-pointer opacity-100"
+            }`}
+          />
+          <img
+            alt="images"
+            onClick={() => {handleContinue()}}
+            src={chevronLeftBlack}
+            className={`h-[40px] slider-nav-btn theme-white ${
               activeSlide === data.slides.length - 1 ? "opacity-0" : "cursor-pointer opacity-100"
             }`}
           />

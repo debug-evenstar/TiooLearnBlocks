@@ -37,15 +37,15 @@ const FlashCardsComponent: FC<FlashCardComponentProps> = ({ data, slide }) => {
         handleCardTransition();
         const newCards = cardData;
         newCards.pop();
+        (newCards.length === 0) && slide.functions?.hideButtonGroup();
         setTimeout(() => {
             setCardData(() => [...newCards]);
             if(newCards.length === 0){
                 imgContainerRef.current.style.display = "none";
-                slide.functions?.hideButtonGroup();
                 setFinished(true)
             }
             refreshButtons();
-        }, 1200);
+        }, 1000);
 
     };
 

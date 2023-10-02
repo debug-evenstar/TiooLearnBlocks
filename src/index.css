@@ -670,7 +670,7 @@ body {
 }
 .lesson-bg-white {
   background-size: cover;
-  background-color: #f5f5f5;
+  background-color: #fff;
   background-image: url("https://res.cloudinary.com/dbgorivob/image/upload/v1696022177/backgrounds/Group_12634_1_pcsmit.png");
   color : black;
 }
@@ -689,12 +689,13 @@ body {
 .lesson-bg-white .slide-prev {
   background-color: #4F46E5;
 }
-.lesson-bg-default .hanger-white {
+.lesson-bg-default .hanger-white , .lesson-bg-default .theme-white {
   display: none;
 }
-.lesson-bg-white .hanger-default {
+.lesson-bg-white .hanger-default , .lesson-bg-white .theme-default{
   display: none;
 }
+
 
 .bg-home {
   background: linear-gradient(to right, rgba(105, 76, 87, 1),rgba(0, 0, 0, 0.2));
