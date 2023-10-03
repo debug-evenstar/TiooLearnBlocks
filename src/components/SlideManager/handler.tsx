@@ -130,6 +130,7 @@ class LessonSlide implements LessonSlideInterface{
     verifySubjectiveAnswer( index : number, input: string , answer : string|string[]){
         if( typeof answer == "string" && input.toLowerCase() === answer.toLowerCase()){
             this.functions?.selectAnswer(index, answer);
+            this.triggerFeedback("success");
             this.updateProgress();
             //Focus on next TextField
             this.activateNextField();
@@ -138,6 +139,7 @@ class LessonSlide implements LessonSlideInterface{
             answer.forEach(ans => {
                 if (ans.toLowerCase() === input.toLowerCase()){
                     this.functions?.selectAnswer(index, ans);
+                    this.triggerFeedback("success");
                     this.updateProgress();
                     //Focus on next TextField
                     this.activateNextField();

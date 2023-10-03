@@ -671,7 +671,7 @@ body {
 .lesson-bg-white {
   background-size: cover;
   background-color: #fff;
-  background-image: url("https://res.cloudinary.com/dbgorivob/image/upload/v1696022177/backgrounds/Group_12634_1_pcsmit.png");
+  /* background-image: url("https://res.cloudinary.com/dbgorivob/image/upload/v1696022177/backgrounds/Group_12634_1_pcsmit.png"); */
   color : black;
 }
 
