@@ -12,7 +12,7 @@ interface LessonPageProps {
 const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, back}) => {
   return (
     <>
-      <div id="LessonPage" className="lesson-bg-white lg:bg-cover bg-fixed nue w-full h-screen overflow-y-hidden pb-24 lg:pb-0 px-3 lg:px-6 xl:px-6 flex flex-col">
+      <div id="LessonPage" className="lesson-bg-white lg:bg-cover bg-fixed nue w-full h-screen overflow-y-hidden pb-24 lg:pb-0 px-3 lg:px-4 xl:px-6 flex flex-col">
         <div className="">
         <div className="hidden lg:flex text-white justify-between">
           <div className="exit-box lg:w-3/12 pt-6">
@@ -23,17 +23,17 @@ const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, ba
             { subject && className && (<p className="mt-4 hidden">{subject} : {className}</p>)}
           </div>
           <div className="w-6/12 relative">
-          <img
+            <img
               src="https://res.cloudinary.com/dic7regoe/image/upload/v1691443460/praxeum/Group_12598_mkbyg0.png"
               alt="board"
-              className="w-full absolute hanger-default"
+              className="w-full absolute mt-[-4%] hanger-default"
             />
             <img
               src="https://res.cloudinary.com/dbgorivob/image/upload/v1696016208/backgrounds/HangingBar_g9ydh0.png"
               alt="board"
-              className="w-full absolute hanger-white"
+              className="w-full absolute mt-[-4%] hanger-white"
             />
-            <div className="mt-[9%] text-center relative">
+            <div className="mt-[5%] text-center relative">
               {/* <p className="fw-600 text-black text-lg">Lesson 1</p> */}
               {title && (<p className="font-bold  text-[#FA14D5] pt-3 text-2xl 2xl:text-3xl ">
                 {title}
@@ -71,7 +71,7 @@ const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, ba
             </div>
           </div>
         </div>
-        <div className="lg:pt-16 w-full grow overflow-y-hidden">
+        <div className="lg:pt-8 w-full grow overflow-y-hidden">
           {slides && slides.length && (<RenderComponent slides={slides} back={()=>back()}/>)}
         </div>
       </div>

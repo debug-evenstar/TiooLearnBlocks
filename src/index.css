@@ -696,6 +696,33 @@ body {
   display: none;
 }
 
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  margin-left : 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e1e1e1;
+  border-radius: 10px;
+  border-right: none;
+  border-left: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track-piece:end {
+  background: transparent;
+  margin-bottom: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track-piece:start {
+  background: transparent;
+  margin-top: 20px;
+}
+
 
 .bg-home {
   background: linear-gradient(to right, rgba(105, 76, 87, 1),rgba(0, 0, 0, 0.2));

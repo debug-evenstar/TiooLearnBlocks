@@ -58,19 +58,21 @@ const DesktopComponent: FC<ComponentSlides> = ({ slides , back}) => {
 
     return (
         <>
-            <div className="h-full flex grow justify-between items-end relative overflow-y-scroll">
-                <div className="w-[120px] h-full mb-[15px] relative" onClick={() => handlePrevious()}>
+            <div className="h-full flex grow justify-between items-end relative overflow-y-scroll custom-scrollbar">
+                <div className="w-[120px] h-full mb-[15px] ml-2 relative" onClick={() => handlePrevious()}>
                     <div className="fixed w-full bottom-5">
                         {activeSlide > 0 && ( <PreviousBtn title="Previous" prev />)}
                     </div>
                 </div>
                 
                 <div className="h-full lg:w-[calc(100%_-_300px)] flex flex-col pb-[20px] no-scrollbar">
-                    <SlideIndicator
-                        num={slides.length}
-                        active={activeSlide}
-                        changeSlide={changeSlide}
-                    />
+                    <div className="fixed top-[50px] right-[8%] w-[150px]">
+                        <SlideIndicator
+                            num={slides.length}
+                            active={activeSlide}
+                            changeSlide={changeSlide}
+                        />
+                    </div>
                     <div className="mt-4 w-full bg-cover rounded-lg min-h-[70vh] place-center grow fw-600 no-scrollbar">
                         <SlideManager
                             lessonSlides={slides}
@@ -84,7 +86,7 @@ const DesktopComponent: FC<ComponentSlides> = ({ slides , back}) => {
                     </div>
                 </div>
                 <div
-                    className={"w-[120px] h-full mb-[15px] relative"}
+                    className={"w-[120px] h-full mb-[15px] mr-2 relative"}
                     onClick={() => handleContinue()}
                 >
                     <div className="fixed w-full bottom-5">
