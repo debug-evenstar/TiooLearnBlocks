@@ -38,6 +38,10 @@ const formatMappings : {[key : string] : Function} = {
     keyword : (text : string | React.ReactElement) => (<span className="!text-green-500">{` `}{text}{` `}</span>)
 }
 
+const exclusions = [
+    "<~","~>"
+];
+
 const format = (key : string, text : string) => {
     return formatMappings[key](text);
 }
@@ -82,6 +86,9 @@ const collectFormattingIndices  = (list : any[], index : number = 0) => {
     let track = false;
     for (let i = 0; i < list.length; i++) {
         const text = list[i];
+        if(stringContainsAny(exclusions, text)){
+            continue;
+        }
         if( text.includes(pair[0]) ) {
             track = true;
             list[i] = list[i].replace(pair[0], "");

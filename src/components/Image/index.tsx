@@ -10,8 +10,8 @@ const ImageComponent: FC<ImageComponentProps> = ({ data, slide }) => {
                 alt="images"
                 className={
                     slide.parent 
-                        ? "w-[350px] mx-auto rounded-lg cursor-pointer"
-                        : "w-[320px] mx-auto rounded-lg cursor-pointer"
+                        ? "w-[80%] mx-auto rounded-lg cursor-pointer"
+                        : "w-[80%] mx-auto rounded-lg cursor-pointer"
                 }
                 onClick={() => setPreviewImage(!previewImage)}
             />
