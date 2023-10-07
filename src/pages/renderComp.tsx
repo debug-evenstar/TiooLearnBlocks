@@ -5,11 +5,12 @@ import DesktopComponent from '../components/Lesson/DesktopComponent';
 interface ComponentSlides {
   slides : any[]
   back : Function;
+  title? : string;
 }
 // Will make typed later
 //lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData)[][];
 
-const RenderComponent : FC<ComponentSlides> = ({slides, back}) => {
+const RenderComponent : FC<ComponentSlides> = ({slides, back, title}) => {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   useEffect(() => {
     // Event listener function to update the screen width state
@@ -32,9 +33,9 @@ const RenderComponent : FC<ComponentSlides> = ({slides, back}) => {
   return (
     <div className='h-full'>
       {screenWidth < breakpoint ? (
-        <MobileComponent slides={slides} back={back}/>
+        <MobileComponent slides={slides} back={back} title={title}/>
       ) : (
-        <DesktopComponent slides={slides} back={back}/>
+        <DesktopComponent slides={slides} back={back} title={title}/>
       )}
     </div>
   );

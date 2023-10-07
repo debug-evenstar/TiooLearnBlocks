@@ -9,6 +9,8 @@ import VideoComponent from "../Video";
 import WordMatchComponent from "../WordMatch";
 import { GlobalEventStorage, SlideEvents } from "./events";
 import { simulateWidth } from "components/extensions/TextFields";
+import PrefaceComponent from "components/Preface";
+import PostfaceComponent from "components/Postface";
 
 declare global {
     interface Window {
@@ -31,6 +33,7 @@ export interface LessonSlideInterface {
     addFields : Function;
     selectAnswer : Function;
     setFunction : Function;
+    setAttribute : Function;
     triggerFeedback : Function;
     updateProgress : Function;
     functions? : {[key : string] : Function};
@@ -242,6 +245,15 @@ class LessonSlide implements LessonSlideInterface{
         }
     }
 
+    setAttribute(attributeName : string , value : string) {
+        if ( this.attributes) {
+            this.attributes[attributeName] = value;
+        }else {
+            this.attributes = {};
+            this.attributes[attributeName] = value;
+        }
+    }
+
     feedbackMessage(type : string, list : any[], index : number = this.progress){
         return (!this.options || this.options.length === 0) && (this.answers && this.answers.length > 1)
             ? list[index]
@@ -410,7 +422,9 @@ const keyToComponentMapper : {[key : string] : any} = {
     "Video" : VideoComponent,
     "WordMatch" : WordMatchComponent,
     "Options" : OptionsComponent,
-    "GridSteps" : GridSteps
+    "GridSteps" : GridSteps,
+    "Preface" : PrefaceComponent,
+    "Postface" : PostfaceComponent
 }
 
 

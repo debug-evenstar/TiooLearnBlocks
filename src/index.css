@@ -440,11 +440,8 @@ body {
 }
 .polygon-clip-next {
   font-size: 20px;
-  width: 120px;
   top: 5;
   left: 5;
-  height: 80px;
-  padding: 18px 5px;
   clip-path: polygon(
     2.491% 10.909%,
     2.491% 10.909%,

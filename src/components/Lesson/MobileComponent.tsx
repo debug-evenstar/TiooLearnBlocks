@@ -8,9 +8,10 @@ import SlideManager from "components/SlideManager";
 interface ComponentSlides {
     slides: any[];
     back : Function;
+    title? : string;
 }
 
-const MobileComponent: FC<ComponentSlides> = ({ slides , back}) => {
+const MobileComponent: FC<ComponentSlides> = ({ slides , back, title}) => {
     const [SuccessFeed, setSuccessFeed] = useState(false);
     const [FailureFeed, setFailureFeed] = useState(false);
     const [message, setMessage] = useState<string>("");

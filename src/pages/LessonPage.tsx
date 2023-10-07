@@ -72,7 +72,7 @@ const LessonPage : FC<LessonPageProps> = ({subject, className, title, slides, ba
           </div>
         </div>
         <div className="lg:pt-8 w-full grow overflow-y-hidden">
-          {slides && slides.length && (<RenderComponent slides={slides} back={()=>back()}/>)}
+          {slides && slides.length && (<RenderComponent slides={slides} back={()=>back()} title={title}/>)}
         </div>
       </div>
     </>
