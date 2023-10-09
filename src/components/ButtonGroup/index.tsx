@@ -26,7 +26,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
             nextButtonGroup();
           },600)
         }else{
-          if( slide.progress < data.answers.length){
+          if(slide.answers && slide.progress < slide.answers.length){
             setButtonStatus(index, "failure");
             setTimeout(()=>{
               setButtonStatus(index, "default");
@@ -74,7 +74,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
   }
 
   const restartButtonGroup = () => {
-    buttonContainerRef.current.style.display = "block";
+    buttonContainerRef.current.style.display = "flex";
     initStatuses();
     setActiveOptionGroupIndex(0);
     if (data.options && data.options.length > 0) {
@@ -87,7 +87,7 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
 
   useEffect(()=>{
     initStatuses();
-  },[])
+  },[data, slide])
 
   useEffect(()=>{
     if (data.options && data.options.length > 0) {
@@ -98,7 +98,8 @@ const ButtonGroupComponent:FC<ButtonGroupProps> = ({data, manager, slide}) => {
     slide.setFunction('initButtonStatuses', initStatuses);
     slide.setFunction('hideButtonGroup', hideButton);
     slide.setFunction('restartButtonGroup', restartButtonGroup);
-  },[data]);
+    restartButtonGroup();
+  },[data, slide]);
 
 
 

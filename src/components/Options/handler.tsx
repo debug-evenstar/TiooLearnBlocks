@@ -5,6 +5,7 @@ export interface TextStyles {
 }
 
 export interface OptionData {
+    component : string;
     options : string[],
     answers : string[]
 }

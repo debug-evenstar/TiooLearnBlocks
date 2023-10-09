@@ -3,10 +3,11 @@ interface TextStyles {
     color?: string;
 }
 export interface TextData {
+    component: string;
     content: string;
     tips?: string[];
     answers?: any[];
-    options?: string[];
+    options?: string[][];
 }
 export interface TextComponentProps {
     styles?: TextStyles;

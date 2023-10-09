@@ -35,7 +35,6 @@ const ButtonComponent: React.FC<ButtonProps> = ({
 
   useEffect(()=>{
     generateStyle();
-    console.log(status);
   },[status]);
 
   return (

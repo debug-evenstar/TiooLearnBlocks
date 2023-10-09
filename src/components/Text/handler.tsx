@@ -8,10 +8,11 @@ interface TextStyles {
 }
 
 export interface TextData {
+    component : string;
     content : string;
     tips? :  string[];
     answers? : any[];
-    options? : string[];
+    options? : string[][];
 }
 
 export interface TextComponentProps {
@@ -33,10 +34,14 @@ const formatIdentifiers : {[key : string] : any } = {
 
 const formatMappings : {[key : string] : Function} = {
     bold : (text : string | React.ReactElement) => (<strong className="text-font">{` `}{text}{` `}</strong>),
-    heading : (text : string | React.ReactElement) => (<strong className="text-font heading">{` `}{text}{` `}</strong>),
+    heading : (text : string | React.ReactElement) => (<strong className="w-full text-center text-font heading">{` `}{text}{` `}</strong>),
     italic : (text : string | React.ReactElement) => (<i>{` `}{text}{` `}</i>),
-    keyword : (text : string | React.ReactElement) => (<span className="text-green-500">{` `}{text}{` `}</span>)
+    keyword : (text : string | React.ReactElement) => (<span className="!text-green-500">{` `}{text}{` `}</span>)
 }
+
+const exclusions = [
+    "<~","~>"
+];
 
 const format = (key : string, text : string) => {
     return formatMappings[key](text);
@@ -82,6 +87,9 @@ const collectFormattingIndices  = (list : any[], index : number = 0) => {
     let track = false;
     for (let i = 0; i < list.length; i++) {
         const text = list[i];
+        if(stringContainsAny(exclusions, text)){
+            continue;
+        }
         if( text.includes(pair[0]) ) {
             track = true;
             list[i] = list[i].replace(pair[0], "");

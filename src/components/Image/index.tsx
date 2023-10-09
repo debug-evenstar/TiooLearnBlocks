@@ -8,11 +8,15 @@ const ImageComponent: FC<ImageComponentProps> = ({ data, slide }) => {
             <img
                 src={data.url}
                 alt="images"
-                className="w-[320px] mx-auto rounded-lg cursor-pointer"
+                className={
+                    slide.parent 
+                        ? "w-[80%] mx-auto rounded-lg cursor-pointer"
+                        : "w-[80%] mx-auto rounded-lg cursor-pointer"
+                }
                 onClick={() => setPreviewImage(!previewImage)}
             />
             {previewImage && (
-                <div className="w-full h-full top-0 left-0 absolute z-10 flex justify-center items-center bg-[rgb(0,0,0,0.8)]">
+                <div className="w-screen h-screen top-0 left-0 fixed z-10 flex justify-center items-center bg-[rgb(0,0,0,0.8)]">
                     <div
                         className="absolute top-[15px] right-[30px] text-[35px] text-white cursor-pointer comic"
                         onClick={() => setPreviewImage(!previewImage)}

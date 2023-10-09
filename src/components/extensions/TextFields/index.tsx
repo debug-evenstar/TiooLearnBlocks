@@ -11,6 +11,7 @@ export interface TextFieldsInterface {
     slide : LessonSlideInterface;
     setFieldValue : Function;
     answers : any[];
+    options : any[];
     simulateAnswerWidth : Function;
     inputAnswerMatch : Function;
     slideScopeIndex : Function;
@@ -23,13 +24,15 @@ class TextFieldsHandler implements TextFieldsInterface{
     fieldData : {[key: string]: any};
     slide : LessonSlideInterface;
     answers : any[];
+    options: any[];
 
-    constructor(data : any, slide : LessonSlideInterface, answers : any[] = []){
+    constructor(data : any, slide : LessonSlideInterface, answers : any[] = [], options : any[] = []){
         this.data = data;
         this.fieldIds = [];
         this.fieldData = {}
         this.slide = slide;
         this.answers = answers;
+        this.options = options;
         this.processTextFields();
     }
 
@@ -62,7 +65,7 @@ class TextFieldsHandler implements TextFieldsInterface{
 
     fieldReplacementFill(index : number, value : string, data : any[]){
         const fieldIndex = Object.values(this.fieldData)[index].index;
-        data[fieldIndex] = (<span className="text-green-500 font-semibold text-[17px] text-font">{value}</span>);
+        data[fieldIndex] = (<span className="!text-green-500 font-semibold text-[17px] text-font">{value}</span>);
         return [...data];
     }
 
@@ -72,7 +75,7 @@ class TextFieldsHandler implements TextFieldsInterface{
         let answer : (number|null) = answerIndex !== -1
             ? this.answers[answerIndex]
             : null;
-
+        let options = this.options && this.options.length ? true : false;
         return {
             id : id,
             index : answerIndex,
@@ -80,7 +83,7 @@ class TextFieldsHandler implements TextFieldsInterface{
                 <TextFieldComponent 
                     id={id}
                     manager={this}
-                    allowInput={!!answer}
+                    allowInput={!!answer && !options}
                     answer={answer}
                 />
             )
@@ -112,23 +115,7 @@ class TextFieldsHandler implements TextFieldsInterface{
     }
 
     simulateAnswerWidth(answer : string|string[]){
-        let fieldAnswer : string = "";
-        const textElement = document.createElement("p");
-        textElement.className = "text-font";
-        textElement.style.opacity = "0";
-        if(typeof answer === "string"){
-            fieldAnswer = answer;
-        }else{
-            answer.forEach(item => {
-                fieldAnswer = item.length > fieldAnswer.length ? item : fieldAnswer;
-            })
-        }
-        textElement.innerHTML = fieldAnswer;
-        textElement.style.display = "inline-block";
-        document.body.appendChild(textElement);
-        const textWidth = textElement.offsetWidth + 30;
-        document.body.removeChild(textElement);
-        return textWidth;
+        return simulateWidth(answer);
     }
 
     inputAnswerMatch(input : string, answer : string|string[] ){
@@ -147,15 +134,46 @@ class TextFieldsHandler implements TextFieldsInterface{
     }
 
     // Use field answers to determine slide scope index
-    slideScopeIndex( answer : string|string[] ){
-        const slideAnswers = this.slide.answers;
-        const index = slideAnswers?.indexOf(answer);
+    slideScopeIndex( id : string, answer : string|string[] ){
+        const slideFields = this.slide.textFields;
+        let index = 0;
+        if(slideFields){
+            for (let i = 0; i < slideFields.length; i++) {
+                const field = slideFields[i];
+                if(field.id === id) {
+                    return index;
+                }else{
+                    index++
+                }
+            }
+        }
         return index;
     }
+}
+
+export const simulateWidth = (answer : string|string[]) => {
+    let fieldAnswer : string = "";
+    const textElement = document.createElement("p");
+    textElement.className = "text-font";
+    textElement.style.opacity = "0";
+    if(typeof answer === "string"){
+        fieldAnswer = answer;
+    }else{
+        answer.forEach(item => {
+            fieldAnswer = item.length > fieldAnswer.length ? item : fieldAnswer;
+        })
+    }
+    textElement.innerHTML = fieldAnswer;
+    textElement.style.display = "inline-block";
+    document.body.appendChild(textElement);
+    const textWidth = textElement.offsetWidth + 30;
+    document.body.removeChild(textElement);
+    return textWidth;
 }
 
 export const TextFields = (
     data : any,
     slide : LessonSlideInterface,
-    answers : any[]
-) => ( new TextFieldsHandler(data, slide, answers) );
+    answers : any[],
+    options : any[]
+) => ( new TextFieldsHandler(data, slide, answers, options) );

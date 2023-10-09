@@ -1,5 +1,6 @@
 import { LessonSlideInterface } from "../SlideManager/handler";
 export interface WordMatchData {
+    component: string;
     answers: string[];
     options: string[];
     feedbacks: any[];

@@ -3,6 +3,7 @@ export interface TextStyles {
     color?: string;
 }
 export interface OptionData {
+    component: string;
     options: string[];
     answers: string[];
 }
