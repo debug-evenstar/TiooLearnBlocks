@@ -1,27 +1,22 @@
-import React, { FC, useRef, useState, useEffect } from "react";
+import React, { FC, useRef, useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
-import { dummyData } from "utilities/data";
 import EditorialSlideView from "components/editorailComps/slideView";
 import ActiveEditSlide from "components/editorailComps/activeEditSlide";
+
 
 interface Props {
   data?: any
   lessons?: any
+  changeFile: (file:any,payload:any, id:any) => void
+  changeCard: (file:any,payload:any, id:any, length:number, changedIndex:any) => void
+  back: () => void
+  lessonlist: any
+  name: string
+  isBusy: boolean
 }
-const  Editorial:FC<Props> = ({data, lessons}) => {
-  const fetchLess = async () => {
-   await fetch("https://api.hellotioo.com/open/lesson/35/template")
-      // await fetch('https://api.hellotioo.com/open/lesson/template/35')
-      .then((res: any) => {
-        if (!res.error) {
-          console.log(res.data);
-        } else console.log(res);
-      });
-  };
-  useEffect(() => {
-    fetchLess();
-  }, []);
-  const parseSlides = dummyData.LessonSlides.map(
+const  Editorial:FC<Props> = ({data, lessons, changeFile, back, lessonlist, name, isBusy, changeCard}) => {
+  
+  const parseSlides = data && data.LessonSlides.map(
     (slide: any) => slide.slide_data
   );
   const slideManagerRef = useRef<any>(null);
@@ -44,15 +39,23 @@ const  Editorial:FC<Props> = ({data, lessons}) => {
   };
 
   const changeSlide = (index: number) => {
-    slideManagerRef?.current?.navigator(1, index);
     setShowEdit(false);
+    setTimeout(() => {
+      slideManagerRef?.current?.navigator(1, index);
+    }, 400);
   };
+  if(!data){
+    return    <p>Loading...</p>
+  }
   return (
     <MainLayout
       slides={parseSlides}
       changeTo={changeSlide}
       active={activeSlide}
       showComp={showEdit}
+      back={back}
+      lessonlist={lessonlist}
+      name={name}
     >
       <div className="w-full bg-white px-[30px] py-[28px]">
         <div className="mt-6">
@@ -74,8 +77,11 @@ const  Editorial:FC<Props> = ({data, lessons}) => {
               <ActiveEditSlide
                 active={activeSlide}
                 slides={parseSlides}
-                data={dummyData}
+                data={data}
                 showEdit={() => setShowEdit(false)}
+                changeFile={changeFile}
+                isBusy={isBusy}
+                changeCard={changeCard}
               />
             </>
           )}
@@ -98,4 +104,7 @@ const  Editorial:FC<Props> = ({data, lessons}) => {
   );
 }
 
-export default Editorial;
+export  default Editorial;
+// export {default as MainEditorial} from '../../layouts/MainLayout'
+// export {default as SlideView} from "components/editorailComps/slideView"
+// export {default as ActiveSlide} from "components/editorailComps/activeEditSlide"

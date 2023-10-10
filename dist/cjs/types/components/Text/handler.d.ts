@@ -13,6 +13,7 @@ export interface TextComponentProps {
     styles?: TextStyles;
     data: TextData;
     slide: LessonSlideInterface;
+    altHeaderStyle: string;
 }
 export declare const processTextStyles: () => void;
 export declare const formatTextContent: (content: string) => any;

@@ -55,6 +55,20 @@ body {
 input[type="file"] {
   cursor: pointer !important;
 }
+.slick-prev:before {
+  content: "<";
+  color: rgb(50, 50, 50);
+  font-size: 40px;
+  font-weight: 500;
+}
+
+.slick-next:before {
+  content: ">";
+  color: rgb(50, 50, 50);
+  font-size: 40px;
+  font-weight: 500;
+}
+
 
 .compinactive {
   box-shadow: 0.4000000059604645px 0.4000000059604645px 2px 1px #0000001a;
