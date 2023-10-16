@@ -6,6 +6,8 @@ import { FlashCardData as FlashCardData$1 } from 'components/FlashCards/handler'
 import { WordMatchData as WordMatchData$1 } from 'components/WordMatch/handler';
 import { ButtonGroupData as ButtonGroupData$1 } from 'components/ButtonGroup/handler';
 import { GridStepsData as GridStepsData$1 } from 'components/GridSteps/handler';
+import { PrefaceData as PrefaceData$1 } from 'components/Preface/handler';
+import { PostfaceData as PostfaceData$1 } from 'components/Postface/handler';
 import { LessonSlideInterface as LessonSlideInterface$1 } from 'components/SlideManager/handler';
 
 declare global {
@@ -28,6 +30,7 @@ interface LessonSlideInterface {
     addFields: Function;
     selectAnswer: Function;
     setFunction: Function;
+    setAttribute: Function;
     triggerFeedback: Function;
     updateProgress: Function;
     functions?: {
@@ -128,14 +131,15 @@ interface OptionsComponentProps {
 }
 
 interface SlideManagerProps {
-    lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData | GridStepsData$1)[][];
+    lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData | GridStepsData$1 | PrefaceData$1 | PostfaceData$1)[][];
     canProceed: Function;
     handleFeedback: Function;
     updateActiveSlide: Function;
     ref: any;
-    altHeaderStyle?: string;
     parent?: any;
     altHeaderStyle?: string;
+    handleContinue?: Function;
+    lessonTitle?: string;
 }
 declare const SlideManager: FC<SlideManagerProps>;
 
@@ -174,6 +178,18 @@ declare const VideoComponent: FC<VideoComponentProps>;
 
 declare const WordMatchComponent: FC<WordMatchComponentProps>;
 
+interface Props {
+    data?: any;
+    lessons?: any;
+    changeFile: (file: any, payload: any, id: any) => void;
+    changeCard: (file: any, payload: any, id: any, length: number, changedIndex: any) => void;
+    back: () => void;
+    lessonlist: any;
+    name: string;
+    isBusy: boolean;
+}
+declare const Editorial: FC<Props>;
+
 interface GridStepsData {
     size: string;
     start: string;
@@ -190,6 +206,28 @@ interface GridStepsComponentProps {
 
 declare const GridSteps: react.FC<GridStepsComponentProps>;
 
+interface PrefaceData {
+    component: string;
+    objectives: string[];
+}
+interface PrefaceComponentProps {
+    data: PrefaceData;
+    slide: LessonSlideInterface$1;
+}
+
+declare const PrefaceComponent: FC<PrefaceComponentProps>;
+
+interface PostfaceData {
+    component: string;
+    terms: string[];
+}
+interface PostfaceComponentProps {
+    data: PostfaceData;
+    slide: LessonSlideInterface$1;
+}
+
+declare const PostfaceComponent: FC<PostfaceComponentProps>;
+
 interface LessonPageProps {
     subject: string;
     className: string;
@@ -199,4 +237,4 @@ interface LessonPageProps {
 }
 declare const LessonPage: FC<LessonPageProps>;
 
-export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, LessonPage, OptionsComponent as Options, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };
+export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, LessonPage, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };

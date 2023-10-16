@@ -8,4 +8,7 @@ export { default as Slider } from "./Slider";
 export { default as Text } from "./Text";
 export { default as Video } from "./Video";
 export { default as WordMatch } from "./WordMatch";
+export { default as Editorial } from "../pages/editorial";
 export { default as GridSteps } from "./GridSteps";
+export { default as Preface } from "./Preface";
+export { default as Postface } from "./Postface";
