@@ -166,6 +166,9 @@ input[type="file"] {
 
 .text-preview {
   font-size: 10px !important;
+  white-space: wrap;
+  font-size: 20px;
+  
 }
 
 .heading {
@@ -181,4 +184,685 @@ input[type="file"] {
 }
 .bg-preview{
   background-color: rgba(0, 0, 0, 0.35);
+}
+.slide-transition{
+  transition: opacity 0.8s, left 0.8s;
+}
+
+.slide-box{
+  height : fit-content;
+}
+
+
+.slide-box-clip {
+  clip-path : polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
+  overflow: hidden;
+}
+
+@keyframes slide-transition-left-in {
+  0%   {width:0px; opacity: 0; left : 0; height:0; padding-left : unset; padding-right : unset;}
+  1%   {width : 100%; height : 100%; opacity: 0; left : 0; padding-left : 0px; padding-right : 0px;}
+  60%   {width : 100%; height : 100%; opacity: 0; left : -40%; padding-left : 10px; padding-right : 10px;}
+  100% {width : 100%; height : 100%; opacity: 1; left : -100%; padding-left : 10px; padding-right : 10px;}
+}
+
+@keyframes slide-transition-left-out {
+  0%   {width:100%; height : 100%; opacity: 1; left : 0; padding-left : 10px; padding-right : 10px;}
+  0%   {width:100%; height : 100%; opacity: 1; left : -100%; padding-left : 10px; padding-right : 10px;}
+  40%   {width:100%; height : 100%; opacity: 0.2; left : -60%; padding-left : 10px; padding-right : 10px;}
+  95% {width : 100%; height : 100%; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
+  100% {width : 0px; height: 0px; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
+}
+
+@keyframes slide-transition-right-in {
+  0%   {width:0px; height : 0px; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
+  1%   {width : 100%; height : 100%; opacity: 0; left : -100%; padding-left : 10px; padding-right : 10px;}
+  2%   {width : 100%; height : 100%; opacity: 0.2; left : -100%; padding-left : 10px; padding-right : 10px;}
+  60% {width : 100%; height : 100%; opacity: 0.6; left : -40%; padding-left : 10px; padding-right : 10px;}
+  100% {width : 100%; height: 100%; opacity: 1; left : 0; padding-left : 10px; padding-right : 10px;}
+}
+
+@keyframes slide-transition-right-out {
+  0%   {width:100%; height : 100%; opacity: 1; left : 0; padding-left : 10px; padding-right : 10px;}
+  95% {width : 100%; height : 100%; opacity: 0; left : -100%; padding-left : 0px; padding-right : 0px;}
+  100% {width : 100%; height: 100%; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
+}
+
+
+
+.slide-left-in {
+  animation-name: slide-transition-left-in;
+  animation-timing-function: linear;
+  animation-duration: 0.8s;
+  animation-delay: 0s;
+  animation-fill-mode: forwards;
+}
+
+.slide-left-out {
+  animation-name: slide-transition-left-out;
+  animation-timing-function: linear;
+  animation-duration: 0.8s;
+  animation-delay: 0s;
+  animation-fill-mode: forwards;
+}
+
+.slide-right-in {
+  animation-name: slide-transition-right-in;
+  animation-timing-function: linear;
+  animation-duration:0.8s;
+  animation-delay: 0s;
+  animation-fill-mode: forwards;
+}
+
+.slide-right-out {
+  animation-name: slide-transition-right-out;
+  animation-timing-function: linear;
+  animation-duration:0.8s;
+  animation-delay: 0s;
+  animation-fill-mode: forwards;
+}
+
+/* LESSON PAGE COMPONENT STYLES */
+.nue {
+  font-family: "Comic Neue", cursive;
+}
+
+.no-scrollbar::-webkit-scrollbar{
+  display: none;
+}
+.fw-200 {
+  font-weight: 200;
+}
+.fw-300 {
+  font-weight: 300;
+}
+.fw-400 {
+  font-weight: 400;
+}
+.fw-500 {
+  font-weight: 500;
+}
+.fw-600 {
+  font-weight: 600;
+}
+.fw-700 {
+  font-weight: 700;
+}
+.fw-800 {
+  font-weight: 800;
+}
+.fw-900 {
+  font-weight: 900;
+}
+.fs-400 {
+  font-size: 14px;
+}
+.fs-00 {
+  font-size: 10px;
+}
+.fs-100 {
+  font-size: 11px;
+}
+.fs-200 {
+  font-size: 12px;
+}
+.fs-300 {
+  font-size: 13px;
+}
+.fs-500 {
+  font-size: 15px;
+}
+.fs-600 {
+  font-size: 16px;
+}
+.fs-700 {
+  font-size: 17px;
+}
+.fs-800 {
+  font-size: 18px;
+}
+
+.poly {
+  clip-path: polygon(
+    2.491% 10.909%,
+    2.491% 10.909%,
+    2.556% 9.729%,
+    2.745% 8.61%,
+    3.047% 7.567%,
+    3.452% 6.614%,
+    3.95% 5.766%,
+    4.53% 5.04%,
+    5.183% 4.448%,
+    5.898% 4.007%,
+    6.664% 3.732%,
+    7.472% 3.636%,
+    78.692% 3.636%,
+    78.692% 3.636%,
+    79.222% 3.678%,
+    79.74% 3.799%,
+    80.243% 3.998%,
+    80.727% 4.271%,
+    81.187% 4.614%,
+    81.62% 5.026%,
+    82.023% 5.502%,
+    82.392% 6.039%,
+    82.723% 6.635%,
+    83.011% 7.285%,
+    100% 50.443%,
+    100% 50.443%,
+    100.248% 51.162%,
+    100.438% 51.908%,
+    100.57% 52.672%,
+    100.644% 53.449%,
+    100.661% 54.23%,
+    100.62% 55.01%,
+    100.522% 55.781%,
+    100.367% 56.536%,
+    100.154% 57.268%,
+    99.884% 57.97%,
+    83.042% 96.63%,
+    83.042% 96.63%,
+    82.749% 97.234%,
+    82.418% 97.787%,
+    82.053% 98.284%,
+    81.659% 98.723%,
+    81.237% 99.102%,
+    80.791% 99.418%,
+    80.326% 99.669%,
+    79.843% 99.851%,
+    79.346% 99.962%,
+    78.839% 100%,
+    7.472% 100%,
+    7.472% 100%,
+    6.664% 99.905%,
+    5.898% 99.629%,
+    5.183% 99.188%,
+    4.53% 98.597%,
+    3.95% 97.87%,
+    3.452% 97.022%,
+    3.047% 96.069%,
+    2.745% 95.026%,
+    2.556% 93.907%,
+    2.491% 92.727%,
+    2.491% 10.909%
+  );
+  -webkit-clip-path: polygon(
+    2.491% 10.909%,
+    2.491% 10.909%,
+    2.556% 9.729%,
+    2.745% 8.61%,
+    3.047% 7.567%,
+    3.452% 6.614%,
+    3.95% 5.766%,
+    4.53% 5.04%,
+    5.183% 4.448%,
+    5.898% 4.007%,
+    6.664% 3.732%,
+    7.472% 3.636%,
+    78.692% 3.636%,
+    78.692% 3.636%,
+    79.222% 3.678%,
+    79.74% 3.799%,
+    80.243% 3.998%,
+    80.727% 4.271%,
+    81.187% 4.614%,
+    81.62% 5.026%,
+    82.023% 5.502%,
+    82.392% 6.039%,
+    82.723% 6.635%,
+    83.011% 7.285%,
+    100% 50.443%,
+    100% 50.443%,
+    100.248% 51.162%,
+    100.438% 51.908%,
+    100.57% 52.672%,
+    100.644% 53.449%,
+    100.661% 54.23%,
+    100.62% 55.01%,
+    100.522% 55.781%,
+    100.367% 56.536%,
+    100.154% 57.268%,
+    99.884% 57.97%,
+    83.042% 96.63%,
+    83.042% 96.63%,
+    82.749% 97.234%,
+    82.418% 97.787%,
+    82.053% 98.284%,
+    81.659% 98.723%,
+    81.237% 99.102%,
+    80.791% 99.418%,
+    80.326% 99.669%,
+    79.843% 99.851%,
+    79.346% 99.962%,
+    78.839% 100%,
+    7.472% 100%,
+    7.472% 100%,
+    6.664% 99.905%,
+    5.898% 99.629%,
+    5.183% 99.188%,
+    4.53% 98.597%,
+    3.95% 97.87%,
+    3.452% 97.022%,
+    3.047% 96.069%,
+    2.745% 95.026%,
+    2.556% 93.907%,
+    2.491% 92.727%,
+    2.491% 10.909%
+  );
+}
+.poly-2 {
+  -webkit-clip-path: polygon(
+    100% 0%,
+    100% 55%,
+    100% 100%,
+    25% 100%,
+    0% 50%,
+    25% 0%
+  );
+  clip-path: polygon(100% 0%, 100% 55%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
+  border-radius: inset(0% 45% 0% 45% round 10px);
+}
+.polywrapper {
+  width: fit-content;
+  margin: auto;
+  clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+  background: #ffffff;
+  border: 5px solid #ffffff;
+  border-radius: 5px;
+}
+.polywrapper2 {
+  width: fit-content;
+  border-radius: 5px;
+  margin: auto;
+  clip-path: polygon(100% 0%, 100% 55%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
+  background: #030036bd;
+  border: 5px solid #030036bd;
+}
+.polygon-small {
+  font-size: 23px;
+  width: 140px;
+  position: absolute;
+  top: 5;
+  left: 5;
+  padding: 20px 5px;
+  clip-path: polygon(
+    2.491% 10.909%,
+    2.491% 10.909%,
+    2.556% 9.729%,
+    2.745% 8.61%,
+    3.047% 7.567%,
+    3.452% 6.614%,
+    3.95% 5.766%,
+    4.53% 5.04%,
+    5.183% 4.448%,
+    5.898% 4.007%,
+    6.664% 3.732%,
+    7.472% 3.636%,
+    78.692% 3.636%,
+    78.692% 3.636%,
+    79.222% 3.678%,
+    79.74% 3.799%,
+    80.243% 3.998%,
+    80.727% 4.271%,
+    81.187% 4.614%,
+    81.62% 5.026%,
+    82.023% 5.502%,
+    82.392% 6.039%,
+    82.723% 6.635%,
+    83.011% 7.285%,
+    100% 50.443%,
+    100% 50.443%,
+    100.248% 51.162%,
+    100.438% 51.908%,
+    100.57% 52.672%,
+    100.644% 53.449%,
+    100.661% 54.23%,
+    100.62% 55.01%,
+    100.522% 55.781%,
+    100.367% 56.536%,
+    100.154% 57.268%,
+    99.884% 57.97%,
+    83.042% 96.63%,
+    83.042% 96.63%,
+    82.749% 97.234%,
+    82.418% 97.787%,
+    82.053% 98.284%,
+    81.659% 98.723%,
+    81.237% 99.102%,
+    80.791% 99.418%,
+    80.326% 99.669%,
+    79.843% 99.851%,
+    79.346% 99.962%,
+    78.839% 100%,
+    7.472% 100%,
+    7.472% 100%,
+    6.664% 99.905%,
+    5.898% 99.629%,
+    5.183% 99.188%,
+    4.53% 98.597%,
+    3.95% 97.87%,
+    3.452% 97.022%,
+    3.047% 96.069%,
+    2.745% 95.026%,
+    2.556% 93.907%,
+    2.491% 92.727%,
+    2.491% 10.909%
+  );
+}
+.polygon-clip-next {
+  font-size: 20px;
+  top: 5;
+  left: 5;
+  clip-path: polygon(
+    2.491% 10.909%,
+    2.491% 10.909%,
+    2.556% 9.729%,
+    2.745% 8.61%,
+    3.047% 7.567%,
+    3.452% 6.614%,
+    3.95% 5.766%,
+    4.53% 5.04%,
+    5.183% 4.448%,
+    5.898% 4.007%,
+    6.664% 3.732%,
+    7.472% 3.636%,
+    78.692% 3.636%,
+    78.692% 3.636%,
+    79.222% 3.678%,
+    79.74% 3.799%,
+    80.243% 3.998%,
+    80.727% 4.271%,
+    81.187% 4.614%,
+    81.62% 5.026%,
+    82.023% 5.502%,
+    82.392% 6.039%,
+    82.723% 6.635%,
+    83.011% 7.285%,
+    100% 50.443%,
+    100% 50.443%,
+    100.248% 51.162%,
+    100.438% 51.908%,
+    100.57% 52.672%,
+    100.644% 53.449%,
+    100.661% 54.23%,
+    100.62% 55.01%,
+    100.522% 55.781%,
+    100.367% 56.536%,
+    100.154% 57.268%,
+    99.884% 57.97%,
+    83.042% 96.63%,
+    83.042% 96.63%,
+    82.749% 97.234%,
+    82.418% 97.787%,
+    82.053% 98.284%,
+    81.659% 98.723%,
+    81.237% 99.102%,
+    80.791% 99.418%,
+    80.326% 99.669%,
+    79.843% 99.851%,
+    79.346% 99.962%,
+    78.839% 100%,
+    7.472% 100%,
+    7.472% 100%,
+    6.664% 99.905%,
+    5.898% 99.629%,
+    5.183% 99.188%,
+    4.53% 98.597%,
+    3.95% 97.87%,
+    3.452% 97.022%,
+    3.047% 96.069%,
+    2.745% 95.026%,
+    2.556% 93.907%,
+    2.491% 92.727%,
+    2.491% 10.909%
+  );
+}
+.polygon-clip-prev {
+  font-size: 20px;
+  background: #e3e2ff;
+  width: 120px;
+  position: absolute;
+  top: 5;
+  left: 5;
+  height: 80px;
+  padding: 18px 5px 18px 25px;
+  clip-path: polygon(
+    100% 92.727%,
+    100% 92.727%,
+    99.935% 93.907%,
+    99.748% 95.026%,
+    99.449% 96.069%,
+    99.047% 97.022%,
+    98.554% 97.87%,
+    97.978% 98.597%,
+    97.331% 99.188%,
+    96.623% 99.629%,
+    95.863% 99.905%,
+    95.062% 100%,
+    24.463% 100%,
+    24.463% 100%,
+    23.937% 99.959%,
+    23.423% 99.837%,
+    22.925% 99.638%,
+    22.446% 99.366%,
+    21.989% 99.022%,
+    21.56% 98.611%,
+    21.16% 98.135%,
+    20.795% 97.597%,
+    20.467% 97.002%,
+    20.181% 96.351%,
+    3.34% 53.193%,
+    3.34% 53.193%,
+    3.095% 52.474%,
+    2.906% 51.729%,
+    2.775% 50.964%,
+    2.701% 50.188%,
+    2.685% 49.406%,
+    2.725% 48.626%,
+    2.823% 47.855%,
+    2.977% 47.1%,
+    3.188% 46.368%,
+    3.455% 45.666%,
+    20.15% 7.006%,
+    20.15% 7.006%,
+    20.441% 6.402%,
+    20.769% 5.85%,
+    21.13% 5.353%,
+    21.522% 4.913%,
+    21.94% 4.534%,
+    22.381% 4.218%,
+    22.843% 3.968%,
+    23.322% 3.785%,
+    23.814% 3.674%,
+    24.317% 3.636%,
+    95.062% 3.636%,
+    95.062% 3.636%,
+    95.863% 3.732%,
+    96.623% 4.007%,
+    97.331% 4.448%,
+    97.978% 5.04%,
+    98.554% 5.766%,
+    99.047% 6.614%,
+    99.449% 7.567%,
+    99.748% 8.61%,
+    99.935% 9.729%,
+    100% 10.909%,
+    100% 92.727%
+  );
+}
+.polygon-clip2 {
+  position: absolute;
+  background-color: white;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 95px;
+  padding: 25px 5px;
+  clip-path: polygon(
+    2.491% 10.909%,
+    2.491% 10.909%,
+    2.556% 9.729%,
+    2.745% 8.61%,
+    3.047% 7.567%,
+    3.452% 6.614%,
+    3.95% 5.766%,
+    4.53% 5.04%,
+    5.183% 4.448%,
+    5.898% 4.007%,
+    6.664% 3.732%,
+    7.472% 3.636%,
+    78.692% 3.636%,
+    78.692% 3.636%,
+    79.222% 3.678%,
+    79.74% 3.799%,
+    80.243% 3.998%,
+    80.727% 4.271%,
+    81.187% 4.614%,
+    81.62% 5.026%,
+    82.023% 5.502%,
+    82.392% 6.039%,
+    82.723% 6.635%,
+    83.011% 7.285%,
+    100% 50.443%,
+    100% 50.443%,
+    100.248% 51.162%,
+    100.438% 51.908%,
+    100.57% 52.672%,
+    100.644% 53.449%,
+    100.661% 54.23%,
+    100.62% 55.01%,
+    100.522% 55.781%,
+    100.367% 56.536%,
+    100.154% 57.268%,
+    99.884% 57.97%,
+    83.042% 96.63%,
+    83.042% 96.63%,
+    82.749% 97.234%,
+    82.418% 97.787%,
+    82.053% 98.284%,
+    81.659% 98.723%,
+    81.237% 99.102%,
+    80.791% 99.418%,
+    80.326% 99.669%,
+    79.843% 99.851%,
+    79.346% 99.962%,
+    78.839% 100%,
+    7.472% 100%,
+    7.472% 100%,
+    6.664% 99.905%,
+    5.898% 99.629%,
+    5.183% 99.188%,
+    4.53% 98.597%,
+    3.95% 97.87%,
+    3.452% 97.022%,
+    3.047% 96.069%,
+    2.745% 95.026%,
+    2.556% 93.907%,
+    2.491% 92.727%,
+    2.491% 10.909%
+  );
+}
+
+.rhombus {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+#LessonPage{
+  transition: background-color 2s;
+}
+.lesson-bg-default {
+  background-color: #27397A;
+  background-size: cover;
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png');
+  color: white;
+}
+.lesson-bg-white {
+  background-size: cover;
+  background-color: #fff;
+  /* background-image: url("https://res.cloudinary.com/dbgorivob/image/upload/v1696022177/backgrounds/Group_12634_1_pcsmit.png"); */
+  color : black;
+}
+
+.lesson-bg-default span , 
+.lesson-bg-default .exit-box{
+  color: white;
+}
+
+.lesson-bg-white span , 
+.lesson-bg-white .exit-box{
+  color: black;
+}
+
+
+.lesson-bg-white .slide-prev {
+  background-color: #4F46E5;
+}
+.lesson-bg-default .hanger-white , .lesson-bg-default .theme-white {
+  display: none;
+}
+.lesson-bg-white .hanger-default , .lesson-bg-white .theme-default{
+  display: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  margin-left : 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e1e1e1;
+  border-radius: 10px;
+  border-right: none;
+  border-left: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track-piece:end {
+  background: transparent;
+  margin-bottom: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track-piece:start {
+  background: transparent;
+  margin-top: 20px;
+}
+
+
+.bg-home {
+  background: linear-gradient(to right, rgba(105, 76, 87, 1),rgba(0, 0, 0, 0.2));
+}
+.bg-dash {
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1689193391/praxeum/Frame_1000004421_aysm37.png');
+}
+.bg-frame{
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1689405515/praxeum/Frame_1000004193_io2u7f.png');
+}
+.bg-frame2{
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1690134583/praxeum/Frame_1000004498_eke756.png');
+}
+.bg-frame3{
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1693301653/praxeum/Frame_1000004193_1_n5eyfh.png');
+}
+.bg-compbg{
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691443549/praxeum/Desktop_-_328_1_1_kgqpua.png');
+}
+.bg-bgsuccess {
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691484705/praxeum/success_q0ntxg.png');
+}
+.bg-bgfailure {
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691484705/praxeum/fail_gtdllx.png');
+}
+.bg-mobilesuccess {
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691568250/praxeum/Group_12599_skzl8n.png');
+}
+.bg-mobilefailure {
+  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1693040911/praxeum/Group_12610_qogt9r.png');
+}
+.bg-smallbtn {
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1693049510/praxeum/btn_qdygvj.png");
+  background-size: 100% 100%;
 }

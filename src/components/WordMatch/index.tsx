@@ -72,18 +72,19 @@ const WordMatchComponent: FC<WordMatchComponentProps> = ({ data, slide }) => {
     useEffect(() => {
         setOptionsList(() => [...data.options]);
         setAnswersList(() => shuffleAnswers(data.answers));
-    }, [data]);
+        setAnsweredList(() => []);
+    }, [data, slide]);
 
     useEffect(()=>{
       if((answeredList.length !== 0) && (answeredList.length === answersList.length)){
-        slide.functions?.allowProceed();
+        slide.functions?.allowProceed && slide.functions?.allowProceed();
       }
     },[answeredList, answersList, slide]);
 
 
     return (
         <>
-            <div>
+            <div className="whitespace-normal">
                 {optionsList.length &&
                     optionsList.map((option, index) => {
                         return (

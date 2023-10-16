@@ -1,13 +1,17 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import chevronRight from "../../img/chevron-right.svg";
 import chevronLeft from "../../img/chevron-left.svg";
+import chevronRightBlack from "../../img/chevron-right-black.svg";
+import chevronLeftBlack from "../../img/chevron-left-black.svg";
 import { SliderComponentProps, sliderComponentStyles } from "./handler";
 import SlideManager from "components/SlideManager";
+import { LessonSlideInterface } from "components/SlideManager/handler";
 
 const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
   const sliderRef = useRef<any>();
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [canProceed, setCanProceed] = useState<boolean>(true);
+  const [parentSlideScope, setParentSlideScope] = useState<LessonSlideInterface>(slide);
 
   const handleContinue = () => {
       const currentSlideIndex = sliderRef?.current?.activeSlideIndex();
@@ -18,12 +22,25 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
         }
       } else {
         if(canProceed){
-          sliderRef?.current?.navigator(1);
+          hideButtonsDuringTransition();
+          setTimeout(()=>{
+            sliderRef?.current?.navigator(1);
+          },800)
           //setCanProceed(false);
           // Disable feedbacks
         }
       }
   };
+  
+  const hideButtonsDuringTransition = () => {
+    const btns = document.querySelectorAll(".slider-nav-btn");
+    btns.forEach((element : any) => { 
+      element.style.display = "none";
+      setTimeout(()=>{
+        element.style.removeProperty("display");
+      },1200)
+    });
+  }
 
   const handlePrevious = () => {
       sliderRef?.current?.navigator(-1);
@@ -35,34 +52,22 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
     if(val){
       if(state === 1){
         handleContinue();
+      } else {
+        if( slide && slide.functions && slide.functions.canProceed ) {
+          setTimeout(()=>{
+            slide.functions?.canProceed(val, 0);
+          },1000);
+        }
       }
     }
   };
 
   //Register slide data to parent slide
   useEffect(()=>{
-    // let answers : any[] = [];
-    // let options : any[] = [];
-    // let feedbacks : any[] = [];
-    // data.slides.forEach((slide)=>{
-    //   slide.forEach((component : any)=>{
-    //     answers = component.answers && component.answers.length 
-    //       ? [...answers, ...component.answers]
-    //       : answers
-    //     options = component.options && component.options.length 
-    //     ? [...options, ...component.options]
-    //     : options
-    //     feedbacks = component.feedbacks && component.feedbacks.length 
-    //     ? [...feedbacks, ...component.feedbacks]
-    //     : feedbacks
-    //   });
-    // })
-    // slide.setAnswers([...(slide.answers ?? []), ...answers]);
-    // slide.setOptions([...(slide.options ?? []), ...options]);
-    // slide.setFeedbacks([...(slide.feedbacks ?? []), ...feedbacks]);
-  },[])
+    setParentSlideScope(slide);
+  },[slide, activeSlide])
 
-
+  // Need to optimize dynamic image handling
   return (
     <>
       <div className="w-full py-4 flex flex-row justify-between items-center">
@@ -70,33 +75,49 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
             src={chevronRight}
             onClick={() => {handlePrevious()}}
             alt="images"
-            className={`h-[40px] ${
-              activeSlide === 0 ? "opacity-0" : "cursor-pointer"
+            className={`h-[40px] slider-nav-btn theme-default ${
+              activeSlide === 0 ? "opacity-0" : "cursor-pointer opacity-100"
             }`}
           />
-          <SlideManager
+          <img
+            src={chevronRightBlack}
+            onClick={() => {handlePrevious()}}
+            alt="images"
+            className={`h-[40px] slider-nav-btn theme-white ${
+              activeSlide === 0 ? "opacity-0" : "cursor-pointer opacity-100"
+            }`}
+          />
+          {parentSlideScope && <SlideManager
             lessonSlides={data.slides}
             canProceed={(val: boolean, state : number) => proceed(val, state)}
             handleFeedback={(text: string, type: string)=>{
-              slide.functions && slide.functions.triggerFeedback(text, type)
+              parentSlideScope.functions && parentSlideScope.functions.triggerFeedback(text, type)
             }}
             updateActiveSlide={(i:number) => setActiveSlide(i)}
             ref={sliderRef}
-            parent={slide}
-          />
+            parent={parentSlideScope}
+          />}
           <img
             alt="images"
             onClick={() => {handleContinue()}}
             src={chevronLeft}
-            className={`h-[40px] ${
-              activeSlide === data.slides.length - 1 ? "opacity-0" : "cursor-pointer"
+            className={`h-[40px] slider-nav-btn theme-default ${
+              activeSlide === data.slides.length - 1 ? "opacity-0" : "cursor-pointer opacity-100"
+            }`}
+          />
+          <img
+            alt="images"
+            onClick={() => {handleContinue()}}
+            src={chevronLeftBlack}
+            className={`h-[40px] slider-nav-btn theme-white ${
+              activeSlide === data.slides.length - 1 ? "opacity-0" : "cursor-pointer opacity-100"
             }`}
           />
       </div>
 
       <div className="w-full flex flex-row justify-center">
         {data.slides.map((slide, index) => (
-          <span className={`h-[10px] mx-[2px] border-[1px] border-white aspect-square block rounded-[10px] 
+          <span key={index} className={`h-[10px] mx-[2px] border-[1px] border-white aspect-square block rounded-[10px] 
           ${index === activeSlide ? 'bg-white' : ''}`}
           ></span>
         ))}

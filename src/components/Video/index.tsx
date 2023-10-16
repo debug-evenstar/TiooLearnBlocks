@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { VideoComponentProps } from "./handler";
+import { pageContainsYoutubeScript, youtubeInit } from "components/SlideManager/handler";
 
 declare global {
     interface Window {
@@ -11,6 +12,8 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
     const videoRef = useRef<any>(null);
     const [videoId, setvideoId] = useState<string>("");
     const [videoEnded, setVideoEnded] = useState<boolean>(false);
+    const [youtubePluginReady, setYoutubePluginReady] = useState<boolean>(pageContainsYoutubeScript());
+    
     const endVideo = () => {
         slide.setVideo({ ended : true});
         setVideoEnded(() => true);
@@ -54,35 +57,50 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
         },2000);
     }
 
-    let videoInit = false;
-    useEffect(()=>{
-        slide.setVideo({ ended : false });
-        if(videoId === "" && !videoInit) {
-            const vidId = `ytb-${(new Date()).getTime()}`;
-            setvideoId(() => vidId);
-            videoInit = true;
-            setTimeout(()=>{
-                const playerOptions = {
-                    events: {
-                      'onReady': onPlayerReady,
-                      'onStateChange': onPlayerStateChange
-                    },
-                    host: 'https://www.youtube.com'
-                };
-                const instance = new window.YT.Player(vidId, playerOptions);
-                fallbackVideoCheck(instance);
-            }, 1000);
+
+    const loadYoutubeInstance = (videoId : string) => {
+        try{
+            const playerOptions = {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                },
+                host: 'https://www.youtube.com'
+            };
+            const instance = new window.YT.Player(videoId, playerOptions);
+            fallbackVideoCheck(instance);
+        }catch(e){
+            setTimeout(() => loadYoutubeInstance(videoId),1000);
         }
+    }
+
+    useEffect(()=>{
+        // Verify slide is not false slide before initializing
+        if(youtubePluginReady && slide?.functions?.allowProceed) {
+            slide.setVideo({ ended : false });
+            if(videoId === "") {
+                const vidId = `ytb-${(new Date()).getTime()}`;
+                setvideoId(() => vidId);
+                setTimeout(() => loadYoutubeInstance(vidId), 1000);
+            }
+        }
+    },[youtubePluginReady, slide]);
+
+    useEffect(()=>{
+        if(!pageContainsYoutubeScript) {
+            youtubeInit();
+        }
+        setYoutubePluginReady(() => true);
     },[]);
 
 
     return (
         <>
             <div className="w-full">
-                {!isYoutubeUrl() && (<video className="w-full" controls autoPlay={true} ref={videoRef} onEnded={() => endVideo()}>
+                {!isYoutubeUrl() && (<video className="w-full" controls ref={videoRef} onEnded={() => endVideo()}>
                     <source src={data.url} type="video/mp4"></source>
                 </video>)}
-                {isYoutubeUrl() && (
+                {isYoutubeUrl() && youtubePluginReady && (
                     <iframe 
                         id={videoId}
                         title="Youtube video"

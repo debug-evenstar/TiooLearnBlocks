@@ -52,9 +52,9 @@ const OptionsComponent: React.FC<OptionsComponentProps> = ({ data, slide }) => {
     return (
         <>
             <div>
-                <p className="text-center text-[14px]">
+                {/* <p className="text-center text-[14px]">
                     SELECT MULTIPLE ANSWERS
-                </p>
+                </p> */}
                 {options.map((option, index) => {
                     return (
                         <div

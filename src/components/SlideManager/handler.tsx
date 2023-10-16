@@ -1,3 +1,4 @@
+import GridSteps from "components/GridSteps";
 import ButtonGroupComponent from "../ButtonGroup";
 import FlashCardsComponent from "../FlashCards";
 import ImageComponent from "../Image";
@@ -7,6 +8,9 @@ import TextComponent from "../Text"
 import VideoComponent from "../Video";
 import WordMatchComponent from "../WordMatch";
 import { GlobalEventStorage, SlideEvents } from "./events";
+import { simulateWidth } from "components/extensions/TextFields";
+import PrefaceComponent from "components/Preface";
+import PostfaceComponent from "components/Postface";
 
 declare global {
     interface Window {
@@ -29,6 +33,7 @@ export interface LessonSlideInterface {
     addFields : Function;
     selectAnswer : Function;
     setFunction : Function;
+    setAttribute : Function;
     triggerFeedback : Function;
     updateProgress : Function;
     functions? : {[key : string] : Function};
@@ -42,6 +47,7 @@ export interface LessonSlideInterface {
     fillWithHint : Function;
     verifySubjectiveAnswer : Function;
     registerSlideData : Function;
+    checkSlideCanProceed : Function;
 }
 
 class LessonSlide implements LessonSlideInterface{
@@ -112,6 +118,11 @@ class LessonSlide implements LessonSlideInterface{
                 const hint = answer.substr(0, 1);
                 fieldElement.value = hint;
             }
+            // Added to expand input width on add text
+            const width = simulateWidth(answer);
+            const setWidth = (fieldElement.value.length/answer.length * width) + 30;
+            fieldElement.style.width = `${setWidth}px`;
+
             formatTextColor(fieldElement, true);
             if( fieldElement.value === answer) {
                 this.verifySubjectiveAnswer( field.index , fieldElement.value, answer);
@@ -122,6 +133,7 @@ class LessonSlide implements LessonSlideInterface{
     verifySubjectiveAnswer( index : number, input: string , answer : string|string[]){
         if( typeof answer == "string" && input.toLowerCase() === answer.toLowerCase()){
             this.functions?.selectAnswer(index, answer);
+            this.triggerFeedback("success");
             this.updateProgress();
             //Focus on next TextField
             this.activateNextField();
@@ -130,6 +142,7 @@ class LessonSlide implements LessonSlideInterface{
             answer.forEach(ans => {
                 if (ans.toLowerCase() === input.toLowerCase()){
                     this.functions?.selectAnswer(index, ans);
+                    this.triggerFeedback("success");
                     this.updateProgress();
                     //Focus on next TextField
                     this.activateNextField();
@@ -232,8 +245,17 @@ class LessonSlide implements LessonSlideInterface{
         }
     }
 
+    setAttribute(attributeName : string , value : string) {
+        if ( this.attributes) {
+            this.attributes[attributeName] = value;
+        }else {
+            this.attributes = {};
+            this.attributes[attributeName] = value;
+        }
+    }
+
     feedbackMessage(type : string, list : any[], index : number = this.progress){
-        return !this.options || this.options.length == 0 
+        return (!this.options || this.options.length === 0) && (this.answers && this.answers.length > 1)
             ? list[index]
             : type === this.SUCCESS_FEEDBACK 
                 ? list[0] : list[1];
@@ -244,16 +266,16 @@ class LessonSlide implements LessonSlideInterface{
             index = this.progress;
         }
         if(this.feedbacks && this.feedbacks.length > 0) {
-            const feedbackMessage = this.feedbacks.length > 2
+            const feedbackMessage = this.feedbacks.length > 1 // Not sure of this change yet - Revert if issues arise
                 ? this.feedbackMessage(feedbackType, this.feedbacks[index])
                 : this.feedbackMessage(feedbackType, this.feedbacks[0], index);
-
             this.functions?.triggerFeedback(feedbackMessage , feedbackType);
         }
     }
 
     registerSlideData(slide : any) {
         this.resetData();
+        
         slide.forEach((component : any)=>{
             this.answers = [ 
                 ...( this.answers ?? [] ), 
@@ -281,13 +303,16 @@ class LessonSlide implements LessonSlideInterface{
         this.progress = 0;
         this.video = null;
         this.textFields = [];
+        this.functions = {};
     }
     
     eventManager() {
         return {
             on: (eventName : string, callback : any) => {
-                if( !window.SlideEventListener ) {
-                    window.SlideEventListener = window.addEventListener(eventName, (data : any)=>{
+                if( !window.SlideEventListener || !window.SlideEventListener[eventName]) {
+                    window.SlideEventListener = window.SlideEventListener ?? {};
+                    window.SlideEventListener[eventName] = true;
+                    window.addEventListener(eventName, (data : any)=>{
                         this.eventsStorage.callEventFunctions(eventName, data);
                     });
                 }
@@ -303,6 +328,52 @@ class LessonSlide implements LessonSlideInterface{
     on(eventName : string, callback : any){ return this.eventManager().on(eventName, callback) }
     dispatch(eventName : string, data : any = {}){ this.eventManager().trigger(eventName, data) }
 
+    checkSlideCanProceed = (slide : any, strict : boolean = false) => {
+        let activate = true;
+        const strictComponents = ["ButtonGroup", "FlashCards","Slider","WordMatch","Video","Options"];
+        const mildComponents = ["GridSteps","Text"];
+        for (let i = 0; i < slide.length; i++) {
+          const data = slide[i];
+          if(data && strictComponents.includes(data.component)){     
+            activate = false;
+            if( strict ){ 
+              // Check for progress match answers
+              if(this.answers && this.answers.length > 0) {
+                activate = (this.progress === this.answers.length);
+              }
+              // Check for video ended
+              if (this.video) {
+                activate = this.video.ended;
+              }
+            }
+          }
+          if(data && mildComponents.includes(data.component)) {
+            if(data.answers && this.answers && data.answers.length > 0){
+              activate = (this.progress === this.answers.length);
+            }
+          }
+    
+        }
+        return activate;
+    }
+}
+
+export const setPageTheme = (theme? : string) => {
+    const page = document.getElementById("LessonPage");
+    if( page ){
+        //Remove previous bg
+        page.classList.forEach((className : any) => {
+            if(className.includes("lesson-bg")){
+                page.classList.remove(className);
+            }
+        });
+        if( theme ) {
+            page.classList.add(`lesson-bg-${theme}`);
+        } else {
+            page.classList.add(`lesson-bg-default`);
+        }
+    }
+
 }
 
 export const formatTextColor = (target : any, status : boolean) => {
@@ -313,14 +384,13 @@ export const formatTextColor = (target : any, status : boolean) => {
       target.classList.remove("text-green-500");
       target.classList.add("text-orange-500");
     }
-  }
+}
 
+export const pageContainsYoutubeScript = () =>{
+    const script = document.getElementById('youtube-iframe');
+    return script ? true : false;
+}
 export const youtubeInit = () => {
-
-    const pageContainsYoutubeScript = () =>{
-        const script = document.getElementById('youtube-iframe');
-        return script ? true : false;
-    }
     
     const insertYoutubeApiScript = () => {
         var tag = document.createElement('script');
@@ -340,7 +410,7 @@ export const youtubeInit = () => {
 }
 
 
-export const LessonSlideScope = (parent : any) => ( new LessonSlide(parent) );
+export const LessonSlideScope = (parent : any = null) => ( new LessonSlide(parent) );
 
 
 const keyToComponentMapper : {[key : string] : any} = {
@@ -351,7 +421,10 @@ const keyToComponentMapper : {[key : string] : any} = {
     "FlashCards" : FlashCardsComponent,
     "Video" : VideoComponent,
     "WordMatch" : WordMatchComponent,
-    "Options" : OptionsComponent
+    "Options" : OptionsComponent,
+    "GridSteps" : GridSteps,
+    "Preface" : PrefaceComponent,
+    "Postface" : PostfaceComponent
 }
 
 
