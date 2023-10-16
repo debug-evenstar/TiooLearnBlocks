@@ -8,11 +8,13 @@ interface Props {
   data?: any
   lessons?: any
   changeFile: (file:any,payload:any, id:any) => void
+  changeCard: (file:any,payload:any, id:any, length:number, changedIndex:any) => void
   back: () => void
   lessonlist: any
   name: string
+  isBusy: boolean
 }
-const  Editorial:FC<Props> = ({data, lessons, changeFile, back, lessonlist, name}) => {
+const  Editorial:FC<Props> = ({data, lessons, changeFile, back, lessonlist, name, isBusy, changeCard}) => {
   
   const parseSlides = data && data.LessonSlides.map(
     (slide: any) => slide.slide_data
@@ -43,7 +45,7 @@ const  Editorial:FC<Props> = ({data, lessons, changeFile, back, lessonlist, name
     }, 400);
   };
   if(!data){
-    return    <p>Loading</p>
+    return    <p>Loading...</p>
   }
   return (
     <MainLayout
@@ -78,6 +80,8 @@ const  Editorial:FC<Props> = ({data, lessons, changeFile, back, lessonlist, name
                 data={data}
                 showEdit={() => setShowEdit(false)}
                 changeFile={changeFile}
+                isBusy={isBusy}
+                changeCard={changeCard}
               />
             </>
           )}
