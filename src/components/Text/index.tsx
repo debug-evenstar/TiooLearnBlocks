@@ -7,6 +7,7 @@ const TextComponent: FC<TextComponentProps> = ({
   styles,
   data,
   slide,
+  altHeaderStyle,
 }) => {
   
   const [processed , setProcessed] = useState<any[]>([]);

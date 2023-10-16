@@ -18,6 +18,7 @@ export interface LessonSlideInterface {
     addFields: Function;
     selectAnswer: Function;
     setFunction: Function;
+    setAttribute: Function;
     triggerFeedback: Function;
     updateProgress: Function;
     functions?: {
@@ -72,6 +73,7 @@ declare class LessonSlide implements LessonSlideInterface {
     updateProgress(): void;
     callComponentFunctions(value: string): void;
     setFunction(functionName: string, handler: Function): void;
+    setAttribute(attributeName: string, value: string): void;
     feedbackMessage(type: string, list: any[], index?: number): any;
     triggerFeedback(feedbackType: string, index?: number): void;
     registerSlideData(slide: any): void;

@@ -1,6 +1,6 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 @import url("https://fonts.googleapis.com/css2?family=Mulish&family=Open+Sans:wght@300;400;600&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
@@ -125,8 +125,14 @@ input[type="file"] {
 .text-font {
   font-family: "Comic Neue";
   font-weight: 600;
-  white-space: wrap;
   /* font-size: 20px; */
+}
+
+.text-preview {
+  font-size: 10px !important;
+  white-space: wrap;
+  font-size: 20px;
+  
 }
 
 .heading {
@@ -143,17 +149,6 @@ input[type="file"] {
 .bg-preview{
   background-color: rgba(0, 0, 0, 0.35);
 }
-
-.dasheds {
-  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='22' stroke-linecap='square'/%3e%3c/svg%3e");
-}
-.bgcomps {
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png');
-}
-.bg-preview{
-  background-color: rgba(0, 0, 0, 0.35);
-}
-
 .slide-transition{
   transition: opacity 0.8s, left 0.8s;
 }
