@@ -17,6 +17,8 @@ const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide, lessonli
     "Multi Choice",
     "Flash Card",
     "Dual Choice",
+    "Slider",
+    "FlashCards",
   ];
   const activeSlid = slides && slides[activeSlide];
   const [comps, setComps] = useState<any[]>();

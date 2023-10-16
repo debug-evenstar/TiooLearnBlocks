@@ -6,7 +6,6 @@ import {
 } from "components/SlideManager/handler";
 import { RiDeleteBin5Line, RiShareForwardLine } from "react-icons/ri";
 import { TiArrowBackOutline } from "react-icons/ti";
-import { BiCrop } from "react-icons/bi";
 import { FiUploadCloud } from "react-icons/fi";
 import { FaTimes } from "react-icons/fa";
 
@@ -24,6 +23,13 @@ interface Props {
     length: number,
     changedIndex: any
   ) => void;
+  changeSlide: (
+    file: any,
+    payload: any,
+    id: any,
+    length: number,
+    changedIndex: any
+  ) => void;
 }
 const ActiveEditSlide: FC<Props> = ({
   active,
@@ -32,6 +38,7 @@ const ActiveEditSlide: FC<Props> = ({
   showEdit,
   changeFile,
   changeCard,
+  changeSlide,
   isBusy,
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
@@ -109,16 +116,16 @@ const ActiveEditSlide: FC<Props> = ({
   const [cards, setCards] = useState<any[]>([]);
   const [selectedCardImage, setSelectedCardImage] = useState<any>();
   const [cardPreviewImage, setCardPreviewImage] = useState<any>();
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentCard, setCurrentCard] = useState(0);
   const [changedCards, setChangedCards] = useState<any[]>([]);
   const [changedIndex, setChangedIndex] = useState<any[]>([]);
-  const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % cards.length);
+  const nextCard = () => {
+    setCurrentCard((prevCard) => (prevCard + 1) % cards.length);
   };
 
-  const prevSlide = () => {
-    setCurrentSlide((prevSlide) =>
-      prevSlide === 0 ? cards.length - 1 : prevSlide - 1
+  const prevCard = () => {
+    setCurrentCard((prevCard) =>
+      prevCard === 0 ? cards.length - 1 : prevCard - 1
     );
   };
   useEffect(() => {
@@ -157,7 +164,7 @@ const ActiveEditSlide: FC<Props> = ({
     return (
       <div className="relative pt-3">
         <p className="relative -top-7 left-2">
-          {currentSlide + 1} / {cards.length}
+          {currentCard + 1} / {cards.length}
         </p>
         <div className="relative w-8/12 mx-auto h-[300px]">
           {cards &&
@@ -165,7 +172,7 @@ const ActiveEditSlide: FC<Props> = ({
             cards?.map((item: any, index: number) => (
               <div
                 className={`absolute top-0 w-full h-full ${
-                  index === currentSlide ? "active" : "hidden"
+                  index === currentCard ? "active" : "hidden"
                 }`}
                 key={index}
               >
@@ -193,11 +200,11 @@ const ActiveEditSlide: FC<Props> = ({
             ))}
         </div>
         <button
-          onClick={prevSlide}
+          onClick={prevCard}
           className="absolute top-[130px] slick-prev"
         ></button>
         <button
-          onClick={nextSlide}
+          onClick={nextCard}
           className="absolute right-0 top-[130px] slick-next"
         ></button>
       </div>
@@ -216,7 +223,7 @@ const ActiveEditSlide: FC<Props> = ({
           {textComp.map((component: any, index: number) => {
             const Component = loadComponent(component);
             return (
-              <Component key={index} data={component} slide={SlideScope} />
+              <Component key={index} data={component} Card={SlideScope} />
             );
           })}
         </div>
@@ -234,6 +241,103 @@ const ActiveEditSlide: FC<Props> = ({
     );
   };
   // end of flash cards
+  // slider components
+  // slider components
+  const [slider, setSlider] = useState<any[]>([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [changedSlides, setChangedSlides] = useState<any[]>([]);
+  const [changedSlideIndex, setChangedSlideIndex] = useState<any[]>([]);
+  const nextSlide = () => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % slider.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prevSlide) =>
+      prevSlide === 0 ? slider.length - 1 : prevSlide - 1
+    );
+  };
+  const handleSlideUpload = (e: any, index: number) => {
+    e.preventDefault();
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      // setSelectedCardImage(selectedFile);
+      // setCardPreviewImage(imageUrl);
+      setChangedSlides([...changedSlides, selectedFile]);
+      setChangedSlideIndex([...changedSlideIndex, index]);
+      const newArr = [...slider];
+      newArr[index] = [{
+        url: imageUrl,
+      }];
+      setSlider(newArr);
+    }
+  };
+
+  const delSlideFile = (index: number) => {
+    const newArr = [...slider];
+    newArr[index] = [{
+      url: "https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg",
+    }];
+    setSlider(newArr);
+  };
+  useEffect(() => {
+    const flashComp =
+      activeSlid &&
+      activeSlid.filter((where: any) => where.component === "Slider");
+    setSlider(flashComp[0]?.slides);
+  }, [activeSlid]);
+  const RenderSlides = () => {
+    return (
+      <div className="relative pt-3">
+        <p className="relative -top-7 left-2">
+          {currentSlide + 1} / {slider.length}
+        </p>
+        <div className="relative w-8/12 mx-auto h-[300px]">
+          {slider &&
+            !!slider.length &&
+            slider?.map((item: any, index: number) => (
+              <div
+                className={`absolute top-0 w-full h-full ${
+                  index === currentSlide ? "active" : "hidden"
+                }`}
+                key={index}
+              >
+                <div className="absolute flex gap-x-2 right-0 -top-8">
+                  <div className="w-6 relative overflow-hidden !cursor-pointer">
+                    <FiUploadCloud className="text-2xl cursor-pointer" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleSlideUpload(e, index)}
+                      className="absolute top-0 -left-24 opacity-0"
+                    />
+                  </div>
+                  <RiDeleteBin5Line
+                    className="text-2xl cursor-pointer"
+                    onClick={() => delSlideFile(index)}
+                  />
+                </div>
+                <img
+                  src={item[0].url}
+                  alt="card"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+        </div>
+        <button
+          onClick={prevSlide}
+          className="absolute top-[130px] slick-prev"
+        ></button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-0 top-[130px] slick-next"
+        ></button>
+      </div>
+    );
+  };
+  // end of slider components
+  // end of slider components
   const RenderPreview = () => {
     const textComp =
       activeSlid &&
@@ -291,8 +395,15 @@ const ActiveEditSlide: FC<Props> = ({
       changeCard(changedCards, payload, slideId, cards.length, changedIndex);
       setTimeout(() => {
         setChangedCards([]);
+        setChangedIndex([])
       }, 400);
-    } else {
+    } else if(!!slider?.length){
+      changeSlide(changedSlides, payload, slideId, slider.length, changedSlideIndex);
+      setTimeout(() => {
+        setChangedSlides([]);
+        setChangedSlideIndex([])
+      }, 400);
+    }else {
       changeFile(seletedImage, payload, slideId);
     }
   };
@@ -377,6 +488,12 @@ const ActiveEditSlide: FC<Props> = ({
               <RenderCard />
             </div>
           )}
+          {
+            !!slider?.length && (
+              <div className="mt-12 relative p-6 py-12 dasheds">
+                <RenderSlides />
+              </div>)
+          }
         </div>
       </div>
       <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">

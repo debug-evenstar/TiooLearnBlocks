@@ -5,22 +5,46 @@ import LeftSidebar from "../components/LeftSidebar";
 
 interface MainLayoutProps {
   children: React.ReactElement;
-  slides: any
-  changeTo: (index:number) => void
-  active: number
-  showComp: boolean
-  back: () => void
-  lessonlist: any
-  name: string
+  slides: any;
+  changeTo: (index: number) => void;
+  active: number;
+  showComp: boolean;
+  back: () => void;
+  lessonlist: any;
+  name: string;
+  data: any;
+  showOverlay: () => void;
 }
-const MainLayout: React.FC<MainLayoutProps> = ({ children, slides, changeTo, active, showComp, back, lessonlist, name }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({
+  children,
+  slides,
+  changeTo,
+  active,
+  showComp,
+  back,
+  lessonlist,
+  name,
+  data,
+  showOverlay,
+}) => {
   return (
     <div className="h-screen w-full top-0 overflow-hidden relative">
-      <Header activeSlide={active} back={back} name={name}/>
+      <Header activeSlide={active} back={back} name={name} />
       <div className="w-full h-full flex">
-        <LeftSidebar slides={slides} changeTo={changeTo}/>
+        <LeftSidebar
+          slides={slides}
+          changeTo={changeTo}
+          data={data}
+          showOverlay={showOverlay}
+        />
         <div className="w-full overflow-y-auto">{children}</div>
-        <RightSidebar lessonlist={lessonlist} slides={slides} data={''} showComp={showComp} activeSlide={active}/>
+        <RightSidebar
+          lessonlist={lessonlist}
+          slides={slides}
+          data={""}
+          showComp={showComp}
+          activeSlide={active}
+        />
       </div>
     </div>
   );

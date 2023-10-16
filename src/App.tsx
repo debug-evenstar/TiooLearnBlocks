@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
-// import Editorial from "./pages/editorial";
-import RenderComponent from "./pages/renderComp";
-// import { Editorial } from "components";
+import RenderComponent from "pages/renderComp";
+import { Editorial } from "components";
 
 function App() {
   const datas = {
@@ -38,10 +37,9 @@ function App() {
   };
   const [saving, setSaving] = useState(false);
   const [date, setDate] = useState<any>();
-  // const navigate = useNavigate()
   const fetchLess = async () => {
     await axios
-      .get("https://api.hellotioo.com/open/lesson/35/template")
+      .get("https://beta.api.hellotioo.com/open/lesson/473/template")
       .then((res: any) => {
         if (!res.error) {
           setDate(res.data.data);
@@ -129,7 +127,70 @@ function App() {
             component: "FlashCards",
           };
           console.log(comps);
-          
+
+          const payloads = {
+            slide_data: [...datas, comps],
+          };
+          axios
+            .put(
+              `https://api.hellotioo.com/open/lesson/template/${id}`,
+              payloads
+            )
+            .then((res: any) => {
+              if (!res.error) {
+                fetchLess();
+                setSaving(false);
+              }
+            });
+        } else console.log(res);
+      });
+  };
+  const changeSlide = async (
+    file: any,
+    payload: any,
+    id: any,
+    length: number,
+    changedIndex: any
+  ) => {
+    setSaving(true);
+    const datas = payload.filter((where: any) => where.component !== "Slider");
+    const slideImg = payload.filter(
+      (where: any) => where.component === "Slider"
+    );
+    console.log(payload);
+    const fd = new FormData();
+    for (let i = 0; i < file.length; i++) {
+      fd.append(`image`, file[i]);
+    }
+    await axios
+      .put(`https://api.hellotioo.com/open/lesson/templateimage/${id}`, fd)
+      .then((res: any) => {
+        if (!res.error) {
+          const url = res.data.data;
+          const newArray = Array(slideImg[0].slides.length).fill([
+            { url: "", component: "Image", alternative: [] },
+          ]);
+          changedIndex.forEach((i: number, index: number) => {
+            if (i >= 0 && i < newArray.length) {
+              newArray[i] = {
+                url: url[index],
+                component: "Image",
+                alternative: [],
+              };
+            }
+          });
+          const updatedArray = slideImg[0].slides.map((obj: any, i: number) => {
+            if (changedIndex.includes(i)) {
+              return [newArray[i]];
+            } else {
+              return obj;
+            }
+          });
+          const comps = {
+            slides: updatedArray,
+            component: "Slider",
+            theme: slideImg[0].theme,
+          };
           const payloads = {
             slide_data: [...datas, comps],
           };
@@ -154,7 +215,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route
+        <Route
           path="/"
           element={
             <Editorial
@@ -162,13 +223,17 @@ function App() {
               changeFile={changeFile}
               back={handleBack}
               changeCard={changeCard}
+              updateSlide={changeSlide}
               lessonlist={datas}
               name={user.name}
               isBusy={saving}
             />
           }
-        /> */}
-        <Route path="/comp" element={<RenderComponent />} />
+        />
+        <Route
+          path="/comp"
+          element={<RenderComponent slides={date} back={handleBack} />}
+        />
       </Routes>
     </BrowserRouter>
   );
