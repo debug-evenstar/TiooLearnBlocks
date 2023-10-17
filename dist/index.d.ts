@@ -183,6 +183,8 @@ interface Props {
     lessons?: any;
     changeFile: (file: any, payload: any, id: any) => void;
     changeCard: (file: any, payload: any, id: any, length: number, changedIndex: any) => void;
+    updateSlide: (file: any, payload: any, id: any, length: number, changedIndex: number) => void;
+    createOverlay: (file: any, ext: any, text: string, index: number) => void;
     back: () => void;
     lessonlist: any;
     name: string;
@@ -228,13 +230,4 @@ interface PostfaceComponentProps {
 
 declare const PostfaceComponent: FC<PostfaceComponentProps>;
 
-interface LessonPageProps {
-    subject: string;
-    className: string;
-    title: string;
-    slides: any[];
-    back: Function;
-}
-declare const LessonPage: FC<LessonPageProps>;
-
-export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, LessonPage, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };
+export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };

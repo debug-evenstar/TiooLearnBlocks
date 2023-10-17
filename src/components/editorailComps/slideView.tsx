@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import SlideManager from "components/SlideManager";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
+import RenderComponent from "pages/renderComp";
 
 interface Props {
   handlePrevious: () => void;
@@ -30,12 +31,13 @@ const EditorialSlideView: FC<Props> = ({
         <FaAngleLeft className="text-[#87909E] text-[20px]" />
       </div>
       <div className=" w-10/12 relative mx-auto border-[0.92px] min-h-[440px] text-black rounded-[9px] shadow-md">
-        <div className="absolute top-5 right-5">
+        <div className="absolute z-10 top-5 right-5">
           <FiEdit
             className="text-[#87909E] text-xl cursor-pointer"
             onClick={showEdit}
           />
         </div>
+        {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}
         <SlideManager
           lessonSlides={parsedSlides}
           ref={slideManagerRef}
