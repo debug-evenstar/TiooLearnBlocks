@@ -4,6 +4,7 @@ import {
   LessonSlideScope,
   loadComponent,
 } from "./SlideManager/handler";
+import { FaPlus } from "react-icons/fa";
 
 interface Props {
   slides: any;
@@ -41,8 +42,8 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data,   showOverlay }) => {
         ))}
         <div className="relative h-[208px] grid place-content-center border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100" onClick={showOverlay}>
           <div className="text-center">
-            <span className="fw-600 text-xl">+</span>
-            <p className="fs-500">Add Overlay</p>
+            <span className="fw-600 text-xl"><FaPlus className="mx-auto"/></span>
+            <p className="fs-500 fw-500 mt-2">Add Overlay</p>
           </div>
         </div>
         <div className="pt-16"></div>

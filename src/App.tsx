@@ -60,7 +60,7 @@ function App() {
     const fd = new FormData();
     fd.append(!!checkImg.length ? "image" : "video", file);
     await axios
-      .put(`https://api.hellotioo.com/open/lesson/templateimage/${id}`, fd)
+      .put(`https://beta.api.hellotioo.com/open/lesson/templateimage/${id}`, fd)
       .then((res: any) => {
         if (!res.error) {
           const url = res.data.data[0];
@@ -105,7 +105,7 @@ function App() {
       fd.append(`image`, file[i]);
     }
     await axios
-      .put(`https://api.hellotioo.com/open/lesson/templateimage/${id}`, fd)
+      .put(`https://beta.api.hellotioo.com/open/lesson/templateimage/${id}`, fd)
       .then((res: any) => {
         if (!res.error) {
           const url = res.data.data;
@@ -126,14 +126,12 @@ function App() {
             cards: updatedArray,
             component: "FlashCards",
           };
-          console.log(comps);
-
           const payloads = {
             slide_data: [...datas, comps],
           };
           axios
             .put(
-              `https://api.hellotioo.com/open/lesson/template/${id}`,
+              `https://beta.api.hellotioo.com/open/lesson/template/${id}`,
               payloads
             )
             .then((res: any) => {
@@ -157,13 +155,12 @@ function App() {
     const slideImg = payload.filter(
       (where: any) => where.component === "Slider"
     );
-    console.log(payload);
     const fd = new FormData();
     for (let i = 0; i < file.length; i++) {
       fd.append(`image`, file[i]);
     }
     await axios
-      .put(`https://api.hellotioo.com/open/lesson/templateimage/${id}`, fd)
+      .put(`https://beta.api.hellotioo.com/open/lesson/templateimage/${id}`, fd)
       .then((res: any) => {
         if (!res.error) {
           const url = res.data.data;
@@ -196,7 +193,7 @@ function App() {
           };
           axios
             .put(
-              `https://api.hellotioo.com/open/lesson/template/${id}`,
+              `https://beta.api.hellotioo.com/open/lesson/template/${id}`,
               payloads
             )
             .then((res: any) => {
@@ -208,10 +205,49 @@ function App() {
         } else console.log(res);
       });
   };
+  const createOverlay = async (
+    file: any,
+    ext: any,
+    text: string,
+    index: number
+  ) => {
+    const fd = new FormData();
+      fd.append(`image`, file);
+    await axios
+      .put(`https://beta.api.hellotioo.com/open/lesson/templateimage/${index}`, fd)
+      .then((res: any) => {
+        if (!res.error) {
+          const url = res.data.data;
+          const overly = {
+            component: "Image",
+            url: url[0],
+            extensions: ext,
+          };
+          const textData = {
+            component: "Text",
+            content: text,
+            theme: "White",
+          };
+          const payload = {
+            slide_index: index,
+            slide_data: [overly, textData]
+          };
+          axios.post(`https://beta.api.hellotioo.com/open/lesson/${date.id}/slide`, payload)
+          .then((res: any) => {
+            if (!res.error) {
+              fetchLess();
+              setSaving(false);
+            }
+          });
+        } else {
+        }
+      })
+      .catch((err) => {});
+  };
   const handleBack = () => {
     // navigate('/')
   };
-
+  
   return (
     <BrowserRouter>
       <Routes>
@@ -224,6 +260,7 @@ function App() {
               back={handleBack}
               changeCard={changeCard}
               updateSlide={changeSlide}
+              createOverlay={createOverlay}
               lessonlist={datas}
               name={user.name}
               isBusy={saving}

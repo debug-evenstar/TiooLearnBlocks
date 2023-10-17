@@ -8,6 +8,8 @@ interface MainLayoutProps {
     back: () => void;
     lessonlist: any;
     name: string;
+    data: any;
+    showOverlay: () => void;
 }
 declare const MainLayout: React.FC<MainLayoutProps>;
 export default MainLayout;

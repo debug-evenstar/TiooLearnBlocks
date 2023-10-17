@@ -22,6 +22,7 @@ interface Props {
     length: number,
     changedIndex: number
   ) => void;
+  createOverlay: (file:any, ext:any, text:string, index:number) => void
   back: () => void;
   lessonlist: any;
   name: string;
@@ -36,7 +37,8 @@ const Editorial: FC<Props> = ({
   name,
   isBusy,
   changeCard,
-  updateSlide
+  updateSlide,
+  createOverlay
 }) => {
   const parseSlides =
     data && data.LessonSlides.map((slide: any) => slide.slide_data);
@@ -62,6 +64,7 @@ const Editorial: FC<Props> = ({
 
   const changeSlide = (index: number) => {
     setShowEdit(false);
+    setOverlay(false);
     setTimeout(() => {
       slideManagerRef?.current?.navigator(1, index);
     }, 400);
@@ -114,10 +117,10 @@ const Editorial: FC<Props> = ({
             </>
           )}
           {
-              overlay && <><CreateOverlaySlide /></>
+              overlay && <><CreateOverlaySlide isBusy={isBusy} createOverlay={createOverlay} slideLength={parseSlides.length}/></>
           }
         </div>
-        {!showEdit && (
+        {(!overlay && !showEdit) && (
           <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">
             <div className="w-full h-[50px] flex items-center justify-between">
               <div className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold">
