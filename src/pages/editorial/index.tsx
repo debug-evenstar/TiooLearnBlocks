@@ -28,7 +28,7 @@ interface Props {
   name: string;
   isBusy: boolean;
 }
-const Editorial: FC<Props> = ({
+const EditorialComp: FC<Props> = ({
   data,
   lessons,
   changeFile,
@@ -138,4 +138,4 @@ const Editorial: FC<Props> = ({
   );
 };
 
-export default Editorial;
+export default EditorialComp;
