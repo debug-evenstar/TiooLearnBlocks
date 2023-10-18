@@ -245,7 +245,7 @@ function App() {
       .catch((err) => {});
   };
   const userData = {
-    token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyZGF0YSI6eyJpZCI6MjAsImVtYWlsIjoiYW5pZWtwZW5vQHByYXhldW0uYWkiLCJhY2NvdW50X3R5cGUiOiJhZG1pbiJ9LCJpYXQiOjE2OTcwNjg2NTAsImV4cCI6MTcwNDg0NDY1MH0.JG-Q6IPdoFkI6lAc-l8wZY2UfDNoTEkDNqUQYQ_XDP8`,
+    auth: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyZGF0YSI6eyJpZCI6MjAsImVtYWlsIjoiYW5pZWtwZW5vQHByYXhldW0uYWkiLCJhY2NvdW50X3R5cGUiOiJhZG1pbiJ9LCJpYXQiOjE2OTcwNjg2NTAsImV4cCI6MTcwNDg0NDY1MH0.JG-Q6IPdoFkI6lAc-l8wZY2UfDNoTEkDNqUQYQ_XDP8`,
     name: "Nmandi Binkle",
     base: `https://beta.api.hellotioo.com/`
   }

@@ -3,7 +3,7 @@ import EditorialComp from "pages/editorial";
 import React, { FC, useState } from "react";
 interface UserProps {
   name: string;
-  token: string;
+  auth: string;
   base: string;
 }
 interface Props {
@@ -29,7 +29,7 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
       .put(`${user.base}/lesson/templateimage/${id}`, fd, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${user.token}` 
+          'Authorization': `Bearer ${user.auth}` 
         }
       })
       .then((res: any) => {
@@ -49,7 +49,7 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
               payloads, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}` 
+                    'Authorization': `Bearer ${user.auth}` 
                   },
               }
             )
@@ -84,7 +84,7 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
       .put(`${user.base}/lesson/templateimage/${id}`, fd, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${user.token}` 
+          'Authorization': `Bearer ${user.auth}` 
         }
       })
       .then((res: any) => {
@@ -116,7 +116,7 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
               payloads, {
                 headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${user.token}` 
+                  'Authorization': `Bearer ${user.auth}` 
                 }
               }
             )
@@ -149,7 +149,7 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
       .put(`${user.base}/lesson/templateimage/${id}`, fd,  {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${user.token}` 
+          'Authorization': `Bearer ${user.auth}` 
         }
       })
       .then((res: any) => {
@@ -188,7 +188,7 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
               payloads, {
                 headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${user.token}` 
+                  'Authorization': `Bearer ${user.auth}` 
                 }
               }
             )
@@ -215,7 +215,7 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
         fd, {
             headers: {
               'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${user.token}` 
+              'Authorization': `Bearer ${user.auth}` 
             }
           }
       )
@@ -242,7 +242,7 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
               payload, {
                 headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${user.token}` 
+                  'Authorization': `Bearer ${user.auth}` 
                 }
               }
             )
