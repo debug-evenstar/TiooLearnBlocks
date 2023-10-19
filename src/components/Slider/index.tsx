@@ -3,7 +3,7 @@ import chevronRight from "../../img/chevron-right.svg";
 import chevronLeft from "../../img/chevron-left.svg";
 import chevronRightBlack from "../../img/chevron-right-black.svg";
 import chevronLeftBlack from "../../img/chevron-left-black.svg";
-import { SliderComponentProps, sliderComponentStyles } from "./handler";
+import { SliderComponentProps } from "./handler";
 import SlideManager from "components/SlideManager";
 import { LessonSlideInterface } from "components/SlideManager/handler";
 
@@ -22,10 +22,10 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
         }
       } else {
         if(canProceed){
-          hideButtonsDuringTransition();
+          // hideButtonsDuringTransition();
           setTimeout(()=>{
             sliderRef?.current?.navigator(1);
-          },800)
+          },50)
           //setCanProceed(false);
           // Disable feedbacks
         }
@@ -35,14 +35,15 @@ const SliderComponent: FC<SliderComponentProps> = ({ data, slide }) => {
   const hideButtonsDuringTransition = () => {
     const btns = document.querySelectorAll(".slider-nav-btn");
     btns.forEach((element : any) => { 
-      element.style.display = "none";
+      element.style.opacity = 0;
       setTimeout(()=>{
-        element.style.removeProperty("display");
-      },1200)
+        element.style.removeProperty("opacity");
+      },1200);
     });
   }
 
   const handlePrevious = () => {
+      // hideButtonsDuringTransition();
       sliderRef?.current?.navigator(-1);
       // Disable feedbacks
   };

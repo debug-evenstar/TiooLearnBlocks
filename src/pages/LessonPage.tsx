@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { MdArrowBack } from "react-icons/md";
 import RenderComponent from "./renderComp";
 

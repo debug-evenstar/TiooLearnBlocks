@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import EditorialSlideView from "components/editorailComps/slideView";
 import ActiveEditSlide from "components/editorailComps/activeEditSlide";
