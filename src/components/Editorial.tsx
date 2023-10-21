@@ -1,4 +1,3 @@
-import axios from "axios";
 import EditorialComp from "pages/editorial";
 import React, { FC, useState } from "react";
 interface UserProps {
@@ -25,16 +24,17 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
     );
     const fd = new FormData();
     fd.append(!!checkImg.length ? "image" : "video", file);
-    await axios
-      .put(`${user.base}/lesson/templateimage/${id}`, fd, {
+    await fetch(`${user.base}/open/lesson/templateimage/${id}`,{
+        method: "PUT",
         headers: {
-          'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${user.auth}` 
-        }
+        },
+        body: fd,
       })
+      .then(response => response.json())
       .then((res: any) => {
         if (!res.error) {
-          const url = res.data.data[0];
+          const url = res.data[0];
           const comps = {
             alternatives: [],
             component: !!checkImg.length ? "Image" : "Video",
@@ -43,14 +43,14 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
           const payloads = {
             slide_data: [...datas, comps],
           };
-          axios
-            .put(
-              `${user.base}/lesson/template/${id}`,
-              payloads, {
+          fetch(
+              `${user.base}/lesson/template/${id}`,{
+                method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${user.auth}` 
                   },
+                  body: JSON.stringify(payloads)
               }
             )
             .then((res: any) => {
@@ -80,16 +80,17 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
     for (let i = 0; i < file.length; i++) {
       fd.append(`image`, file[i]);
     }
-    await axios
-      .put(`${user.base}/lesson/templateimage/${id}`, fd, {
+      await fetch(`${user.base}/open/lesson/templateimage/${id}`,{
+        method: "PUT",
         headers: {
-          'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${user.auth}` 
-        }
+        },
+        body: fd,
       })
+      .then(response => response.json())
       .then((res: any) => {
         if (!res.error) {
-          const url = res.data.data;
+          const url = res.data;
           const newArray = Array(cardsImg[0].cards.length).fill("");
           changedIndex.forEach((i: number, index: number) => {
             if (i >= 0 && i < newArray.length) {
@@ -110,14 +111,14 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
           const payloads = {
             slide_data: [...datas, comps],
           };
-          axios
-            .put(
-              `${user.base}/lesson/template/${id}`,
-              payloads, {
+            fetch(
+              `${user.base}/lesson/template/${id}`,{
+                method: "PUT",
                 headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${user.auth}` 
-                }
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.auth}` 
+                  },
+                  body: JSON.stringify(payloads)
               }
             )
             .then((res: any) => {
@@ -145,16 +146,17 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
     for (let i = 0; i < file.length; i++) {
       fd.append(`image`, file[i]);
     }
-    await axios
-      .put(`${user.base}/lesson/templateimage/${id}`, fd,  {
+      await fetch(`${user.base}/open/lesson/templateimage/${id}`,{
+        method: "PUT",
         headers: {
-          'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${user.auth}` 
-        }
+        },
+        body: fd,
       })
+      .then(response => response.json())
       .then((res: any) => {
         if (!res.error) {
-          const url = res.data.data;
+          const url = res.data;
           const newArray = Array(slideImg[0].slides.length).fill([
             { url: "", component: "Image", alternative: [] },
           ]);
@@ -182,14 +184,14 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
           const payloads = {
             slide_data: [...datas, comps],
           };
-          axios
-            .put(
-              `${user.base}/lesson/template/${id}`,
-              payloads, {
+            fetch(
+              `${user.base}/lesson/template/${id}`,{
+                method: "PUT",
                 headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${user.auth}` 
-                }
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.auth}` 
+                  },
+                  body: JSON.stringify(payloads)
               }
             )
             .then((res: any) => {
@@ -209,19 +211,17 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
   ) => {
     const fd = new FormData();
     fd.append(`image`, file);
-    await axios
-      .put(
-        `${user.base}/lesson/templateimage/${index}`,
-        fd, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${user.auth}` 
-            }
-          }
-      )
+      await fetch(`${user.base}/open/lesson/templateimage/${index}`,{
+        method: "PUT",
+        headers: {
+          'Authorization': `Bearer ${user.auth}` 
+        },
+        body: fd,
+      })
+      .then(response => response.json())
       .then((res: any) => {
         if (!res.error) {
-          const url = res.data.data;
+          const url = res.data;
           const overly = {
             component: "Image",
             url: url[0],
@@ -236,14 +236,14 @@ const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
             slide_index: index,
             slide_data: [overly, textData],
           };
-          axios
-            .post(
-              `${user.base}/lesson/${data.id}/slide`,
-              payload, {
+            fetch(
+              `${user.base}/lesson/${data.id}/slide`,{
+                method: "POST",
                 headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${user.auth}` 
-                }
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.auth}` 
+                  },
+                  body: JSON.stringify(payload)
               }
             )
             .then((res: any) => {
