@@ -11,5 +11,5 @@ interface Props {
     name: string;
     isBusy: boolean;
 }
-declare const Editorial: FC<Props>;
-export default Editorial;
+declare const EditorialComp: FC<Props>;
+export default EditorialComp;

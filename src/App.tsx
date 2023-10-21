@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
 
 import RenderComponent from "pages/renderComp";
 import { Editorial } from "components";
@@ -910,14 +909,10 @@ function App() {
           element={
             <Editorial
               data={date}
-              changeFile={changeFile}
               back={handleBack}
-              changeCard={changeCard}
-              updateSlide={changeSlide}
-              createOverlay={createOverlay}
-              lessonlist={datas}
-              name={user.name}
-              isBusy={saving}
+              user= {userData}
+              lessonList={datas}
+              refetch={fetchLess}
             />
           }
         /> */}
