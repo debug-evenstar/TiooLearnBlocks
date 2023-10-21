@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { TextComponentProps, formatTextContent } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
 import { TextFields } from "../extensions/TextFields";
@@ -102,7 +102,7 @@ const TextComponent: FC<TextComponentProps> = ({
 
 
   return <>
-    <div className={`${isHeading || slide.parent ? "text-center" : "text-left"} text-font`} ref={textContainerRef}>
+    <div className={`${isHeading || slide.parent ? "text-center" : "text-left"} text-font text-[19px]`} ref={textContainerRef}>
       {processed.map((item, index) => (
           <span className="text-font" key={index}>
             {(typeof item) == "string" ? ` ${item} ` : (item)}

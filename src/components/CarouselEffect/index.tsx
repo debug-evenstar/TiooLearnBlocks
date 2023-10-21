@@ -21,7 +21,7 @@ const CarouselEffect : FC<CarouselEffectProps> = (props : any) => {
                 setTimeout(()=>{
                     carouselContainerRef.current.style.removeProperty("overflow-x");
                     setActiveIndex(() => index);
-                },1200);
+                },1100);
             }else{
                 carouselContainerRef.current.style.overflowX = "hidden";
                 children[index].classList.add("slide-right-in");
@@ -29,7 +29,7 @@ const CarouselEffect : FC<CarouselEffectProps> = (props : any) => {
                 setTimeout(()=>{
                     carouselContainerRef.current.style.removeProperty("overflow-x");
                     setActiveIndex(() => index);
-                },1200);
+                },1100);
             }
 
         }
