@@ -178,17 +178,17 @@ declare const VideoComponent: FC<VideoComponentProps>;
 
 declare const WordMatchComponent: FC<WordMatchComponentProps>;
 
-interface Props {
-    data?: any;
-    lessons?: any;
-    changeFile: (file: any, payload: any, id: any) => void;
-    changeCard: (file: any, payload: any, id: any, length: number, changedIndex: any) => void;
-    updateSlide: (file: any, payload: any, id: any, length: number, changedIndex: number) => void;
-    createOverlay: (file: any, ext: any, text: string, index: number) => void;
-    back: () => void;
-    lessonlist: any;
+interface UserProps {
     name: string;
-    isBusy: boolean;
+    auth: string;
+    base: string;
+}
+interface Props {
+    data: any;
+    user: UserProps;
+    back: () => void;
+    lessonList: any;
+    refetch: () => void;
 }
 declare const Editorial: FC<Props>;
 
@@ -230,4 +230,13 @@ interface PostfaceComponentProps {
 
 declare const PostfaceComponent: FC<PostfaceComponentProps>;
 
-export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };
+interface LessonPageProps {
+    subject: string;
+    className: string;
+    title: string;
+    slides: any[];
+    back: Function;
+}
+declare const LessonPage: FC<LessonPageProps>;
+
+export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, LessonPage, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };
