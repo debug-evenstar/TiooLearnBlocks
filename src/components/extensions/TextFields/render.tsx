@@ -7,9 +7,10 @@ interface TextFieldProps {
   manager?: TextFieldsInterface;
   allowInput? : boolean;
   answer? : any;
+  styles? : React.CSSProperties;
 }
 
-const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true, answer}) => {
+const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true, answer, styles}) => {
   const [slideScopeIndex, setSlideScopeIndex] = useState<number>(
     manager?.slideScopeIndex(id, answer)
   );
@@ -82,6 +83,7 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
           type="text"
           name="value"
           id={id}
+          style={styles ?? {}}
           className={`bg-white text-center text-black h-[22px] border border-[#4F46E5] px-3 mx-2 input-style w-20 rounded-[20px]`}
           onChange={handleChange}
           disabled={inputIsDisabled}

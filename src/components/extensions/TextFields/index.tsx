@@ -104,6 +104,15 @@ class TextFieldsHandler implements TextFieldsInterface{
                     allowInput={!!answer && !options}
                     answer={answer}
                 />
+            ),
+            customElement : (props : any) => (
+                <TextFieldComponent 
+                    id={id}
+                    manager={this}
+                    allowInput={!!answer && !options}
+                    answer={answer}
+                    styles={props.styles ?? {}}
+                />
             )
         }
 
