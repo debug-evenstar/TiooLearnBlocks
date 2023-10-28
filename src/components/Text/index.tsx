@@ -76,16 +76,6 @@ const TextComponent: FC<TextComponentProps> = ({
     if(formatted.includes("<?>") ){
       var textFields : any = TextFields(processText, slide, (data.answers ?? []), (data.options ?? []));
       processText = textFields.data;
-      const selectAnswer : any = slide.functions?.selectAnswer;
-      // Function to select answer and fill field
-      slide.setFunction("selectAnswer", ( index : number, value : string )=>{
-        if( selectAnswer && answerBelongsToPrevious( value ) ){
-          selectAnswer(index, value);
-          return;
-        }
-        const updateProcessed = textFields.fieldReplacementFill(index, value, processText);
-        setProcessed(() => updateProcessed);
-      });
     }
     setProcessed(() => processText);
     if( data.answers && !data.options) {

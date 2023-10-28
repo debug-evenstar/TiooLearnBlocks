@@ -125,14 +125,16 @@ class LessonSlide implements LessonSlideInterface{
 
             formatTextColor(fieldElement, true);
             if( fieldElement.value === answer) {
-                this.verifySubjectiveAnswer( field.index , fieldElement.value, answer);
+                this.verifySubjectiveAnswer(fieldElement.value, answer , (status : boolean, value : string) => {
+                    status && this.textFields && this.textFields[this.progress].fill(value);
+                });
             }
         }
     }
 
-    verifySubjectiveAnswer( index : number, input: string , answer : string|string[]){
+    verifySubjectiveAnswer( input: string , answer : string|string[], callback? : Function){
         if( typeof answer == "string" && input.toLowerCase() === answer.toLowerCase()){
-            this.functions?.selectAnswer(index, answer);
+            callback && callback(true, answer);
             this.triggerFeedback("success");
             this.updateProgress();
             //Focus on next TextField
@@ -141,7 +143,7 @@ class LessonSlide implements LessonSlideInterface{
         }else if( typeof answer == "object"){
             answer.forEach(ans => {
                 if (ans.toLowerCase() === input.toLowerCase()){
-                    this.functions?.selectAnswer(index, ans);
+                    callback && callback(true, ans);
                     this.triggerFeedback("success");
                     this.updateProgress();
                     //Focus on next TextField
@@ -171,7 +173,7 @@ class LessonSlide implements LessonSlideInterface{
             if( /*index > this.progress  ||*/ this.answers[index] !== value ) {
                 this.triggerFeedback(this.FAILURE_FEEDBACK, index);
             } else {
-                this.functions?.selectAnswer( this.progress, value );
+                this.textFields && this.textFields[this.progress].fill(value);
                 this.answered.push(value);
                 this.triggerFeedback(this.SUCCESS_FEEDBACK, index);
                 this.progress++;
@@ -192,6 +194,7 @@ class LessonSlide implements LessonSlideInterface{
         if( this.answers && this.progress < this.answers.length ) {
             const answer = this.answers[this.progress];
             if( answer === value ) {
+                this.textFields && this.textFields[this.progress].fill(value);
                 this.triggerFeedback(this.SUCCESS_FEEDBACK);
                 this.progress++;
                 if(this.progress === this.answers.length) {

@@ -13,8 +13,9 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
   const [slideScopeIndex, setSlideScopeIndex] = useState<number>(
     manager?.slideScopeIndex(id, answer)
   );
-
   const [inputIsDisabled, setInputIsDisabled] = useState<boolean>(!allowInput);
+  const [isAnswered, setIsAnswered] = useState<boolean>(false);
+  const [filled, setFilled] = useState<any>(null);
   const handleChange = (e: any) => {
     // Handle color change
     if( answer ) {
@@ -25,8 +26,16 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
 
     }
     // Set value
-    manager?.setFieldValue(id, e.target.value)
-    setInputWidth();
+    let answered = false;
+    manager?.setFieldValue(id, e.target.value, ()=>{
+      setFilled(manager.fieldReplacementFill(e.target.value));
+      setIsAnswered(true);
+      answered = true;
+    });
+
+    if( !answered ) {
+      setInputWidth();
+    }
   };
 
   const setInputWidth = () => {
@@ -56,17 +65,29 @@ const TextFieldComponent: FC<TextFieldProps> = ({id, manager, allowInput = true,
     });
   },[manager]);
 
+  useEffect(()=>{
+    if( manager && manager.fieldData && id) {
+      manager.setFiller(id, (value : any) => {
+        setFilled(manager.fieldReplacementFill(value));
+        setIsAnswered(true);
+      });
+    }
+  },[])
+
 
   return (
     <>
-      <input
-        type="text"
-        name="value"
-        id={id}
-        className={`bg-white text-center text-black h-[22px] border border-[#4F46E5] px-3 mx-2 input-style w-20 rounded-[20px]`}
-        onChange={handleChange}
-        disabled={inputIsDisabled}
-      />
+      {!isAnswered && 
+        <input
+          type="text"
+          name="value"
+          id={id}
+          className={`bg-white text-center text-black h-[22px] border border-[#4F46E5] px-3 mx-2 input-style w-20 rounded-[20px]`}
+          onChange={handleChange}
+          disabled={inputIsDisabled}
+        />
+      }
+      {isAnswered && filled}
     </>
   );
 };

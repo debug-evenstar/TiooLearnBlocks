@@ -8,6 +8,8 @@ export interface TextFieldsInterface {
     fieldIds : string[]; 
     fieldData : {[key: string]: string};
     fieldReplacementFill : Function;
+    triggerReplacement : Function;
+    setFiller : Function;
     slide : LessonSlideInterface;
     setFieldValue : Function;
     answers : any[];
@@ -15,6 +17,7 @@ export interface TextFieldsInterface {
     simulateAnswerWidth : Function;
     inputAnswerMatch : Function;
     slideScopeIndex : Function;
+    registerField : Function;
 }
 
 class TextFieldsHandler implements TextFieldsInterface{
@@ -33,7 +36,9 @@ class TextFieldsHandler implements TextFieldsInterface{
         this.slide = slide;
         this.answers = answers;
         this.options = options;
-        this.processTextFields();
+        if (data.length){
+            this.processTextFields();
+        }
     }
 
     getIdentifier(){
@@ -44,7 +49,14 @@ class TextFieldsHandler implements TextFieldsInterface{
         // Some Jsx returned
     }
 
-    setFieldValue(id : string , value : string) {
+    setFiller(id : any, callback : Function) {
+        if(this.fieldData && id) {
+            this.fieldData[id]["fill"] = callback;
+            this.updateFieldInSlide(id);
+        }
+    }
+
+    setFieldValue(id : string , value : string, callback? : Function) {
         const newValue : {[key: string]: any}  = {};
         newValue[id] = {
             ...(this.fieldData[id] ?? {}),
@@ -59,14 +71,18 @@ class TextFieldsHandler implements TextFieldsInterface{
         if ( this.answers && this.answers.length ){
             const fieldIndex = Object.keys(this.fieldData).indexOf(id);
             const answer : string|string[] = this.answers[fieldIndex]
-            this.slide.verifySubjectiveAnswer(fieldIndex, value, answer);
+            this.slide.verifySubjectiveAnswer(value, answer, (status : boolean)=>{
+                status && callback && callback();
+            });
         }
     }
 
-    fieldReplacementFill(index : number, value : string, data : any[]){
-        const fieldIndex = Object.values(this.fieldData)[index].index;
-        data[fieldIndex] = (<span className="!text-green-500 font-semibold text-[17px] text-font">{value}</span>);
-        return [...data];
+    fieldReplacementFill(value : string){
+        return (<span className="!text-green-500 font-semibold text-[17px] text-font">{value}</span>);
+    }
+
+    triggerReplacement(){
+
     }
 
 
@@ -76,9 +92,11 @@ class TextFieldsHandler implements TextFieldsInterface{
             ? this.answers[answerIndex]
             : null;
         let options = this.options && this.options.length ? true : false;
-        return {
+
+        const field : any = {
             id : id,
             index : answerIndex,
+            manager : this,
             element : (
                 <TextFieldComponent 
                     id={id}
@@ -88,6 +106,24 @@ class TextFieldsHandler implements TextFieldsInterface{
                 />
             )
         }
+
+        this.registerField(field);
+        return field;
+    }
+
+    registerField(field : any){
+        this.fieldIds.push(field.id);
+        this.slide.addFields(field);
+        this.fieldData[field.id] = {
+            ...field
+        };
+    }
+
+    updateFieldInSlide(id : string) {
+        this.slide.textFields?.forEach((field : any, index : number) => {
+            if (this.slide.textFields && field.id === id) 
+                this.slide.textFields[index] = this.fieldData[id];
+        });
     }
 
     processTextFields(){
@@ -100,12 +136,7 @@ class TextFieldsHandler implements TextFieldsInterface{
                     const field = this.answers.length 
                         ? this.formatTextField(answerIndex)
                         : this.formatTextField();
-                    this.fieldIds.push(field.id);
-                    this.slide.addFields(field);
                     textContent[index] = field.element;
-                    this.fieldData[field.id] = {
-                        index : index
-                    }
                     answerIndex++;
                 }
             }
