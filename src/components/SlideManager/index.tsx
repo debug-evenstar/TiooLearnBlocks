@@ -1,5 +1,5 @@
 import React, { FC, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { LessonSlideInterface, LessonSlideScope, loadComponent, setPageTheme, youtubeInit } from "./handler";
+import { LessonSlideInterface, LessonSlideScope, loadComponent, setPageTheme, SlideData, youtubeInit } from "./handler";
 import { TextData } from "../Text/handler";
 import { ButtonGroupData } from "../ButtonGroup/handler";
 import { SliderData } from "../Slider/handler";
@@ -14,10 +14,7 @@ import { PrefaceData } from "components/Preface/handler";
 import { PostfaceData } from "components/Postface/handler";
 
 interface SlideManagerProps {
-  lessonSlides: (
-    TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | 
-    VideoData | WordMatchData | OptionData | GridStepsData | PrefaceData |
-    PostfaceData)[][];
+  lessonSlides: SlideData[];
   canProceed : Function;
   handleFeedback : Function;
   updateActiveSlide : Function;

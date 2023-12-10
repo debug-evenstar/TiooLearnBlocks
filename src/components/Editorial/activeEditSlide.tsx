@@ -8,6 +8,7 @@ import { RiDeleteBin5Line, RiShareForwardLine } from "react-icons/ri";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { FiUploadCloud } from "react-icons/fi";
 import { FaTimes } from "react-icons/fa";
+import EditorialCanvas from "./Base/EditorialCanvas";
 
 interface Props {
   active: number;
@@ -44,7 +45,7 @@ const ActiveEditSlide: FC<Props> = ({
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   // const [checkText, setCheckText] = useState([]);
   const [checkFiles, setCheckFiles] = useState<any>();
-  const [activeSlide, setActiveSlide] = useState<any[]>();
+  const [activeSlide, setActiveSlide] = useState<any[]>([]);
   const [slideId, setSlideId] = useState("");
   const [delFile, setDelFile] = useState(false);
   const [seletedImage, setSelectedImage] = useState<any>();
@@ -82,262 +83,7 @@ const ActiveEditSlide: FC<Props> = ({
     setSlideId(parseSlides[active].id);
   };
 
-  const RenderText = () => {
-    const textComp =
-      activeSlid &&
-      activeSlid.filter((where: any) => where.component === "Text");
-    return (
-      <>
-        {textComp.map((component: any, index: number) => {
-          const Component = loadComponent(component);
-          return <Component key={index} data={component} slide={SlideScope} />;
-        })}
-      </>
-    );
-  };
-  const RenderFile = () => {
-    const textComp =
-      activeSlid &&
-      activeSlid.filter(
-        (where: any) =>
-          where.component === "Image" || where.component === "Video"
-      );
-    return (
-      <>
-        {textComp.map((component: any, index: number) => {
-          const Component = loadComponent(component);
-          return <Component key={index} data={component} slide={SlideScope} />;
-        })}
-      </>
-    );
-  };
-  // Flash card comps
-  // Flash card components
-  const [cards, setCards] = useState<any[]>([]);
-  const [selectedCardImage, setSelectedCardImage] = useState<any>();
-  const [cardPreviewImage, setCardPreviewImage] = useState<any>();
-  const [currentCard, setCurrentCard] = useState(0);
-  const [changedCards, setChangedCards] = useState<any[]>([]);
-  const [changedIndex, setChangedIndex] = useState<any[]>([]);
-  const nextCard = () => {
-    setCurrentCard((prevCard) => (prevCard + 1) % cards.length);
-  };
 
-  const prevCard = () => {
-    setCurrentCard((prevCard) =>
-      prevCard === 0 ? cards.length - 1 : prevCard - 1
-    );
-  };
-  useEffect(() => {
-    const flashComp =
-      activeSlid &&
-      activeSlid.filter((where: any) => where.component === "FlashCards");
-    setCards(flashComp[0]?.cards);
-  }, [activeSlid]);
-
-  const handleCardUpload = (e: any, index: number) => {
-    e.preventDefault();
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setSelectedCardImage(selectedFile);
-      setCardPreviewImage(imageUrl);
-      setChangedCards([...changedCards, selectedFile]);
-      setChangedIndex([...changedIndex, index]);
-      const newArr = [...cards];
-      newArr[index] = {
-        url: imageUrl,
-      };
-      setCards(newArr);
-    }
-  };
-
-  const delCardFile = (index: number) => {
-    const newArr = [...cards];
-    newArr[index] = {
-      url: "https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg",
-    };
-    setCards(newArr);
-    // setShowDelCard()
-  };
-  const RenderCard = () => {
-    return (
-      <div className="relative pt-3">
-        <p className="relative -top-7 left-2">
-          {currentCard + 1} / {cards.length}
-        </p>
-        <div className="relative w-8/12 mx-auto h-[300px]">
-          {cards &&
-            !!cards.length &&
-            cards?.map((item: any, index: number) => (
-              <div
-                className={`absolute top-0 w-full h-full ${
-                  index === currentCard ? "active" : "hidden"
-                }`}
-                key={index}
-              >
-                <div className="absolute flex gap-x-2 right-0 -top-8">
-                  <div className="w-6 relative overflow-hidden !cursor-pointer">
-                    <FiUploadCloud className="text-2xl cursor-pointer" />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleCardUpload(e, index)}
-                      className="absolute top-0 -left-24 opacity-0"
-                    />
-                  </div>
-                  <RiDeleteBin5Line
-                    className="text-2xl cursor-pointer"
-                    onClick={() => delCardFile(index)}
-                  />
-                </div>
-                <img
-                  src={item.url}
-                  alt="card"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-        </div>
-        <button
-          onClick={prevCard}
-          className="absolute top-[130px] slick-prev"
-        ></button>
-        <button
-          onClick={nextCard}
-          className="absolute right-0 top-[130px] slick-next"
-        ></button>
-      </div>
-    );
-  };
-  const RenderCardPreview = () => {
-    const textComp =
-      activeSlid &&
-      activeSlid.filter((where: any) => where.component === "Text");
-    const fileComp =
-      activeSlid &&
-      activeSlid.filter((where: any) => where.component !== "Text");
-    return (
-      <div className="pt-12">
-        <div>
-          {textComp.map((component: any, index: number) => {
-            const Component = loadComponent(component);
-            return (
-              <Component key={index} data={component} Card={SlideScope} />
-            );
-          })}
-        </div>
-        <div className="pt-">
-          {!showPreview &&
-            fileComp.map((component: any, index: number) => {
-              const Component = loadComponent(component);
-              return (
-                <Component key={index} data={component} slide={SlideScope} />
-              );
-            })}
-        </div>
-        <div></div>
-      </div>
-    );
-  };
-  // end of flash cards
-  // slider components
-  // slider components
-  const [slider, setSlider] = useState<any[]>([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [changedSlides, setChangedSlides] = useState<any[]>([]);
-  const [changedSlideIndex, setChangedSlideIndex] = useState<any[]>([]);
-  const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % slider.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prevSlide) =>
-      prevSlide === 0 ? slider.length - 1 : prevSlide - 1
-    );
-  };
-  const handleSlideUpload = (e: any, index: number) => {
-    e.preventDefault();
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      // setSelectedCardImage(selectedFile);
-      // setCardPreviewImage(imageUrl);
-      setChangedSlides([...changedSlides, selectedFile]);
-      setChangedSlideIndex([...changedSlideIndex, index]);
-      const newArr = [...slider];
-      newArr[index] = [{
-        url: imageUrl,
-      }];
-      setSlider(newArr);
-    }
-  };
-
-  const delSlideFile = (index: number) => {
-    const newArr = [...slider];
-    newArr[index] = [{
-      url: "https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg",
-    }];
-    setSlider(newArr);
-  };
-  useEffect(() => {
-    const flashComp =
-      activeSlid &&
-      activeSlid.filter((where: any) => where.component === "Slider");
-    setSlider(flashComp[0]?.slides);
-  }, [activeSlid]);
-  const RenderSlides = () => {
-    return (
-      <div className="relative pt-3">
-        <p className="relative -top-7 left-2">
-          {currentSlide + 1} / {slider.length}
-        </p>
-        <div className="relative w-8/12 mx-auto h-[300px]">
-          {slider &&
-            !!slider.length &&
-            slider?.map((item: any, index: number) => (
-              <div
-                className={`absolute top-0 w-full h-full ${
-                  index === currentSlide ? "active" : "hidden"
-                }`}
-                key={index}
-              >
-                <div className="absolute flex gap-x-2 right-0 -top-8">
-                  <div className="w-6 relative overflow-hidden !cursor-pointer">
-                    <FiUploadCloud className="text-2xl cursor-pointer" />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleSlideUpload(e, index)}
-                      className="absolute top-0 -left-24 opacity-0"
-                    />
-                  </div>
-                  <RiDeleteBin5Line
-                    className="text-2xl cursor-pointer"
-                    onClick={() => delSlideFile(index)}
-                  />
-                </div>
-                <img
-                  src={item[0].url}
-                  alt="card"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-        </div>
-        <button
-          onClick={prevSlide}
-          className="absolute top-[130px] slick-prev"
-        ></button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-0 top-[130px] slick-next"
-        ></button>
-      </div>
-    );
-  };
-  // end of slider components
-  // end of slider components
   const RenderPreview = () => {
     const textComp =
       activeSlid &&
@@ -391,30 +137,17 @@ const ActiveEditSlide: FC<Props> = ({
   };
   const editFile = () => {
     const payload = [...activeSlid];
-    if (!!cards?.length) {
-      changeCard(changedCards, payload, slideId, cards.length, changedIndex);
-      setTimeout(() => {
-        setChangedCards([]);
-        setChangedIndex([])
-      }, 400);
-    } else if(!!slider?.length){
-      changeSlide(changedSlides, payload, slideId, slider.length, changedSlideIndex);
-      setTimeout(() => {
-        setChangedSlides([]);
-        setChangedSlideIndex([])
-      }, 400);
-    }else {
-      changeFile(seletedImage, payload, slideId);
-    }
   };
   return (
     <div>
-      <div className="flex gap-x-4 px-6">
-        <div className="w-full pr-5">
+      <div className="flex gap-x-4">
+        <div className="w-full">
           {/* {!!checkText.length && ( */}
-          <div className="p-6 py-12 dasheds">
-            <RenderText />
-          </div>
+     
+            <EditorialCanvas 
+              slideData={activeSlide}
+            />
+
           {/* )} */}
           {checkFiles && (
             <div className="mt-12 relative p-6 py-12 dasheds">
@@ -456,7 +189,7 @@ const ActiveEditSlide: FC<Props> = ({
                   />
                 </div>
               )}
-              {!delFile && !showPreview && <RenderFile />}
+              {/* {!delFile && !showPreview && <RenderFile />} */}
               {showPreview &&
                 (checkFile("Image") ? (
                   <div className="w-8/12 max-h-[300px] object-fit mx-auto my-6 rounded-[18px] overflow-hidden">
@@ -473,17 +206,6 @@ const ActiveEditSlide: FC<Props> = ({
                 ))}
             </div>
           )}
-          {!!cards?.length && (
-            <div className="mt-12 relative p-6 py-12 dasheds">
-              <RenderCard />
-            </div>
-          )}
-          {
-            !!slider?.length && (
-              <div className="mt-12 relative p-6 py-12 dasheds">
-                <RenderSlides />
-              </div>)
-          }
         </div>
       </div>
       <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">
@@ -507,7 +229,7 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0 bg-preview">
           <div className="mt-4 w-6/12 bgcomps text-white bg-cover rounded-lg min-h-[70vh] px-5 flex justify-center items-center fw-600">
             <div>
-              {!!cards?.length ? <RenderCardPreview /> : <RenderPreview />}
+              <RenderPreview />
             </div>
           </div>
           <FaTimes
