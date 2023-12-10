@@ -83,14 +83,16 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   }));
 
   const proceed = (slide : any, state : number = 1) => {
-    if(activeSlide[0].component !== "Preface" && activeSlide[0].component !== "Postface") {
-      if ( SlideScope.checkSlideCanProceed(slide , true) ){
-        canProceed(true, state);
-      } else {
-        canProceed(false, state);
+    if(activeSlide.length){
+      if(activeSlide[0].component !== "Preface" && activeSlide[0].component !== "Postface") {
+        if ( SlideScope.checkSlideCanProceed(slide , true) ){
+          canProceed(true, state);
+        } else {
+          canProceed(false, state);
+        }
+      }else{
+        canProceed(false);
       }
-    }else{
-      canProceed(false);
     }
   }
 
@@ -164,6 +166,10 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(({ lessonSlides, canProce
   },[hintIsActive]);
 
 
+  // Experimental to allow for editorial slide update
+  useEffect(()=>{
+    setSlides(() => lessonSlides);
+  },[lessonSlides])
   
 
   const containerStyle = {

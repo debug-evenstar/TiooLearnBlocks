@@ -3,16 +3,19 @@ import {
   LessonSlideInterface,
   LessonSlideScope,
   loadComponent,
-} from "./SlideManager/handler";
+} from "../SlideManager/handler";
 import { FaPlus } from "react-icons/fa";
+import { SidebarFunctions } from "./interfaces";
+
+
 
 interface Props {
   slides: any;
   changeTo: (index: number) => void;
   data: any;
-  showOverlay: () => void;
+  sidebarFunctions : SidebarFunctions;
 }
-const LeftSidebar: FC<Props> = ({ slides, changeTo, data,   showOverlay }) => {
+const LeftSidebar: FC<Props> = ({ slides, changeTo, data, sidebarFunctions}) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   return (
     <div className="bg-white shadow relative w-full max-w-[20%] overflow-auto mb-20  pl-[33px] pr-[20px] overflow-y-auto  scrollbar">
@@ -40,10 +43,10 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data,   showOverlay }) => {
             </div>
           </div>
         ))}
-        <div className="relative h-[208px] grid place-content-center border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100" onClick={showOverlay}>
+        <div className="relative h-[208px] grid place-content-center border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100" onClick={() => sidebarFunctions.addSlide()}>
           <div className="text-center">
             <span className="fw-600 text-xl"><FaPlus className="mx-auto"/></span>
-            <p className="fs-500 fw-500 mt-2">Add Overlay</p>
+            <p className="fs-500 fw-500 mt-2">Add Slide</p>
           </div>
         </div>
         <div className="pt-16"></div>

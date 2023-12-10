@@ -1,8 +1,9 @@
-import { FC, useRef, useState } from "react";
-import MainLayout from "../../layouts/MainLayout";
-import EditorialSlideView from "components/editorailComps/slideView";
-import ActiveEditSlide from "components/editorailComps/activeEditSlide";
-import CreateOverlaySlide from "components/editorailComps/createSlide";
+import { FC, useEffect, useRef, useState } from "react";
+import MainLayout from "../../layouts/EditorialLayout";
+import EditorialSlideView from "components/Editorial/slideView";
+import ActiveEditSlide from "components/Editorial/activeEditSlide";
+import CreateOverlaySlide from "components/Editorial/createSlide";
+import { SidebarFunctions } from "components/Editorial/interfaces";
 
 interface Props {
   data?: any;
@@ -40,13 +41,13 @@ const EditorialComp: FC<Props> = ({
   updateSlide,
   createOverlay
 }) => {
-  const parseSlides =
-    data && data.LessonSlides.map((slide: any) => slide.slide_data);
+  const [parseSlides, setParseSlides] = useState<any[]>([])
   const slideManagerRef = useRef<any>(null);
   const [canProceed, setCanProceed] = useState<boolean>(true);
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [showEdit, setShowEdit] = useState(false);
-  const [overlay, setOverlay] = useState(false)
+  const [overlay, setOverlay] = useState(false);
+
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
     if (currentSlideIndex === parseSlides.length - 1) {
@@ -69,12 +70,31 @@ const EditorialComp: FC<Props> = ({
       slideManagerRef?.current?.navigator(1, index);
     }, 400);
   };
+
   const showCreateSlide = () => {
     setOverlay(true)
-  }
-  if (!data) {
+  };
+
+  useEffect(()=>{
+    if( data ) {
+      setParseSlides(() => data.LessonSlides.map((slide: any) => slide.slide_data));
+    }
+  },[data]);
+
+  if (!data || parseSlides.length == 0 ) {
     return <p>Loading...</p>;
+  };
+
+
+  const sidebarFunctions : SidebarFunctions = {
+    addSlide : () => {
+      setParseSlides((prev) => [
+        ...prev,
+        []
+      ])
+    }
   }
+
   return (
     <MainLayout
       data={data}
@@ -85,11 +105,11 @@ const EditorialComp: FC<Props> = ({
       back={back}
       lessonlist={lessonlist}
       name={name}
-      showOverlay={showCreateSlide}
+      sidebarFunctions={sidebarFunctions}
     >
       <div className="w-full bg-white px-[30px] py-[28px]">
         <div className="mt-6">
-          {(!showEdit && !overlay) && (
+          {(!showEdit) && (
             <>
               <EditorialSlideView
                 showEdit={() => setShowEdit(true)}
@@ -102,7 +122,7 @@ const EditorialComp: FC<Props> = ({
               />
             </>
           )}
-          {(showEdit && !overlay) && (
+          {(showEdit) && (
             <>
               <ActiveEditSlide
                 active={activeSlide}
@@ -116,9 +136,9 @@ const EditorialComp: FC<Props> = ({
               />
             </>
           )}
-          {
+          {/* {
               overlay && <><CreateOverlaySlide isBusy={isBusy} createOverlay={createOverlay} slideLength={parseSlides.length}/></>
-          }
+          } */}
         </div>
         {(!overlay && !showEdit) && (
           <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">

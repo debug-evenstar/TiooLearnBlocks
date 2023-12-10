@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
-import RightSidebar from "../components/RightSidebar";
-import LeftSidebar from "../components/LeftSidebar";
+import RightSidebar from "../components/Editorial/RightSidebar";
+import LeftSidebar from "../components/Editorial/LeftSidebar";
+import { SidebarFunctions } from "components/Editorial/interfaces";
 
 interface MainLayoutProps {
   children: React.ReactElement;
@@ -13,9 +14,9 @@ interface MainLayoutProps {
   lessonlist: any;
   name: string;
   data: any;
-  showOverlay: () => void;
+  sidebarFunctions : SidebarFunctions;
 }
-const MainLayout: React.FC<MainLayoutProps> = ({
+const EditorialLayout: React.FC<MainLayoutProps> = ({
   children,
   slides,
   changeTo,
@@ -25,7 +26,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   lessonlist,
   name,
   data,
-  showOverlay,
+  sidebarFunctions
 }) => {
   return (
     <div className="h-screen w-full top-0 overflow-hidden relative">
@@ -35,7 +36,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           slides={slides}
           changeTo={changeTo}
           data={data}
-          showOverlay={showOverlay}
+          sidebarFunctions={sidebarFunctions}
         />
         <div className="w-full overflow-y-auto">{children}</div>
         <RightSidebar
@@ -50,4 +51,4 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   );
 };
 
-export default MainLayout;
+export default EditorialLayout;

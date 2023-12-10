@@ -33,9 +33,7 @@ class ToolTipsHandler{
     formatToolTip(text : string, tipContent : string){
         
         const id = randomString(15);
-        console.log(text);
         text = formatTextContent(text);
-        console.log(text);
         return {
             id : id,
             element : (

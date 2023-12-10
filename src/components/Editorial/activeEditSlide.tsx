@@ -78,7 +78,7 @@ const ActiveEditSlide: FC<Props> = ({
     } else return false;
   };
   const getId = () => {
-    const parseSlides = data.LessonSlides.map((slide: any) => slide);
+    const parseSlides = slides.map((slide: any) => slide);
     setSlideId(parseSlides[active].id);
   };
 
@@ -410,16 +410,6 @@ const ActiveEditSlide: FC<Props> = ({
   return (
     <div>
       <div className="flex gap-x-4 px-6">
-        <div className="flex gap-x-3">
-          <TiArrowBackOutline
-            className="text-2xl text-gray-500 cursor-pointer"
-            onClick={showEdit}
-          />
-          <RiShareForwardLine
-            className="text-2xl text-gray-500 mt-[1px] cursor-pointer"
-            onClick={getId}
-          />
-        </div>
         <div className="w-full pr-5">
           {/* {!!checkText.length && ( */}
           <div className="p-6 py-12 dasheds">
