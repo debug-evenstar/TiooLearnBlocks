@@ -89,16 +89,16 @@ const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide, lessonli
         {!showComp && <Item />}
         {showComp && (
           <div className="w-full">
-            <h3 className="text-[15px] mt-6 text-[#87909E] font-medium">
+            <h3 className="text-[15px] mt-2 text-[#87909E] font-medium">
               Components
             </h3>
-            <div className="mt-8 text-[14px]">
+            <div className="mt-4 text-[14px]">
               <FaAngleUp
                 className="text-xl text-gray-500  mb-4 mx-auto cursor-pointer"
                 onClick={() => scroll(-30)}
               />
               <div
-                className="grid gap-4 border-y border-gray-400 py-3 h-[250px] overflow-y-scroll hide-scroll"
+                className="grid gap-4 border-y border-gray-400 py-3 h-[300px] overflow-y-scroll hide-scroll"
                 ref={scrRef}
               >
                 {compTypes.map((item, index) => (
