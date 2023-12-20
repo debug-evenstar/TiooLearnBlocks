@@ -7,9 +7,15 @@ interface Props {
   showComp: boolean;
   activeSlide: number;
   slides: any;
-  lessonlist: any
+  lessonlist: any;
 }
-const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide, lessonlist }) => {
+const RightSidebar: FC<Props> = ({
+  slides,
+  data,
+  showComp,
+  activeSlide,
+  lessonlist,
+}) => {
   const compTypes = [
     "Text",
     "Image",
@@ -33,19 +39,26 @@ const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide, lessonli
   const scroll = (scrollOffset: any) => {
     scrRef.current.scrollTop += scrollOffset;
   };
-  const formatTerm = (val:any) => {
-    if(val === 1){
-      return 'First Term'
-    }else if(val === 2){
-      return 'Second Term'
-    }else return 'Third Term'
-  }
+  const formatTerm = (val: any) => {
+    if (val === 1) {
+      return "First Term";
+    } else if (val === 2) {
+      return "Second Term";
+    } else return "Third Term";
+  };
+
+  const handleDragStart = (e: any, id: string) => {
+    e.dataTransfer.setData("text/plain", id);
+  };
+
   const Item = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [isActive, setIsActive] = useState(1);
     return (
       <div className="w-full my-5">
-        <h3 className="text-[12px] text-[#87909E] font-medium">{formatTerm(lessonlist.term)}</h3>
+        <h3 className="text-[12px] text-[#87909E] font-medium">
+          {formatTerm(lessonlist.term)}
+        </h3>
         <div className="w-full flex items-center justify-between">
           <h3
             className="text-[#030036] text-[13px] font-medium w-[137px] opacity-70 cursor-pointer py-[8px]"
@@ -63,21 +76,22 @@ const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide, lessonli
         </div>
         {isOpen && (
           <div>
-            {lessonlist && lessonlist.lessons?.map((data:any, index:number) => {
-              return (
-                <div
-                  key={index}
-                  onClick={() => setIsActive(data.id)}
-                  className={` ${
-                    isActive === data.id
-                      ? `w-full p-[9px] text-[#4F46E5] text-[11px] font-medium border-l-[3.3px] border-[#4F46E5] bg-[#E3E2FF] rounded-[4px] overflow-hidden cursor-pointer`
-                      : `w-full p-[9px] text-[#87909E] text-[11px] font-normal cursor-pointer`
-                  }`}
-                >
-                  Lesson {index + 1}: {data.topic}
-                </div>
-              );
-            })}
+            {lessonlist &&
+              lessonlist.lessons?.map((data: any, index: number) => {
+                return (
+                  <div
+                    key={index}
+                    onClick={() => setIsActive(data.id)}
+                    className={` ${
+                      isActive === data.id
+                        ? `w-full p-[9px] text-[#4F46E5] text-[11px] font-medium border-l-[3.3px] border-[#4F46E5] bg-[#E3E2FF] rounded-[4px] overflow-hidden cursor-pointer`
+                        : `w-full p-[9px] text-[#87909E] text-[11px] font-normal cursor-pointer`
+                    }`}
+                  >
+                    Lesson {index + 1}: {data.topic}
+                  </div>
+                );
+              })}
           </div>
         )}
       </div>
@@ -103,12 +117,14 @@ const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide, lessonli
               >
                 {compTypes.map((item, index) => (
                   <div
-                  key={index}
-                    className={`${comps && comps.includes(item)
-                      ? "compactive"
-                      : "compinactive"} cursor-pointer mx-1 hover:scale-y-105 duration-100`
-                      
-                    }
+                    key={index}
+                    className={`${
+                      comps && comps.includes(item)
+                        ? "compactive"
+                        : "compinactive"
+                    } cursor-pointer mx-1 hover:scale-y-105 duration-100`}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
                   >
                     {item}
                   </div>
@@ -120,7 +136,7 @@ const RightSidebar: FC<Props> = ({ slides, data, showComp, activeSlide, lessonli
               />
             </div>
             <div className="mt-12">
-              <PromptBox/>
+              <PromptBox />
             </div>
           </div>
         )}

@@ -52,6 +52,7 @@ const ActiveEditSlide: FC<Props> = ({
   const [previewImage, setPreviewImage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [previewSlide, setPreviewSlide] = useState(false);
+  const [dragItems, setDragItems] = useState<any[]>([]);
 
   useEffect(() => {
     if (slides) {
@@ -82,7 +83,6 @@ const ActiveEditSlide: FC<Props> = ({
     const parseSlides = slides.map((slide: any) => slide);
     setSlideId(parseSlides[active].id);
   };
-
 
   const RenderPreview = () => {
     const textComp =
@@ -138,15 +138,32 @@ const ActiveEditSlide: FC<Props> = ({
   const editFile = () => {
     const payload = [...activeSlid];
   };
+
+  const handleDrop = (id: string) => {
+    const existingClone = dragItems.find((item) => item.id === id);
+
+    if (!existingClone) {
+      setDragItems([...dragItems, { id: id + "-clone-" + Date.now() }]);
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    const filteredItems = dragItems.filter((item) => item.id !== id);
+    setDragItems(filteredItems);
+  };
+
   return (
     <div>
       <div className="flex gap-x-4">
         <div className="w-full">
           {/* {!!checkText.length && ( */}
-     
-            <EditorialCanvas 
-              slideData={activeSlide}
-            />
+
+          <EditorialCanvas
+            slideData={activeSlide}
+            onDrop={handleDrop}
+            handleDelete={handleDelete}
+            dragItems={dragItems}
+          />
 
           {/* )} */}
           {checkFiles && (
