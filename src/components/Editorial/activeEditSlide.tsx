@@ -149,62 +149,62 @@ const ActiveEditSlide: FC<Props> = ({
             />
 
           {/* )} */}
-          {checkFiles && (
-            <div className="mt-12 relative p-6 py-12 dasheds">
-              <div className="flex absolute top-5 right-10 gap-x-4">
-                {delFile && (
-                  <div className="w-6 relative overflow-hidden !cursor-pointer">
-                    <FiUploadCloud className="text-2xl cursor-pointer" />
-                    {checkFile("Video") && (
-                      <input
-                        type="file"
-                        accept="video/*"
-                        onChange={handleUpload}
-                        className="absolute top-0 -left-24 opacity-0"
-                      />
-                    )}
-                    {checkFile("Image") && (
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleUpload}
-                        className="absolute top-0 -left-24 opacity-0"
-                      />
-                    )}
-                  </div>
-                )}
-                {!delFile && (
-                  <RiDeleteBin5Line
-                    className="text-2xl cursor-pointer"
-                    onClick={deleteFile}
-                  />
-                )}
-              </div>
-              {delFile && !showPreview && (
-                <div className="w-6/12 mx-auto my-6 rounded-[18px] overflow-hidden">
-                  <img
-                    src="https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg"
-                    alt="placeholder"
-                    className="w-full"
-                  />
-                </div>
-              )}
-              {/* {!delFile && !showPreview && <RenderFile />} */}
-              {showPreview &&
-                (checkFile("Image") ? (
-                  <div className="w-8/12 max-h-[300px] object-fit mx-auto my-6 rounded-[18px] overflow-hidden">
-                    <img
-                      src={previewImage}
-                      alt="placeholder"
-                      className="w-full"
-                    />
-                  </div>
-                ) : (
-                  <video className="w-full" controls autoPlay={true}>
-                    <source src={previewImage} type="video/mp4"></source>
-                  </video>
-                ))}
-            </div>
+          {checkFiles && (<></>
+            // <div className="mt-12 relative p-6 py-12 dasheds">
+            //   <div className="flex absolute top-5 right-10 gap-x-4">
+            //     {delFile && (
+            //       <div className="w-6 relative overflow-hidden !cursor-pointer">
+            //         <FiUploadCloud className="text-2xl cursor-pointer" />
+            //         {checkFile("Video") && (
+            //           <input
+            //             type="file"
+            //             accept="video/*"
+            //             onChange={handleUpload}
+            //             className="absolute top-0 -left-24 opacity-0"
+            //           />
+            //         )}
+            //         {checkFile("Image") && (
+            //           <input
+            //             type="file"
+            //             accept="image/*"
+            //             onChange={handleUpload}
+            //             className="absolute top-0 -left-24 opacity-0"
+            //           />
+            //         )}
+            //       </div>
+            //     )}
+            //     {!delFile && (
+            //       <RiDeleteBin5Line
+            //         className="text-2xl cursor-pointer"
+            //         onClick={deleteFile}
+            //       />
+            //     )}
+            //   </div>
+            //   {delFile && !showPreview && (
+            //     <div className="w-6/12 mx-auto my-6 rounded-[18px] overflow-hidden">
+            //       <img
+            //         src="https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg"
+            //         alt="placeholder"
+            //         className="w-full"
+            //       />
+            //     </div>
+            //   )}
+            //   {/* {!delFile && !showPreview && <RenderFile />} */}
+            //   {showPreview &&
+            //     (checkFile("Image") ? (
+            //       <div className="w-8/12 max-h-[300px] object-fit mx-auto my-6 rounded-[18px] overflow-hidden">
+            //         <img
+            //           src={previewImage}
+            //           alt="placeholder"
+            //           className="w-full"
+            //         />
+            //       </div>
+            //     ) : (
+            //       <video className="w-full" controls autoPlay={true}>
+            //         <source src={previewImage} type="video/mp4"></source>
+            //       </video>
+            //     ))}
+            // </div>
           )}
         </div>
       </div>

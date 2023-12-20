@@ -5,6 +5,7 @@ import { LessonSlideInterface } from "../SlideManager/handler";
 
 interface TextStyles {
     color?: string;
+    fontSize? : string;
 }
 
 export interface TextData {
