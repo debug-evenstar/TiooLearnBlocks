@@ -1,4 +1,4 @@
-import React, { FC, createRef, useRef } from "react";
+import React, { FC, createRef } from "react";
 import { EditorialCanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
@@ -9,8 +9,6 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   handleDelete,
   dragItems,
 }) => {
-  const canvasRef = useRef<HTMLDivElement | null>(null);
-
   const handleDragOver = (e: any) => {
     e.preventDefault();
   };
@@ -23,7 +21,6 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
 
   return (
     <div
-      ref={canvasRef}
       className="w-full bg-white drop-shadow-sm min-h-[70vh] border-dotted border-slate-300 border-2 p-5 flex flex-col relative"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -44,11 +41,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             handle=".handle"
           >
             <div ref={nodeRef}>
-              <ViewBox
-                id={item.id}
-                handleDelete={handleDelete}
-                canvasRef={canvasRef}
-              />
+              <ViewBox id={item.id} handleDelete={handleDelete} />
             </div>
           </Draggable>
         );

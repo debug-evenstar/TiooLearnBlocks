@@ -14,5 +14,4 @@ export interface EditorialCanvasInterface {
 export interface CanvasComponentViewBox {
   id: string;
   handleDelete: (id: string) => void;
-  canvasRef: React.MutableRefObject<HTMLDivElement | null>;
 }

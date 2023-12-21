@@ -5,11 +5,7 @@ import { FiUploadCloud } from "react-icons/fi";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 
-const ViewBox: FC<CanvasComponentViewBox> = ({
-  id,
-  handleDelete,
-  canvasRef,
-}) => {
+const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
     height: id.includes("Image") ? 200 : 100,
