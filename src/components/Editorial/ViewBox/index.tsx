@@ -13,6 +13,7 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
 
   const onResize = (event: any, { node, size, handle }: any) => {
     setViewBoxSize({ width: size.width, height: size.height });
+
     console.log(size);
   };
 
@@ -25,7 +26,7 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
       <div
         className="m-5 p-2 dasheds rounded"
         style={{
-          minWidth: viewBoxSize.width + "px",
+          width: viewBoxSize.width + "px",
           minHeight: viewBoxSize.height + "px",
           maxHeight: "fit-content",
         }}
