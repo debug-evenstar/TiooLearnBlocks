@@ -28,7 +28,6 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
         style={{
           width: viewBoxSize.width + "px",
           height: viewBoxSize.height + "px",
-          minHeight: "8rem",
           maxHeight: "fit-content",
         }}
       >
