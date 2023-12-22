@@ -28,6 +28,7 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
       height={viewBoxSize.height}
       minConstraints={[280, height]}
       onResize={onResize}
+      resizeHandles={["s", "w", "e", "n", "se", "sw", "ne", "nw"]}
     >
       <div
         ref={viewBoxRef}
