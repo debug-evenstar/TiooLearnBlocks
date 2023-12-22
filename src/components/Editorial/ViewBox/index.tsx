@@ -27,7 +27,8 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
         className="m-5 p-2 dasheds rounded"
         style={{
           width: viewBoxSize.width + "px",
-          minHeight: viewBoxSize.height + "px",
+          height: viewBoxSize.height + "px",
+          minHeight: "8rem",
           maxHeight: "fit-content",
         }}
       >
