@@ -25,13 +25,14 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
       <div
         className="m-5 p-2 dasheds rounded"
         style={{
-          width: viewBoxSize.width + "px",
-          height: viewBoxSize.height + "px",
+          minWidth: viewBoxSize.width + "px",
+          minHeight: viewBoxSize.height + "px",
+          maxHeight: "fit-content",
         }}
       >
         {id.includes("Text") && <Text id={id} handleDelete={handleDelete} />}
 
-        {id.includes("Image") && <Image id={id} />}
+        {id.includes("Image") && <Image id={id} handleDelete={handleDelete} />}
       </div>
     </Resizable>
   );

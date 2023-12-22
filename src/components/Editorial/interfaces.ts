@@ -18,6 +18,7 @@ export interface CanvasComponentViewBox {
 
 export interface CanvasImage {
   id: string;
+  handleDelete: (id: string) => void;
 }
 
 export interface CanvasText {
