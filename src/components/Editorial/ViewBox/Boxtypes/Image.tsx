@@ -29,7 +29,12 @@ const Image: FC<CanvasImage> = ({ id, handleDelete }) => {
       </div>
 
       <div className="w-6/12 mx-auto my-6 rounded-[18px] overflow-hidden">
-        <img src={previewImage} alt="placeholder" className="w-full" />
+        <img
+          src={previewImage}
+          alt="placeholder"
+          className="w-full"
+          draggable={false}
+        />
       </div>
     </div>
   );
