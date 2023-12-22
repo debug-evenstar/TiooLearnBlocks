@@ -1,57 +1,50 @@
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { CanvasComponentViewBox } from "../interfaces";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { FiUploadCloud } from "react-icons/fi";
+import { Resizable } from "react-resizable";
+import "react-resizable/css/styles.css";
+import Image from "./Boxtypes/Image";
+import Text from "./Boxtypes/Text";
 
 const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
-  const [previewImage, setPreviewImage] = useState(
-    "https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg"
-  );
+  const [viewBoxSize, setViewBoxSize] = useState({
+    width: 300,
+    height: id.includes("Image") ? 200 : 120,
+  });
 
-  const handleUpload = (e: any) => {
-    e.preventDefault();
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setPreviewImage(imageUrl);
-    }
+  const viewBoxRef = useRef<HTMLDivElement | null>(null);
+
+  const onResize = (event: any, { node, size, handle }: any) => {
+    setViewBoxSize({ width: size.width, height: size.height });
+    console.log(viewBoxRef.current?.offsetHeight);
+
+    console.log(size);
   };
 
+  const height = id.includes("Image") ? 200 : 120;
+
   return (
-    <div className=" m-5 p-5 draggable dasheds rounded">
-      <div className="w-full flex justify-end gap-2">
-        {id.includes("Image") && (
-          <div className="w-6 relative overflow-hidden !cursor-pointer">
-            <FiUploadCloud className="text-2xl cursor-pointer" />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleUpload}
-              className="absolute top-0 -left-24 opacity-0"
-            />
-          </div>
+    <Resizable
+      width={viewBoxSize.width}
+      height={viewBoxSize.height}
+      minConstraints={[280, height]}
+      onResize={onResize}
+      resizeHandles={["s", "w", "e", "n", "se", "sw", "ne", "nw"]}
+    >
+      <div
+        ref={viewBoxRef}
+        className="m-5 p-2 dasheds rounded"
+        style={{
+          width: viewBoxSize.width + "px",
+          height: viewBoxSize.height + "px",
+        }}
+      >
+        {id.includes("Text") && (
+          <Text id={id} handleDelete={handleDelete} viewBoxRef={viewBoxRef} />
         )}
 
-        <RiDeleteBin5Line
-          className="text-2xl cursor-pointer"
-          onClick={() => handleDelete(id)}
-        />
+        {id.includes("Image") && <Image id={id} handleDelete={handleDelete} />}
       </div>
-
-      {id.includes("Text") && (
-        <input
-          className="w-full outline-none"
-          type="text"
-          placeholder="Add text"
-        />
-      )}
-
-      {id.includes("Image") && (
-        <div className="w-6/12 mx-auto my-6 rounded-[18px] overflow-hidden">
-          <img src={previewImage} alt="placeholder" className="w-full" />
-        </div>
-      )}
-    </div>
+    </Resizable>
   );
 };
 
