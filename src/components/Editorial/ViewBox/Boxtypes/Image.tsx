@@ -18,13 +18,15 @@ const Image: FC<CanvasImage> = ({ id, handleDelete }) => {
   };
 
   return (
-    <div className="handle p-3 h-full w-full cursor-move">
-      <RiDeleteBin5Line
-        className="text-2xl cursor-pointer z-50"
-        onClick={() => handleDelete(id)}
-      />
+    <div className="handle p-3 h-full w-full cursor-move flex flex-col justify-center align-middle">
+      <div className="absolute top-5 right-5 flex justify-end gap-2">
+        <UploadIcon handleUpload={handleUpload} />
 
-      <UploadIcon handleUpload={handleUpload} />
+        <RiDeleteBin5Line
+          className="text-2xl cursor-pointer z-50"
+          onClick={() => handleDelete(id)}
+        />
+      </div>
 
       <div className="w-6/12 mx-auto my-6 rounded-[18px] overflow-hidden">
         <img src={previewImage} alt="placeholder" className="w-full" />
