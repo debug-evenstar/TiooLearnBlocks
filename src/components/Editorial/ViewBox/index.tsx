@@ -8,7 +8,7 @@ import Text from "./Boxtypes/Text";
 const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
-    height: id.includes("Image") ? 200 : 100,
+    height: id.includes("Image") ? 200 : 120,
   });
 
   const onResize = (event: any, { node, size, handle }: any) => {
@@ -17,10 +17,13 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
     console.log(size);
   };
 
+  const height = id.includes("Image") ? 200 : 120;
+
   return (
     <Resizable
       width={viewBoxSize.width}
       height={viewBoxSize.height}
+      minConstraints={[280, height]}
       onResize={onResize}
     >
       <div
