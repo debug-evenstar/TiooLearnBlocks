@@ -1,7 +1,5 @@
 import { FC, useState } from "react";
 import { CanvasComponentViewBox } from "../interfaces";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { FiUploadCloud } from "react-icons/fi";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import Image from "./Boxtypes/Image";
