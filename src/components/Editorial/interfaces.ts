@@ -15,3 +15,12 @@ export interface CanvasComponentViewBox {
   id: string;
   handleDelete: (id: string) => void;
 }
+
+export interface CanvasImage {
+  id: string;
+}
+
+export interface CanvasText {
+  id: string;
+  handleDelete: (id: string) => void;
+}
