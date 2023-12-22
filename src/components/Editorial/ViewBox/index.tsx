@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
@@ -11,8 +11,11 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
     height: id.includes("Image") ? 200 : 120,
   });
 
+  const viewBoxRef = useRef<HTMLDivElement | null>(null);
+
   const onResize = (event: any, { node, size, handle }: any) => {
     setViewBoxSize({ width: size.width, height: size.height });
+    console.log(viewBoxRef.current?.offsetHeight);
 
     console.log(size);
   };
@@ -27,14 +30,16 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
       onResize={onResize}
     >
       <div
+        ref={viewBoxRef}
         className="m-5 p-2 dasheds rounded"
         style={{
           width: viewBoxSize.width + "px",
           height: viewBoxSize.height + "px",
-          maxHeight: "fit-content",
         }}
       >
-        {id.includes("Text") && <Text id={id} handleDelete={handleDelete} />}
+        {id.includes("Text") && (
+          <Text id={id} handleDelete={handleDelete} viewBoxRef={viewBoxRef} />
+        )}
 
         {id.includes("Image") && <Image id={id} handleDelete={handleDelete} />}
       </div>

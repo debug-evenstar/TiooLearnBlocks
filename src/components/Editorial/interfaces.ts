@@ -24,4 +24,5 @@ export interface CanvasImage {
 export interface CanvasText {
   id: string;
   handleDelete: (id: string) => void;
+  viewBoxRef: React.MutableRefObject<any>;
 }
