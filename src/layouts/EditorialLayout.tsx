@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
-import RightSidebar from "../components/Editorial/RightSidebar";
+import RightSidebar from "../components/Editorial/ViewBox/RightSidebar/RightSidebar";
 import LeftSidebar from "../components/Editorial/LeftSidebar";
 import { SidebarFunctions } from "components/Editorial/interfaces";
 
@@ -14,7 +14,7 @@ interface MainLayoutProps {
   lessonlist: any;
   name: string;
   data: any;
-  sidebarFunctions : SidebarFunctions;
+  sidebarFunctions: SidebarFunctions;
 }
 const EditorialLayout: React.FC<MainLayoutProps> = ({
   children,
@@ -26,7 +26,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
   lessonlist,
   name,
   data,
-  sidebarFunctions
+  sidebarFunctions,
 }) => {
   return (
     <div className="h-screen w-full top-0 overflow-hidden relative">

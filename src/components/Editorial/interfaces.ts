@@ -6,9 +6,6 @@ export interface SidebarFunctions {
 
 export interface EditorialCanvasInterface {
   slideData: SlideData;
-  onDrop: (id: string) => void;
-  handleDelete: (id: string) => void;
-  dragItems: any[];
 }
 
 export interface CanvasComponentViewBox {
@@ -18,11 +15,9 @@ export interface CanvasComponentViewBox {
 
 export interface CanvasImage {
   id: string;
-  handleDelete: (id: string) => void;
 }
 
 export interface CanvasText {
   id: string;
-  handleDelete: (id: string) => void;
   viewBoxRef: React.MutableRefObject<any>;
 }

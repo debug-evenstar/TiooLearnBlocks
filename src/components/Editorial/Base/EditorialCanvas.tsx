@@ -2,13 +2,36 @@ import React, { FC, createRef } from "react";
 import { EditorialCanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  handleSetSidebarState,
+  handleToggleSidebarState,
+} from "provider/rightSidebarSlice";
+import { handleSetDragItems } from "provider/dragItemsSlice";
+import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 
-const EditorialCanvas: FC<EditorialCanvasInterface> = ({
-  slideData,
-  onDrop,
-  handleDelete,
-  dragItems,
-}) => {
+const EditorialCanvas: FC<EditorialCanvasInterface> = ({ slideData }) => {
+  const dispatch = useDispatch();
+  const selector: any = useSelector(handleSetDragItems);
+
+  const dragItems: any[] = selector.payload.dragItems.value;
+
+  const onDrop = (id: string) => {
+    const existingClone = dragItems.find((item) => item.id === id);
+    const itemId = id + "-clone-" + Date.now();
+
+    if (!existingClone) {
+      dispatch(handleSetDragItems([...dragItems, { id: itemId }]));
+      console.log(itemId);
+      dispatch(handleSetActiveViewbox(itemId));
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    const filteredItems = dragItems.filter((item) => item.id !== id);
+    dispatch(handleSetDragItems(filteredItems));
+  };
+
   const handleDragOver = (e: any) => {
     e.preventDefault();
   };
@@ -17,6 +40,12 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     e.preventDefault();
     const data = e.dataTransfer.getData("text/plain");
     onDrop(data);
+    dispatch(handleToggleSidebarState());
+  };
+
+  const handleClickedViewbox = (id: string) => {
+    dispatch(handleSetActiveViewbox(id));
+    dispatch(handleSetSidebarState(true));
   };
 
   return (
@@ -40,7 +69,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             onStop={handleStop}
             handle=".handle"
           >
-            <div ref={nodeRef}>
+            <div ref={nodeRef} onClick={() => handleClickedViewbox(item.id)}>
               <ViewBox id={item.id} handleDelete={handleDelete} />
             </div>
           </Draggable>
