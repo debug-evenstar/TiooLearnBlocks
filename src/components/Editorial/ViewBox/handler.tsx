@@ -1,5 +1,5 @@
-import Image from "./Boxtypes/Image";
-import Text from "./Boxtypes/Text";
+import Image from "./Boxtypes/Image/Image";
+import Text from "./Boxtypes/Text/Text";
 import Background from "./RightSidebar/EditProperties/Background";
 import Delete from "./RightSidebar/EditProperties/Delete";
 import Extensions from "./RightSidebar/EditProperties/Extensions";
@@ -15,6 +15,7 @@ export function getOriginalName(str: string): string {
   }
 }
 
+// for viewbox component
 export const ViewBoxContent = (
   id: string,
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>
@@ -31,6 +32,7 @@ export const ViewBoxContent = (
   return viewboxTypes[componentName];
 };
 
+// for editing in rightsidebar
 export const EditProperties = (id: string) => {
   const componentName = getOriginalName(id);
 

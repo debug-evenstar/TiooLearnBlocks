@@ -4,6 +4,7 @@ import React, { FC, useRef, useState } from "react";
 const Text: FC<CanvasText> = ({ id, viewBoxRef }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [textareaRowCount, setTextareaRowCount] = useState(1);
+  const [isEditable, setIsEditable] = useState(false);
 
   const handleTextAreaChange = () => {
     const viewBox = viewBoxRef.current;
@@ -29,12 +30,20 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef }) => {
   };
 
   return (
-    <div className="handle flex flex-col justify-between p-3 h-full w-full cursor-move">
+    <div
+      className={`flex flex-col justify-between p-3 h-full w-full ${
+        isEditable && "handle cursor-move"
+      }`}
+      onDoubleClick={() => setIsEditable(!isEditable)}
+    >
       <textarea
         ref={textareaRef}
-        className="w-full h-auto outline-none resize-none overflow-y-hidden"
+        className={`w-full h-auto outline-none resize-none overflow-y-hidden ${
+          isEditable && "cursor-move"
+        }`}
         placeholder="Add text"
         onChange={handleTextAreaChange}
+        disabled={isEditable}
       />
     </div>
   );

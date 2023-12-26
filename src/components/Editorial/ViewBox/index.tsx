@@ -31,7 +31,7 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
     >
       <div
         ref={viewBoxRef}
-        className="m-5 p-2 dasheds rounded"
+        className="m-5 p-2 border-2 border-slate-500 border-dotted rounded"
         style={{
           width: viewBoxSize.width + "px",
           height: viewBoxSize.height + "px",

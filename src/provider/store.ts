@@ -16,7 +16,7 @@ const persistedReducer = persistReducer(
     key: "root",
     storage: AsyncStorage,
     version: 0,
-    whitelist: ["rightSidebarState"],
+    //whitelist: ["rightSidebarState"],
   },
   rootReducer
 );
