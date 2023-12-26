@@ -2,7 +2,7 @@ import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useRef, useState } from "react";
 import { RiDeleteBin5Line } from "react-icons/ri";
 
-const Text: FC<CanvasText> = ({ id, handleDelete, viewBoxRef }) => {
+const Text: FC<CanvasText> = ({ id, viewBoxRef }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [textareaRowCount, setTextareaRowCount] = useState(1);
 
@@ -37,25 +37,6 @@ const Text: FC<CanvasText> = ({ id, handleDelete, viewBoxRef }) => {
         placeholder="Add text"
         onChange={handleTextAreaChange}
       />
-
-      <div className="w-full flex justify-between gap-2">
-        <div className="w-[45%] self-center px-2 bg-white shadow-sm shadow-gray-400 flex gap-2">
-          <p className="p-2">
-            <b>B</b>
-          </p>
-
-          <p className="p-2">
-            <i>I</i>
-          </p>
-
-          <p className="p-2">T</p>
-        </div>
-
-        <RiDeleteBin5Line
-          className="text-2xl cursor-pointer self-center"
-          onClick={() => handleDelete(id)}
-        />
-      </div>
     </div>
   );
 };

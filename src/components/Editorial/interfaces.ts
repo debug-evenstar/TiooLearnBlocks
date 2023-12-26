@@ -1,4 +1,5 @@
 import { SlideData } from "components/SlideManager/handler";
+import { ReactElement, ReactNode } from "react";
 
 export interface SidebarFunctions {
   addSlide: Function;
@@ -11,18 +12,31 @@ export interface EditorialCanvasInterface {
   dragItems: any[];
 }
 
+export interface BoxConfiguration {
+  width : number;
+  height : number;
+  xOffset : number;
+  yOffset : number;
+}
+
 export interface CanvasComponentViewBox {
   id: string;
-  handleDelete: (id: string) => void;
+  children? : React.ReactNode;
+  boxConfiguration : BoxConfiguration;
+  updateBoxConfiguration : Function;
+}
+
+export interface CanvasComponentEditBox {
+  id: string;
+  children? : React.ReactNode;
+  boxConfiguration : BoxConfiguration;
 }
 
 export interface CanvasImage {
   id: string;
-  handleDelete: (id: string) => void;
 }
 
 export interface CanvasText {
   id: string;
-  handleDelete: (id: string) => void;
   viewBoxRef: React.MutableRefObject<any>;
 }
