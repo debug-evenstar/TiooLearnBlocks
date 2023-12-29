@@ -6,6 +6,7 @@ import {
 } from "components/SlideManager/handler";
 import { FaTimes } from "react-icons/fa";
 import EditorialCanvas from "./Base/EditorialCanvas";
+import { EditorialManagerInterface } from "./Base/EditorialManager";
 
 interface Props {
   active: number;
@@ -28,6 +29,7 @@ interface Props {
     length: number,
     changedIndex: any
   ) => void;
+  manager : EditorialManagerInterface
 }
 const ActiveEditSlide: FC<Props> = ({
   active,
@@ -38,6 +40,7 @@ const ActiveEditSlide: FC<Props> = ({
   changeCard,
   changeSlide,
   isBusy,
+  manager
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   // const [checkText, setCheckText] = useState([]);
@@ -141,7 +144,7 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="w-full">
           {/* {!!checkText.length && ( */}
 
-          <EditorialCanvas slideData={activeSlide} />
+          <EditorialCanvas slideData={activeSlide} manager={manager}/>
         </div>
       </div>
       <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">

@@ -10,7 +10,7 @@ import {
 import { handleSetDragItems } from "provider/dragItemsSlice";
 import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 
-const EditorialCanvas: FC<EditorialCanvasInterface> = ({ slideData }) => {
+const EditorialCanvas: FC<EditorialCanvasInterface> = ({ slideData, manager}) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(handleSetDragItems);
 
@@ -70,7 +70,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({ slideData }) => {
             handle=".handle"
           >
             <div ref={nodeRef} onClick={() => handleClickedViewbox(item.id)}>
-              <ViewBox id={item.id} handleDelete={handleDelete} />
+              <ViewBox id={item.id} manager={manager} handleDelete={handleDelete} />
             </div>
           </Draggable>
         );

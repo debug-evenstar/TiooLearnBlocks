@@ -3,6 +3,7 @@ import MainLayout from "../../layouts/EditorialLayout";
 import EditorialSlideView from "components/Editorial/slideView";
 import ActiveEditSlide from "components/Editorial/activeEditSlide";
 import { SidebarFunctions } from "components/Editorial/interfaces";
+import { CreateEditorialManager } from "components/Editorial/Base/EditorialManager";
 
 interface Props {
   data?: any;
@@ -46,6 +47,7 @@ const EditorialComp: FC<Props> = ({
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [showEdit, setShowEdit] = useState(false);
   const [overlay, setOverlay] = useState(false);
+  const [manager , setManager] = useState(CreateEditorialManager());
 
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
@@ -86,12 +88,6 @@ const EditorialComp: FC<Props> = ({
     return <p>Loading...</p>;
   }
 
-  const sidebarFunctions: SidebarFunctions = {
-    addSlide: () => {
-      setParseSlides((prev) => [...prev, []]);
-    },
-  };
-
   return (
     <MainLayout
       data={data}
@@ -102,7 +98,7 @@ const EditorialComp: FC<Props> = ({
       back={back}
       lessonlist={lessonlist}
       name={name}
-      sidebarFunctions={sidebarFunctions}
+      manager={manager}
     >
       <div className="w-full bg-white px-[30px] py-[28px]">
         <div className="mt-6">
@@ -130,6 +126,7 @@ const EditorialComp: FC<Props> = ({
                 isBusy={isBusy}
                 changeCard={changeCard}
                 changeSlide={updateSlide}
+                manager={manager}
               />
             </>
           )}

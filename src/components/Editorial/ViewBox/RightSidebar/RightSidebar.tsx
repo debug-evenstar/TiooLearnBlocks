@@ -3,6 +3,7 @@ import ActiveSidebar from "./ActiveSidebar";
 import InactiveSidebar from "./InactiveSidebar";
 import { useSelector } from "react-redux";
 import { handleToggleSidebarState } from "provider/rightSidebarSlice";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
 interface Props {
   data: any;
@@ -10,6 +11,7 @@ interface Props {
   activeSlide: number;
   slides: any;
   lessonlist: any;
+  manager : EditorialManagerInterface
 }
 
 const RightSidebar: FC<Props> = ({
@@ -18,6 +20,7 @@ const RightSidebar: FC<Props> = ({
   showComp,
   activeSlide,
   lessonlist,
+  manager
 }) => {
   const selector: any = useSelector(handleToggleSidebarState);
   const isActive = selector.payload.rightSidebarState.value;

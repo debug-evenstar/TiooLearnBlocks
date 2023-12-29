@@ -4,7 +4,7 @@ import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent } from "./handler";
 
-const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
+const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
     height: id.includes("Image") ? 200 : 65,
@@ -37,7 +37,7 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, handleDelete }) => {
           height: viewBoxSize.height + "px",
         }}
       >
-        {ViewBoxContent(id, viewBoxRef)}
+        {ViewBoxContent(id, manager, viewBoxRef)}
       </div>
     </Resizable>
   );

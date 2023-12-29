@@ -1,7 +1,7 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 
-const Text: FC<CanvasText> = ({ id, viewBoxRef }) => {
+const Text: FC<CanvasText> = ({ id, manager, viewBoxRef }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [textareaRowCount, setTextareaRowCount] = useState(1);
   const [isEditable, setIsEditable] = useState(true);

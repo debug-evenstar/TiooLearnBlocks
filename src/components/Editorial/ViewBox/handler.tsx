@@ -1,3 +1,4 @@
+import { EditorialManagerInterface } from "../Base/EditorialManager";
 import Image from "./Boxtypes/Image/Image";
 import Text from "./Boxtypes/Text/Text";
 import Background from "./RightSidebar/EditProperties/Background";
@@ -18,6 +19,7 @@ export function getOriginalName(str: string): string {
 // for viewbox component
 export const ViewBoxContent = (
   id: string,
+  manager : EditorialManagerInterface,
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>
 ) => {
   const componentName = getOriginalName(id);
@@ -25,7 +27,7 @@ export const ViewBoxContent = (
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {
-    Text: <Text id={id} viewBoxRef={viewBoxRef} />,
+    Text: <Text id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     Image: <Image id={id} />,
   };
 
