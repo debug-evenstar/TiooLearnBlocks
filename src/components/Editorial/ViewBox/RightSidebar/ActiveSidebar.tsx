@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { BsArrowLeft, BsPencil } from "react-icons/bs";
 import { MdRedo, MdUndo } from "react-icons/md";
 import { RiArrowDropDownFill } from "react-icons/ri";
@@ -6,8 +6,13 @@ import PromptBox from "components/Editorial/promptBox";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { EditProperties, getOriginalName } from "../handler";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
-const ActiveSidebar = () => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const ActiveSidebar: FC<Props> = ({ manager }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
   const id: string = selector.payload.activeViewbox.value;
@@ -42,7 +47,7 @@ const ActiveSidebar = () => {
           </div>
         </section>
 
-        <section>{EditProperties(id)}</section>
+        <section>{EditProperties(id, manager)}</section>
       </main>
 
       <div className="mt-12 p-4">

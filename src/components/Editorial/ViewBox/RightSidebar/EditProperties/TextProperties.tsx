@@ -1,3 +1,4 @@
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import React, { FC, useState } from "react";
 import {
   RiAlignCenter,
@@ -18,7 +19,11 @@ import {
   RiUnderline,
 } from "react-icons/ri";
 
-const TextProperties: FC<any> = () => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const TextProperties: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
 
   return (
@@ -34,7 +39,7 @@ const TextProperties: FC<any> = () => {
       {isActive && (
         <main className="w-full shadow-md">
           <section className="flex flex-wrap py-4">
-            <TextEditProperties />
+            <TextEditProperties manager={manager} />
           </section>
 
           <section className="w-full flex justify-between py-4">
@@ -78,10 +83,17 @@ const TextProperties: FC<any> = () => {
   );
 };
 
-const TextEditProperties = () => {
+const TextEditProperties: FC<Props> = ({ manager }) => {
   return (
     <>
-      <div className="border p-2 cursor-pointer">
+      <div
+        className="border p-2 cursor-pointer"
+        onClick={() =>
+          manager.canvasManager.activeComponent.functions?.toggleBold(
+            manager.canvasManager.activeComponent.data?.boldRange
+          )
+        }
+      >
         <RiBold />
       </div>
       <div className="border p-2 cursor-pointer">

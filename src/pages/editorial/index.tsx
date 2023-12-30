@@ -47,7 +47,7 @@ const EditorialComp: FC<Props> = ({
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [showEdit, setShowEdit] = useState(false);
   const [overlay, setOverlay] = useState(false);
-  const [manager , setManager] = useState(CreateEditorialManager());
+  const [manager, setManager] = useState(CreateEditorialManager());
 
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
