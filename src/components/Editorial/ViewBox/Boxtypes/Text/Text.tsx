@@ -1,7 +1,6 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import "react-quill/dist/quill.snow.css";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -34,13 +33,6 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       }
     }
   };
-
-  useEffect(()=>{
-    // Call the handler to register the functions
-    manager.canvasManager.activeComponent.functions["boldenText"] = () => {
-      console.log("Someething");
-    }
-  },[]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -102,6 +94,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   };
 
   const toggleBolden = (range: Range) => {
+    console.log(range.toString());
     const boldElement = document.createElement("b");
     range.surroundContents(boldElement);
 
@@ -130,13 +123,11 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   };
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleBold"] = (
-      range: Range
-    ) => {
-      toggleBolden(range);
+    manager.canvasManager.activeComponent.functions["toggleBold"] = () => {
+      const range = boldRange();
+      range && range.toString() && toggleBolden(range);
     };
-    manager.canvasManager.activeComponent.data["boldRange"] = boldRange();
-  }, [manager, boldRange]);
+  }, [manager]);
 
   return (
     <div
@@ -146,10 +137,10 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       }`}
       onDoubleClick={() => setIsEditable(!isEditable)}
     >
-      <button onClick={toggleBold}>toggleBold</button>
+      {/* <button onClick={toggleBold}>toggleBold</button>
       <button onClick={() => manager.sidebarManager.functions?.toggleBold()}>
         toggleItalic
-      </button>
+      </button> */}
       <div
         ref={editableRef}
         className={`w-full h-auto outline-none resize-none overflow-y-hidden no-scrollbar ${
