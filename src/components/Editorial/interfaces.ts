@@ -7,12 +7,12 @@ export interface SidebarFunctions {
 
 export interface EditorialCanvasInterface {
   slideData: SlideData;
-  manager : EditorialManagerInterface;
+  manager: EditorialManagerInterface;
 }
 
 export interface CanvasComponentViewBox {
   id: string;
-  manager : EditorialManagerInterface;
+  manager: EditorialManagerInterface;
   handleDelete: (id: string) => void;
 }
 
@@ -22,6 +22,6 @@ export interface CanvasImage {
 
 export interface CanvasText {
   id: string;
-  manager : EditorialManagerInterface;
+  manager: EditorialManagerInterface;
   viewBoxRef: React.MutableRefObject<any>;
 }

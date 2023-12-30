@@ -19,7 +19,7 @@ export function getOriginalName(str: string): string {
 // for viewbox component
 export const ViewBoxContent = (
   id: string,
-  manager : EditorialManagerInterface,
+  manager: EditorialManagerInterface,
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>
 ) => {
   const componentName = getOriginalName(id);
@@ -35,7 +35,10 @@ export const ViewBoxContent = (
 };
 
 // for editing in rightsidebar
-export const EditProperties = (id: string, manager : EditorialManagerInterface) => {
+export const EditProperties = (
+  id: string,
+  manager: EditorialManagerInterface
+) => {
   const componentName = getOriginalName(id);
 
   const viewboxTypes: {
@@ -43,7 +46,7 @@ export const EditProperties = (id: string, manager : EditorialManagerInterface) 
   } = {
     Text: (
       <>
-        <TextProperties manager={manager}/>
+        <TextProperties manager={manager} />
         <Background />
         <Extensions />
         <Delete id={id} />

@@ -19,7 +19,11 @@ import {
   RiUnderline,
 } from "react-icons/ri";
 
-const TextProperties: FC<any> = ({ manager}) => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const TextProperties: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
   return (
     <div className="w-full my-5 py-2">
@@ -34,7 +38,7 @@ const TextProperties: FC<any> = ({ manager}) => {
       {isActive && (
         <main className="w-full shadow-md">
           <section className="flex flex-wrap py-4">
-            <TextEditProperties manager={manager}/>
+            <TextEditProperties manager={manager} />
           </section>
 
           <section className="w-full flex justify-between py-4">
@@ -78,12 +82,17 @@ const TextProperties: FC<any> = ({ manager}) => {
   );
 };
 
-
-const TextEditProperties : FC<any> = ({manager}) => {
-  console.log(manager);
+const TextEditProperties: FC<Props> = ({ manager }) => {
   return (
     <>
-      <div className="border p-2 cursor-pointer" onClick={() => manager.canvasManager.activeComponent.functions?.boldenText()}>
+      <div
+        className="border p-2 cursor-pointer"
+        onClick={() =>
+          manager.canvasManager.activeComponent.functions?.toggleBold(
+            manager.canvasManager.activeComponent.data?.boldRange
+          )
+        }
+      >
         <RiBold />
       </div>
       <div className="border p-2 cursor-pointer">

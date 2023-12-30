@@ -8,7 +8,11 @@ import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { EditProperties, getOriginalName } from "../handler";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
-const ActiveSidebar : FC<any> = ({manager}) => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const ActiveSidebar: FC<Props> = ({ manager }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
   const id: string = selector.payload.activeViewbox.value;
