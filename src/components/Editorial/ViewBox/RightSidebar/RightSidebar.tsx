@@ -28,7 +28,7 @@ const RightSidebar: FC<Props> = ({
   return (
     <div className="border-l bg-white border-[#030036] border-opacity-10 shadow relative w-full h-screen max-w-[20%] overflow-auto pt-5 px-[29px] ">
       {isActive ? (
-        <ActiveSidebar />
+        <ActiveSidebar manager={manager}/>
       ) : (
         <InactiveSidebar
           slides={slides}

@@ -29,6 +29,13 @@ const Text: FC<CanvasText> = ({ id, manager, viewBoxRef }) => {
     }
   };
 
+  useEffect(()=>{
+    // Call the handler to register the functions
+    manager.canvasManager.activeComponent.functions["boldenText"] = () => {
+      console.log("Someething");
+    }
+  },[]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const viewBox = viewBoxRef.current;

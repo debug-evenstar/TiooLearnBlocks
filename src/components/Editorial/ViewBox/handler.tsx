@@ -35,7 +35,7 @@ export const ViewBoxContent = (
 };
 
 // for editing in rightsidebar
-export const EditProperties = (id: string) => {
+export const EditProperties = (id: string, manager : EditorialManagerInterface) => {
   const componentName = getOriginalName(id);
 
   const viewboxTypes: {
@@ -43,7 +43,7 @@ export const EditProperties = (id: string) => {
   } = {
     Text: (
       <>
-        <TextProperties />
+        <TextProperties manager={manager}/>
         <Background />
         <Extensions />
         <Delete id={id} />
