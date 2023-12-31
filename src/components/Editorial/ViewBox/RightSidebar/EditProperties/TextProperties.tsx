@@ -12,12 +12,14 @@ import {
   RiBold,
   RiH1,
   RiH2,
+  RiH3,
   RiItalic,
   RiLink,
   RiLinkUnlink,
   RiListCheck,
   RiListOrdered,
   RiListUnordered,
+  RiStrikethrough,
   RiUnderline,
 } from "react-icons/ri";
 
@@ -86,29 +88,90 @@ const TextProperties: FC<Props> = ({ manager }) => {
 };
 
 const TextEditProperties: FC<Props> = ({ manager }) => {
+  const toggleWrapper =
+    manager.canvasManager.activeComponent.functions?.toggleWrapper;
+
+  const [linkBoxActive, setLinkBoxActive] = useState(false);
+  const [linkBoxValue, setLinkBoxValue] = useState("");
+
+  const handleAddLink = () => {
+    toggleWrapper("a", "blue", linkBoxValue);
+    setLinkBoxValue("");
+    setLinkBoxActive(false);
+  };
+
   return (
     <>
       <a
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
-        onClick={() =>{
-          manager.canvasManager.activeComponent.functions?.toggleBold()
+        onClick={() => {
+          toggleWrapper("b");
         }}
       >
         <RiBold />
       </a>
-      <div className="border p-2 cursor-pointer">
+
+      <a
+        className="border p-2 cursor-pointer"
+        href="javascript:void(0)"
+        onClick={() => {
+          toggleWrapper("i");
+        }}
+      >
         <RiItalic />
-      </div>
-      <div className="border p-2 cursor-pointer">
+      </a>
+
+      <a
+        className="border p-2 cursor-pointer"
+        href="javascript:void(0)"
+        onClick={() => {
+          toggleWrapper("span", "underline");
+        }}
+      >
         <RiUnderline />
-      </div>
-      <div className="border p-2 cursor-pointer">
+      </a>
+
+      <a
+        className="border p-2 cursor-pointer"
+        href="javascript:void(0)"
+        onClick={() => {
+          toggleWrapper("span", "line-through");
+        }}
+      >
+        <RiStrikethrough />
+      </a>
+
+      <a
+        className="border p-2 cursor-pointer"
+        href="javascript:void(0)"
+        onClick={() => {
+          toggleWrapper("h1");
+        }}
+      >
         <RiH1 />
-      </div>
-      <div className="border p-2 cursor-pointer">
+      </a>
+
+      <a
+        className="border p-2 cursor-pointer"
+        href="javascript:void(0)"
+        onClick={() => {
+          toggleWrapper("h2");
+        }}
+      >
         <RiH2 />
-      </div>
+      </a>
+
+      <a
+        className="border p-2 cursor-pointer"
+        href="javascript:void(0)"
+        onClick={() => {
+          toggleWrapper("h3");
+        }}
+      >
+        <RiH3 />
+      </a>
+
       <div className="border p-2 cursor-pointer">
         <RiListOrdered />
       </div>
@@ -118,9 +181,42 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
       <div className="border p-2 cursor-pointer">
         <RiListCheck />
       </div>
-      <div className="border p-2 cursor-pointer">
-        <RiLink />
+
+      <div className="border p-2 cursor-pointer relative">
+        <a
+          href="javascript:void(0)"
+          onClick={() => setLinkBoxActive(!linkBoxActive)}
+        >
+          <RiLink />
+        </a>
+
+        {linkBoxActive && (
+          <section className="bg-white border p-2 absolute">
+            <input
+              className="border p-2 h-10 w-40 text-[12px]"
+              placeholder="Input link here"
+              value={linkBoxValue}
+              onChange={(e) => setLinkBoxValue(e.target.value)}
+            />
+            <div className="flex gap-2 mt-2">
+              <a
+                className="bg-[#4F46E5] text-[12px] text-white p-1.5"
+                href="javascript:void(0)"
+                onClick={handleAddLink}
+              >
+                Add link
+              </a>
+              <button
+                className="bg-[#4F46E5] text-[12px] text-white p-1"
+                onClick={() => setLinkBoxActive(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </section>
+        )}
       </div>
+
       <div className="border p-2 cursor-pointer">
         <RiLinkUnlink />
       </div>
