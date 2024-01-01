@@ -7,7 +7,7 @@ import { ViewBoxContent } from "./handler";
 const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
-    height: id.includes("Image") ? 200 : 65,
+    height: id.includes("Text") ? 65 : 280,
   });
 
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
@@ -19,7 +19,7 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
     console.log(size);
   };
 
-  const height = id.includes("Image") ? 200 : 65;
+  const height = id.includes("Text") ? 65 : 280;
 
   return (
     <Resizable

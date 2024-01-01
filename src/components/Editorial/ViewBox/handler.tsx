@@ -1,10 +1,10 @@
 import { EditorialManagerInterface } from "../Base/EditorialManager";
 import Image from "./Boxtypes/Image/Image";
 import Text from "./Boxtypes/Text/Text";
-import Background from "./RightSidebar/EditProperties/Background";
-import Delete from "./RightSidebar/EditProperties/Delete";
-import Extensions from "./RightSidebar/EditProperties/Extensions";
-import TextProperties from "./RightSidebar/EditProperties/TextProperties";
+import Background from "../../RightSidebar/EditProperties/Background";
+import Delete from "../../RightSidebar/EditProperties/Delete";
+import Extensions from "../../RightSidebar/EditProperties/Extensions";
+import TextProperties from "../../RightSidebar/EditProperties/TextProperties";
 
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
@@ -23,12 +23,14 @@ export const ViewBoxContent = (
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>
 ) => {
   const componentName = getOriginalName(id);
+  console.log(componentName);
 
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {
     Text: <Text id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     Image: <Image id={id} />,
+    Video: <Image id={id} />,
   };
 
   return viewboxTypes[componentName];
@@ -53,6 +55,13 @@ export const EditProperties = (
       </>
     ),
     Image: (
+      <>
+        <Background manager={manager} />
+        <Extensions />
+        <Delete id={id} />
+      </>
+    ),
+    Video: (
       <>
         <Background manager={manager} />
         <Extensions />

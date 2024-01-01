@@ -16,7 +16,6 @@ const Delete: FC<Props> = ({ id }) => {
   const dragItems: any[] = selector.payload.dragItems.value;
 
   const handleDelete = (id: string) => {
-    console.log(id, "is the id");
     const filteredItems = dragItems.filter((item) => item.id !== id);
     dispatch(handleSetDragItems(filteredItems));
     dispatch(refreshToggleSidebarState());
