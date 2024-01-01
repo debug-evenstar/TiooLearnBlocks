@@ -1,6 +1,6 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { toggleWrapper } from "./handler";
+import { toggleWrapper } from "./handlers/wrapperHandler";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -80,6 +80,12 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       range &&
         range.toString() &&
         toggleWrapper(range, elementType, style, link);
+      handleSetContent();
+    };
+
+    manager.canvasManager.activeComponent.functions["toggleWrapperStyle"] = (
+      style: string = ""
+    ) => {
       handleSetContent();
     };
   }, [manager]);
