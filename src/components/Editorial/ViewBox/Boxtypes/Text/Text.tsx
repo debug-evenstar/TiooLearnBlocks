@@ -89,6 +89,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
     ) => {
       const element = editableRef.current;
       if (!element) return;
+      toggleWrapperStyle(element, style);
       handleSetContent();
     };
   }, [manager]);

@@ -16,15 +16,7 @@ export function isHsv(colorString: string) {
 
 // Color Formatting Functions
 export function formatHex(hexColor: string) {
-  if (hexColor.length === 4) {
-    let extendedColor = "#";
-    for (let i = 1; i < hexColor.length; i++) {
-      extendedColor += hexColor[i] + hexColor[i];
-    }
-    return extendedColor;
-  } else {
-    return hexColor;
-  }
+  return hexColor;
 }
 
 export function formatRgb(rgbColor: string) {
