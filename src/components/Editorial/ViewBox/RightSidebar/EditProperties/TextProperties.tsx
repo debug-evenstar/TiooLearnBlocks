@@ -10,6 +10,7 @@ import {
   RiArrowDropDownFill,
   RiArrowDropUpFill,
   RiBold,
+  RiFontColor,
   RiH1,
   RiH2,
   RiH3,
@@ -22,7 +23,7 @@ import {
   RiStrikethrough,
   RiUnderline,
 } from "react-icons/ri";
-import { handleChangeTextColor } from "../../Boxtypes/Text/handlers/stylesHandler";
+import { ColorResult, SketchPicker } from "react-color";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -36,7 +37,14 @@ const TextProperties: FC<Props> = ({ manager }) => {
     manager.canvasManager.activeComponent.functions?.toggleWrapperStyle;
 
   const [isActive, setIsActive] = useState(false);
+  const [colorIsActive, setColorIsActive] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
+
+  const handleChangeTextColor = (color: ColorResult) => {
+    setTextColor(color.hex);
+    toggleWrapperStyle(color.hex, "textColor");
+    setColorIsActive(false);
+  };
 
   return (
     <div className="w-full my-5 py-2">
@@ -115,16 +123,39 @@ const TextProperties: FC<Props> = ({ manager }) => {
           </section>
 
           <section className="w-full py-4">
-            <div className="flex items-center gap-2 mb-4">
-              <p className="text-[12px]">Text color: </p>
+            <div
+              className={`${!colorIsActive && "flex"} items-center gap-2 mb-4`}
+            >
+              <p
+                className={`text-[12px] cursor-pointer ${
+                  colorIsActive && "mb-4"
+                }`}
+                onClick={() => setColorIsActive(!colorIsActive)}
+              >
+                Text color:{" "}
+              </p>
               <a href="javascript:void(0)">
-                <input
-                  className="border h-6 w-14 text-[12px]"
-                  value={textColor}
-                  onChange={(e) =>
-                    handleChangeTextColor(e, setTextColor, toggleWrapperStyle)
-                  }
-                />
+                {!colorIsActive && (
+                  <div
+                    className="text-center"
+                    onClick={() => setColorIsActive(true)}
+                  >
+                    <b className="w-full">A</b>
+                    <div
+                      className="h-1 w-6"
+                      style={{
+                        backgroundColor: textColor,
+                      }}
+                    />
+                  </div>
+                )}
+                {colorIsActive && (
+                  <SketchPicker
+                    width="90%"
+                    color={textColor}
+                    onChangeComplete={(color) => handleChangeTextColor(color)}
+                  />
+                )}
               </a>
             </div>
 

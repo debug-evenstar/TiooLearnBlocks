@@ -47,14 +47,14 @@ export const EditProperties = (
     Text: (
       <>
         <TextProperties manager={manager} />
-        <Background />
+        <Background manager={manager} />
         <Extensions />
         <Delete id={id} />
       </>
     ),
     Image: (
       <>
-        <Background />
+        <Background manager={manager} />
         <Extensions />
         <Delete id={id} />
       </>
