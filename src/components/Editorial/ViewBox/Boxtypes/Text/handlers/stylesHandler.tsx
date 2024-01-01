@@ -47,6 +47,30 @@ export function isValidColorLength(colorString: string) {
   return length === 4 || length === 7 || length === 11 || length === 16;
 }
 
+export function handleChangeTextColor(
+  e: any,
+  setTextColor: React.Dispatch<React.SetStateAction<string>>,
+  toggleWrapperStyle: Function
+) {
+  const newTextColor = e.target.value;
+
+  // Check color format and update accordingly
+  if (isHex(newTextColor)) {
+    setTextColor(formatHex(newTextColor));
+  } else if (isRgb(newTextColor)) {
+    setTextColor(formatRgb(newTextColor));
+  } else if (isHsv(newTextColor)) {
+    setTextColor(formatHsv(newTextColor));
+  } else {
+    setTextColor(newTextColor);
+  }
+
+  // Call toggleWrapperStyle only if valid length reached
+  if (isValidColorLength(newTextColor)) {
+    toggleWrapperStyle(newTextColor);
+  }
+}
+
 export const toggleWrapperStyle = (element: HTMLDivElement, style: string) => {
   element.style.color = style;
 };

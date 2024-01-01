@@ -22,13 +22,22 @@ import {
   RiStrikethrough,
   RiUnderline,
 } from "react-icons/ri";
+import { handleChangeTextColor } from "../../Boxtypes/Text/handlers/stylesHandler";
 
 interface Props {
   manager: EditorialManagerInterface;
 }
 
 const TextProperties: FC<Props> = ({ manager }) => {
+  const toggleWrapper =
+    manager.canvasManager.activeComponent.functions?.toggleWrapper;
+
+  const toggleWrapperStyle =
+    manager.canvasManager.activeComponent.functions?.toggleWrapperStyle;
+
   const [isActive, setIsActive] = useState(false);
+  const [textColor, setTextColor] = useState("#000000");
+
   return (
     <div className="w-full my-5 py-2">
       <a
@@ -64,16 +73,59 @@ const TextProperties: FC<Props> = ({ manager }) => {
           </section>
 
           <section className="w-full border flex justify-between my-4 p-2">
-            <RiAlignLeft className="cursor-pointer" />
-            <RiAlignCenter className="cursor-pointer" />
-            <RiAlignRight className="cursor-pointer" />
-            <RiAlignJustify className="cursor-pointer" />
+            <a
+              className="border p-2 cursor-pointer"
+              href="javascript:void(0)"
+              onClick={() => {
+                toggleWrapper("span", "left");
+              }}
+            >
+              <RiAlignLeft className="cursor-pointer" />
+            </a>
+
+            <a
+              className="border p-2 cursor-pointer"
+              href="javascript:void(0)"
+              onClick={() => {
+                toggleWrapper("span", "center");
+              }}
+            >
+              <RiAlignCenter className="cursor-pointer" />
+            </a>
+
+            <a
+              className="border p-2 cursor-pointer"
+              href="javascript:void(0)"
+              onClick={() => {
+                toggleWrapper("span", "right");
+              }}
+            >
+              <RiAlignRight className="cursor-pointer" />
+            </a>
+
+            <a
+              className="border p-2 cursor-pointer"
+              href="javascript:void(0)"
+              onClick={() => {
+                toggleWrapper("span", "justify");
+              }}
+            >
+              <RiAlignJustify className="cursor-pointer" />
+            </a>
           </section>
 
           <section className="w-full py-4">
             <div className="flex items-center gap-2 mb-4">
               <p className="text-[12px]">Text color: </p>
-              <div className="border h-6 w-14" />
+              <a href="javascript:void(0)">
+                <input
+                  className="border h-6 w-14 text-[12px]"
+                  value={textColor}
+                  onChange={(e) =>
+                    handleChangeTextColor(e, setTextColor, toggleWrapperStyle)
+                  }
+                />
+              </a>
             </div>
 
             <div className="flex items-center gap-2">
