@@ -3,9 +3,7 @@ import React, { FC, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 
 const Image: FC<CanvasImage> = ({ id }) => {
-  const [previewImage, setPreviewImage] = useState(
-    "https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg"
-  );
+  const [previewImage, setPreviewImage] = useState("");
 
   const handleUpload = (e: any) => {
     e.preventDefault();
@@ -17,15 +15,19 @@ const Image: FC<CanvasImage> = ({ id }) => {
   };
 
   return (
-    <div className="handle p-3 h-full w-full cursor-move flex flex-col justify-center align-middle">
-      <div className="w-6/12 mx-auto my-6 rounded-[18px] overflow-hidden">
-        <img
-          src={previewImage}
-          alt="placeholder"
-          className="w-full"
-          draggable={false}
-        />
-      </div>
+    <div className="flex flex-col h-full w-full p-3 cursor-move justify-center items-center">
+      <UploadIcon handleUpload={handleUpload} />
+
+      {previewImage.length > 1 && (
+        <div className="w-6/12 mx-auto my-6 rounded-lg overflow-hidden">
+          <img
+            src={previewImage}
+            alt="placeholder"
+            className="w-full"
+            draggable={false}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -38,14 +40,18 @@ export interface UploadIconProps {
 
 const UploadIcon: FC<UploadIconProps> = ({ handleUpload }) => {
   return (
-    <div className="w-6 relative overflow-hidden !cursor-pointer">
-      <FiUploadCloud className="text-2xl cursor-pointer" />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleUpload}
-        className="absolute top-0 -left-24 opacity-0"
-      />
+    <div className="w-fit relative overflow-hidden cursor-pointer bg-[red]">
+      <div className="w-6 justify-self-center align-self-center">
+        <FiUploadCloud className="text-2xl cursor-pointer" />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleUpload}
+          className="absolute top-0 -left-24 opacity-0"
+        />
+      </div>
+      <p className="text-center">Drag or upload from you computer</p>
+      <p className="text-center text-[4f46e5]">Choose file</p>
     </div>
   );
 };

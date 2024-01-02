@@ -5,6 +5,7 @@ import Background from "../../RightSidebar/EditProperties/Background";
 import Delete from "../../RightSidebar/EditProperties/Delete";
 import Extensions from "../../RightSidebar/EditProperties/Extensions";
 import TextProperties from "../../RightSidebar/EditProperties/TextProperties";
+import Video from "./Boxtypes/Video/Video";
 
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
@@ -30,7 +31,7 @@ export const ViewBoxContent = (
   } = {
     Text: <Text id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     Image: <Image id={id} />,
-    Video: <Image id={id} />,
+    Video: <Video id={id} />,
   };
 
   return viewboxTypes[componentName];
@@ -56,15 +57,11 @@ export const EditProperties = (
     ),
     Image: (
       <>
-        <Background manager={manager} />
-        <Extensions />
         <Delete id={id} />
       </>
     ),
     Video: (
       <>
-        <Background manager={manager} />
-        <Extensions />
         <Delete id={id} />
       </>
     ),

@@ -8,15 +8,15 @@ interface Props {
 }
 
 const Background: FC<Props> = ({ manager }) => {
-  const toggleWrapperStyle =
-    manager.canvasManager.activeComponent.functions?.toggleWrapperStyle;
+  const toggleViewboxStyle =
+    manager.canvasManager.activeComponent.functions?.toggleViewboxStyle;
 
   const [isActive, setIsActive] = useState(false);
   const [color, setColor] = useState<any>("#561ecb");
 
   const handleChangeColor = (color: ColorResult) => {
     setColor(color.hex);
-    toggleWrapperStyle(color.hex, "bgColor");
+    toggleViewboxStyle(color.hex, "bgColor");
   };
 
   return (

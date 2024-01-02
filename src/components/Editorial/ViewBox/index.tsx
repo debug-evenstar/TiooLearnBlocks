@@ -1,8 +1,9 @@
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent } from "./handler";
+import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 
 const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
   const [viewBoxSize, setViewBoxSize] = useState({
@@ -20,6 +21,17 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
   };
 
   const height = id.includes("Text") ? 65 : 280;
+
+  useEffect(() => {
+    manager.canvasManager.activeComponent.functions["toggleViewboxStyle"] = (
+      style: string = "",
+      styleType: string
+    ) => {
+      const element = viewBoxRef.current;
+      if (!element) return;
+      toggleWrapperStyle(element, style, styleType);
+    };
+  }, [manager]);
 
   return (
     <Resizable
