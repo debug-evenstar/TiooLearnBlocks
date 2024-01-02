@@ -1,4 +1,81 @@
 
+/* -------------------------------------------------------------------------- */
+/*                          COMPONENT DATA INTERFACES                         */
+/* -------------------------------------------------------------------------- */
+
+interface PositionProperties {
+    offset : number;
+    offsetPercent? : number;
+}
+
+
+interface ComponentPositionInterface {
+    xAxis : PositionProperties;
+    yAxis : PositionProperties;
+
+}
+
+interface ComponentSizeInterface {
+    width : number;
+    widthPercent? : number;
+    height : number;
+    heightPercent? : number;
+}
+
+interface ComponentLayoutInterface {
+    position? : ComponentPositionInterface;
+    size : ComponentSizeInterface;
+}
+
+export const setComponentLayout = (
+    canvasProps : { width : number, height : number },
+    layoutData? : ComponentLayoutInterface,
+) => {
+    const percentValue = (value: number, base : number) => value/base * 100;
+    return {
+        position : {
+            xAxis : { 
+                offset : layoutData?.position?.xAxis.offset ?? 0 ,
+                offsetPercent : percentValue(layoutData?.position?.xAxis.offset ?? 0 , canvasProps.width)
+            },
+            yAxis : { 
+                offset : layoutData?.position?.xAxis.offset ?? 0 ,
+                offsetPercent : percentValue(layoutData?.position?.yAxis.offset ?? 0 , canvasProps.height)
+            } 
+        },
+        size : {
+            width : layoutData?.size.width ?? 0,
+            widthPercent : percentValue(layoutData?.size.width ?? 0 , canvasProps.width),
+            height : layoutData?.size.height ?? 0,
+            heightPercent : percentValue(layoutData?.size.height ?? 0 , canvasProps.height)
+        }
+    }
+};
+
+// Experimental styles interface
+interface ComponentStylesInterface {
+    backgroundColor : string;
+    borderProperties : {
+        radius : string;
+        stroke : number;
+    }
+}
+
+export interface ComponentBaseDataInterface {
+    component : string; // Component Name
+    theme : string | any; // Allow theme configuration basic implementation for now
+    extensions? : any[] // Allow multiple extension types ... To be defined clearly later
+    layout? : ComponentLayoutInterface; // Manage viewbox layout
+    styles? : ComponentStylesInterface; // Manage optional styles for component view box or global per-component styles
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/*                    EDITORIAL & CANVAS MANAGER INTERFACES                   */
+/* -------------------------------------------------------------------------- */
+
+
 // Data Group is used when data and function types are not clearly defined
 // It is to be replaced with the actual types and interfaces when clearly defined
 
@@ -22,21 +99,59 @@ const CanvasManager : CanvasManagerInterface = {
     activeComponent : DataGroup
 };
 
+interface EditorialSlideManager { 
+    slides : any[];
+    activeSlide : number;
+}
+
+const SlideManager : EditorialSlideManager = {
+    slides : [],
+    activeSlide : 0
+};
+
 export interface EditorialManagerInterface {
     sidebarManager : DataGroupInterface;
     canvasManager : CanvasManagerInterface;
+    slideManager : EditorialSlideManager
 }
-
 
 class EditorialManager implements EditorialManagerInterface {
 
     sidebarManager: DataGroupInterface = DataGroup;
     canvasManager: CanvasManagerInterface = CanvasManager;
+    slideManager: EditorialSlideManager = SlideManager; 
 
-    constructor() {
-        console.log(this.canvasManager);
+    constructor(slides : any[]) {
+        this.slideManager.slides = slides;
+        this.initCanvasManager();
     }
 
+    initCanvasManager(){
+        const componentData = this.canvasManager.activeComponent.data ?? {
+            layoutData : {}, // Store layout configuration for the active component
+            coreData : {} // Core data of the active component
+        };
+        this.canvasManager.activeComponent.data = componentData;
+        this.canvasManager.canvas.functions["getCanvasSize"] = this.getCanvasSize;
+        this.canvasManager.canvas.functions["saveActiveComponentData"] = this.saveComponentData;
+    }
+
+    getCanvasSize(){
+        const canvas = document.getElementById("editorial-canvas");
+        return { width : canvas?.offsetWidth, height : canvas?.offsetHeight };
+    }
+
+    saveComponentData(){
+        const slides : any[] = this.slideManager.slides;
+        const activeSlide = slides[this.slideManager.activeSlide];
+        const activeComponent = this.canvasManager.activeComponent;
+        activeSlide[activeComponent.data.index] = {
+            ...activeComponent.data.coreData,
+            ...activeComponent.data.layoutData
+        }
+        slides[this.slideManager.activeSlide] = activeSlide;
+        this.slideManager.slides = slides;
+    }
 }
 
-export const CreateEditorialManager = () => (new EditorialManager());
+export const CreateEditorialManager = (slides : any[]) => (new EditorialManager(slides));

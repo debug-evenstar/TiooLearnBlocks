@@ -2,6 +2,8 @@ import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { toggleWrapper } from "./handlers/wrapperHandler";
 import { toggleWrapperStyle } from "./handlers/stylesHandler";
+import { setTextComponentData } from "./handlers/dataHandler";
+
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -11,6 +13,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const [isEditable, setIsEditable] = useState(true);
   const [textValue, setTextValue] = useState("");
   const [content, setContent] = useState("");
+
 
   const handleTextChange = (e: any) => {
     const textValue = e.target.value;
@@ -42,7 +45,8 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
 
     if (!editable) return;
     setContent(editable.innerHTML);
-    console.log(content);
+    const textData = setTextComponentData(editable.innerHTML);
+    manager.canvasManager.activeComponent.data.coreData = textData;
   };
 
   const getRange = () => {
