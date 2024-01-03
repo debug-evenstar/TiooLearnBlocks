@@ -97,7 +97,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       toggleWrapperStyle(element, style, styleType);
       handleSetContent();
     };
-  }, [manager]);
+  }, [manager, isEditable]);
 
   return (
     <div
@@ -109,7 +109,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
     >
       <div
         ref={editableRef}
-        className={`w-full outline-none resize-none overflow-y-hidden no-scrollbar ${
+        className={`w-full h-full outline-none resize-none overflow-y-hidden no-scrollbar ${
           !isEditable && "cursor-move"
         }`}
         contentEditable={isEditable}

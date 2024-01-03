@@ -90,9 +90,20 @@ const TextComponent: FC<TextComponentProps> = ({
   },[formatted, data.content, slide]);
 
 
+  const parseStyles = () => {
+      // Expandable
+      const textStyle = `
+        ${isHeading || slide.parent ? "text-center" : "text-left"}
+        text-font
+        ${styles?.fontSize ? "text-["+styles.fontSize+"]" : ""}
+      `;
+      return textStyle;
+  }
+
+
 
   return <>
-    <div className={`${isHeading || slide.parent ? "text-center" : "text-left"} text-font text-[19px]`} ref={textContainerRef}>
+    <div className={parseStyles()} ref={textContainerRef}>
       {processed.map((item, index) => (
           <span className="text-font" key={index}>
             {(typeof item) == "string" ? ` ${item} ` : (item)}

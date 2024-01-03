@@ -29,7 +29,7 @@ interface Props {
     length: number,
     changedIndex: any
   ) => void;
-  manager : EditorialManagerInterface
+  manager: EditorialManagerInterface;
 }
 const ActiveEditSlide: FC<Props> = ({
   active,
@@ -40,7 +40,7 @@ const ActiveEditSlide: FC<Props> = ({
   changeCard,
   changeSlide,
   isBusy,
-  manager
+  manager,
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   // const [checkText, setCheckText] = useState([]);
@@ -144,7 +144,7 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="w-full">
           {/* {!!checkText.length && ( */}
 
-          <EditorialCanvas slideData={activeSlide} manager={manager}/>
+          <EditorialCanvas slideData={activeSlide} manager={manager} />
         </div>
       </div>
       <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">

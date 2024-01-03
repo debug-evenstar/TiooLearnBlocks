@@ -5,7 +5,7 @@ import { RiArrowDropDownFill } from "react-icons/ri";
 import PromptBox from "components/Editorial/promptBox";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { EditProperties, getOriginalName } from "../handler";
+import { EditProperties, getOriginalName } from "../Editorial/ViewBox/handler";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
 interface Props {

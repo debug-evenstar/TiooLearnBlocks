@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import PromptBox from "../../promptBox";
+import PromptBox from "../Editorial/promptBox";
 
 interface Props {
   data: any;
@@ -114,20 +114,25 @@ const InactiveSidebar: FC<Props> = ({
               className="grid gap-4 border-y border-gray-400 p-3 h-[300px] overflow-y-scroll hide-scroll"
               ref={scrRef}
             >
-              {compTypes.map((item, index) => (
-                <div
-                  key={index}
-                  className={`${
-                    comps && comps.includes(item)
-                      ? "compactive"
-                      : "compinactive"
-                  } cursor-pointer mx-1 hover:scale-y-105 duration-100`}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, item)}
-                >
-                  {item}
-                </div>
-              ))}
+              {compTypes.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`${
+                      comps &&
+                      {
+                        /* comps.includes(item) */
+                      }
+                        ? "compactive"
+                        : "compinactive"
+                    } cursor-pointer mx-1 hover:scale-y-105 duration-100`}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
+                  >
+                    {item}
+                  </div>
+                );
+              })}
             </div>
             <FaAngleDown
               className="text-xl text-gray-500 mx-auto mt-2 cursor-pointer"
