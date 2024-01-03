@@ -12,12 +12,10 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
   });
 
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
+  const nodeRef : any = createRef();
 
   const onResize = (event: any, { node, size, handle }: any) => {
     setViewBoxSize({ width: size.width, height: size.height });
-    console.log(viewBoxRef.current?.offsetHeight);
-
-    console.log(size);
   };
 
   const height = id.includes("Text") ? 65 : 280;
@@ -51,7 +49,8 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
       >
         {ViewBoxContent(id, manager, viewBoxRef)}
       </div>
-    </Resizable>
+
+    </Draggable>
   );
 };
 
