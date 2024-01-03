@@ -1,8 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
-import RightSidebar from "../components/Editorial/RightSidebar";
+import RightSidebar from "../components/RightSidebar/RightSidebar";
 import LeftSidebar from "../components/Editorial/LeftSidebar";
-import { SidebarFunctions } from "components/Editorial/interfaces";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
 interface MainLayoutProps {
   children: React.ReactElement;
@@ -14,7 +14,7 @@ interface MainLayoutProps {
   lessonlist: any;
   name: string;
   data: any;
-  sidebarFunctions : SidebarFunctions;
+  manager: EditorialManagerInterface;
 }
 const EditorialLayout: React.FC<MainLayoutProps> = ({
   children,
@@ -26,7 +26,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
   lessonlist,
   name,
   data,
-  sidebarFunctions
+  manager,
 }) => {
   return (
     <div className="h-screen w-full top-0 overflow-hidden relative">
@@ -36,7 +36,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
           slides={slides}
           changeTo={changeTo}
           data={data}
-          sidebarFunctions={sidebarFunctions}
+          manager={manager}
         />
         <div className="w-full overflow-y-auto">{children}</div>
         <RightSidebar
@@ -45,6 +45,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
           data={""}
           showComp={showComp}
           activeSlide={active}
+          manager={manager}
         />
       </div>
     </div>

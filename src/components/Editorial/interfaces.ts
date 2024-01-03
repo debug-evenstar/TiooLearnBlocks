@@ -1,5 +1,5 @@
 import { SlideData } from "components/SlideManager/handler";
-import { ReactElement, ReactNode } from "react";
+import { EditorialManagerInterface } from "./Base/EditorialManager";
 
 export interface SidebarFunctions {
   addSlide: Function;
@@ -7,29 +7,13 @@ export interface SidebarFunctions {
 
 export interface EditorialCanvasInterface {
   slideData: SlideData;
-  onDrop: (id: string) => void;
-  handleDelete: (id: string) => void;
-  dragItems: any[];
-}
-
-export interface BoxConfiguration {
-  width : number;
-  height : number;
-  xOffset : number;
-  yOffset : number;
+  manager: EditorialManagerInterface;
 }
 
 export interface CanvasComponentViewBox {
   id: string;
-  children? : React.ReactNode;
-  boxConfiguration : BoxConfiguration;
-  updateBoxConfiguration : Function;
-}
-
-export interface CanvasComponentEditBox {
-  id: string;
-  children? : React.ReactNode;
-  boxConfiguration : BoxConfiguration;
+  manager: EditorialManagerInterface;
+  handleDelete: (id: string) => void;
 }
 
 export interface CanvasImage {
@@ -38,5 +22,6 @@ export interface CanvasImage {
 
 export interface CanvasText {
   id: string;
+  manager: EditorialManagerInterface;
   viewBoxRef: React.MutableRefObject<any>;
 }

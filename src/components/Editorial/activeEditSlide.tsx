@@ -4,11 +4,9 @@ import {
   LessonSlideScope,
   loadComponent,
 } from "components/SlideManager/handler";
-import { RiDeleteBin5Line, RiShareForwardLine } from "react-icons/ri";
-import { TiArrowBackOutline } from "react-icons/ti";
-import { FiUploadCloud } from "react-icons/fi";
 import { FaTimes } from "react-icons/fa";
 import EditorialCanvas from "./Base/EditorialCanvas";
+import { EditorialManagerInterface } from "./Base/EditorialManager";
 
 interface Props {
   active: number;
@@ -31,6 +29,7 @@ interface Props {
     length: number,
     changedIndex: any
   ) => void;
+  manager: EditorialManagerInterface;
 }
 const ActiveEditSlide: FC<Props> = ({
   active,
@@ -41,6 +40,7 @@ const ActiveEditSlide: FC<Props> = ({
   changeCard,
   changeSlide,
   isBusy,
+  manager,
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   // const [checkText, setCheckText] = useState([]);
@@ -52,7 +52,6 @@ const ActiveEditSlide: FC<Props> = ({
   const [previewImage, setPreviewImage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [previewSlide, setPreviewSlide] = useState(false);
-  const [dragItems, setDragItems] = useState<any[]>([]);
 
   useEffect(() => {
     if (slides) {
@@ -139,90 +138,13 @@ const ActiveEditSlide: FC<Props> = ({
     const payload = [...activeSlid];
   };
 
-  const handleDrop = (id: string) => {
-    const existingClone = dragItems.find((item) => item.id === id);
-
-    if (!existingClone) {
-      setDragItems([...dragItems, { id: id + "-clone-" + Date.now() }]);
-    }
-  };
-
-  const handleDelete = (id: string) => {
-    const filteredItems = dragItems.filter((item) => item.id !== id);
-    setDragItems(filteredItems);
-  };
-
   return (
     <div>
       <div className="flex gap-x-4">
         <div className="w-full">
           {/* {!!checkText.length && ( */}
 
-          <EditorialCanvas
-            slideData={activeSlide}
-            onDrop={handleDrop}
-            handleDelete={handleDelete}
-            dragItems={dragItems}
-          />
-
-          {/* )} */}
-          {checkFiles && (<></>
-            // <div className="mt-12 relative p-6 py-12 dasheds">
-            //   <div className="flex absolute top-5 right-10 gap-x-4">
-            //     {delFile && (
-            //       <div className="w-6 relative overflow-hidden !cursor-pointer">
-            //         <FiUploadCloud className="text-2xl cursor-pointer" />
-            //         {checkFile("Video") && (
-            //           <input
-            //             type="file"
-            //             accept="video/*"
-            //             onChange={handleUpload}
-            //             className="absolute top-0 -left-24 opacity-0"
-            //           />
-            //         )}
-            //         {checkFile("Image") && (
-            //           <input
-            //             type="file"
-            //             accept="image/*"
-            //             onChange={handleUpload}
-            //             className="absolute top-0 -left-24 opacity-0"
-            //           />
-            //         )}
-            //       </div>
-            //     )}
-            //     {!delFile && (
-            //       <RiDeleteBin5Line
-            //         className="text-2xl cursor-pointer"
-            //         onClick={deleteFile}
-            //       />
-            //     )}
-            //   </div>
-            //   {delFile && !showPreview && (
-            //     <div className="w-6/12 mx-auto my-6 rounded-[18px] overflow-hidden">
-            //       <img
-            //         src="https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg"
-            //         alt="placeholder"
-            //         className="w-full"
-            //       />
-            //     </div>
-            //   )}
-            //   {/* {!delFile && !showPreview && <RenderFile />} */}
-            //   {showPreview &&
-            //     (checkFile("Image") ? (
-            //       <div className="w-8/12 max-h-[300px] object-fit mx-auto my-6 rounded-[18px] overflow-hidden">
-            //         <img
-            //           src={previewImage}
-            //           alt="placeholder"
-            //           className="w-full"
-            //         />
-            //       </div>
-            //     ) : (
-            //       <video className="w-full" controls autoPlay={true}>
-            //         <source src={previewImage} type="video/mp4"></source>
-            //       </video>
-            //     ))}
-            // </div>
-          )}
+          <EditorialCanvas slideData={activeSlide} manager={manager} />
         </div>
       </div>
       <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">

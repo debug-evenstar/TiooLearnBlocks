@@ -4,6 +4,8 @@ import RenderComponent from "pages/renderComp";
 import { Editorial } from "components";
 import { LessonPage } from "pages";
 import axios from "axios";
+import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
+import { useDispatch } from "react-redux";
 
 function App() {
   const datas = {
@@ -33,6 +35,7 @@ function App() {
     ],
   };
 
+  const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
   const [date, setDate] = useState<any>();
   const fetchLess = async () => {
@@ -46,6 +49,7 @@ function App() {
   };
   useEffect(() => {
     fetchLess();
+    dispatch(refreshToggleSidebarState());
   }, []);
 
   const handleBack = () => {
