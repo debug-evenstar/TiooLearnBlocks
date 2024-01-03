@@ -54,8 +54,8 @@ export const setComponentLayout = (
 
 // Experimental styles interface
 interface ComponentStylesInterface {
-    backgroundColor : string;
-    borderProperties : {
+    backgroundColor? : string;
+    borderProperties? : {
         radius : string;
         stroke : number;
     }
@@ -128,6 +128,7 @@ class EditorialManager implements EditorialManagerInterface {
 
     initCanvasManager(){
         const componentData = this.canvasManager.activeComponent.data ?? {
+            styleData : {}, // Store component v styles
             layoutData : {}, // Store layout configuration for the active component
             coreData : {} // Core data of the active component
         };
@@ -147,7 +148,8 @@ class EditorialManager implements EditorialManagerInterface {
         const activeComponent = this.canvasManager.activeComponent;
         activeSlide[activeComponent.data.index] = {
             ...activeComponent.data.coreData,
-            ...activeComponent.data.layoutData
+            ...activeComponent.data.layoutData,
+            ...activeComponent.data.styleData
         }
         slides[this.slideManager.activeSlide] = activeSlide;
         this.slideManager.slides = slides;
