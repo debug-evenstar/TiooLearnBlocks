@@ -93,7 +93,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       toggleWrapperStyle(element, style, styleType);
       handleSetContent();
     };
-  }, [manager]);
+  }, [manager, isEditable]);
 
   return (
     <div
