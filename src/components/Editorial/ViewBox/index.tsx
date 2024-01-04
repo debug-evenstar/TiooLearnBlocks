@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, createRef, useEffect, useRef, useState } from "react";
 import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
@@ -13,17 +13,16 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
   });
 
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
-  const nodeRef : any = createRef();
+  const nodeRef: any = createRef();
 
-
-  const updateComponentLayout = (width : number, height : number) => {
+  const updateComponentLayout = (width: number, height: number) => {
     manager.canvasManager.activeComponent.data.layoutData = setComponentLayout(
-        manager.canvasManager.canvas.functions?.getCanvasSize(),
-        {
-            size : { width, height }
-        }
-    )
-  }
+      manager.canvasManager.canvas.functions?.getCanvasSize(),
+      {
+        size: { width, height },
+      }
+    );
+  };
 
   const onResize = (event: any, { node, size, handle }: any) => {
     setViewBoxSize({ width: size.width, height: size.height });
@@ -45,10 +44,9 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
     };
   }, [manager]);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     updateComponentLayout(300, height);
-  },[])
+  }, []);
 
   return (
     <Resizable
@@ -68,7 +66,6 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
       >
         {ViewBoxContent(id, manager, viewBoxRef)}
       </div>
-
     </Resizable>
   );
 };
