@@ -1,4 +1,4 @@
-import React, { FC, createRef, useEffect } from "react";
+import React, { FC, createRef, useEffect, useState } from "react";
 import { EditorialCanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
@@ -15,23 +15,26 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   manager,
 }) => {
   const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetDragItems);
-
-  const dragItems: any[] = selector.payload.dragItems.value;
+  const [slideComponents, setSlideComponents] = useState<any[]>(
+    manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData)
+  );
 
   const onDrop = (id: string) => {
-    const existingClone = dragItems.find((item) => item.id === id);
+    const existingClone = slideComponents.find((item) => item.id === id);
     const itemId = id + "-clone-" + Date.now();
 
     if (!existingClone) {
-      dispatch(handleSetDragItems([...dragItems, { id: itemId }]));
+      // dispatch(handleSetDragItems([...slideComponents, { id: itemId }]));
+      updateSlideComponents(
+        [...slideComponents, { id: itemId }]
+      );
       console.log(itemId);
       dispatch(handleSetActiveViewbox(itemId));
     }
   };
 
   const handleDelete = (id: string) => {
-    const filteredItems = dragItems.filter((item) => item.id !== id);
+    const filteredItems = slideComponents.filter((item) => item.id !== id);
     dispatch(handleSetDragItems(filteredItems));
   };
 
@@ -52,6 +55,16 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   };
 
 
+  const updateSlideComponents = (components : any[]) => {
+    setSlideComponents(() => components);
+    // Also update slide manager
+  }
+
+
+  useEffect(()=>{
+    setSlideComponents(manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData));
+  },[slideData]);
+
   return (
     <div
       id="editorial-canvas"
@@ -59,7 +72,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      {dragItems.map((item) => {
+      {slideComponents.map((item) => {
         const nodeRef: any = createRef();
 
         const handleStop = (event: any, data: any) => {

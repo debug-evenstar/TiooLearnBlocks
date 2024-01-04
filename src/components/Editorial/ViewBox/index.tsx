@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, createRef, useEffect, useRef, useState } from "react";
 import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
