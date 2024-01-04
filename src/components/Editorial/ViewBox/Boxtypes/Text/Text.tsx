@@ -2,13 +2,8 @@ import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { replaceContent, toggleWrapper } from "./handlers/wrapperHandler";
 import { toggleWrapperStyle } from "./handlers/stylesHandler";
-import { useSelector } from "react-redux";
-import { handleToggleSidebarState } from "provider/rightSidebarSlice";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
-  const selector: any = useSelector(handleToggleSidebarState);
-  const isActive = selector.payload.rightSidebarState.value;
-
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const editableRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +35,14 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
         viewBox.style.height = newHeight + "px";
       }
     }
+  };
+
+  const handleSetContent = () => {
+    const editable = editableRef.current;
+
+    if (!editable) return;
+    setContent(editable.innerHTML);
+    console.log(content);
   };
 
   const getRange = () => {
@@ -120,7 +123,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       range && range.toString() && replaceContent(range);
       handleSetContent();
     };
-  }, [manager, isActive, content, viewBoxRef]);
+  }, [manager, content, viewBoxRef]);
 
   return (
     <div

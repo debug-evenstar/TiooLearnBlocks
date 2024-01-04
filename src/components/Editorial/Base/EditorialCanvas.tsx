@@ -1,4 +1,4 @@
-import React, { FC, createRef } from "react";
+import React, { FC, createRef, useEffect } from "react";
 import { EditorialCanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
@@ -52,8 +52,10 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     dispatch(handleSetSidebarState(true));
   };
 
+
   return (
     <div
+      id="editorial-canvas"
       className="w-full bg-white drop-shadow-sm min-h-[70vh] border-dotted border-slate-300 border-2 p-5 flex flex-col relative"
       onDragOver={handleDragOver}
       onDrop={handleDrop}

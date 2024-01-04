@@ -3,6 +3,7 @@ import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent } from "./handler";
+import { setComponentLayout } from "../Base/EditorialManager";
 import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 
 const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
@@ -12,12 +13,23 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
   });
 
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
+  const nodeRef : any = createRef();
+
+
+  const updateComponentLayout = (width : number, height : number) => {
+    manager.canvasManager.activeComponent.data.layoutData = setComponentLayout(
+        manager.canvasManager.canvas.functions?.getCanvasSize(),
+        {
+            size : { width, height }
+        }
+    )
+  }
 
   const onResize = (event: any, { node, size, handle }: any) => {
     setViewBoxSize({ width: size.width, height: size.height });
-    console.log(viewBoxRef.current?.offsetHeight);
-
-    console.log(size);
+    // console.log(viewBoxRef.current?.offsetHeight);
+    // console.log(size);
+    updateComponentLayout(size.width, size.height);
   };
 
   const height = id.includes("Text") ? 65 : 280;
@@ -32,6 +44,11 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
       toggleWrapperStyle(element, style, styleType);
     };
   }, [manager]);
+
+
+  useEffect(()=>{
+    updateComponentLayout(300, height);
+  },[])
 
   return (
     <Resizable
@@ -51,6 +68,7 @@ const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
       >
         {ViewBoxContent(id, manager, viewBoxRef)}
       </div>
+
     </Resizable>
   );
 };
