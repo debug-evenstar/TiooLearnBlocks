@@ -42,6 +42,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   const handleDrop = (e: any) => {
     e.preventDefault();
     const data = e.dataTransfer.getData("text/plain");
+    if (!data) return;
     onDrop(data);
     dispatch(handleToggleSidebarState());
   };

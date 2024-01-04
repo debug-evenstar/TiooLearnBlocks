@@ -5,7 +5,11 @@ const checkersForToggleWrapper = (
   link: string
 ) => {
   if (elementType === "span") {
-    element.style.textDecoration = style;
+    if (style === "line-through" || style === "underline") {
+      element.style.textDecoration = style;
+    }
+
+    element.style.color = style;
   }
 
   if (elementType === "a") {
@@ -27,4 +31,10 @@ export const toggleWrapper = (
   checkersForToggleWrapper(elementType, element, style, link);
 
   range.surroundContents(element);
+};
+
+export const replaceContent = (range: Range) => {
+  const element = document.createElement("input");
+  range.deleteContents();
+  range.insertNode(element);
 };

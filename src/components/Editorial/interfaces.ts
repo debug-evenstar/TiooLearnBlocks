@@ -16,8 +16,10 @@ export interface CanvasComponentViewBox {
   handleDelete: (id: string) => void;
 }
 
-export interface CanvasImage {
+export interface CanvasMedia {
   id: string;
+  manager: EditorialManagerInterface;
+  viewBoxRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 export interface CanvasText {

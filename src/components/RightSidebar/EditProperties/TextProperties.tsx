@@ -10,7 +10,6 @@ import {
   RiArrowDropDownFill,
   RiArrowDropUpFill,
   RiBold,
-  RiFontColor,
   RiH1,
   RiH2,
   RiH3,
@@ -33,8 +32,8 @@ const TextProperties: FC<Props> = ({ manager }) => {
   const toggleWrapper =
     manager.canvasManager.activeComponent.functions?.toggleWrapper;
 
-  const toggleWrapperStyle =
-    manager.canvasManager.activeComponent.functions?.toggleWrapperStyle;
+  const toggleTextStyle =
+    manager.canvasManager.activeComponent.functions?.toggleTextStyle;
 
   const [isActive, setIsActive] = useState(false);
   const [colorIsActive, setColorIsActive] = useState(false);
@@ -42,7 +41,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
 
   const handleChangeTextColor = (color: ColorResult) => {
     setTextColor(color.hex);
-    toggleWrapperStyle(color.hex, "textColor");
+    toggleTextStyle(color.hex, "textColor");
     setColorIsActive(false);
   };
 
