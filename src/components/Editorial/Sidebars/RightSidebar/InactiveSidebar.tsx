@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import PromptBox from "../promptBox";
+import PromptBox from "../../promptBox";
 
 interface Props {
   data: any;

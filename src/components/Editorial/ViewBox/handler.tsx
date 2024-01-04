@@ -1,13 +1,13 @@
 import { EditorialManagerInterface } from "../Base/EditorialManager";
 import Image from "./Boxtypes/Image/Image";
 import Text from "./Boxtypes/Text/Text";
-import Background from "../RightSidebar/EditProperties/Background";
-import Delete from "../RightSidebar/EditProperties/Delete";
-import TextProperties from "../RightSidebar/EditProperties/TextProperties";
+import Background from "../Sidebars/RightSidebar/EditProperties/Background";
+import Delete from "../Sidebars/RightSidebar/EditProperties/Delete";
+import TextProperties from "../Sidebars/RightSidebar/EditProperties/TextProperties";
 import Video from "./Boxtypes/Video/Video";
-import VideoProperties from "components/Editorial/RightSidebar/EditProperties/VideoProperties";
-import ImageProperties from "components/Editorial/RightSidebar/EditProperties/ImageProperties";
-import Extensions from "components/Editorial/RightSidebar/EditProperties/Extensions";
+import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
+import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/ImageProperties";
+import Extensions from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions";
 
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
