@@ -1,12 +1,12 @@
 import { FC, createRef, useEffect, useRef, useState } from "react";
-import { CanvasComponentViewBox } from "../interfaces";
+//import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent } from "./handler";
 import { setComponentLayout } from "../Base/EditorialManager";
 import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 
-const ViewBox: FC<CanvasComponentViewBox> = ({ id, manager, handleDelete }) => {
+const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
     height: id.includes("Text") ? 65 : 280,

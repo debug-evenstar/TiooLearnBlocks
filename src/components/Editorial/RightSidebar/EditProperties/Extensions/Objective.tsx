@@ -1,8 +1,16 @@
 import React, { FC, useState } from "react";
 import { RiAddCircleLine } from "react-icons/ri";
 import { ObjectiveItemProp, ObjectiveItemType, OptionType } from "./interfaces";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
-const Objective = () => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const Objective: FC<Props> = ({ manager }) => {
+  const replaceContent =
+    manager.canvasManager.activeComponent.functions?.replaceContent;
+
   const [isActive, setIsActive] = useState(false);
 
   const [objectives, setObjectives] = useState<[ObjectiveItemType] | any[]>([]);
@@ -21,6 +29,7 @@ const Objective = () => {
         ],
       },
     ]);
+    replaceContent();
     console.log(objectives, "Objs");
   };
 

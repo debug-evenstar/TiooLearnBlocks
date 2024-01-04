@@ -7,8 +7,13 @@ import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import Objective from "./Objective";
 import Subjective from "./Subjective";
 import Tips from "./Tips";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
-const Extensions: FC<any> = () => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const Extensions: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
 
   return (
@@ -26,7 +31,7 @@ const Extensions: FC<any> = () => {
       {isActive && (
         <main>
           <a href="javascript:void(0)">
-            <Objective />
+            <Objective manager={manager} />
             <Subjective />
             <Tips />
           </a>

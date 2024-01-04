@@ -1,9 +1,9 @@
-import { CanvasImage } from "components/Editorial/interfaces";
+import { CanvasMedia } from "components/Editorial/interfaces";
 import React, { FC, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 
-const Image: FC<CanvasImage> = ({ id }) => {
+const Image: FC<CanvasMedia> = ({ id }) => {
   const [previewImage, setPreviewImage] = useState(
     "https://res.cloudinary.com/dic7regoe/image/upload/v1694805252/praxeum/noimage_cu02fq.jpg"
   );
