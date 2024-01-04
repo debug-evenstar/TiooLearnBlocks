@@ -1,7 +1,13 @@
 import React, { FC, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
+import InputResize from "./InputResize";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
-const Extensions: FC<any> = () => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const ImageProperties: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
 
   return (
@@ -10,13 +16,17 @@ const Extensions: FC<any> = () => {
         className="w-full flex justify-between items-center cursor-pointer"
         onClick={() => setIsActive(!isActive)}
       >
-        <p className="text-[15px]">Extensions</p>
+        <p className="text-[15px]">Image Properties</p>
         {isActive ? <RiArrowDropUpFill /> : <RiArrowDropDownFill />}
       </div>
 
-      {isActive && <main>main</main>}
+      {isActive && (
+        <main>
+          <InputResize manager={manager} componentType="image" />
+        </main>
+      )}
     </div>
   );
 };
 
-export default Extensions;
+export default ImageProperties;

@@ -6,6 +6,9 @@ import Delete from "../Sidebars/RightSidebar/EditProperties/Delete";
 import Extensions from "../Sidebars/RightSidebar/EditProperties/Extensions";
 import TextProperties from "../Sidebars/RightSidebar/EditProperties/TextProperties";
 import Video from "./Boxtypes/Video/Video";
+import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
+import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/ImageProperties";
+
 
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
@@ -30,8 +33,8 @@ export const ViewBoxContent = (
     [key: string]: JSX.Element;
   } = {
     Text: <Text id={id} manager={manager} viewBoxRef={viewBoxRef} />,
-    Image: <Image id={id} />,
-    Video: <Video id={id} />,
+    Image: <Image id={id} manager={manager} viewBoxRef={viewBoxRef} />,
+    Video: <Video id={id} manager={manager} viewBoxRef={viewBoxRef} />,
   };
 
   return viewboxTypes[componentName];
@@ -51,17 +54,19 @@ export const EditProperties = (
       <>
         <TextProperties manager={manager} />
         <Background manager={manager} />
-        <Extensions />
+        <Extensions manager={manager} />
         <Delete id={id} />
       </>
     ),
     Image: (
       <>
+        <ImageProperties manager={manager} />
         <Delete id={id} />
       </>
     ),
     Video: (
       <>
+        <VideoProperties manager={manager} />
         <Delete id={id} />
       </>
     ),

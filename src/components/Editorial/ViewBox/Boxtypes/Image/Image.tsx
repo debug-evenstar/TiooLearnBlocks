@@ -1,8 +1,10 @@
-import { CanvasImage } from "components/Editorial/interfaces";
-import React, { FC, useState } from "react";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { CanvasMedia } from "components/Editorial/interfaces";
+import React, { FC, useEffect, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
+import { toggleWrapperSize } from "./handler";
 
-const Image: FC<CanvasImage> = ({ id }) => {
+const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const [previewImage, setPreviewImage] = useState("");
 
   const handleChange = (e: any) => {
@@ -29,9 +31,24 @@ const Image: FC<CanvasImage> = ({ id }) => {
     }
   };
 
+  useEffect(() => {
+    manager.canvasManager.activeComponent.functions["toggleImageSize"] = (
+      style: string = "",
+      styleType: string
+    ) => {
+      const element = viewBoxRef.current;
+      if (!element) return;
+      toggleWrapperSize(element, style, styleType);
+    };
+  }, [manager, viewBoxRef]);
+
   return (
     <div className="relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center">
-      <UploadIcon handleChange={handleChange} handleDrop={handleDrop} />
+      <UploadIcon
+        handleChange={handleChange}
+        handleDrop={handleDrop}
+        manager={manager}
+      />
 
       {previewImage.length > 1 && (
         <div className="w-full mx-auto my-6 rounded-lg overflow-hidden h-full absolute ">
@@ -49,12 +66,17 @@ const Image: FC<CanvasImage> = ({ id }) => {
 
 export default Image;
 
-interface UploadIconProps {
+export interface UploadIconProps {
   handleChange: (e: any) => void;
   handleDrop: (e: any) => void;
+  manager: EditorialManagerInterface;
 }
 
-const UploadIcon: FC<UploadIconProps> = ({ handleChange, handleDrop }) => {
+const UploadIcon: FC<UploadIconProps> = ({
+  handleChange,
+  handleDrop,
+  manager,
+}) => {
   const handleDragOver = (e: any) => {
     e.preventDefault();
     // Set the drop effect and effect allowed properties

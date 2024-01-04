@@ -1,9 +1,7 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { toggleWrapper } from "./handlers/wrapperHandler";
+import { replaceContent, toggleWrapper } from "./handlers/wrapperHandler";
 import { toggleWrapperStyle } from "./handlers/stylesHandler";
-import { setTextComponentData } from "./handlers/dataHandler";
-
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -13,7 +11,6 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const [isEditable, setIsEditable] = useState(true);
   const [textValue, setTextValue] = useState("");
   const [content, setContent] = useState("");
-
 
   const handleTextChange = (e: any) => {
     const textValue = e.target.value;
@@ -45,8 +42,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
 
     if (!editable) return;
     setContent(editable.innerHTML);
-    const textData = setTextComponentData(editable.innerHTML);
-    manager.canvasManager.activeComponent.data.coreData = textData;
+    console.log(content);
   };
 
   const getRange = () => {
@@ -76,6 +72,14 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   }, [isEditable, viewBoxRef, textareaRef]);
 
   useEffect(() => {
+    const handleSetContent = () => {
+      const editable = editableRef.current;
+
+      if (!editable) return;
+      setContent(editable.innerHTML);
+      console.log(content);
+    };
+
     manager.canvasManager.activeComponent.functions["toggleWrapper"] = (
       elementType: string,
       style: string = "",
@@ -97,7 +101,30 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       toggleWrapperStyle(element, style, styleType);
       handleSetContent();
     };
-  }, [manager, isEditable]);
+
+    manager.canvasManager.activeComponent.functions["toggleTextStyle"] = (
+      style: string = "",
+      styleType: string
+    ) => {
+      const range = getRange();
+
+      if (range && range.toString() && range.startOffset !== range.endOffset) {
+        toggleWrapper(range, "span", style, "");
+        return;
+      }
+
+      const element = viewBoxRef.current;
+      if (!element) return;
+      toggleWrapperStyle(element, style, styleType);
+    };
+
+    manager.canvasManager.activeComponent.functions["replaceContent"] = () => {
+      const range = getRange();
+      range && range.toString() && replaceContent(range);
+      console.log("replace called!");
+      handleSetContent();
+    };
+  }, [manager, content, viewBoxRef]);
 
   return (
     <div
