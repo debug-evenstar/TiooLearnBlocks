@@ -133,10 +133,10 @@ class EditorialManager implements EditorialManagerInterface {
             coreData : {} // Core data of the active component
         };
         this.canvasManager.activeComponent.data = componentData;
-        this.canvasManager.canvas.functions["getCanvasSize"] = this.getCanvasSize;
-        this.canvasManager.canvas.functions["saveActiveComponentData"] = this.saveComponentData;
-        this.canvasManager.canvas.functions["parseSlideToCanvas"] = this.parseSlideToCanvas;
-        this.canvasManager.canvas.functions["getComponentData"] = this.getComponentData;
+        this.canvasManager.canvas.functions["getCanvasSize"] = () => this.getCanvasSize();
+        this.canvasManager.canvas.functions["saveActiveComponentData"] = () => this.saveComponentData();
+        this.canvasManager.canvas.functions["parseSlideToCanvas"] = (slide :any[]) => this.parseSlideToCanvas(slide);
+        this.canvasManager.canvas.functions["getComponentData"] = (id: string) => this.getComponentData(id);
     }
 
     getCanvasSize(){
@@ -162,8 +162,9 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     parseSlideToCanvas(slide : any[]){
-        const parsed = slide.map((item) => {
-            const itemId = item.component + "-clone-" + Date.now();
+        const parsed = slide.map((item, index) => {
+            const itemId = item.component + "-clone-" + Date.now() + index;
+            console.log(itemId);
             return {
                 ...item,
                 id : itemId,

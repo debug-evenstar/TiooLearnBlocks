@@ -15,9 +15,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   manager,
 }) => {
   const dispatch = useDispatch();
-  const [slideComponents, setSlideComponents] = useState<any[]>(
-    manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData)
-  );
+  const [slideComponents, setSlideComponents] = useState<any[]>([]);
 
   const onDrop = (id: string) => {
     const existingClone = slideComponents.find((item) => item.id === id);
@@ -63,7 +61,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
 
 
   useEffect(()=>{
-    setSlideComponents(manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData));
+    manager.canvasManager && setSlideComponents(manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData));
   },[slideData]);
 
   return (

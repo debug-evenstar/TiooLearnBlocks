@@ -2,6 +2,7 @@ import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { replaceContent, toggleWrapper } from "./handlers/wrapperHandler";
 import { toggleWrapperStyle } from "./handlers/stylesHandler";
+import { setTextComponentData } from "./handlers/dataHandler";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -125,6 +126,11 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       handleSetContent();
     };
   }, [manager, content, viewBoxRef]);
+
+  useEffect(()=>{
+    const textComponentData = manager.canvasManager.canvas.functions.getComponentData(id);
+    textComponentData && setTextValue(textComponentData.content);
+  },[id])
 
   return (
     <div
