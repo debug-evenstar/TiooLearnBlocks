@@ -18,8 +18,15 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const [content, setContent] = useState("");
 
   const handleTextChange = (e: any) => {
-    const textValue = e.target.value;
-    setTextValue(textValue);
+    let textContentValue = e.target.value;
+
+
+    // Fix problem of undefined content value
+    if(e.target.value === undefined && textValue){
+      textContentValue = textValue;
+    }
+
+    setTextValue(textContentValue);
 
     const editableDiv = e.target as HTMLElement;
 

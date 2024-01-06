@@ -64,9 +64,10 @@ interface ComponentStylesInterface {
 export interface ComponentBaseDataInterface {
     component : string; // Component Name
     theme : string | any; // Allow theme configuration basic implementation for now
-    extensions? : any[] // Allow multiple extension types ... To be defined clearly later
+    extensions? : any[]; // Allow multiple extension types ... To be defined clearly later
     layout? : ComponentLayoutInterface; // Manage viewbox layout
     styles? : ComponentStylesInterface; // Manage optional styles for component view box or global per-component styles
+    canvas? : boolean;
 }
 
 
