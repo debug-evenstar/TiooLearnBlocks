@@ -42,14 +42,6 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
     }
   };
 
-  const handleSetContent = () => {
-    const editable = editableRef.current;
-
-    if (!editable) return;
-    setContent(editable.innerHTML);
-    console.log(content);
-  };
-
   const getRange = () => {
     const selection = window.getSelection();
     if (!selection) return;
@@ -82,7 +74,6 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
 
       if (!editable) return;
       setContent(editable.innerHTML);
-      console.log(content);
     };
 
     manager.canvasManager.activeComponent.functions["toggleWrapper"] = (
@@ -160,9 +151,8 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
         }`}
         contentEditable={isEditable}
         onInput={handleTextChange}
-      >
-        {textValue}
-      </div>
+        dangerouslySetInnerHTML={{__html : textValue}}
+      />
     </div>
   );
 };

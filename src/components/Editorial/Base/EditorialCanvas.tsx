@@ -26,7 +26,6 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
       updateSlideComponents(
         [...slideComponents, { id: itemId }]
       );
-      console.log(itemId);
       dispatch(handleSetActiveViewbox(itemId));
     }
   };
@@ -64,6 +63,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     manager.canvasManager && setSlideComponents(manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData));
   },[slideData]);
 
+
   return (
     <div
       id="editorial-canvas"
@@ -75,7 +75,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
         const nodeRef: any = createRef();
 
         const handleStop = (event: any, data: any) => {
-          console.log(`Position of item ${item.id}:`, data.x, data.y);
+          // console.log(`Position of item ${item.id}:`, data.x, data.y);
         };
 
         return (

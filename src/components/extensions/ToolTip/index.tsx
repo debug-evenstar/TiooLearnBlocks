@@ -22,7 +22,7 @@ class ToolTipsHandler{
     }
 
     getIdentifiers(){
-        return ["<~","~>"];
+        return [["<~","~>"],["<tlt>","</tlt>"]];
     }
     
     generateToolTip(content : string){
@@ -47,37 +47,38 @@ class ToolTipsHandler{
 
     processDataTips(){
         const identifiers = this.getIdentifiers();
-        const start = identifiers[0], end = identifiers[1];
-        const textContent = [ ...this.data ];
-        let tipIndex = 0;
-        let withinTip = false
-        let currentTipIndex = -1;
-        let activeTipable : string[] = [];
-        this.data.splice(0,this.data.length)
-        textContent.forEach((item : any, index : number)=>{
-                if(typeof item == "string" && (item.includes(start) || withinTip || item.includes(end))){
-                    if( item.includes(start) ) {
-                        withinTip = true;
-                        currentTipIndex = index;
+        identifiers.forEach((pair, index)=>{
+            const textContent = [ ...this.data ];
+            const start = pair[0], end = pair[1];
+            let tipIndex = 0;
+            let withinTip = false
+            let currentTipIndex = -1;
+            let activeTipable : string[] = [];
+            this.data.splice(0,this.data.length)
+            textContent.forEach((item : any, index : number)=>{
+                    if(typeof item == "string" && (item.includes(start) || withinTip || item.includes(end))){
+                        if( item.includes(start) ) {
+                            withinTip = true;
+                            currentTipIndex = index;
+                        }
+                        if( withinTip ){
+                            const extracted = item.replace(start,"").replace(end,"");
+                            activeTipable.push(extracted);
+                        }
+                        if( item.includes(end) ){
+                            const extracted = activeTipable.join(" ");
+                            const formattedTip = this.formatToolTip(extracted, this.tips[tipIndex]);
+                            this.data.push(formattedTip.element);
+                            currentTipIndex = -1;
+                            activeTipable = [];
+                            withinTip = false;
+                            tipIndex++;
+                        }
+                    }else{
+                        this.data.push(item);
                     }
-                    if( withinTip ){
-                        const extracted = item.replace(start,"").replace(end,"");
-                        activeTipable.push(extracted);
-                    }
-                    if( item.includes(end) ){
-                        const extracted = activeTipable.join(" ");
-                        const formattedTip = this.formatToolTip(extracted, this.tips[tipIndex]);
-                        this.data.push(formattedTip.element);
-                        currentTipIndex = -1;
-                        activeTipable = [];
-                        withinTip = false;
-                        tipIndex++;
-                    }
-                }else{
-                    this.data.push(item);
-                }
-
-        })
+            })
+        });
         return this.data;
     }
 }

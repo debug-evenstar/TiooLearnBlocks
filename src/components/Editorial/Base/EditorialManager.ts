@@ -164,7 +164,6 @@ class EditorialManager implements EditorialManagerInterface {
     parseSlideToCanvas(slide : any[]){
         const parsed = slide.map((item, index) => {
             const itemId = item.component + "-clone-" + Date.now() + index;
-            console.log(itemId);
             return {
                 ...item,
                 id : itemId,

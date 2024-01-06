@@ -27,7 +27,6 @@ export const ViewBoxContent = (
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>
 ) => {
   const componentName = getOriginalName(id);
-  console.log(componentName);
 
   const viewboxTypes: {
     [key: string]: JSX.Element;
@@ -46,7 +45,6 @@ export const EditProperties = (
   manager: EditorialManagerInterface
 ) => {
   const componentName = getOriginalName(id);
-
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {
@@ -71,6 +69,6 @@ export const EditProperties = (
       </>
     ),
   };
-
+  console.log(componentName);
   return viewboxTypes[componentName];
 };

@@ -1,3 +1,6 @@
+import ToolTipComponent from "components/extensions/ToolTip/render";
+import ReactDOM from "react-dom";
+
 const checkersForToggleWrapper = (
   elementType: string,
   element: HTMLElement,
@@ -62,11 +65,11 @@ export const replaceContent = (range: Range) => {
   const parentElement = element.parentElement; // Assuming input is the input element
 
   if (parentElement) {
-    console.log(parentElement.offsetHeight, "start");
+    // console.log(parentElement.offsetHeight, "start");
 
     const newHeight = parseInt(getComputedStyle(parentElement).height) + 20;
     parentElement.style.height = newHeight + "px";
-    console.log(getComputedStyle(parentElement).height);
+    // console.log(getComputedStyle(parentElement).height);
   }
 };
 
@@ -94,5 +97,8 @@ function wrapInTooltip(text: string, tip: string): Node {
 export const addTooltip = (range: Range, tip: string) => {
   const value = range.toString();
   range.deleteContents();
-  range.insertNode(wrapInTooltip(value, tip));
+  const tipComponent  = <ToolTipComponent label={value} content={tip}></ToolTipComponent>
+  var div = document.createElement("div");
+  ReactDOM.render(tipComponent, div)
+  range.insertNode(div.children[0]);
 };
