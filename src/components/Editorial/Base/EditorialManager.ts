@@ -128,18 +128,24 @@ class EditorialManager implements EditorialManagerInterface {
 
     initCanvasManager(){
         const componentData = this.canvasManager.activeComponent.data ?? {
-            styleData : {}, // Store component v styles
+            styleData : {}, // Store component styles
             layoutData : {}, // Store layout configuration for the active component
             coreData : {} // Core data of the active component
         };
         this.canvasManager.activeComponent.data = componentData;
-        this.canvasManager.canvas.functions["getCanvasSize"] = this.getCanvasSize;
-        this.canvasManager.canvas.functions["saveActiveComponentData"] = this.saveComponentData;
+        this.canvasManager.canvas.functions["getCanvasSize"] = () => this.getCanvasSize();
+        this.canvasManager.canvas.functions["saveActiveComponentData"] = () => this.saveComponentData();
+        this.canvasManager.canvas.functions["parseSlideToCanvas"] = (slide :any[]) => this.parseSlideToCanvas(slide);
+        this.canvasManager.canvas.functions["getComponentData"] = (id: string) => this.getComponentData(id);
     }
 
     getCanvasSize(){
         const canvas = document.getElementById("editorial-canvas");
         return { width : canvas?.offsetWidth, height : canvas?.offsetHeight };
+    }
+
+    getComponentData(id : string){
+        return this.canvasManager.canvas.data.components.filter((component : any) => component.id === id)[0];
     }
 
     saveComponentData(){
@@ -148,11 +154,24 @@ class EditorialManager implements EditorialManagerInterface {
         const activeComponent = this.canvasManager.activeComponent;
         activeSlide[activeComponent.data.index] = {
             ...activeComponent.data.coreData,
-            ...activeComponent.data.layoutData,
-            ...activeComponent.data.styleData
+            ...{ layout : activeComponent.data.layoutData },
+            ...{ styles :activeComponent.data.styleData }
         }
         slides[this.slideManager.activeSlide] = activeSlide;
         this.slideManager.slides = slides;
+    }
+
+    parseSlideToCanvas(slide : any[]){
+        const parsed = slide.map((item, index) => {
+            const itemId = item.component + "-clone-" + Date.now() + index;
+            console.log(itemId);
+            return {
+                ...item,
+                id : itemId,
+            }
+        });
+        this.canvasManager.canvas.data.components = parsed;
+        return parsed;
     }
 }
 

@@ -2,14 +2,17 @@ import { ComponentBaseDataInterface} from "components/Editorial/Base/EditorialMa
 
 interface TextComponentDataInterface extends ComponentBaseDataInterface{
     content : string;
+    tips? : string[];
 }
 
 export const setTextComponentData = (
-    content : string = "", 
+    content : string = "",
+    tips : string[] = []
 ) => {
     const data : TextComponentDataInterface = {
         component :  "Text",
         content,
+        tips,
         theme : "white",
     }
     return data;
