@@ -1,6 +1,10 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { replaceContent, toggleWrapper } from "./handlers/wrapperHandler";
+import {
+  addTooltip,
+  replaceContent,
+  toggleWrapper,
+} from "./handlers/wrapperHandler";
 import { toggleWrapperStyle } from "./handlers/stylesHandler";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
@@ -124,6 +128,15 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       console.log("replace called!");
       handleSetContent();
     };
+
+    manager.canvasManager.activeComponent.functions["addTooltip"] = (
+      tip: string
+    ) => {
+      const range = getRange();
+      range && range.toString() && addTooltip(range, tip);
+
+      handleSetContent();
+    };
   }, [manager, content, viewBoxRef]);
 
   return (
@@ -136,7 +149,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
     >
       <div
         ref={editableRef}
-        className={`w-full h-full outline-none resize-none overflow-y-hidden no-scrollbar ${
+        className={`w-full h-full outline-none resize-none no-scrollbar ${
           !isEditable && "cursor-move"
         }`}
         contentEditable={isEditable}

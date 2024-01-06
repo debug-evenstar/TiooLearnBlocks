@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import React, { FC, useState } from "react";
 
-const Subjective = () => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const Subjective: FC<Props> = () => {
   const [isActive, setIsActive] = useState(false);
 
   return (

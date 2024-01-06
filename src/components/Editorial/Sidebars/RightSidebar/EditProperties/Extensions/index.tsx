@@ -32,8 +32,8 @@ const Extensions: FC<Props> = ({ manager }) => {
         <main>
           <a href="javascript:void(0)">
             <Objective manager={manager} />
-            <Subjective />
-            <Tips />
+            <Subjective manager={manager} />
+            <Tips manager={manager} />
           </a>
         </main>
       )}
