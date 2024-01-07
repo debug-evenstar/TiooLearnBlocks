@@ -81,6 +81,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
 
       {inputList.map((input, index) => (
         <input
+          className="w-20 p-1.5"
           key={index}
           style={{
             position: "absolute",
