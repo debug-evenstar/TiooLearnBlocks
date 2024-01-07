@@ -1,13 +1,6 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { CanvasMedia } from "components/Editorial/interfaces";
-import React, {
-  FC,
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { toggleWrapperSize } from "./handler";
 

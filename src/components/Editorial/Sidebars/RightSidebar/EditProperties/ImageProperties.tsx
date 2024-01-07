@@ -1,8 +1,9 @@
+/* eslint-disable no-script-url */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { FC, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import InputResize from "./InputResize";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { BsToggle2Off } from "react-icons/bs";
 import { Switch } from "@mui/material";
 
 interface Props {
