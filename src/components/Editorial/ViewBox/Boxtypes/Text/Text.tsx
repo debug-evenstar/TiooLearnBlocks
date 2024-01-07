@@ -21,6 +21,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
 
   const [textareaRowCount, setTextareaRowCount] = useState(1);
   const [isEditable, setIsEditable] = useState(true);
+  const [showOptionBox, setShowOptionBox] = useState(false);
   const [textValue, setTextValue] = useState("");
   const [content, setContent] = useState("");
 
@@ -128,7 +129,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
         />
       </div>
 
-      {activeId === id && (
+      {showOptionBox && activeId === id && (
         <div className="w-full flex justify-around gap-2">
           <input
             className="border border-black w-20 p-2"
