@@ -1,11 +1,19 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { CanvasMedia } from "components/Editorial/interfaces";
-import React, { FC, useEffect, useState } from "react";
+import React, {
+  FC,
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { toggleWrapperSize } from "./handler";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const [previewImage, setPreviewImage] = useState("");
+  const [overlayActive, setOverlayActive] = useState(false);
 
   const handleChange = (e: any) => {
     e.preventDefault();
@@ -40,7 +48,28 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       if (!element) return;
       toggleWrapperSize(element, style, styleType);
     };
+
+    manager.canvasManager.activeComponent.functions["toggleOverlay"] = (
+      status: boolean
+    ) => {
+      setOverlayActive(status);
+      console.log(status, "overlay status");
+    };
   }, [manager, viewBoxRef]);
+
+  const [inputList, setInputList] = useState<any[]>([]);
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  const handleAddInput: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    if (imageRef.current) {
+      const { pageX, pageY } = event;
+      const imageRect = imageRef.current.getBoundingClientRect();
+      const relativeX = pageX - imageRect.left;
+      const relativeY = pageY - imageRect.top;
+      const newInput = { x: relativeX, y: relativeY };
+      setInputList((prevList) => [...prevList, newInput]);
+    }
+  };
 
   return (
     <div className="relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center">
@@ -50,9 +79,26 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         manager={manager}
       />
 
+      {inputList.map((input, index) => (
+        <input
+          key={index}
+          style={{
+            position: "absolute",
+            top: `${input.y}px`,
+            left: `${input.x}px`,
+            zIndex: "200",
+          }}
+          placeholder={`Input ${index + 1}`}
+        />
+      ))}
+
       {previewImage.length > 1 && (
-        <div className="w-full mx-auto my-6 rounded-lg overflow-hidden h-full absolute ">
+        <div
+          className="w-full mx-auto my-6 rounded-lg overflow-hidden h-full absolute"
+          onClick={overlayActive ? handleAddInput : () => null}
+        >
           <img
+            ref={imageRef}
             src={previewImage}
             alt="placeholder"
             className="w-full h-full"
