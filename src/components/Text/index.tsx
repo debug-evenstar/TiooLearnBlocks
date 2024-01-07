@@ -78,6 +78,7 @@ const TextComponent: FC<TextComponentProps> = ({
       );
       processText = textFields.data;
     }
+
     setProcessed(() => processText);
     if (data.answers && !data.options) {
       slide.attributes["hasSubjective"] = true;
@@ -100,6 +101,7 @@ const TextComponent: FC<TextComponentProps> = ({
     return textStyle;
   };
 
+<<<<<<< HEAD
   return (
     <>
       <div className={parseStyles()} ref={textContainerRef}>
@@ -111,6 +113,24 @@ const TextComponent: FC<TextComponentProps> = ({
       </div>
     </>
   );
+=======
+
+
+  return <>
+    <div className={parseStyles()} ref={textContainerRef}>
+      {processed.map((item, index) => (
+          (typeof item) == "string" ? (
+            <span className="text-font" key={index} dangerouslySetInnerHTML={{__html : ` ${item} `}}/>
+          ) : (
+            <span className="text-font" key={index}>
+              (item)
+            </span>
+          )
+
+      ))}
+    </div>
+  </>;
+>>>>>>> 606a50bc9e58e9b28cf5eacdca84eaef37b12f03
 };
 
 export default TextComponent;

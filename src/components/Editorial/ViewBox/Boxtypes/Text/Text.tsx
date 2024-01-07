@@ -19,11 +19,35 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const [textValue, setTextValue] = useState("");
   const [content, setContent] = useState("");
 
-  const handleTextChange = (e: FormEvent<HTMLDivElement>) => {
-    if (!e.currentTarget.nodeValue) return;
-    setTextValue(e.currentTarget.nodeValue);
+  const handleTextChange = (e: any) => {
+    let textContentValue = e.target.value;
 
-    resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount);
+    // Fix problem of undefined content value
+    if (e.target.value === undefined && textValue) {
+      textContentValue = textValue;
+    }
+
+    setTextValue(textContentValue);
+
+    const editableDiv = e.target as HTMLElement;
+
+    const lineHeight = parseFloat(
+      window.getComputedStyle(editableDiv).lineHeight
+    );
+    const numberOfRows = Math.floor(editableDiv.scrollHeight / lineHeight);
+
+    editableDiv.style.height = "auto";
+    editableDiv.style.height = editableDiv.scrollHeight + "px";
+
+    const viewBox = viewBoxRef.current;
+    if (viewBox) {
+      if (numberOfRows > textareaRowCount) {
+        setTextareaRowCount(numberOfRows);
+        const heightDifference = lineHeight * (numberOfRows - textareaRowCount);
+        const newHeight = viewBox.offsetHeight + heightDifference;
+        viewBox.style.height = newHeight + "px";
+      }
+    }
   };
 
   const getRange = () => {
