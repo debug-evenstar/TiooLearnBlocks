@@ -12,6 +12,7 @@ const Objective: FC<Props> = ({ manager }) => {
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
   const [isActive, setIsActive] = useState(false);
+  const [correctOption, setCorrectOption] = useState("");
 
   const [objectives, setObjectives] = useState<[ObjectiveItemType] | any[]>([]);
 

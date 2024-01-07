@@ -9,8 +9,13 @@ import React, {
 } from "react";
 import { resizeBox } from "./handlers/wrapperHandler";
 import { registerFunctions } from "./handlers/registerFuncsHandlers";
+import { useSelector } from "react-redux";
+import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
+  const selector: any = useSelector(refreshToggleSidebarState);
+  const activeId: string = selector.payload.activeViewbox.value;
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const editableRef = useRef<HTMLDivElement>(null);
 
@@ -104,23 +109,40 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   }, [textareaRowCount, viewBoxRef, id, textValue]);
 
   return (
-    <div
-      id={id}
-      className={`flex flex-col justify-between p-3 h-full w-full ${
-        !isEditable && "handle cursor-move"
-      }`}
-      onDoubleClick={() => setIsEditable(!isEditable)}
-    >
+    <>
       <div
-        ref={editableRef}
-        className={`w-full h-full outline-none resize-none no-scrollbar ${
-          !isEditable && "cursor-move"
+        id={id}
+        className={`flex flex-col justify-between p-3 h-full w-full ${
+          !isEditable && "handle cursor-move"
         }`}
-        contentEditable={isEditable}
-        onInput={handleTextChange}
-        dangerouslySetInnerHTML={{ __html: textValue }}
-      />
-    </div>
+        onDoubleClick={() => setIsEditable(!isEditable)}
+      >
+        <div
+          ref={editableRef}
+          className={`w-full h-full outline-none resize-none no-scrollbar ${
+            !isEditable && "cursor-move"
+          }`}
+          contentEditable={isEditable}
+          onInput={handleTextChange}
+          dangerouslySetInnerHTML={{ __html: textValue }}
+        />
+      </div>
+
+      {activeId === id && (
+        <div className="w-full flex justify-around gap-2">
+          <input
+            className="border border-black w-20 p-2"
+            type="text"
+            placeholder="Correct"
+          />
+          <input
+            className="border border-black w-20 p-2"
+            type="text"
+            placeholder="Wrong"
+          />
+        </div>
+      )}
+    </>
   );
 };
 
