@@ -6,6 +6,7 @@ import { LessonPage } from "pages";
 import axios from "axios";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { useDispatch } from "react-redux";
+import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 
 function App() {
   const datas = {
@@ -50,6 +51,7 @@ function App() {
   useEffect(() => {
     fetchLess();
     dispatch(refreshToggleSidebarState());
+    //dispatch(refreshToggleShowOptionBox());
   }, []);
 
   const handleBack = () => {

@@ -7,21 +7,30 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { resizeBox } from "./handlers/wrapperHandler";
+import { replaceContent, resizeBox } from "./handlers/wrapperHandler";
 import { registerFunctions } from "./handlers/registerFuncsHandlers";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
+import {
+  handleSetCorrectOption,
+  handleSetWrongOption,
+} from "provider/optionsDataSlice";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
+  const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
   const activeId: string = selector.payload.activeViewbox.value;
+  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+  const { correctOption, wrongOption } = selector.payload.optionsData.value as {
+    correctOption: string;
+    wrongOption: string;
+  };
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const editableRef = useRef<HTMLDivElement>(null);
 
   const [textareaRowCount, setTextareaRowCount] = useState(1);
   const [isEditable, setIsEditable] = useState(true);
-  const [showOptionBox, setShowOptionBox] = useState(false);
   const [textValue, setTextValue] = useState("");
   const [content, setContent] = useState("");
 
@@ -129,17 +138,21 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
         />
       </div>
 
-      {showOptionBox && activeId === id && (
+      {showOptionsBox && activeId === id && (
         <div className="w-full flex justify-around gap-2">
           <input
             className="border border-black w-20 p-2"
             type="text"
             placeholder="Correct"
+            value={correctOption}
+            onChange={(e) => dispatch(handleSetCorrectOption(e.target.value))}
           />
           <input
             className="border border-black w-20 p-2"
             type="text"
             placeholder="Wrong"
+            value={wrongOption}
+            onChange={(e) => dispatch(handleSetWrongOption(e.target.value))}
           />
         </div>
       )}

@@ -4,11 +4,15 @@ import { persistStore, persistReducer } from "redux-persist";
 import rightSidebarSlice from "./rightSidebarSlice";
 import dragItemsSlice from "./dragItemsSlice";
 import activeViewboxSlice from "./activeViewboxSlice";
+import showOptionsBoxSlice from "./showOptionsBoxSlice";
+import optionsDataSlice from "./optionsDataSlice";
 
 const rootReducer = combineReducers({
   rightSidebarState: rightSidebarSlice,
   dragItems: dragItemsSlice,
   activeViewbox: activeViewboxSlice,
+  showOptionsBox: showOptionsBoxSlice,
+  optionsData: optionsDataSlice,
 });
 
 const persistedReducer = persistReducer(
@@ -16,7 +20,7 @@ const persistedReducer = persistReducer(
     key: "root",
     storage: AsyncStorage,
     version: 0,
-    //whitelist: ["rightSidebarState"],
+    blacklist: ["rightSidebarState", "showOptionsBox", "optionsData"],
   },
   rootReducer
 );

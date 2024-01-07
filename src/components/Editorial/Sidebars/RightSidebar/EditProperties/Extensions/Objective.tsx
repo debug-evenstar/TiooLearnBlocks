@@ -1,7 +1,21 @@
-import React, { FC, useState } from "react";
-import { RiAddCircleLine } from "react-icons/ri";
+import React, { FC, useEffect, useState } from "react";
+import {
+  RiAddCircleLine,
+  RiDeleteBin2Fill,
+  RiDeleteBinLine,
+} from "react-icons/ri";
 import { ObjectiveItemProp, ObjectiveItemType, OptionType } from "./interfaces";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  handleToggleShowOptionBox,
+  refreshToggleShowOptionBox,
+} from "provider/showOptionsBoxSlice";
+import {
+  handleSetCorrectOption,
+  refreshOptionsData,
+} from "provider/optionsDataSlice";
+import { MdChatBubbleOutline } from "react-icons/md";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -11,12 +25,23 @@ const Objective: FC<Props> = ({ manager }) => {
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
+  const dispatch = useDispatch();
+  const selector: any = useSelector(handleSetCorrectOption);
+  const { correctOption, wrongOption } = selector.payload.optionsData.value as {
+    correctOption: string;
+    wrongOption: string;
+  };
+
   const [isActive, setIsActive] = useState(false);
-  const [correctOption, setCorrectOption] = useState("");
+  const [optionData, setOptionData] = useState<any>({
+    correctOption: "",
+    wrongOption: "",
+  });
 
   const [objectives, setObjectives] = useState<[ObjectiveItemType] | any[]>([]);
 
   const handleClick = () => {
+    replaceContent();
     const nameAppend = objectives.length + 1;
     setObjectives([
       ...objectives,
@@ -25,20 +50,30 @@ const Objective: FC<Props> = ({ manager }) => {
         name: "Objective " + nameAppend,
         options: [
           {
-            name: `Option ${nameAppend}-A`,
+            name: correctOption,
+          },
+          {
+            name: wrongOption,
           },
         ],
       },
     ]);
-    replaceContent();
-    console.log(objectives, "Objs");
+    dispatch(refreshOptionsData());
+    dispatch(refreshToggleShowOptionBox());
   };
+
+  useEffect(() => {
+    console.log(correctOption, wrongOption, " - Options");
+  }, [correctOption, wrongOption]);
 
   return (
     <div className="p-2 shadow-md">
       <div
         className="w-full flex justify-between items-center cursor-pointer"
-        onClick={() => setIsActive(!isActive)}
+        onClick={() => {
+          setIsActive(!isActive);
+          dispatch(handleToggleShowOptionBox());
+        }}
       >
         <p className="text-[13px]">
           {isActive ? <b>Set Objective</b> : "Set Objective"}
@@ -85,8 +120,12 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       {isActive && (
         <main className="w-full p-2">
           {options?.map((option: OptionType, i: any) => (
-            <div key={i}>
-              <p className="text-[12px]">{option.name}</p>
+            <div key={i} className="flex justify-between items-center">
+              <div className="flex items-center gap-1">
+                <MdChatBubbleOutline />
+                <p className="text-[12px] my-2">{option.name}</p>
+              </div>
+              <RiDeleteBinLine />
             </div>
           ))}
           <div className="flex justify-between py-2 items-center">

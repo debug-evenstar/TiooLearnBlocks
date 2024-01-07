@@ -48,7 +48,6 @@ export const registerFunctions = (
   manager.canvasManager.activeComponent.functions["replaceContent"] = () => {
     const range = getRange();
     range && range.toString() && replaceContent(range);
-    console.log("replace called!");
     handleSetContent();
   };
 
