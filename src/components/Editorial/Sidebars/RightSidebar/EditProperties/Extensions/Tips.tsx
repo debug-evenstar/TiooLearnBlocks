@@ -21,6 +21,11 @@ const Tips: FC<Props> = ({ manager }) => {
     setIsActive(false);
   };
 
+  const handleClose = () => {
+    setIsActive(!isActive);
+    alert("closed");
+  };
+
   return (
     <div
       className="p-2 text-[13px] shadow-md cursor-pointer"
@@ -32,7 +37,7 @@ const Tips: FC<Props> = ({ manager }) => {
         <section className="border shadow-xl">
           <header className="flex justify-between border-b p-2">
             <p>Tip</p>
-            <RiCloseLine onClick={() => setIsActive(false)} />
+            <RiCloseLine onClick={handleClose} />
           </header>
           <div className="p-2">
             <textarea

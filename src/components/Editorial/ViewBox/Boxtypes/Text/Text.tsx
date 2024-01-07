@@ -1,12 +1,14 @@
 import { CanvasText } from "components/Editorial/interfaces";
-import React, { FC, useEffect, useRef, useState } from "react";
-import {
-  addTooltip,
-  replaceContent,
-  toggleWrapper,
-} from "./handlers/wrapperHandler";
-import { toggleWrapperStyle } from "./handlers/stylesHandler";
-import { setTextComponentData } from "./handlers/dataHandler";
+import React, {
+  FC,
+  FormEvent,
+  FormEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { resizeBox } from "./handlers/wrapperHandler";
+import { registerFunctions } from "./handlers/registerFuncsHandlers";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -17,29 +19,11 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const [textValue, setTextValue] = useState("");
   const [content, setContent] = useState("");
 
-  const handleTextChange = (e: any) => {
-    const textValue = e.target.value;
-    setTextValue(textValue);
+  const handleTextChange = (e: FormEvent<HTMLDivElement>) => {
+    if (!e.currentTarget.nodeValue) return;
+    setTextValue(e.currentTarget.nodeValue);
 
-    const editableDiv = e.target as HTMLElement;
-
-    const lineHeight = parseFloat(
-      window.getComputedStyle(editableDiv).lineHeight
-    );
-    const numberOfRows = Math.floor(editableDiv.scrollHeight / lineHeight);
-
-    editableDiv.style.height = "auto";
-    editableDiv.style.height = editableDiv.scrollHeight + "px";
-
-    const viewBox = viewBoxRef.current;
-    if (viewBox) {
-      if (numberOfRows > textareaRowCount) {
-        setTextareaRowCount(numberOfRows);
-        const heightDifference = lineHeight * (numberOfRows - textareaRowCount);
-        const newHeight = viewBox.offsetHeight + heightDifference;
-        viewBox.style.height = newHeight + "px";
-      }
-    }
+    resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount);
   };
 
   const getRange = () => {
@@ -76,65 +60,24 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
       setContent(editable.innerHTML);
     };
 
-    manager.canvasManager.activeComponent.functions["toggleWrapper"] = (
-      elementType: string,
-      style: string = "",
-      link: string = ""
-    ) => {
-      const range = getRange();
-      range &&
-        range.toString() &&
-        toggleWrapper(range, elementType, style, link);
-      handleSetContent();
-    };
-
-    manager.canvasManager.activeComponent.functions["toggleWrapperStyle"] = (
-      style: string = "",
-      styleType: string
-    ) => {
-      const element = editableRef.current;
-      if (!element) return;
-      toggleWrapperStyle(element, style, styleType);
-      handleSetContent();
-    };
-
-    manager.canvasManager.activeComponent.functions["toggleTextStyle"] = (
-      style: string = "",
-      styleType: string
-    ) => {
-      const range = getRange();
-
-      if (range && range.toString() && range.startOffset !== range.endOffset) {
-        toggleWrapper(range, "span", style, "");
-        return;
-      }
-
-      const element = viewBoxRef.current;
-      if (!element) return;
-      toggleWrapperStyle(element, style, styleType);
-    };
-
-    manager.canvasManager.activeComponent.functions["replaceContent"] = () => {
-      const range = getRange();
-      range && range.toString() && replaceContent(range);
-      console.log("replace called!");
-      handleSetContent();
-    };
-
-    manager.canvasManager.activeComponent.functions["addTooltip"] = (
-      tip: string
-    ) => {
-      const range = getRange();
-      range && range.toString() && addTooltip(range, tip);
-
-      handleSetContent();
-    };
+    registerFunctions(
+      manager,
+      getRange,
+      handleSetContent,
+      editableRef,
+      viewBoxRef
+    );
   }, [manager, content, viewBoxRef]);
 
-  useEffect(()=>{
-    const textComponentData = manager.canvasManager.canvas.functions.getComponentData(id);
+  useEffect(() => {
+    const textComponentData =
+      manager.canvasManager.canvas.functions.getComponentData(id);
     textComponentData && setTextValue(textComponentData.content);
-  },[id])
+  }, [id]);
+
+  useEffect(() => {
+    resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount);
+  }, [textareaRowCount, viewBoxRef, id, textValue]);
 
   return (
     <div
@@ -151,7 +94,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
         }`}
         contentEditable={isEditable}
         onInput={handleTextChange}
-        dangerouslySetInnerHTML={{__html : textValue}}
+        dangerouslySetInnerHTML={{ __html: textValue }}
       />
     </div>
   );

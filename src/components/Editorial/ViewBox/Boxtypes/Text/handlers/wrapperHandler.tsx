@@ -97,8 +97,39 @@ function wrapInTooltip(text: string, tip: string): Node {
 export const addTooltip = (range: Range, tip: string) => {
   const value = range.toString();
   range.deleteContents();
-  const tipComponent  = <ToolTipComponent label={value} content={tip}></ToolTipComponent>
+  const tipComponent = (
+    <ToolTipComponent label={value} content={tip}></ToolTipComponent>
+  );
   var div = document.createElement("div");
-  ReactDOM.render(tipComponent, div)
+  ReactDOM.render(tipComponent, div);
   range.insertNode(div.children[0]);
+};
+
+export const resizeBox = (
+  editableRef: React.RefObject<HTMLDivElement>,
+  viewBoxRef: React.MutableRefObject<any>,
+  textareaRowCount: number,
+  setTextareaRowCount: (value: React.SetStateAction<number>) => void
+) => {
+  const editableDiv = editableRef.current;
+
+  if (!editableDiv) return;
+
+  const lineHeight = parseFloat(
+    window.getComputedStyle(editableDiv).lineHeight
+  );
+  const numberOfRows = Math.floor(editableDiv.scrollHeight / lineHeight);
+
+  editableDiv.style.height = "auto";
+  editableDiv.style.height = editableDiv.scrollHeight + "px";
+
+  const viewBox = viewBoxRef.current;
+  if (viewBox) {
+    if (numberOfRows > textareaRowCount) {
+      setTextareaRowCount(numberOfRows);
+      const heightDifference = lineHeight * (numberOfRows - textareaRowCount);
+      const newHeight = viewBox.offsetHeight + heightDifference;
+      viewBox.style.height = newHeight + "px";
+    }
+  }
 };

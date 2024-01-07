@@ -9,8 +9,7 @@ const TextComponent: FC<TextComponentProps> = ({
   slide,
   altHeaderStyle,
 }) => {
-  
-  const [processed , setProcessed] = useState<any[]>([]);
+  const [processed, setProcessed] = useState<any[]>([]);
 
   const [formatted, setFormatted] = useState<any[]>([]);
 
@@ -20,97 +19,98 @@ const TextComponent: FC<TextComponentProps> = ({
 
   const hideText = () => {
     textContainerRef.current.style.display = "none";
-  }
+  };
 
   const showText = () => {
     textContainerRef.current.style.display = "block";
-  }
+  };
 
-  // Needs to be refactored later // No time right now // 
-  const answerBelongsToPrevious = (answer : string) => {
-    if( data.answers ){ 
+  // Needs to be refactored later // No time right now //
+  const answerBelongsToPrevious = (answer: string) => {
+    if (data.answers) {
       for (let i = 0; i < data.answers.length; i++) {
         const ans = data.answers[i];
-        if ( typeof ans == "string" ){
-          if(answer.toLowerCase() === ans.toLowerCase()){
+        if (typeof ans == "string") {
+          if (answer.toLowerCase() === ans.toLowerCase()) {
             return false;
           }
-        }else{
+        } else {
           // If answer is list of answers
           for (let j = 0; j < ans.length; j++) {
             const item = ans[j];
-            if(item.toLowerCase() === answer.toLowerCase()){
+            if (item.toLowerCase() === answer.toLowerCase()) {
               return false;
             }
           }
         }
       }
-    }else{
+    } else {
       // Yet to be handled for option based
       return false;
     }
     return true;
-  }
+  };
 
-  useEffect(()=>{
-    if(data.content.includes("<*-") 
-    && data.content.includes("-*>")){
+  useEffect(() => {
+    if (data.content.includes("<*-") && data.content.includes("-*>")) {
       setIsHeading(() => true);
     }
     // Handle initial text formatting
-    setFormatted(
-      formatTextContent(data.content)
-    )
+    setFormatted(formatTextContent(data.content));
     slide.setFunction("hideText", hideText);
-    slide.setFunction("showText", showText)
-  },[data.content, slide]);
+    slide.setFunction("showText", showText);
+  }, [data.content, slide]);
 
-  useEffect(()=>{
-    let processText : any[] = formatted;
+  useEffect(() => {
+    let processText: any[] = formatted;
     // Handle tips
-    if(data.tips){
-      processText = ToolTips( ToolTipTypes.TEXT, processText, data.tips ).data;
+    if (data.tips) {
+      processText = ToolTips(ToolTipTypes.TEXT, processText, data.tips).data;
     }
 
     // Handle TextFields
-    if(formatted.includes("<?>") ){
-      var textFields : any = TextFields(processText, slide, (data.answers ?? []), (data.options ?? []));
+    if (formatted.includes("<?>")) {
+      var textFields: any = TextFields(
+        processText,
+        slide,
+        data.answers ?? [],
+        data.options ?? []
+      );
       processText = textFields.data;
     }
     setProcessed(() => processText);
-    if( data.answers && !data.options) {
+    if (data.answers && !data.options) {
       slide.attributes["hasSubjective"] = true;
-      if (slide.functions && slide.functions.setHint){
-        setTimeout(()=>{
+      if (slide.functions && slide.functions.setHint) {
+        setTimeout(() => {
           slide.functions?.setHint(true);
-        },1000);
+        }, 1000);
       }
     }
     // console.log(slide);
-  },[formatted, data.content, slide]);
-
+  }, [formatted, data.content, slide]);
 
   const parseStyles = () => {
-      // Expandable
-      const textStyle = `
+    // Expandable
+    const textStyle = `
         ${isHeading || slide.parent ? "text-center" : "text-left"}
         text-font
-        ${styles?.fontSize ? "text-["+styles.fontSize+"]" : ""}
+        ${styles?.fontSize ? "text-[" + styles.fontSize + "]" : ""}
       `;
-      return textStyle;
-  }
+    return textStyle;
+  };
 
-
-
-  return <>
-    <div className={parseStyles()} ref={textContainerRef}>
-      {processed.map((item, index) => (
+  return (
+    <>
+      <div className={parseStyles()} ref={textContainerRef}>
+        {processed.map((item, index) => (
           <span className="text-font" key={index}>
-            {(typeof item) == "string" ? ` ${item} ` : (item)}
+            {typeof item == "string" ? ` ${item} ` : item}
           </span>
-      ))}
-    </div>
-  </>;
+        ))}
+      </div>
+    </>
+  );
 };
 
 export default TextComponent;
