@@ -15,7 +15,9 @@ export const registerFunctions = (
     link: string = ""
   ) => {
     const range = getRange();
-    range && range.toString() && toggleWrapper(range, elementType, style, link);
+    range &&
+      range.toString() &&
+      toggleWrapper(range, elementType, style, styleType, link);
   };
 
   manager.canvasManager.activeComponent.functions["toggleWrapperStyle"] = (
