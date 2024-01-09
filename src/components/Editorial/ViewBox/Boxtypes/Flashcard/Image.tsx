@@ -83,7 +83,7 @@ const Image: FC<any> = ({ id, manager, viewBoxRef, image }) => {
   };
 
   return (
-    <div className="relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center">
+    <div className="relative flex flex-col h-full w-full p-3 handle cursor-move justify-center items-center">
       <UploadIcon
         handleChange={handleChange}
         handleDrop={handleDrop}

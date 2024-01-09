@@ -26,7 +26,7 @@ const CardSlider: FC<ImageCarouselProps> = ({ images, id, manager }) => {
   };
 
   return (
-    <div className="flex justify-between items-center cursor-move">
+    <div className="flex items-center gap-2 cursor-move">
       <button onClick={handlePrevClick}>
         <FaAngleLeft className="text-[#87909E] text-[20px]" />
       </button>
