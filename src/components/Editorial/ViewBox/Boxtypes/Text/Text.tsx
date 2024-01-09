@@ -32,8 +32,8 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const [textareaRowCount, setTextareaRowCount] = useState(1);
   const [isEditable, setIsEditable] = useState(true);
   const [textValue, setTextValue] = useState("");
-  const [content, setContent] = useState("");
 
+  // Move into a handler later
   const handleTextChange = (e: any) => {
     let textContentValue = e.target.value;
 
@@ -43,6 +43,11 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
     }
 
     setTextValue(textContentValue);
+
+    // Using innerHTML to avoid conflict with Text value on content update...
+    manager.canvasManager.canvas.functions.updateActiveComponentData({
+      content : e.target.innerHTML
+    });
 
     const editableDiv = e.target as HTMLElement;
 
@@ -92,21 +97,13 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   }, [isEditable, viewBoxRef, textareaRef]);
 
   useEffect(() => {
-    const handleSetContent = () => {
-      const editable = editableRef.current;
-
-      if (!editable) return;
-      setContent(editable.innerHTML);
-    };
-
     registerFunctions(
       manager,
       getRange,
-      handleSetContent,
       editableRef,
       viewBoxRef
     );
-  }, [manager, content, viewBoxRef]);
+  }, [manager, viewBoxRef]);
 
   useEffect(() => {
     const textComponentData =

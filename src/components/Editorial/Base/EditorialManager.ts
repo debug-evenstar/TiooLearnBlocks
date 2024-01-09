@@ -61,6 +61,17 @@ interface ComponentStylesInterface {
     }
 }
 
+type ObjectiveQuestionType = "OBJECTIVE";
+type SubjectiveQuestionType = "SUBJECTIVE";
+
+interface QuestionInterface {
+    type : ObjectiveQuestionType | SubjectiveQuestionType;
+    identifier : string;
+    options? : string[][] | string[];
+    answers? : string[][] | string[];
+    feedbacks? : string[][] | string[];
+}
+
 export interface ComponentBaseDataInterface {
     component : string; // Component Name
     theme : string | any; // Allow theme configuration basic implementation for now
@@ -68,6 +79,7 @@ export interface ComponentBaseDataInterface {
     layout? : ComponentLayoutInterface; // Manage viewbox layout
     styles? : ComponentStylesInterface; // Manage optional styles for component view box or global per-component styles
     canvas? : boolean;
+    questions? : QuestionInterface[]; // Handle question types on different components
 }
 
 
@@ -138,6 +150,17 @@ class EditorialManager implements EditorialManagerInterface {
         this.canvasManager.canvas.functions["saveActiveComponentData"] = () => this.saveComponentData();
         this.canvasManager.canvas.functions["parseSlideToCanvas"] = (slide :any[]) => this.parseSlideToCanvas(slide);
         this.canvasManager.canvas.functions["getComponentData"] = (id: string) => this.getComponentData(id);
+        this.canvasManager.canvas.functions["updateActiveComponentData"] = (data: any) => this.updateActiveComponentData(data);
+    }
+
+    updateActiveComponentData(data : any){
+        if(this.canvasManager.activeComponent.data) {
+            this.canvasManager.activeComponent.data.coreData = {
+                ...this.canvasManager.activeComponent.data.coreData,
+                ...data
+            }
+        }
+        this.saveComponentData();
     }
 
     getCanvasSize(){
@@ -153,13 +176,15 @@ class EditorialManager implements EditorialManagerInterface {
         const slides : any[] = this.slideManager.slides;
         const activeSlide = slides[this.slideManager.activeSlide];
         const activeComponent = this.canvasManager.activeComponent;
-        activeSlide[activeComponent.data.index] = {
-            ...activeComponent.data.coreData,
-            ...{ layout : activeComponent.data.layoutData },
-            ...{ styles :activeComponent.data.styleData }
+        if(activeComponent) {
+            activeSlide[activeComponent.data.index] = {
+                ...activeComponent.data.coreData,
+                ...{ layout : activeComponent.data.layoutData },
+                ...{ styles :activeComponent.data.styleData }
+            }
+            slides[this.slideManager.activeSlide] = activeSlide;
+            this.slideManager.slides = slides;
         }
-        slides[this.slideManager.activeSlide] = activeSlide;
-        this.slideManager.slides = slides;
     }
 
     parseSlideToCanvas(slide : any[]){
