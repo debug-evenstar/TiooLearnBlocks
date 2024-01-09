@@ -1,4 +1,4 @@
-import { FC, createRef, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 //import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
@@ -14,7 +14,6 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
 
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
-  const nodeRef: any = createRef();
 
   const updateComponentLayout = (width: number, height: number) => {
     manager.canvasManager.activeComponent.data.layoutData = setComponentLayout(

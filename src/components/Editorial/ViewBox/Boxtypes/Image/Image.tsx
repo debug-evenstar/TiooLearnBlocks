@@ -104,7 +104,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         />
       ))}
 
-      {previewImage.length > 1 && (
+      {previewImage?.length > 1 && (
         <div
           className="w-full mx-auto my-6 rounded-lg overflow-hidden h-full absolute"
           onClick={overlayActive ? handleAddInput : () => null}

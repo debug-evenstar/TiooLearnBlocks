@@ -1,6 +1,5 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useRef, useState } from "react";
-import { RiDeleteBin5Line } from "react-icons/ri";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);

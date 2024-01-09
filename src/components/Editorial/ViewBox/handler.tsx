@@ -1,4 +1,7 @@
-import { EditorialManagerInterface } from "../Base/EditorialManager";
+import {
+  ComponentBaseDataInterface,
+  EditorialManagerInterface,
+} from "../Base/EditorialManager";
 import Image from "./Boxtypes/Image/Image";
 import Text from "./Boxtypes/Text/Text";
 import Background from "../Sidebars/RightSidebar/EditProperties/Background";
@@ -8,11 +11,15 @@ import TextProperties from "../Sidebars/RightSidebar/EditProperties/TextProperti
 import Video from "./Boxtypes/Video/Video";
 import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
 import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/ImageProperties";
+import Flashcard from "./Boxtypes/Flashcard/Flashcard";
 
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
 
   if (indexOfClone !== -1) {
+    if (str.substring(0, indexOfClone) === "Flash Card") {
+      return "FlashCard";
+    }
     return str.substring(0, indexOfClone);
   } else {
     return str;
@@ -28,6 +35,7 @@ export const ViewBoxContent = (
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   const componentName = getOriginalName(id);
+  console.log(id, componentName);
 
   const viewboxTypes: {
     [key: string]: JSX.Element;
@@ -42,6 +50,7 @@ export const ViewBoxContent = (
       />
     ),
     Image: <Image id={id} manager={manager} viewBoxRef={viewBoxRef} />,
+    FlashCard: <Flashcard id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     Video: <Video id={id} manager={manager} viewBoxRef={viewBoxRef} />,
   };
 
@@ -77,7 +86,12 @@ export const EditProperties = (
         <Delete id={id} />
       </>
     ),
+    FlashCard: (
+      <>
+        <ImageProperties manager={manager} />
+        <Delete id={id} />
+      </>
+    ),
   };
-  console.log(componentName);
   return viewboxTypes[componentName];
 };

@@ -1,13 +1,6 @@
 import { CanvasText } from "components/Editorial/interfaces";
-import React, {
-  FC,
-  FormEvent,
-  FormEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { replaceContent, resizeBox } from "./handlers/wrapperHandler";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { resizeBox } from "./handlers/wrapperHandler";
 import { registerFunctions } from "./handlers/registerFuncsHandlers";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
@@ -15,7 +8,7 @@ import {
   handleSetCorrectOption,
   handleSetWrongOption,
 } from "provider/optionsDataSlice";
-import { setTextComponentData } from "./handlers/dataHandler";
+import { handleTextChange } from "./handlers/generalHandler";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -38,43 +31,6 @@ const Text: FC<CanvasText> = ({
 
   const [textareaRowCount, setTextareaRowCount] = useState(1);
   const [textValue, setTextValue] = useState("");
-
-  // Move into a handler later
-  const handleTextChange = (e: any) => {
-    let textContentValue = e.target.value;
-
-    // Fix problem of undefined content value
-    if (e.target.value === undefined && textValue) {
-      textContentValue = textValue;
-    }
-
-    setTextValue(textContentValue);
-
-    // Using innerHTML to avoid conflict with Text value on content update...
-    manager.canvasManager.canvas.functions.updateActiveComponentData(
-      setTextComponentData(e.target.innerHTML)
-    );
-
-    const editableDiv = e.target as HTMLElement;
-
-    const lineHeight = parseFloat(
-      window.getComputedStyle(editableDiv).lineHeight
-    );
-    const numberOfRows = Math.floor(editableDiv.scrollHeight / lineHeight);
-
-    editableDiv.style.height = "auto";
-    editableDiv.style.height = editableDiv.scrollHeight + "px";
-
-    const viewBox = viewBoxRef.current;
-    if (viewBox) {
-      if (numberOfRows > textareaRowCount) {
-        setTextareaRowCount(numberOfRows);
-        const heightDifference = lineHeight * (numberOfRows - textareaRowCount);
-        const newHeight = viewBox.offsetHeight + heightDifference;
-        viewBox.style.height = newHeight + "px";
-      }
-    }
-  };
 
   const getRange = () => {
     const selection = window.getSelection();
@@ -131,7 +87,17 @@ const Text: FC<CanvasText> = ({
             !isEditable && "cursor-move"
           }`}
           contentEditable={isEditable}
-          onInput={handleTextChange}
+          onInput={(e) =>
+            handleTextChange(
+              e,
+              manager,
+              textValue,
+              setTextValue,
+              viewBoxRef,
+              textareaRowCount,
+              setTextareaRowCount
+            )
+          }
           dangerouslySetInnerHTML={{ __html: textValue }}
         />
       </div>
