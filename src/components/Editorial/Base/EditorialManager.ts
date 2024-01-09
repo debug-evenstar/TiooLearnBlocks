@@ -151,6 +151,9 @@ class EditorialManager implements EditorialManagerInterface {
         this.canvasManager.canvas.functions["parseSlideToCanvas"] = (slide :any[]) => this.parseSlideToCanvas(slide);
         this.canvasManager.canvas.functions["getComponentData"] = (id: string) => this.getComponentData(id);
         this.canvasManager.canvas.functions["updateActiveComponentData"] = (data: any) => this.updateActiveComponentData(data);
+        setInterval(()=>{
+            console.log(this.canvasManager.activeComponent.data.coreData);
+        },5000);
     }
 
     updateActiveComponentData(data : any){
@@ -169,9 +172,10 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     getComponentData(id : string){
-        return this.canvasManager.canvas.data.components.filter((component : any) => component.id === id)[0];
+        const slideComponent = this.canvasManager.canvas.data.components.filter((component : any) => component.id === id)
+        return slideComponent.length ? slideComponent[0] : {};
     }
-
+    // Remember to set canvas data compontents here
     saveComponentData(){
         const slides : any[] = this.slideManager.slides;
         const activeSlide = slides[this.slideManager.activeSlide];

@@ -29,6 +29,10 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl);
+      // Do the real upload here, then
+      manager.canvasManager.canvas.functions.updateActiveComponentData({
+        url : ""
+      });
     }
   };
 

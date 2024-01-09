@@ -15,6 +15,7 @@ import {
   handleSetCorrectOption,
   handleSetWrongOption,
 } from "provider/optionsDataSlice";
+import { setTextComponentData } from "./handlers/dataHandler";
 
 const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const dispatch = useDispatch();
@@ -45,9 +46,9 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
     setTextValue(textContentValue);
 
     // Using innerHTML to avoid conflict with Text value on content update...
-    manager.canvasManager.canvas.functions.updateActiveComponentData({
-      content : e.target.innerHTML
-    });
+    manager.canvasManager.canvas.functions.updateActiveComponentData(
+      setTextComponentData(e.target.innerHTML)
+    );
 
     const editableDiv = e.target as HTMLElement;
 
