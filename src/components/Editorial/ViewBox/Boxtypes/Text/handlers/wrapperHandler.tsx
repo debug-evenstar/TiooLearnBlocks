@@ -1,15 +1,30 @@
 import ToolTipComponent from "components/extensions/ToolTip/render";
 import ReactDOM from "react-dom";
 
+const positions = ["left", "right", "center", "justify"];
+
 const checkersForToggleWrapper = (
   elementType: string,
   element: HTMLElement,
   style: string,
+  styleType: string,
   link: string
 ) => {
   if (elementType === "span") {
-    if (style === "line-through" || style === "underline") {
+    if (styleType === "line") {
       element.style.textDecoration = style;
+    }
+
+    if (styleType === "position") {
+      console.log(style);
+      const div = element.parentElement;
+      if (!div) return;
+      console.log(div);
+      div.style.justifyContent = style;
+    }
+
+    if (styleType === "font-size") {
+      element.style.fontSize = style + "px";
     }
 
     element.style.color = style;
@@ -19,6 +34,7 @@ const checkersForToggleWrapper = (
     //@ts-ignore
     element.href = link;
     element.style.color = style;
+    element.style.textDecoration = "line-through";
     element.style.cursor = "cursor-move";
   }
 };
@@ -27,11 +43,12 @@ export const toggleWrapper = (
   range: Range,
   elementType: string,
   style: string,
+  styleType: string,
   link: string
 ) => {
   const element = document.createElement(elementType);
 
-  checkersForToggleWrapper(elementType, element, style, link);
+  checkersForToggleWrapper(elementType, element, style, styleType, link);
 
   range.surroundContents(element);
 };

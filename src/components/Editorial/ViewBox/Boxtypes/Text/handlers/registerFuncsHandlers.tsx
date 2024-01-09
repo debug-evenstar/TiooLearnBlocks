@@ -11,10 +11,13 @@ export const registerFunctions = (
   manager.canvasManager.activeComponent.functions["toggleWrapper"] = (
     elementType: string,
     style: string = "",
+    styleType: string = "",
     link: string = ""
   ) => {
     const range = getRange();
-    range && range.toString() && toggleWrapper(range, elementType, style, link);
+    range &&
+      range.toString() &&
+      toggleWrapper(range, elementType, style, styleType, link);
   };
 
   manager.canvasManager.activeComponent.functions["toggleWrapperStyle"] = (
@@ -33,7 +36,7 @@ export const registerFunctions = (
     const range = getRange();
 
     if (range && range.toString() && range.startOffset !== range.endOffset) {
-      toggleWrapper(range, "span", style, "");
+      toggleWrapper(range, "span", style, styleType, "");
       return;
     }
 
@@ -52,6 +55,5 @@ export const registerFunctions = (
   ) => {
     const range = getRange();
     range && range.toString() && addTooltip(range, tip);
-
   };
 };

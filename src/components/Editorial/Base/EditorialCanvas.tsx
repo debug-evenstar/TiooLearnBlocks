@@ -23,9 +23,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
 
     if (!existingClone) {
       // dispatch(handleSetDragItems([...slideComponents, { id: itemId }]));
-      updateSlideComponents(
-        [...slideComponents, { id: itemId }]
-      );
+      updateSlideComponents([...slideComponents, { id: itemId }]);
       dispatch(handleSetActiveViewbox(itemId));
     }
   };
@@ -52,17 +50,17 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     dispatch(handleSetSidebarState(true));
   };
 
-
-  const updateSlideComponents = (components : any[]) => {
+  const updateSlideComponents = (components: any[]) => {
     setSlideComponents(() => components);
     // Also update slide manager
-  }
+  };
 
-
-  useEffect(()=>{
-    manager.canvasManager && setSlideComponents(manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData));
-  },[slideData]);
-
+  useEffect(() => {
+    manager.canvasManager &&
+      setSlideComponents(
+        manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData)
+      );
+  }, [slideData]);
 
   return (
     <div

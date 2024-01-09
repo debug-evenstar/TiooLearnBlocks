@@ -33,7 +33,6 @@ input[type="file"] {
   font-weight: 500;
 }
 
-
 .compinactive {
   box-shadow: 0.4000000059604645px 0.4000000059604645px 2px 1px #0000001a;
   border-radius: 4px;
@@ -144,55 +143,171 @@ input[type="file"] {
   background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='22' stroke-linecap='square'/%3e%3c/svg%3e");
 }
 .bgcomps {
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png');
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png");
 }
-.bg-preview{
+.bg-preview {
   background-color: rgba(0, 0, 0, 0.35);
 }
-.slide-transition{
+.slide-transition {
   transition: opacity 0.8s, left 0.8s;
 }
 
-.slide-box{
-  height : fit-content;
+.slide-box {
+  height: fit-content;
 }
 
-
 .slide-box-clip {
-  clip-path : polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
+  clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
   overflow: hidden;
 }
 
 @keyframes slide-transition-left-in {
-  0%   {width:0px; opacity: 0; left : 0; height:0; padding-left : unset; padding-right : unset;}
-  1%   {width : 100%; height : 100%; opacity: 0; left : 0; padding-left : 0px; padding-right : 0px;}
-  60%   {width : 100%; height : 100%; opacity: 0; left : -40%; padding-left : 10px; padding-right : 10px;}
-  100% {width : 100%; height : 100%; opacity: 1; left : -100%; padding-left : 10px; padding-right : 10px;}
+  0% {
+    width: 0px;
+    opacity: 0;
+    left: 0;
+    height: 0;
+    padding-left: unset;
+    padding-right: unset;
+  }
+  1% {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    left: 0;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  60% {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    left: -40%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    left: -100%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 @keyframes slide-transition-left-out {
-  0%   {width:100%; height : 100%; opacity: 1; left : 0; padding-left : 10px; padding-right : 10px;}
-  0%   {width:100%; height : 100%; opacity: 1; left : -100%; padding-left : 10px; padding-right : 10px;}
-  40%   {width:100%; height : 100%; opacity: 0.2; left : -60%; padding-left : 10px; padding-right : 10px;}
-  95% {width : 100%; height : 100%; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
-  100% {width : 0px; height: 0px; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
+  0% {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    left: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  0% {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    left: -100%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  40% {
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    left: -60%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  95% {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    left: 0;
+    padding-left: unset;
+    padding-right: unset;
+  }
+  100% {
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    left: 0;
+    padding-left: unset;
+    padding-right: unset;
+  }
 }
 
 @keyframes slide-transition-right-in {
-  0%   {width:0px; height : 0px; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
-  1%   {width : 100%; height : 100%; opacity: 0; left : -100%; padding-left : 10px; padding-right : 10px;}
-  2%   {width : 100%; height : 100%; opacity: 0.2; left : -100%; padding-left : 10px; padding-right : 10px;}
-  60% {width : 100%; height : 100%; opacity: 0.6; left : -40%; padding-left : 10px; padding-right : 10px;}
-  100% {width : 100%; height: 100%; opacity: 1; left : 0; padding-left : 10px; padding-right : 10px;}
+  0% {
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    left: 0;
+    padding-left: unset;
+    padding-right: unset;
+  }
+  1% {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    left: -100%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  2% {
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    left: -100%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  60% {
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+    left: -40%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    left: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 @keyframes slide-transition-right-out {
-  0%   {width:100%; height : 100%; opacity: 1; left : 0; padding-left : 10px; padding-right : 10px;}
-  95% {width : 100%; height : 100%; opacity: 0; left : -100%; padding-left : 0px; padding-right : 0px;}
-  100% {width : 100%; height: 100%; opacity: 0; left : 0; padding-left : unset; padding-right : unset;}
+  0% {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    left: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  95% {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    left: -100%;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    left: 0;
+    padding-left: unset;
+    padding-right: unset;
+  }
 }
-
-
 
 .slide-left-in {
   animation-name: slide-transition-left-in;
@@ -213,7 +328,7 @@ input[type="file"] {
 .slide-right-in {
   animation-name: slide-transition-right-in;
   animation-timing-function: linear;
-  animation-duration:0.8s;
+  animation-duration: 0.8s;
   animation-delay: 0s;
   animation-fill-mode: forwards;
 }
@@ -221,7 +336,7 @@ input[type="file"] {
 .slide-right-out {
   animation-name: slide-transition-right-out;
   animation-timing-function: linear;
-  animation-duration:0.8s;
+  animation-duration: 0.8s;
   animation-delay: 0s;
   animation-fill-mode: forwards;
 }
@@ -231,7 +346,7 @@ input[type="file"] {
   font-family: "Comic Neue", cursive;
 }
 
-.no-scrollbar::-webkit-scrollbar{
+.no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .fw-200 {
@@ -731,46 +846,47 @@ input[type="file"] {
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
-#LessonPage{
+#LessonPage {
   transition: background-color 2s;
 }
 .lesson-bg-default {
-  background-color: #27397A;
+  background-color: #27397a;
   background-size: cover;
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png');
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png");
   color: white;
 }
 .lesson-bg-white {
   background-size: cover;
   background-color: #fff;
   /* background-image: url("https://res.cloudinary.com/dbgorivob/image/upload/v1696022177/backgrounds/Group_12634_1_pcsmit.png"); */
-  color : black;
-}
-
-.lesson-bg-default span , 
-.lesson-bg-default .exit-box{
-  color: white;
-}
-
-.lesson-bg-white span , 
-.lesson-bg-white .exit-box{
   color: black;
 }
 
+.lesson-bg-default span,
+.lesson-bg-default .exit-box {
+  color: white;
+}
+
+.lesson-bg-white span,
+.lesson-bg-white .exit-box {
+  color: black;
+}
 
 .lesson-bg-white .slide-prev {
-  background-color: #4F46E5;
+  background-color: #4f46e5;
 }
-.lesson-bg-default .hanger-white , .lesson-bg-default .theme-white {
+.lesson-bg-default .hanger-white,
+.lesson-bg-default .theme-white {
   display: none;
 }
-.lesson-bg-white .hanger-default , .lesson-bg-white .theme-default{
+.lesson-bg-white .hanger-default,
+.lesson-bg-white .theme-default {
   display: none;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
-  margin-left : 10px;
+  margin-left: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -795,38 +911,70 @@ input[type="file"] {
   margin-top: 20px;
 }
 
-
 .bg-home {
-  background: linear-gradient(to right, rgba(105, 76, 87, 1),rgba(0, 0, 0, 0.2));
+  background: linear-gradient(
+    to right,
+    rgba(105, 76, 87, 1),
+    rgba(0, 0, 0, 0.2)
+  );
 }
 .bg-dash {
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1689193391/praxeum/Frame_1000004421_aysm37.png');
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1689193391/praxeum/Frame_1000004421_aysm37.png");
 }
-.bg-frame{
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1689405515/praxeum/Frame_1000004193_io2u7f.png');
+.bg-frame {
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1689405515/praxeum/Frame_1000004193_io2u7f.png");
 }
-.bg-frame2{
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1690134583/praxeum/Frame_1000004498_eke756.png');
+.bg-frame2 {
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1690134583/praxeum/Frame_1000004498_eke756.png");
 }
-.bg-frame3{
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1693301653/praxeum/Frame_1000004193_1_n5eyfh.png');
+.bg-frame3 {
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1693301653/praxeum/Frame_1000004193_1_n5eyfh.png");
 }
-.bg-compbg{
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691443549/praxeum/Desktop_-_328_1_1_kgqpua.png');
+.bg-compbg {
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1691443549/praxeum/Desktop_-_328_1_1_kgqpua.png");
 }
 .bg-bgsuccess {
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691484705/praxeum/success_q0ntxg.png');
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1691484705/praxeum/success_q0ntxg.png");
 }
 .bg-bgfailure {
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691484705/praxeum/fail_gtdllx.png');
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1691484705/praxeum/fail_gtdllx.png");
 }
 .bg-mobilesuccess {
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1691568250/praxeum/Group_12599_skzl8n.png');
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1691568250/praxeum/Group_12599_skzl8n.png");
 }
 .bg-mobilefailure {
-  background-image: url('https://res.cloudinary.com/dic7regoe/image/upload/v1693040911/praxeum/Group_12610_qogt9r.png');
+  background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1693040911/praxeum/Group_12610_qogt9r.png");
 }
 .bg-smallbtn {
   background-image: url("https://res.cloudinary.com/dic7regoe/image/upload/v1693049510/praxeum/btn_qdygvj.png");
   background-size: 100% 100%;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: bold;
+  }
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+  h4 {
+    @apply text-base;
+  }
+  h5 {
+    @apply text-sm;
+  }
+  h5 {
+    @apply text-xs;
+  }
 }

@@ -7,5 +7,8 @@ export const toggleWrapperStyle = (
 ) => {
   if (styleType === "bgColor") {
     element.style.backgroundColor = style;
+  }
+  if (styleType === "position") {
+    element.style.textAlign = style;
   } else element.style.color = style;
 };
