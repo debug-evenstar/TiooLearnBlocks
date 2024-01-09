@@ -15,19 +15,16 @@ const checkersForToggleWrapper = (
       element.style.textDecoration = style;
     }
 
-    if (styleType === "position") {
-      console.log(style);
-      const div = element.parentElement;
-      if (!div) return;
-      console.log(div);
-      div.style.justifyContent = style;
-    }
-
     if (styleType === "font-size") {
       element.style.fontSize = style + "px";
     }
 
     element.style.color = style;
+  }
+
+  if (styleType === "position") {
+    element.className = "w-full";
+    element.style.textAlign = style;
   }
 
   if (elementType === "a") {
@@ -49,6 +46,14 @@ export const toggleWrapper = (
   const element = document.createElement(elementType);
 
   checkersForToggleWrapper(elementType, element, style, styleType, link);
+
+  if (
+    styleType === "font-size" ||
+    (styleType === "spacing" &&
+      range.commonAncestorContainer.nodeName === "DIV")
+  ) {
+    return;
+  }
 
   range.surroundContents(element);
 };

@@ -2,37 +2,42 @@ import { EditorialManagerInterface } from "components/Editorial/Base/EditorialMa
 import { CanvasMedia } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
-import { toggleWrapperSize } from "./handler";
+import { toggleWrapperSize, uploadFile } from "./handler";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [overlayActive, setOverlayActive] = useState(false);
   const [data, setData] = useState<any>();
 
-  const handleChange = (e: any) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    if (!e.target.files) return;
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setPreviewImage(imageUrl);
+      //const imageUrl = URL.createObjectURL(selectedFile);
+      //setPreviewImage(imageUrl);
+      const url = await uploadFile(753, selectedFile);
+      setPreviewImage(url);
+      manager.canvasManager.canvas.functions.updateActiveComponentData({
+        url,
+      });
     }
   };
 
   const handleDrop = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    const files = Array.from(e.dataTransfer.files);
+    const files: any = Array.from(e.dataTransfer.files);
     handleUpload(files);
   };
 
-  const handleUpload = (files: any) => {
+  const handleUpload = async (files: FileList) => {
     const file = files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewImage(imageUrl);
-      // Do the real upload here, then
+      const url = await uploadFile(753, file);
+      setPreviewImage(url);
       manager.canvasManager.canvas.functions.updateActiveComponentData({
-        url : ""
+        url,
       });
     }
   };
