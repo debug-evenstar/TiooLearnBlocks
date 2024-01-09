@@ -23,6 +23,7 @@ import {
   RiUnderline,
 } from "react-icons/ri";
 import { ColorResult, SketchPicker } from "react-color";
+import { toggleWrapperStyle } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/stylesHandler";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -35,13 +36,24 @@ const TextProperties: FC<Props> = ({ manager }) => {
   const toggleTextStyle =
     manager.canvasManager.activeComponent.functions?.toggleTextStyle;
 
+  const toggleWrapperStyle =
+    manager.canvasManager.activeComponent.functions?.toggleWrapperStyle;
+
   const [isActive, setIsActive] = useState(false);
   const [colorIsActive, setColorIsActive] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
+  const [textSize, setTextSize] = useState("0");
 
   const handleChangeTextColor = (color: ColorResult) => {
     setTextColor(color.hex);
     toggleTextStyle(color.hex, "textColor");
+    setColorIsActive(false);
+  };
+
+  const handleChangeTextSize = (size: string) => {
+    setTextSize(size);
+    toggleWrapper("span", size, "font-size");
+
     setColorIsActive(false);
   };
 
@@ -69,11 +81,16 @@ const TextProperties: FC<Props> = ({ manager }) => {
             </div>
 
             <div className="flex items-center gap-2">
-              <p>
+              <p onClick={() => handleChangeTextSize(`${+textSize - 1}`)}>
                 <b>-</b>
               </p>
-              <div className="border h-6 w-8" />
-              <p>
+              <input
+                className="border h-6 w-8 text-center"
+                placeholder="0"
+                value={textSize}
+                onChange={(e) => handleChangeTextSize(e.target.value)}
+              />
+              <p onClick={() => handleChangeTextSize(`${+textSize + 1}`)}>
                 <b>+</b>
               </p>
             </div>
@@ -84,7 +101,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("span", "left");
+                toggleWrapper("span", "left", "position");
               }}
             >
               <RiAlignLeft className="cursor-pointer" />
@@ -94,7 +111,8 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("span", "center");
+                //toggleWrapper("span", "center", "position");
+                toggleWrapperStyle("center", "position");
               }}
             >
               <RiAlignCenter className="cursor-pointer" />
@@ -104,7 +122,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("span", "right");
+                toggleWrapper("span", "right", "position");
               }}
             >
               <RiAlignRight className="cursor-pointer" />
@@ -114,7 +132,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("span", "justify");
+                toggleWrapper("span", "justify", "position");
               }}
             >
               <RiAlignJustify className="cursor-pointer" />
@@ -208,7 +226,7 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("span", "underline");
+          toggleWrapper("span", "underline", "line");
         }}
       >
         <RiUnderline />
@@ -218,7 +236,7 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("span", "line-through");
+          toggleWrapper("span", "line-through", "line");
         }}
       >
         <RiStrikethrough />

@@ -31,7 +31,7 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
     updateComponentLayout(size.width, size.height);
   };
 
-  const height = id.includes("Text") ? 65 : 280;
+  const height = id.includes("Text") ? 10 : 65;
 
   useEffect(() => {
     manager.canvasManager.activeComponent.functions["toggleViewboxStyle"] = (

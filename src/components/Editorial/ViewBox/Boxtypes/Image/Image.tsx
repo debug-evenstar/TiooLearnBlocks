@@ -7,6 +7,7 @@ import { toggleWrapperSize } from "./handler";
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [overlayActive, setOverlayActive] = useState(false);
+  const [data, setData] = useState<any>();
 
   const handleChange = (e: any) => {
     e.preventDefault();
@@ -49,6 +50,14 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       console.log(status, "overlay status");
     };
   }, [manager, viewBoxRef]);
+
+  useEffect(() => {
+    const imageComponentData =
+      manager.canvasManager.canvas.functions.getComponentData(id);
+    imageComponentData && setData(imageComponentData.content);
+    setPreviewImage(imageComponentData.url);
+    console.log(imageComponentData, "Image");
+  }, [id]);
 
   const [inputList, setInputList] = useState<any[]>([]);
   const imageRef = useRef<HTMLImageElement>(null);

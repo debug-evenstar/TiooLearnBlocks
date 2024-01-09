@@ -5,7 +5,7 @@ export const toggleWrapperSize = (
   style: string,
   styleType: string
 ) => {
-  if (styleType === "height" && +style >= 280) {
+  if (styleType === "height") {
     element.style.height = style + "px";
   } else element.style.width = style + "px";
 };
