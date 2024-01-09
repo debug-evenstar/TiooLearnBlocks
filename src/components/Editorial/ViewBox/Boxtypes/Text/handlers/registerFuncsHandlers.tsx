@@ -18,6 +18,11 @@ export const registerFunctions = (
     if (range && range.toString()) {
       toggleWrapper(range, elementType, style, styleType, link);
     }
+
+    const element = editableRef.current;
+    if (styleType !== "position") return;
+    if (!element) return;
+    toggleWrapperStyle(element, style, styleType);
   };
 
   manager.canvasManager.activeComponent.functions["toggleWrapperStyle"] = (

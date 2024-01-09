@@ -98,12 +98,7 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   }, [isEditable, viewBoxRef, textareaRef]);
 
   useEffect(() => {
-    registerFunctions(
-      manager,
-      getRange,
-      editableRef,
-      viewBoxRef
-    );
+    registerFunctions(manager, getRange, editableRef, viewBoxRef);
   }, [manager, viewBoxRef]);
 
   useEffect(() => {
