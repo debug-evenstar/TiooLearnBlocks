@@ -17,7 +17,13 @@ import {
 } from "provider/optionsDataSlice";
 import { setTextComponentData } from "./handlers/dataHandler";
 
-const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
+const Text: FC<CanvasText> = ({
+  id,
+  viewBoxRef,
+  manager,
+  isEditable,
+  setIsEditable,
+}) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
   const activeId: string = selector.payload.activeViewbox.value;
@@ -31,7 +37,6 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager }) => {
   const editableRef = useRef<HTMLDivElement>(null);
 
   const [textareaRowCount, setTextareaRowCount] = useState(1);
-  const [isEditable, setIsEditable] = useState(true);
   const [textValue, setTextValue] = useState("");
 
   // Move into a handler later

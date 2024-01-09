@@ -11,6 +11,7 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
     width: 300,
     height: id.includes("Text") ? 65 : 280,
   });
+  const [isEditable, setIsEditable] = useState(false);
 
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
   const nodeRef: any = createRef();
@@ -52,17 +53,21 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
       height={viewBoxSize.height}
       minConstraints={[280, height]}
       onResize={onResize}
-      resizeHandles={["s", "e", "se"]}
+      resizeHandles={id.includes("Text") && !isEditable ? [] : ["s", "e", "se"]}
     >
       <div
         ref={viewBoxRef}
-        className="m-5 p-2 border-2 border-slate-500 border-dotted rounded"
+        className={`border-2 border-slate-500 rounded ${
+          id.includes("Text") && !isEditable
+            ? "border-none"
+            : "border-dotted m-5 p-2"
+        }`}
         style={{
           width: viewBoxSize.width + "px",
           height: viewBoxSize.height + "px",
         }}
       >
-        {ViewBoxContent(id, manager, viewBoxRef)}
+        {ViewBoxContent(id, manager, viewBoxRef, isEditable, setIsEditable)}
       </div>
     </Resizable>
   );

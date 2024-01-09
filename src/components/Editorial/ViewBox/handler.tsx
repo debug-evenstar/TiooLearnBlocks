@@ -9,7 +9,6 @@ import Video from "./Boxtypes/Video/Video";
 import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
 import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/ImageProperties";
 
-
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
 
@@ -24,14 +23,24 @@ export function getOriginalName(str: string): string {
 export const ViewBoxContent = (
   id: string,
   manager: EditorialManagerInterface,
-  viewBoxRef: React.MutableRefObject<HTMLDivElement | null>
+  viewBoxRef: React.MutableRefObject<HTMLDivElement | null>,
+  isEditable: boolean,
+  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   const componentName = getOriginalName(id);
 
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {
-    Text: <Text id={id} manager={manager} viewBoxRef={viewBoxRef} />,
+    Text: (
+      <Text
+        id={id}
+        manager={manager}
+        viewBoxRef={viewBoxRef}
+        isEditable={isEditable}
+        setIsEditable={setIsEditable}
+      />
+    ),
     Image: <Image id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     Video: <Video id={id} manager={manager} viewBoxRef={viewBoxRef} />,
   };

@@ -26,4 +26,6 @@ export interface CanvasText {
   id: string;
   manager: EditorialManagerInterface;
   viewBoxRef: React.MutableRefObject<any>;
+  isEditable: boolean;
+  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
 }
