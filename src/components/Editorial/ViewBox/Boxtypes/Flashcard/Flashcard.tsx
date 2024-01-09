@@ -50,7 +50,7 @@ const Flashcard: FC<any> = ({ id, manager, image }) => {
       height={viewBoxSize.height}
       minConstraints={[280, height]}
       onResize={onResize}
-      resizeHandles={id.includes("Text") && !isEditable ? [] : ["s", "e", "se"]}
+      resizeHandles={["s", "e", "se"]}
     >
       <div
         ref={viewBoxRef}
