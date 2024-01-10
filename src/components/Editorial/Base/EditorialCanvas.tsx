@@ -48,11 +48,17 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   const handleClickedViewbox = (id: string) => {
     dispatch(handleSetActiveViewbox(id));
     dispatch(handleSetSidebarState(true));
+    if(manager.canvasManager.activeSlide) {
+      // Set active component index whenever the component is selected or marked active
+      const componentIndexInSlide : number = manager.canvasManager.activeSlide.findIndex((data : any) => data.id === id);
+      manager.canvasManager.activeComponent.data.index = componentIndexInSlide;
+    }
   };
 
   const updateSlideComponents = (components: any[]) => {
     setSlideComponents(() => components);
     // Also update slide manager
+    manager.slideManager.slides[manager.slideManager.activeSlide] = components; 
   };
 
   useEffect(() => {

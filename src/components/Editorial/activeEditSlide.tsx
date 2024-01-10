@@ -13,130 +13,72 @@ interface Props {
   slides: any;
   data: any;
   isBusy: boolean;
-  showEdit: () => void;
-  changeFile: (file: any, payload: any, id: any) => void;
-  changeCard: (
-    file: any,
-    payload: any,
-    id: any,
-    length: number,
-    changedIndex: any
-  ) => void;
-  changeSlide: (
-    file: any,
-    payload: any,
-    id: any,
-    length: number,
-    changedIndex: any
-  ) => void;
   manager: EditorialManagerInterface;
 }
 const ActiveEditSlide: FC<Props> = ({
   active,
   slides,
   data,
-  showEdit,
-  changeFile,
-  changeCard,
-  changeSlide,
   isBusy,
   manager,
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
-  // const [checkText, setCheckText] = useState([]);
-  const [checkFiles, setCheckFiles] = useState<any>();
   const [activeSlide, setActiveSlide] = useState<any[]>([]);
-  const [slideId, setSlideId] = useState("");
-  const [delFile, setDelFile] = useState(false);
-  const [seletedImage, setSelectedImage] = useState<any>();
-  const [previewImage, setPreviewImage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [previewSlide, setPreviewSlide] = useState(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  const RenderPreview = () => {
+    // const textComp =
+    //   activeSlid &&
+    //   activeSlid.filter((where: any) => where.component === "Text");
+    // const fileComp =
+    //   activeSlid &&
+    //   activeSlid.filter(
+    //     (where: any) =>
+    //       where.component === "Image" || where.component === "Video"
+    //   );
+    // return (
+    //   <>
+    //     {textComp.map((component: any, index: number) => {
+    //       const Component = loadComponent(component);
+    //       return <Component key={index} data={component} slide={SlideScope} />;
+    //     })}
+    //     {!showPreview &&
+    //       fileComp.map((component: any, index: number) => {
+    //         const Component = loadComponent(component);
+    //         return (
+    //           <Component key={index} data={component} slide={SlideScope} />
+    //         );
+    //       })}
+    //     {showPreview &&
+    //       (checkFile("Image") ? (
+    //         <div className="w-8/12 max-h-[300px] object-fit mx-auto my-6 rounded-[18px] overflow-hidden">
+    //           <img src={previewImage} alt="placeholder" className="w-full" />
+    //         </div>
+    //       ) : (
+    //         <video className="w-full" controls autoPlay={true}>
+    //           <source src={previewImage} type="video/mp4"></source>
+    //         </video>
+    //       ))}
+    //   </>
+    // );
+  };
+
+  const saveSlide = () => {
+    const slideId : number = data.LessonSlides[active].id;
+    setIsSaving(true)
+    manager.slideManager.saveSlide(slideId, activeSlide, ()=>{
+      setIsSaving(false);
+    });
+  };
 
   useEffect(() => {
     if (slides) {
       setActiveSlide(slides[active]);
+      manager.slideManager.setActiveSlide(active);
     }
-  }, [active]);
-  useEffect(() => {
-    getId();
-  }, []);
-  const activeSlid = slides && slides[active];
-  useEffect(() => {
-    const flashComp =
-      activeSlid &&
-      activeSlid.filter(
-        (where: any) =>
-          where.component === "Image" || where.component === "Video"
-      );
-    setCheckFiles(flashComp[0]);
-  }, [activeSlid]);
-  const checkFile = (file: any) => {
-    const textComp =
-      activeSlid && activeSlid.filter((where: any) => where.component === file);
-    if (!!textComp.length) {
-      return true;
-    } else return false;
-  };
-  const getId = () => {
-    const parseSlides = slides.map((slide: any) => slide);
-    setSlideId(parseSlides[active].id);
-  };
-
-  const RenderPreview = () => {
-    const textComp =
-      activeSlid &&
-      activeSlid.filter((where: any) => where.component === "Text");
-    const fileComp =
-      activeSlid &&
-      activeSlid.filter(
-        (where: any) =>
-          where.component === "Image" || where.component === "Video"
-      );
-    return (
-      <>
-        {textComp.map((component: any, index: number) => {
-          const Component = loadComponent(component);
-          return <Component key={index} data={component} slide={SlideScope} />;
-        })}
-        {!showPreview &&
-          fileComp.map((component: any, index: number) => {
-            const Component = loadComponent(component);
-            return (
-              <Component key={index} data={component} slide={SlideScope} />
-            );
-          })}
-        {showPreview &&
-          (checkFile("Image") ? (
-            <div className="w-8/12 max-h-[300px] object-fit mx-auto my-6 rounded-[18px] overflow-hidden">
-              <img src={previewImage} alt="placeholder" className="w-full" />
-            </div>
-          ) : (
-            <video className="w-full" controls autoPlay={true}>
-              <source src={previewImage} type="video/mp4"></source>
-            </video>
-          ))}
-      </>
-    );
-  };
-  const deleteFile = () => {
-    setDelFile(true);
-    setShowPreview(false);
-  };
-  const handleUpload = (e: any) => {
-    e.preventDefault();
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setSelectedImage(selectedFile);
-      setPreviewImage(imageUrl);
-      setDelFile(false);
-      setShowPreview(true);
-    }
-  };
-  const editFile = () => {
-    const payload = [...activeSlid];
-  };
+  }, [active, slides]);
 
   return (
     <div>
@@ -151,9 +93,9 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="w-full h-[50px] flex items-center justify-between">
           <div
             className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold"
-            onClick={editFile}
+            onClick={saveSlide}
           >
-            {isBusy ? "Saving..." : "Save"}
+            {(isBusy || isSaving) ? "Saving..." : "Save"}
           </div>
           <div
             className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold"
@@ -168,7 +110,7 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0 bg-preview">
           <div className="mt-4 w-6/12 bgcomps text-white bg-cover rounded-lg min-h-[70vh] px-5 flex justify-center items-center fw-600">
             <div>
-              <RenderPreview />
+              {/* <RenderPreview /> */}
             </div>
           </div>
           <FaTimes

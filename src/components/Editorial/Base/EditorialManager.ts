@@ -3,6 +3,8 @@
 /*                          COMPONENT DATA INTERFACES                         */
 /* -------------------------------------------------------------------------- */
 
+import { EditorialSlideManager, EditorialSlideManagerInterface } from "./EditorialSlideManager";
+
 interface PositionProperties {
     offset : number;
     offsetPercent? : number;
@@ -105,6 +107,7 @@ const DataGroup : DataGroupInterface = {
 export interface CanvasManagerInterface {
     canvas : DataGroupInterface;
     activeComponent : DataGroupInterface;
+    activeSlide? : ComponentBaseDataInterface[];
 }
 
 const CanvasManager : CanvasManagerInterface = {
@@ -112,30 +115,21 @@ const CanvasManager : CanvasManagerInterface = {
     activeComponent : DataGroup
 };
 
-interface EditorialSlideManager { 
-    slides : any[];
-    activeSlide : number;
-}
-
-const SlideManager : EditorialSlideManager = {
-    slides : [],
-    activeSlide : 0
-};
 
 export interface EditorialManagerInterface {
     sidebarManager : DataGroupInterface;
     canvasManager : CanvasManagerInterface;
-    slideManager : EditorialSlideManager
+    slideManager : EditorialSlideManagerInterface
 }
 
 class EditorialManager implements EditorialManagerInterface {
 
     sidebarManager: DataGroupInterface = DataGroup;
     canvasManager: CanvasManagerInterface = CanvasManager;
-    slideManager: EditorialSlideManager = SlideManager; 
+    slideManager: EditorialSlideManagerInterface;
 
     constructor(slides : any[]) {
-        this.slideManager.slides = slides;
+        this.slideManager = new EditorialSlideManager(slides);
         this.initCanvasManager();
     }
 
@@ -151,9 +145,6 @@ class EditorialManager implements EditorialManagerInterface {
         this.canvasManager.canvas.functions["parseSlideToCanvas"] = (slide :any[]) => this.parseSlideToCanvas(slide);
         this.canvasManager.canvas.functions["getComponentData"] = (id: string) => this.getComponentData(id);
         this.canvasManager.canvas.functions["updateActiveComponentData"] = (data: any) => this.updateActiveComponentData(data);
-        setInterval(()=>{
-            console.log(this.canvasManager.activeComponent.data.coreData);
-        },5000);
     }
 
     updateActiveComponentData(data : any){
@@ -188,6 +179,7 @@ class EditorialManager implements EditorialManagerInterface {
             }
             slides[this.slideManager.activeSlide] = activeSlide;
             this.slideManager.slides = slides;
+            this.slideManager.handleSlidesUpdate(slides);
         }
     }
 
@@ -200,6 +192,7 @@ class EditorialManager implements EditorialManagerInterface {
             }
         });
         this.canvasManager.canvas.data.components = parsed;
+        this.canvasManager.activeSlide = parsed;
         return parsed;
     }
 }
