@@ -16,6 +16,7 @@ import {
   refreshOptionsData,
 } from "provider/optionsDataSlice";
 import { MdChatBubbleOutline } from "react-icons/md";
+import { setObjandSubComponentData } from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -27,16 +28,15 @@ const Objective: FC<Props> = ({ manager }) => {
 
   const dispatch = useDispatch();
   const selector: any = useSelector(handleSetCorrectOption);
-  const { correctOption, wrongOption } = selector.payload.optionsData.value as {
+  const { identifier, correctOption, wrongOption } = selector.payload
+    .optionsData.value as {
+    identifier: string;
     correctOption: string;
     wrongOption: string;
   };
+  const data = selector.payload.optionsData.value;
 
   const [isActive, setIsActive] = useState(false);
-  const [optionData, setOptionData] = useState<any>({
-    correctOption: "",
-    wrongOption: "",
-  });
 
   const [objectives, setObjectives] = useState<[ObjectiveItemType] | any[]>([]);
 
@@ -58,13 +58,24 @@ const Objective: FC<Props> = ({ manager }) => {
         ],
       },
     ]);
-    dispatch(refreshOptionsData());
+    console.log(data, "identifier");
+
+    //dispatch(refreshOptionsData());
     dispatch(refreshToggleShowOptionBox());
   };
 
   useEffect(() => {
-    console.log(correctOption, wrongOption, " - Options");
-  }, [correctOption, wrongOption]);
+    console.log(identifier, correctOption, wrongOption, " - Options");
+    manager.canvasManager.canvas.functions.updateActiveComponentData(
+      setObjandSubComponentData(
+        "OBJECTIVE",
+        identifier,
+        [correctOption, wrongOption],
+        [correctOption],
+        [""]
+      )
+    );
+  }, [identifier, correctOption, wrongOption]);
 
   return (
     <div className="p-2 shadow-md">

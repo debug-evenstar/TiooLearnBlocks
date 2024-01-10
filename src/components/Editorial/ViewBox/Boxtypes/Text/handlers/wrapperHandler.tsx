@@ -68,19 +68,20 @@ function calculateCharacterWidth(element: HTMLInputElement): number {
   return textWidth;
 }
 
-export const createInput = (value: string) => {
+export const createInput = (value: string, id: string) => {
   const element = document.createElement("div");
 
   element.contentEditable = "true";
   element.innerText = value;
+  element.id = id;
   element.className =
     "h-fit w-fit px-2 border-b border-black inline-block outline-none";
 
   return element;
 };
 
-export const replaceContent = (range: Range) => {
-  const element = createInput(range.toString());
+export const replaceContent = (range: Range, id: string) => {
+  const element = createInput(range.toString(), id);
   range.deleteContents();
   range.insertNode(element);
 

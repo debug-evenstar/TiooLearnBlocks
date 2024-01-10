@@ -1,5 +1,4 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { CanvasMedia } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { toggleWrapperSize, uploadFile } from "../Image/handler";

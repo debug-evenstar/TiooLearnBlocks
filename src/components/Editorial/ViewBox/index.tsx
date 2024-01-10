@@ -57,9 +57,7 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
       <div
         ref={viewBoxRef}
         className={`border-2 border-slate-500 rounded ${
-          id.includes("Text") && !isEditable
-            ? "border-none"
-            : "border-dotted m-5 p-2"
+          id.includes("Text") && !isEditable ? "border-none" : "border-dotted"
         }`}
         style={{
           width: viewBoxSize.width + "px",

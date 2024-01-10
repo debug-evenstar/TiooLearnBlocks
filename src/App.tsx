@@ -51,7 +51,6 @@ function App() {
   useEffect(() => {
     fetchLess();
     dispatch(refreshToggleSidebarState());
-    //dispatch(refreshToggleShowOptionBox());
   }, []);
 
   const handleBack = () => {

@@ -6,7 +6,8 @@ export const registerFunctions = (
   manager: EditorialManagerInterface,
   getRange: () => Range | undefined,
   editableRef: React.RefObject<HTMLDivElement>,
-  viewBoxRef: React.MutableRefObject<any>
+  viewBoxRef: React.MutableRefObject<any>,
+  setIdentifier: (id: string) => void
 ) => {
   manager.canvasManager.activeComponent.functions["toggleWrapper"] = (
     elementType: string,
@@ -52,7 +53,11 @@ export const registerFunctions = (
 
   manager.canvasManager.activeComponent.functions["replaceContent"] = () => {
     const range = getRange();
-    range && range.toString() && replaceContent(range);
+    if (range && range.toString()) {
+      const id = range?.toString() + "-" + Date.now();
+      setIdentifier(id);
+      replaceContent(range, id);
+    }
   };
 
   manager.canvasManager.activeComponent.functions["addTooltip"] = (

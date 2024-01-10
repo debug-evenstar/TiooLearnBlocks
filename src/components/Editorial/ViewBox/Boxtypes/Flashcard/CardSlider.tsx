@@ -1,7 +1,5 @@
-import React, { FC, useState, useEffect, useRef } from "react";
-import { BsArrowBarLeft } from "react-icons/bs";
-import { FaAngleLeft, FaAngleRight, FaBackward } from "react-icons/fa";
-import { MdArrowBack } from "react-icons/md";
+import React, { FC, useState, useRef } from "react";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import Flashcard from "./Flashcard";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
