@@ -11,6 +11,7 @@ import { handleSetDragItems } from "provider/dragItemsSlice";
 import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import Flashcard from "../ViewBox/Boxtypes/Flashcard/Flashcard";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
+import { refreshOptionsData } from "provider/optionsDataSlice";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,

@@ -7,7 +7,8 @@ export const registerFunctions = (
   getRange: () => Range | undefined,
   editableRef: React.RefObject<HTMLDivElement>,
   viewBoxRef: React.MutableRefObject<any>,
-  setIdentifier: (id: string) => void
+  setIdentifier: (id: string) => void,
+  componentId: string
 ) => {
   manager.canvasManager.activeComponent.functions["toggleWrapper"] = (
     elementType: string,
@@ -54,7 +55,7 @@ export const registerFunctions = (
   manager.canvasManager.activeComponent.functions["replaceContent"] = () => {
     const range = getRange();
     if (range && range.toString()) {
-      const id = range?.toString() + "-" + Date.now();
+      const id = componentId + "-" + range?.toString() + "-" + Date.now();
       setIdentifier(id);
       replaceContent(range, id);
     }

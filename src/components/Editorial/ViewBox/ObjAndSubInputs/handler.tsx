@@ -31,23 +31,30 @@ interface DataItem {
   feedbacks: string[];
 }
 
-export function associateDataWithInputElement(
+export function associatedData(
   data: DataItem[],
   htmlString: string
-): void {
+): DataItem[] | undefined {
   const parser = new DOMParser();
   const parsedDocument = parser.parseFromString(htmlString, "text/html");
 
-  const targetIdentifier = data[0].identifier; // Assuming you want to match the first data item's identifier
-  const targetInput = parsedDocument.querySelector(
-    `#${targetIdentifier}`
-  ) as HTMLDivElement;
+  const associatedData: DataItem[] = [];
 
-  if (targetInput) {
-    // Associate data with the input element
-    //targetInput.dataset.data = JSON.stringify(data[0]); // Store data as JSON in a data attribute
-    console.log(targetInput, "found input");
-  } else {
-    console.error("Input element with matching identifier not found.");
+  for (const dataItem of data) {
+    const targetIdentifier = dataItem.identifier;
+    const targetInput = parsedDocument.getElementById(
+      targetIdentifier
+    ) as HTMLDivElement;
+
+    if (targetInput) {
+      console.log(targetInput, "found input");
+      associatedData.push(dataItem); // Push the entire data item
+    } else {
+      console.warn(
+        `Input element with matching identifier ${targetIdentifier} not found.`
+      );
+    }
   }
+
+  return associatedData.length > 0 ? associatedData : undefined;
 }

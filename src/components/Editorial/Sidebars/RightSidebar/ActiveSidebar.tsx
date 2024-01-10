@@ -49,10 +49,6 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
 
         <section>{EditProperties(id, manager)}</section>
       </main>
-
-      <div className="mt-12 p-4">
-        <PromptBox />
-      </div>
     </div>
   );
 };

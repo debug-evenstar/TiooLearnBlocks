@@ -9,5 +9,7 @@ export type ObjectiveItemType = {
 };
 
 export interface ObjectiveItemProp {
-  objective: ObjectiveItemType;
+  objective: any;
+  data: any;
+  index: number;
 }

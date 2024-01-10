@@ -12,7 +12,8 @@ import {
 import { handleTextChange } from "./handlers/generalHandler";
 import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import ContentEditableDiv from "components/ContentEditableDiv";
-import { associateDataWithInputElement } from "../../ObjAndSubInputs/handler";
+import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+import { associatedData } from "../../ObjAndSubInputs/handler";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -66,14 +67,17 @@ const Text: FC<CanvasText> = ({
   }, [isEditable, viewBoxRef, textareaRef]);
 
   useEffect(() => {
-    registerFunctions(
-      manager,
-      getRange,
-      editableRef,
-      viewBoxRef,
-      setIdentifier
-    );
-  }, [manager, viewBoxRef]);
+    if (id === activeId) {
+      registerFunctions(
+        manager,
+        getRange,
+        editableRef,
+        viewBoxRef,
+        setIdentifier,
+        id
+      );
+    }
+  }, [manager, viewBoxRef, activeId]);
 
   useEffect(() => {
     const textComponentData =
@@ -87,6 +91,13 @@ const Text: FC<CanvasText> = ({
 
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
+  const handleClickedObjective = (options: string[]) => {
+    console.log("clicked");
+    dispatch(handleToggleShowOptionBox());
+    dispatch(handleSetCorrectOption(options[0]));
+    dispatch(handleSetWrongOption(options[1]));
+  };
+
   useEffect(() => {
     if (!coreData) return;
     if (coreData?.questions && id === activeId) {
@@ -94,7 +105,30 @@ const Text: FC<CanvasText> = ({
       if (!editable) return;
       console.log(coreData.questions, "questions");
       console.log(editable, "content");
-      associateDataWithInputElement(coreData.questions, editable.innerHTML);
+      const foundIdentifiers = associatedData(
+        coreData.questions,
+        editable.innerHTML
+      );
+
+      if (foundIdentifiers) {
+        foundIdentifiers.forEach((dataItem) => {
+          const inputElement = document.getElementById(dataItem.identifier);
+          if (inputElement) {
+            inputElement.addEventListener("click", () =>
+              handleClickedObjective(dataItem.options)
+            );
+            console.log("added click event to", inputElement);
+
+            return () => {
+              if (inputElement) {
+                inputElement.removeEventListener("click", () =>
+                  handleClickedObjective(dataItem.options)
+                );
+              }
+            };
+          }
+        });
+      }
     }
   }, [coreData, activeId]);
 
