@@ -15,19 +15,16 @@ const checkersForToggleWrapper = (
       element.style.textDecoration = style;
     }
 
-    if (styleType === "position") {
-      console.log(style);
-      const div = element.parentElement;
-      if (!div) return;
-      console.log(div);
-      div.style.justifyContent = style;
-    }
-
     if (styleType === "font-size") {
       element.style.fontSize = style + "px";
     }
 
     element.style.color = style;
+  }
+
+  if (styleType === "position") {
+    element.className = "w-full";
+    element.style.textAlign = style;
   }
 
   if (elementType === "a") {
@@ -50,6 +47,14 @@ export const toggleWrapper = (
 
   checkersForToggleWrapper(elementType, element, style, styleType, link);
 
+  if (
+    styleType === "font-size" ||
+    (styleType === "spacing" &&
+      range.commonAncestorContainer.nodeName === "DIV")
+  ) {
+    return;
+  }
+
   range.surroundContents(element);
 };
 
@@ -63,19 +68,20 @@ function calculateCharacterWidth(element: HTMLInputElement): number {
   return textWidth;
 }
 
-export const createInput = (value: string) => {
+export const createInput = (value: string, id: string) => {
   const element = document.createElement("div");
 
   element.contentEditable = "true";
   element.innerText = value;
+  element.id = id;
   element.className =
     "h-fit w-fit px-2 border-b border-black inline-block outline-none";
 
   return element;
 };
 
-export const replaceContent = (range: Range) => {
-  const element = createInput(range.toString());
+export const replaceContent = (range: Range, id: string) => {
+  const element = createInput(range.toString(), id);
   range.deleteContents();
   range.insertNode(element);
 

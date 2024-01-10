@@ -1,4 +1,4 @@
-import { FC, createRef, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 //import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
@@ -11,9 +11,9 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
     width: 300,
     height: id.includes("Text") ? 65 : 280,
   });
+  const [isEditable, setIsEditable] = useState(false);
 
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
-  const nodeRef: any = createRef();
 
   const updateComponentLayout = (width: number, height: number) => {
     manager.canvasManager.activeComponent.data.layoutData = setComponentLayout(
@@ -26,12 +26,10 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
 
   const onResize = (event: any, { node, size, handle }: any) => {
     setViewBoxSize({ width: size.width, height: size.height });
-    // console.log(viewBoxRef.current?.offsetHeight);
-    // console.log(size);
     updateComponentLayout(size.width, size.height);
   };
 
-  const height = id.includes("Text") ? 10 : 65;
+  const height = id.includes("Text") ? 60 : 65;
 
   useEffect(() => {
     manager.canvasManager.activeComponent.functions["toggleViewboxStyle"] = (
@@ -54,17 +52,19 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
       height={viewBoxSize.height}
       minConstraints={[280, height]}
       onResize={onResize}
-      resizeHandles={["s", "e", "se"]}
+      resizeHandles={id.includes("Text") && !isEditable ? [] : ["s", "e", "se"]}
     >
       <div
         ref={viewBoxRef}
-        className="m-5 p-2 border-2 border-slate-500 border-dotted rounded"
+        className={`border-2 border-slate-500 rounded ${
+          id.includes("Text") && !isEditable ? "border-none" : "border-dotted"
+        }`}
         style={{
           width: viewBoxSize.width + "px",
           height: viewBoxSize.height + "px",
         }}
       >
-        {ViewBoxContent(id, manager, viewBoxRef)}
+        {ViewBoxContent(id, manager, viewBoxRef, isEditable, setIsEditable)}
       </div>
     </Resizable>
   );

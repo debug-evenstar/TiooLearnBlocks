@@ -6,7 +6,9 @@ export const registerFunctions = (
   manager: EditorialManagerInterface,
   getRange: () => Range | undefined,
   editableRef: React.RefObject<HTMLDivElement>,
-  viewBoxRef: React.MutableRefObject<any>
+  viewBoxRef: React.MutableRefObject<any>,
+  setIdentifier: (id: string) => void,
+  componentId: string
 ) => {
   manager.canvasManager.activeComponent.functions["toggleWrapper"] = (
     elementType: string,
@@ -15,9 +17,14 @@ export const registerFunctions = (
     link: string = ""
   ) => {
     const range = getRange();
-    range &&
-      range.toString() &&
+    if (range && range.toString()) {
       toggleWrapper(range, elementType, style, styleType, link);
+    }
+
+    const element = editableRef.current;
+    if (styleType !== "position") return;
+    if (!element) return;
+    toggleWrapperStyle(element, style, styleType);
   };
 
   manager.canvasManager.activeComponent.functions["toggleWrapperStyle"] = (
@@ -47,7 +54,11 @@ export const registerFunctions = (
 
   manager.canvasManager.activeComponent.functions["replaceContent"] = () => {
     const range = getRange();
-    range && range.toString() && replaceContent(range);
+    if (range && range.toString()) {
+      const id = componentId + "-" + range?.toString() + "-" + Date.now();
+      setIdentifier(id);
+      replaceContent(range, id);
+    }
   };
 
   manager.canvasManager.activeComponent.functions["addTooltip"] = (

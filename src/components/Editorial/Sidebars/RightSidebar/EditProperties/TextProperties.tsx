@@ -43,6 +43,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
   const [colorIsActive, setColorIsActive] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
   const [textSize, setTextSize] = useState("0");
+  const [textSpacing, setTextSpacing] = useState("0");
 
   const handleChangeTextColor = (color: ColorResult) => {
     setTextColor(color.hex);
@@ -52,9 +53,12 @@ const TextProperties: FC<Props> = ({ manager }) => {
 
   const handleChangeTextSize = (size: string) => {
     setTextSize(size);
-    toggleWrapper("span", size, "font-size");
+    toggleTextStyle(size, "font-size");
+  };
 
-    setColorIsActive(false);
+  const handleChangeTextSpacing = (spacing: string) => {
+    setTextSpacing(spacing);
+    toggleTextStyle(spacing, "spacing");
   };
 
   return (
@@ -80,20 +84,22 @@ const TextProperties: FC<Props> = ({ manager }) => {
               <div className="border h-6 w-14" />
             </div>
 
-            <div className="flex items-center gap-2">
-              <p onClick={() => handleChangeTextSize(`${+textSize - 1}`)}>
-                <b>-</b>
-              </p>
-              <input
-                className="border h-6 w-8 text-center"
-                placeholder="0"
-                value={textSize}
-                onChange={(e) => handleChangeTextSize(e.target.value)}
-              />
-              <p onClick={() => handleChangeTextSize(`${+textSize + 1}`)}>
-                <b>+</b>
-              </p>
-            </div>
+            <a href="javascript:void(0)">
+              <div className="flex items-center gap-2">
+                <p onClick={() => handleChangeTextSize(`${+textSize - 1}`)}>
+                  <b>-</b>
+                </p>
+                <input
+                  className="border h-6 w-8 text-center"
+                  placeholder="0"
+                  value={textSize}
+                  onChange={(e) => handleChangeTextSize(e.target.value)}
+                />
+                <p onClick={() => handleChangeTextSize(`${+textSize + 1}`)}>
+                  <b>+</b>
+                </p>
+              </div>
+            </a>
           </section>
 
           <section className="w-full border flex justify-between my-4 p-2">
@@ -101,7 +107,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("span", "left", "position");
+                toggleWrapper("div", "left", "position");
               }}
             >
               <RiAlignLeft className="cursor-pointer" />
@@ -111,8 +117,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                //toggleWrapper("span", "center", "position");
-                toggleWrapperStyle("center", "position");
+                toggleWrapper("div", "center", "position");
               }}
             >
               <RiAlignCenter className="cursor-pointer" />
@@ -122,7 +127,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("span", "right", "position");
+                toggleWrapper("div", "right", "position");
               }}
             >
               <RiAlignRight className="cursor-pointer" />
@@ -132,7 +137,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("span", "justify", "position");
+                toggleWrapper("div", "justify", "position");
               }}
             >
               <RiAlignJustify className="cursor-pointer" />
@@ -176,10 +181,18 @@ const TextProperties: FC<Props> = ({ manager }) => {
               </a>
             </div>
 
-            <div className="flex items-center gap-2">
-              <p className="text-[12px]">Spacing: </p>
-              <p>0</p>
-            </div>
+            <a href="javascript:void(0)">
+              <div className="flex items-center gap-2">
+                <p className="text-[12px]">Spacing: </p>
+                <input
+                  className="border h-6 w-8 text-center"
+                  type="text"
+                  placeholder="0"
+                  value={textSpacing}
+                  onChange={(e) => handleChangeTextSpacing(e.target.value)}
+                />
+              </div>
+            </a>
           </section>
         </main>
       )}

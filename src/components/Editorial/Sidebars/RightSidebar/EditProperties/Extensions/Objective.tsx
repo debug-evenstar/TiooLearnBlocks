@@ -16,27 +16,28 @@ import {
   refreshOptionsData,
 } from "provider/optionsDataSlice";
 import { MdChatBubbleOutline } from "react-icons/md";
+import { setObjandSubComponentData } from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
 
 interface Props {
   manager: EditorialManagerInterface;
 }
 
 const Objective: FC<Props> = ({ manager }) => {
+  const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
   const dispatch = useDispatch();
   const selector: any = useSelector(handleSetCorrectOption);
-  const { correctOption, wrongOption } = selector.payload.optionsData.value as {
+  const { identifier, correctOption, wrongOption } = selector.payload
+    .optionsData.value as {
+    identifier: string;
     correctOption: string;
     wrongOption: string;
   };
+  const data = selector.payload.optionsData.value;
 
   const [isActive, setIsActive] = useState(false);
-  const [optionData, setOptionData] = useState<any>({
-    correctOption: "",
-    wrongOption: "",
-  });
 
   const [objectives, setObjectives] = useState<[ObjectiveItemType] | any[]>([]);
 
@@ -58,13 +59,35 @@ const Objective: FC<Props> = ({ manager }) => {
         ],
       },
     ]);
-    dispatch(refreshOptionsData());
+    console.log(data, "identifier");
+
     dispatch(refreshToggleShowOptionBox());
+    //dispatch(refreshOptionsData());
   };
 
   useEffect(() => {
-    console.log(correctOption, wrongOption, " - Options");
-  }, [correctOption, wrongOption]);
+    console.log(identifier, correctOption, wrongOption, " - Options");
+    manager.canvasManager.canvas.functions.updateActiveComponentData(
+      setObjandSubComponentData(
+        "OBJECTIVE",
+        identifier,
+        [correctOption, wrongOption],
+        [correctOption],
+        [""]
+      )
+    );
+  }, [identifier, correctOption, wrongOption]);
+
+  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  useEffect(() => {
+    coreData.questions.map((question: any) => {
+      if (question?.identifier.includes(id)) {
+        setQuestions([...questions, question]);
+      }
+    });
+  }, [coreData, identifier]);
+
+  const id = selector.payload.activeViewbox.value;
 
   return (
     <div className="p-2 shadow-md">
@@ -91,9 +114,15 @@ const Objective: FC<Props> = ({ manager }) => {
           </div>
 
           <section>
-            {objectives.map((obj: ObjectiveItemType) => (
-              <ObjectiveItem key={obj.id} objective={obj} />
-            ))}
+            {questions &&
+              questions?.map((obj: any, i: number) => (
+                <ObjectiveItem
+                  key={obj.identifier}
+                  objective={obj}
+                  index={i}
+                  data={coreData}
+                />
+              ))}
           </section>
         </main>
       )}
@@ -104,7 +133,9 @@ const Objective: FC<Props> = ({ manager }) => {
 export default Objective;
 
 export const ObjectiveItem: FC<ObjectiveItemProp> = ({
-  objective: { name, options },
+  objective,
+  index,
+  data,
 }) => {
   const [isActive, setIsActive] = useState(false);
 
@@ -114,20 +145,23 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
         className="w-full flex justify-between items-center cursor-pointer"
         onClick={() => setIsActive(!isActive)}
       >
-        <p className="text-[12px]">{isActive ? <b>{name}</b> : name}</p>
+        <p className="text-[12px]">
+          {isActive ? <b>Objective {index + 1}</b> : `Objective ${index + 1}`}
+        </p>
       </div>
 
       {isActive && (
         <main className="w-full p-2">
-          {options?.map((option: OptionType, i: any) => (
+          {objective.options?.map((option: string, i: any) => (
             <div key={i} className="flex justify-between items-center">
               <div className="flex items-center gap-1">
                 <MdChatBubbleOutline />
-                <p className="text-[12px] my-2">{option.name}</p>
+                <p className="text-[12px] my-2">{option}</p>
               </div>
               <RiDeleteBinLine />
             </div>
           ))}
+
           <div className="flex justify-between py-2 items-center">
             <p className="text-[12px]">Add option</p>
             <RiAddCircleLine size={"13px"} color="grey" />
