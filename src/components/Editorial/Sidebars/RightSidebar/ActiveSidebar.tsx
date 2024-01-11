@@ -32,7 +32,7 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
           <b className="text-[12px] mt-2 text-[#4F46E5]">
             {getOriginalName(id) !== "FlashCards"
               ? getOriginalName(id)
-              : "Flash Cards"}
+              : "Flash Card"}
           </b>
         </div>
       </header>
