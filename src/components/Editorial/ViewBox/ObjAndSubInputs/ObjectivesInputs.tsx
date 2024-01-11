@@ -16,7 +16,9 @@ interface Props {
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
-  const { correctOption, wrongOption } = selector.payload.optionsData.value as {
+  const { objectiveIndex, correctOption, wrongOption } = selector.payload
+    .optionsData.value as {
+    objectiveIndex: number;
     correctOption: string;
     wrongOption: string;
   };
@@ -24,45 +26,50 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
   const handleSetRightOptionData = (e: any) => {
     const value = e.target.value;
     if (!value) return;
+    manager.canvasManager.canvas.functions.updateObjectiveData(
+      {
+        answers: [value],
+      },
+      0
+    );
+    manager.canvasManager.canvas.functions.updateObjectiveOption(
+      value,
+      objectiveIndex,
+      0
+    );
     dispatch(handleSetCorrectOption(value));
-    {
-      /* manager.canvasManager.canvas.functions.updateActiveComponentData(
-      setObjandSubComponentData("OBJECTIVE", "", [correctOption], [""], [""])
-    ); */
-    }
   };
 
   const handleSetWrongOptionData = (e: any) => {
     const value = e.target.value;
     if (!value) return;
+    manager.canvasManager.canvas.functions.updateObjectiveOption(
+      value,
+      objectiveIndex,
+      1
+    );
+
     dispatch(handleSetWrongOption(value));
-    {
-      /* manager.canvasManager.canvas.functions.updateActiveComponentData(
-      setObjandSubComponentData("OBJECTIVE", "", [wrongOption], [""], [""])
-    ); */
-    }
   };
 
   return (
-    <a href="javascript:void(0)">
-      <div className="w-full flex justify-around gap-2 my-5 z-1000 cursor-auto">
-        <input
-          className="border border-black w-20 p-2"
-          type="text"
-          placeholder="Correct"
-          value={correctOption}
-          onChange={handleSetRightOptionData}
-        />
+    <div className="w-full flex justify-around gap-2 my-5 z-1000 cursor-auto absolute top-[8rem]">
+      <input
+        className="border border-black w-20 p-2 rounded"
+        type="text"
+        placeholder="Correct"
+        value={correctOption}
+        onChange={handleSetRightOptionData}
+      />
 
-        <input
-          className="border border-black w-20 p-2"
-          type="text"
-          placeholder="Wrong"
-          value={wrongOption}
-          onChange={handleSetWrongOptionData}
-        />
-      </div>
-    </a>
+      <input
+        className="border border-black w-20 p-2 rounded"
+        type="text"
+        placeholder="Wrong"
+        value={wrongOption}
+        onChange={handleSetWrongOptionData}
+      />
+    </div>
   );
 };
 

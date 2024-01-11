@@ -13,90 +13,76 @@ import {
 } from "provider/showOptionsBoxSlice";
 import {
   handleSetCorrectOption,
+  handleSetObjectiveIndex,
+  handleSetWrongOption,
   refreshOptionsData,
 } from "provider/optionsDataSlice";
 import { MdChatBubbleOutline } from "react-icons/md";
-import { setObjandSubComponentData } from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
 
 interface Props {
   manager: EditorialManagerInterface;
 }
 
 const Objective: FC<Props> = ({ manager }) => {
+  const selector: any = useSelector(handleSetCorrectOption);
+  const id = selector.payload.activeViewbox.value;
+
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
   const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetCorrectOption);
   const { identifier, correctOption, wrongOption } = selector.payload
     .optionsData.value as {
     identifier: string;
     correctOption: string;
     wrongOption: string;
   };
-  const data = selector.payload.optionsData.value;
 
   const [isActive, setIsActive] = useState(false);
+  const coreData = manager.canvasManager.activeComponent.data.coreData;
 
-  const [objectives, setObjectives] = useState<[ObjectiveItemType] | any[]>([]);
+  const handleSetObjective = () => {
+    console.log(questions, "in objective");
+    replaceContent(questions);
+    setIsActive(true);
+    dispatch(handleToggleShowOptionBox());
+    dispatch(refreshOptionsData());
+  };
 
   const handleClick = () => {
-    replaceContent();
-    const nameAppend = objectives.length + 1;
-    setObjectives([
-      ...objectives,
-      {
-        id: objectives.length + 1,
-        name: "Objective " + nameAppend,
-        options: [
-          {
-            name: correctOption,
-          },
-          {
-            name: wrongOption,
-          },
-        ],
-      },
-    ]);
-    console.log(data, "identifier");
-
-    dispatch(refreshToggleShowOptionBox());
-    //dispatch(refreshOptionsData());
+    console.log(
+      manager.canvasManager.activeComponent.data.coreData,
+      "changed data"
+    );
+    if (questions.length > 0) {
+      replaceContent(questions);
+      setIsActive(true);
+      dispatch(handleToggleShowOptionBox());
+      dispatch(handleSetObjectiveIndex(questions.length));
+    }
+    dispatch(handleSetCorrectOption(""));
+    dispatch(handleSetWrongOption(""));
   };
 
   useEffect(() => {
     console.log(identifier, correctOption, wrongOption, " - Options");
-    manager.canvasManager.canvas.functions.updateActiveComponentData(
-      setObjandSubComponentData(
-        "OBJECTIVE",
-        identifier,
-        [correctOption, wrongOption],
-        [correctOption],
-        [""]
-      )
-    );
-  }, [identifier, correctOption, wrongOption]);
+  }, [identifier]);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
   useEffect(() => {
-    coreData.questions.map((question: any) => {
+    coreData?.questions?.forEach((question: any) => {
       if (question?.identifier.includes(id)) {
         setQuestions([...questions, question]);
+        console.log(question);
       }
     });
   }, [coreData, identifier]);
-
-  const id = selector.payload.activeViewbox.value;
 
   return (
     <div className="p-2 shadow-md">
       <div
         className="w-full flex justify-between items-center cursor-pointer"
-        onClick={() => {
-          setIsActive(!isActive);
-          dispatch(handleToggleShowOptionBox());
-        }}
+        onClick={handleSetObjective}
       >
         <p className="text-[13px]">
           {isActive ? <b>Set Objective</b> : "Set Objective"}

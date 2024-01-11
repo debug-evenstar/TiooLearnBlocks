@@ -7,6 +7,7 @@ export const optionsDataSlice = createSlice({
       identifier: "",
       correctOption: "",
       wrongOption: "",
+      objectiveIndex: 0,
     },
   },
   reducers: {
@@ -20,11 +21,15 @@ export const optionsDataSlice = createSlice({
     handleSetWrongOption: (state, action) => {
       state.value.wrongOption = action.payload;
     },
+    handleSetObjectiveIndex: (state, action) => {
+      state.value.objectiveIndex = action.payload;
+    },
     refreshOptionsData: (state) => {
       state.value = {
         identifier: "",
         correctOption: "",
         wrongOption: "",
+        objectiveIndex: 0,
       };
     },
   },
@@ -35,6 +40,7 @@ export const {
   handleSetCorrectOption,
   handleSetWrongOption,
   refreshOptionsData,
+  handleSetObjectiveIndex,
 } = optionsDataSlice.actions;
 
 export default optionsDataSlice.reducer;

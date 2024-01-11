@@ -1,4 +1,7 @@
-import { ComponentBaseDataInterface } from "components/Editorial/Base/EditorialManager";
+import {
+  ComponentBaseDataInterface,
+  QuestionInterface,
+} from "components/Editorial/Base/EditorialManager";
 
 export const setObjandSubComponentData = (
   type: "OBJECTIVE" | "SUBJECTIVE",
@@ -20,6 +23,24 @@ export const setObjandSubComponentData = (
       },
     ],
   };
+  return data;
+};
+
+export const addObjandSubComponentData = (
+  type: "OBJECTIVE" | "SUBJECTIVE",
+  identifier: string = "",
+  options: string[] = [],
+  answers: string[] = [],
+  feedbacks: string[] = []
+) => {
+  const data: QuestionInterface = {
+    type,
+    identifier,
+    options,
+    answers,
+    feedbacks,
+  };
+
   return data;
 };
 

@@ -7,12 +7,16 @@ import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import {
   handleSetCorrectOption,
   handleSetIdentifier,
+  handleSetObjectiveIndex,
   handleSetWrongOption,
 } from "provider/optionsDataSlice";
 import { handleTextChange } from "./handlers/generalHandler";
 import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import ContentEditableDiv from "components/ContentEditableDiv";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+import {
+  handleToggleShowOptionBox,
+  refreshToggleShowOptionBox,
+} from "provider/showOptionsBoxSlice";
 import { associatedData } from "../../ObjAndSubInputs/handler";
 
 const Text: FC<CanvasText> = ({
@@ -27,7 +31,9 @@ const Text: FC<CanvasText> = ({
   const selector: any = useSelector(refreshToggleSidebarState);
   const activeId: string = selector.payload.activeViewbox.value;
   const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
-  const data = selector.payload.optionsData.value;
+  const { identifier } = selector.payload.optionsData.value as {
+    identifier: string;
+  };
 
   const setIdentifier = (id: string) => {
     dispatch(handleSetIdentifier(id));
@@ -91,7 +97,8 @@ const Text: FC<CanvasText> = ({
 
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
-  const handleClickedObjective = (options: string[]) => {
+  const handleClickedObjective = (options: string[], index: number) => {
+    handleSetObjectiveIndex(index);
     console.log("clicked");
     dispatch(handleToggleShowOptionBox());
     dispatch(handleSetCorrectOption(options[0]));
@@ -103,39 +110,35 @@ const Text: FC<CanvasText> = ({
     if (coreData?.questions && id === activeId) {
       const editable = editableRef.current;
       if (!editable) return;
-      console.log(coreData.questions, "questions");
-      console.log(editable, "content");
-      const foundIdentifiers = associatedData(
-        coreData.questions,
-        editable.innerHTML
-      );
 
-      if (foundIdentifiers) {
-        foundIdentifiers.forEach((dataItem) => {
-          const inputElement = document.getElementById(dataItem.identifier);
+      coreData?.questions?.forEach((question: any, i: number) => {
+        if (question?.identifier.includes(id)) {
+          const inputElement = document.getElementById(question.identifier);
+          console.log(inputElement, "FOUND ELEMENT");
+
           if (inputElement) {
             inputElement.addEventListener("click", () =>
-              handleClickedObjective(dataItem.options)
+              handleClickedObjective(question.options, i)
             );
             console.log("added click event to", inputElement);
 
             return () => {
               if (inputElement) {
                 inputElement.removeEventListener("click", () =>
-                  handleClickedObjective(dataItem.options)
+                  handleClickedObjective(question.options, i)
                 );
               }
             };
           }
-        });
-      }
+        }
+      });
     }
-  }, [coreData, activeId]);
+  }, [coreData, activeId, identifier]);
 
   return (
     <div
       id={id}
-      className={`flex flex-col justify-between p-1 h-full w-full ${
+      className={`flex flex-col justify-between p-1 h-full w-full relative ${
         !isEditable && "handle cursor-move"
       }`}
       onDoubleClick={() => setIsEditable(!isEditable)}
@@ -160,9 +163,7 @@ const Text: FC<CanvasText> = ({
         dangerouslySetInnerHTML={{ __html: textValue }}
       />
 
-      {showOptionsBox && activeId === id && (
-        <ObjectivesInputs manager={manager} />
-      )}
+      {true && activeId === id && <ObjectivesInputs manager={manager} />}
     </div>
   );
 };

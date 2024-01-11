@@ -58,7 +58,7 @@ export const toggleWrapper = (
   range.surroundContents(element);
 };
 
-function calculateCharacterWidth(element: HTMLInputElement): number {
+export function calculateCharacterWidth(element: HTMLInputElement): number {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   const testString = "m";
