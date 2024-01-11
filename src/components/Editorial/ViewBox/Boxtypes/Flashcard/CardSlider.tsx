@@ -1,17 +1,17 @@
-import React, { FC, useState, useRef } from "react";
+import React, { FC, useState, useRef, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import Flashcard from "./Flashcard";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
 interface ImageCarouselProps {
-  images: any[];
   id: string;
   manager: EditorialManagerInterface;
 }
 
-const CardSlider: FC<ImageCarouselProps> = ({ images, id, manager }) => {
+const CardSlider: FC<ImageCarouselProps> = ({ id, manager }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [images, setImages] = useState<any[]>([{ url: "" }]);
 
   const handlePrevClick = () => {
     setCurrentImageIndex(
@@ -22,6 +22,12 @@ const CardSlider: FC<ImageCarouselProps> = ({ images, id, manager }) => {
   const handleNextClick = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
+
+  useEffect(() => {
+    const flashCardComponentData =
+      manager.canvasManager.canvas.functions.getComponentData(id);
+    flashCardComponentData && setImages(flashCardComponentData.cards);
+  }, []);
 
   return (
     <div className="flex items-center gap-2 cursor-move">

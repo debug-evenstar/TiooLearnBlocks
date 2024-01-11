@@ -66,13 +66,6 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
       );
   }, [slideData]);
 
-  const [images, setImages] = useState<any[]>([
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTydOExbsnMsVUb2hXKoQExzkGlhseuclV2L0mYuN4-8Q&s",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSsTi83F0-Gdgzk25Lt9CYq0WqdE__qrB9Ufus1780Zg&s",
-    "https://img.freepik.com/free-photo/cool-geometric-triangular-figure-neon-laser-light-great-backgrounds-wallpapers_181624-9331.jpg",
-    "https://wallpapers.com/images/hd/cool-picture-wolf-art-o0ixt449edz5dgpa.jpg",
-  ]);
-
   return (
     <div
       id="editorial-canvas"
@@ -96,8 +89,8 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             handle=".handle"
           >
             <div ref={nodeRef} onClick={() => handleClickedViewbox(item.id)}>
-              {item.id.includes("Flash Card") ? (
-                <CardSlider images={images} id={item.id} manager={manager} />
+              {item.id.includes("Flash") ? (
+                <CardSlider id={item.id} manager={manager} />
               ) : (
                 <ViewBox
                   id={item.id}

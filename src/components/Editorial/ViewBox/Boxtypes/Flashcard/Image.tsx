@@ -109,7 +109,7 @@ const Image: FC<any> = ({ id, manager, viewBoxRef, image }) => {
       >
         <img
           ref={imageRef}
-          src={image}
+          src={image?.url}
           alt="placeholder"
           className="w-full h-full"
           draggable={false}
