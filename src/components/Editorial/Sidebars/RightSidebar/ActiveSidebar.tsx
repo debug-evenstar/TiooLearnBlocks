@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import { BsArrowLeft, BsPencil } from "react-icons/bs";
 import { MdRedo, MdUndo } from "react-icons/md";
 import { RiArrowDropDownFill } from "react-icons/ri";
-import PromptBox from "components/Editorial/promptBox";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { EditProperties, getOriginalName } from "../../ViewBox/handler";
