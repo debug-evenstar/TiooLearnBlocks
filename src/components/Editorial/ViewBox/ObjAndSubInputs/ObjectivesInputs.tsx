@@ -53,7 +53,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
   return (
     <div className="w-full flex justify-around gap-2 my-5 z-1000 cursor-auto absolute top-[8rem]">
       <input
-        className="border border-black w-[10rem] p-2 rounded"
+        className="border border-black w-[8rem] p-2 rounded"
         type="text"
         placeholder="Correct"
         value={correctOption}
@@ -61,7 +61,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
       />
 
       <input
-        className="border border-black w-[10rem] p-2 rounded"
+        className="border border-black w-[8rem] p-2 rounded"
         type="text"
         placeholder="Wrong"
         value={wrongOption}
