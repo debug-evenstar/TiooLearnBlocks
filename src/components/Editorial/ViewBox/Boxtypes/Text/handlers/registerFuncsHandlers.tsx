@@ -57,7 +57,8 @@ export const registerFunctions = (
   };
 
   manager.canvasManager.activeComponent.functions["replaceContent"] = (
-    questions: any
+    questions: any,
+    type: "OBJECTIVE" | "SUBJECTIVE"
   ) => {
     const range = getRange();
     if (range && range.toString()) {
@@ -67,12 +68,12 @@ export const registerFunctions = (
       if (questions.length > 0) {
         console.log("called add");
         manager.canvasManager.canvas.functions.updateActiveComponentObjective(
-          addObjandSubComponentData("OBJECTIVE", id, ["", ""], [""], [""])
+          addObjandSubComponentData(type, id, [""], [""], [""])
         );
       } else {
         console.log("called set");
         manager.canvasManager.canvas.functions.updateActiveComponentData(
-          setObjandSubComponentData("OBJECTIVE", id, ["", ""], [""], [""])
+          setObjandSubComponentData(type, id, [""], [""], [""])
         );
       }
 

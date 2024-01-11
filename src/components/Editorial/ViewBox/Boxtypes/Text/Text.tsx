@@ -163,7 +163,9 @@ const Text: FC<CanvasText> = ({
         dangerouslySetInnerHTML={{ __html: textValue }}
       />
 
-      {true && activeId === id && <ObjectivesInputs manager={manager} />}
+      {showOptionsBox && activeId === id && (
+        <ObjectivesInputs manager={manager} />
+      )}
     </div>
   );
 };

@@ -1,16 +1,9 @@
 import React, { FC, useEffect, useState } from "react";
-import {
-  RiAddCircleLine,
-  RiDeleteBin2Fill,
-  RiDeleteBinLine,
-} from "react-icons/ri";
-import { ObjectiveItemProp, ObjectiveItemType, OptionType } from "./interfaces";
+import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
+import { ObjectiveItemProp } from "./interfaces";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  handleToggleShowOptionBox,
-  refreshToggleShowOptionBox,
-} from "provider/showOptionsBoxSlice";
+import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import {
   handleSetCorrectOption,
   handleSetObjectiveIndex,
@@ -44,7 +37,7 @@ const Objective: FC<Props> = ({ manager }) => {
 
   const handleSetObjective = () => {
     console.log(questions, "in objective");
-    replaceContent(questions);
+    replaceContent(questions, "OBJECTIVE");
     setIsActive(true);
     dispatch(handleToggleShowOptionBox());
     dispatch(refreshOptionsData());
@@ -56,7 +49,7 @@ const Objective: FC<Props> = ({ manager }) => {
       "changed data"
     );
     if (questions.length > 0) {
-      replaceContent(questions);
+      replaceContent(questions, "OBJECTIVE");
       setIsActive(true);
       dispatch(handleToggleShowOptionBox());
       dispatch(handleSetObjectiveIndex(questions.length));
