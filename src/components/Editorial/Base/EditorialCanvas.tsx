@@ -12,6 +12,7 @@ import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import Flashcard from "../ViewBox/Boxtypes/Flashcard/Flashcard";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { refreshOptionsData } from "provider/optionsDataSlice";
+import Feedback from "../Sidebars/RightSidebar/EditProperties/Extensions/Feedback";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,

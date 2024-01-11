@@ -18,6 +18,7 @@ import {
   refreshToggleShowOptionBox,
 } from "provider/showOptionsBoxSlice";
 import { associatedData } from "../../ObjAndSubInputs/handler";
+import Feedback from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/Feedback";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -31,8 +32,9 @@ const Text: FC<CanvasText> = ({
   const selector: any = useSelector(refreshToggleSidebarState);
   const activeId: string = selector.payload.activeViewbox.value;
   const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
-  const { identifier } = selector.payload.optionsData.value as {
+  const { identifier, objectiveIndex } = selector.payload.optionsData.value as {
     identifier: string;
+    objectiveIndex: number;
   };
 
   const setIdentifier = (id: string) => {
@@ -105,6 +107,24 @@ const Text: FC<CanvasText> = ({
     dispatch(handleSetWrongOption(options[1]));
   };
 
+  const handleSubjectiveChange = (e: any) => {
+    console.log("typing..");
+
+    const value = e.target.innerText;
+    manager.canvasManager.canvas.functions.updateObjectiveData(
+      {
+        answers: [value],
+      },
+      0
+    );
+    manager.canvasManager.canvas.functions.updateObjectiveOption(
+      value,
+      objectiveIndex,
+      0
+    );
+    console.log(coreData);
+  };
+
   useEffect(() => {
     if (!coreData) return;
     if (coreData?.questions && id === activeId) {
@@ -117,18 +137,34 @@ const Text: FC<CanvasText> = ({
           console.log(inputElement, "FOUND ELEMENT");
 
           if (inputElement) {
-            inputElement.addEventListener("click", () =>
-              handleClickedObjective(question.options, i)
-            );
-            console.log("added click event to", inputElement);
+            if (question.type === "OBJECTIVE") {
+              inputElement.addEventListener("click", () =>
+                handleClickedObjective(question.options, i)
+              );
+              console.log("added click event to", inputElement);
 
-            return () => {
-              if (inputElement) {
-                inputElement.removeEventListener("click", () =>
-                  handleClickedObjective(question.options, i)
-                );
-              }
-            };
+              return () => {
+                if (inputElement) {
+                  inputElement.removeEventListener("click", () =>
+                    handleClickedObjective(question.options, i)
+                  );
+                }
+              };
+            }
+
+            if (question.type === "SUBJECTIVE") {
+              inputElement.addEventListener("change", handleSubjectiveChange);
+              console.log("added click event to objective", inputElement);
+
+              return () => {
+                if (inputElement) {
+                  inputElement.removeEventListener(
+                    "click",
+                    handleSubjectiveChange
+                  );
+                }
+              };
+            }
           }
         }
       });

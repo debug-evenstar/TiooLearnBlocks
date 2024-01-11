@@ -36,7 +36,6 @@ const Subjective: FC<Props> = ({ manager }) => {
     console.log(questions, "in objective");
     replaceContent(questions, "SUBJECTIVE");
     setIsActive(true);
-    dispatch(handleToggleShowOptionBox());
     dispatch(refreshOptionsData());
   };
 
@@ -61,7 +60,10 @@ const Subjective: FC<Props> = ({ manager }) => {
 
   useEffect(() => {
     coreData?.questions?.forEach((question: any) => {
-      if (question?.identifier.includes(id)) {
+      if (
+        question?.type === "SUBJECTIVE" &&
+        question?.identifier.includes(id)
+      ) {
         setQuestions([...questions, question]);
         console.log(question);
       }
@@ -77,7 +79,32 @@ const Subjective: FC<Props> = ({ manager }) => {
         <p className="text-[13px]">Set Subjective</p>
       </div>
 
-      {isActive && <main>MAIN</main>}
+      {isActive && (
+        <main>
+          <div
+            className="w-full flex justify-between items-center cursor-pointer"
+            onClick={() => setIsActive(!isActive)}
+          >
+            <p className="text-[12px]">
+              {questions &&
+                questions?.map((sub: any, index: number) => (
+                  <div
+                    className="w-full flex justify-between items-center cursor-pointer"
+                    onClick={() => setIsActive(!isActive)}
+                  >
+                    <p className="text-[12px]">
+                      {isActive ? (
+                        <b>Subjective {index + 1}</b>
+                      ) : (
+                        `Subjective ${index + 1}`
+                      )}
+                    </p>
+                  </div>
+                ))}
+            </p>
+          </div>
+        </main>
+      )}
     </div>
   );
 };

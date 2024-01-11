@@ -44,6 +44,14 @@ const TextProperties: FC<Props> = ({ manager }) => {
   const [textColor, setTextColor] = useState("#000000");
   const [textSize, setTextSize] = useState("0");
   const [textSpacing, setTextSpacing] = useState("0");
+  const [selectedFont, setSelectedFont] = useState("Arial");
+  const fonts = [
+    "Arial",
+    "Times New Roman",
+    "Roboto",
+    "Helvetica",
+    "Courier New",
+  ];
 
   const handleChangeTextColor = (color: ColorResult) => {
     setTextColor(color.hex);
@@ -59,6 +67,11 @@ const TextProperties: FC<Props> = ({ manager }) => {
   const handleChangeTextSpacing = (spacing: string) => {
     setTextSpacing(spacing);
     toggleTextStyle(spacing, "spacing");
+  };
+
+  const handleFontChange = (newFont: string) => {
+    setSelectedFont(newFont);
+    toggleTextStyle(selectedFont, "font");
   };
 
   return (
@@ -78,10 +91,20 @@ const TextProperties: FC<Props> = ({ manager }) => {
             <TextEditProperties manager={manager} />
           </section>
 
-          <section className="w-full flex justify-between py-4">
+          <section className="w-full flex justify-between items-center py-4">
             <div className="flex items-center gap-2">
               <p className="text-[12px]">Font: </p>
-              <div className="border h-6 w-14" />
+              <select
+                className="w-[50%] text-sm bg-white p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#4f46e5] focus:border-[#4f46e5] sm:text-sm"
+                value={selectedFont}
+                onChange={(e) => handleFontChange(e.target.value)}
+              >
+                {fonts.map((font) => (
+                  <option key={font} value={font} className="text-[12px]">
+                    {font}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <a href="javascript:void(0)">

@@ -1,5 +1,9 @@
 import React, { FC, useEffect, useState } from "react";
-import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
+import {
+  RiAddCircleLine,
+  RiDeleteBinLine,
+  RiFeedbackLine,
+} from "react-icons/ri";
 import { ObjectiveItemProp } from "./interfaces";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +15,7 @@ import {
   refreshOptionsData,
 } from "provider/optionsDataSlice";
 import { MdChatBubbleOutline } from "react-icons/md";
+import Feedback from "./Feedback";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -64,7 +69,7 @@ const Objective: FC<Props> = ({ manager }) => {
 
   useEffect(() => {
     coreData?.questions?.forEach((question: any) => {
-      if (question?.identifier.includes(id)) {
+      if (question?.type === "OBJECTIVE" && question?.identifier.includes(id)) {
         setQuestions([...questions, question]);
         console.log(question);
       }
@@ -132,12 +137,18 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       {isActive && (
         <main className="w-full p-2">
           {objective.options?.map((option: string, i: any) => (
-            <div key={i} className="flex justify-between items-center">
-              <div className="flex items-center gap-1">
-                <MdChatBubbleOutline />
-                <p className="text-[12px] my-2">{option}</p>
+            <div key={i}>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-1">
+                  <MdChatBubbleOutline />
+                  <p className="text-[12px] my-2">{option}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <RiFeedbackLine />
+                  <RiDeleteBinLine />
+                </div>
               </div>
-              <RiDeleteBinLine />
+              {false && <Feedback />}
             </div>
           ))}
 
