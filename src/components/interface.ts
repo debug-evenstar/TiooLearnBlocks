@@ -35,7 +35,7 @@ interface ComponentStylesInterface {
 type ObjectiveQuestionType = "OBJECTIVE";
 type SubjectiveQuestionType = "SUBJECTIVE";
 
-interface QuestionInterface {
+export interface QuestionInterface {
     type : ObjectiveQuestionType | SubjectiveQuestionType;
     identifier : string;
     options? : string[][] | string[];

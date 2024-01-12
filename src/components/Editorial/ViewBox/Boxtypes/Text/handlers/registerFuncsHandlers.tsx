@@ -1,6 +1,10 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { toggleWrapperStyle } from "./stylesHandler";
 import { addTooltip, replaceContent, toggleWrapper } from "./wrapperHandler";
+import {
+  addObjandSubComponentData,
+  setObjandSubComponentData,
+} from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
 
 export const registerFunctions = (
   manager: EditorialManagerInterface,
@@ -52,11 +56,27 @@ export const registerFunctions = (
     toggleWrapperStyle(element, style, styleType);
   };
 
-  manager.canvasManager.activeComponent.functions["replaceContent"] = () => {
+  manager.canvasManager.activeComponent.functions["replaceContent"] = (
+    questions: any,
+    type: "OBJECTIVE" | "SUBJECTIVE"
+  ) => {
     const range = getRange();
     if (range && range.toString()) {
       const id = componentId + "-" + range?.toString() + "-" + Date.now();
       setIdentifier(id);
+      console.log(questions.length, "data core");
+      if (questions.length > 0) {
+        console.log("called add");
+        manager.canvasManager.canvas.functions.updateActiveComponentObjective(
+          addObjandSubComponentData(type, id, ["", ""], [""], [""])
+        );
+      } else {
+        console.log("called set");
+        manager.canvasManager.canvas.functions.updateActiveComponentData(
+          setObjandSubComponentData(type, id, ["", ""], [""], [""])
+        );
+      }
+
       replaceContent(range, id);
     }
   };

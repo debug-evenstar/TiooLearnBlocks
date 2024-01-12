@@ -15,6 +15,10 @@ const checkersForToggleWrapper = (
       element.style.textDecoration = style;
     }
 
+    if (styleType === "font") {
+      element.style.fontFamily = style;
+    }
+
     if (styleType === "font-size") {
       element.style.fontSize = style + "px";
     }
@@ -58,7 +62,7 @@ export const toggleWrapper = (
   range.surroundContents(element);
 };
 
-function calculateCharacterWidth(element: HTMLInputElement): number {
+export function calculateCharacterWidth(element: HTMLInputElement): number {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   const testString = "m";
@@ -68,20 +72,19 @@ function calculateCharacterWidth(element: HTMLInputElement): number {
   return textWidth;
 }
 
-export const createInput = (value: string, id: string) => {
+export const createInput = (id: string) => {
   const element = document.createElement("div");
 
   element.contentEditable = "true";
-  element.innerText = value;
   element.id = id;
   element.className =
-    "h-fit w-fit px-2 border-b border-black inline-block outline-none";
+    "h-5 w-20 px-2 border-b border-black inline-block outline-none";
 
   return element;
 };
 
 export const replaceContent = (range: Range, id: string) => {
-  const element = createInput(range.toString(), id);
+  const element = createInput(id);
   range.deleteContents();
   range.insertNode(element);
 

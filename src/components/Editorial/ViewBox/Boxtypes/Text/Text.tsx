@@ -7,13 +7,18 @@ import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import {
   handleSetCorrectOption,
   handleSetIdentifier,
+  handleSetObjectiveIndex,
   handleSetWrongOption,
 } from "provider/optionsDataSlice";
 import { handleTextChange } from "./handlers/generalHandler";
 import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import ContentEditableDiv from "components/ContentEditableDiv";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+import {
+  handleToggleShowOptionBox,
+  refreshToggleShowOptionBox,
+} from "provider/showOptionsBoxSlice";
 import { associatedData } from "../../ObjAndSubInputs/handler";
+import Feedback from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/Feedback";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -27,7 +32,10 @@ const Text: FC<CanvasText> = ({
   const selector: any = useSelector(refreshToggleSidebarState);
   const activeId: string = selector.payload.activeViewbox.value;
   const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
-  const data = selector.payload.optionsData.value;
+  const { identifier, objectiveIndex } = selector.payload.optionsData.value as {
+    identifier: string;
+    objectiveIndex: number;
+  };
 
   const setIdentifier = (id: string) => {
     dispatch(handleSetIdentifier(id));
@@ -91,10 +99,30 @@ const Text: FC<CanvasText> = ({
 
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
-  const handleClickedObjective = (options: string[]) => {
+  const handleClickedObjective = (options: string[], index: number) => {
+    handleSetObjectiveIndex(index);
+    console.log("clicked");
     dispatch(handleToggleShowOptionBox());
     dispatch(handleSetCorrectOption(options[0]));
     dispatch(handleSetWrongOption(options[1]));
+  };
+
+  const handleSubjectiveChange = (e: any) => {
+    console.log("typing..");
+
+    const value = e.target.innerText;
+    manager.canvasManager.canvas.functions.updateObjectiveData(
+      {
+        answers: [value],
+      },
+      0
+    );
+    manager.canvasManager.canvas.functions.updateObjectiveOption(
+      value,
+      objectiveIndex,
+      0
+    );
+    console.log(coreData);
   };
 
   useEffect(() => {
@@ -102,39 +130,51 @@ const Text: FC<CanvasText> = ({
     if (coreData?.questions && id === activeId) {
       const editable = editableRef.current;
       if (!editable) return;
-      console.log(coreData.questions, "questions");
-      console.log(editable, "content");
-      const foundIdentifiers = associatedData(
-        coreData.questions,
-        editable.innerHTML
-      );
 
-      if (foundIdentifiers) {
-        foundIdentifiers.forEach((dataItem) => {
-          const inputElement = document.getElementById(dataItem.identifier);
+      coreData?.questions?.forEach((question: any, i: number) => {
+        if (question?.identifier.includes(id)) {
+          const inputElement = document.getElementById(question.identifier);
+          console.log(inputElement, "FOUND ELEMENT");
+
           if (inputElement) {
-            inputElement.addEventListener("click", () =>
-              handleClickedObjective(dataItem.options)
-            );
-            console.log("added click event to", inputElement);
+            if (question.type === "OBJECTIVE") {
+              inputElement.addEventListener("click", () =>
+                handleClickedObjective(question.options, i)
+              );
+              console.log("added click event to", inputElement);
 
-            return () => {
-              if (inputElement) {
-                inputElement.removeEventListener("click", () =>
-                  handleClickedObjective(dataItem.options)
-                );
-              }
-            };
+              return () => {
+                if (inputElement) {
+                  inputElement.removeEventListener("click", () =>
+                    handleClickedObjective(question.options, i)
+                  );
+                }
+              };
+            }
+
+            if (question.type === "SUBJECTIVE") {
+              inputElement.addEventListener("input", handleSubjectiveChange);
+              console.log("added click event to objective", inputElement);
+
+              return () => {
+                if (inputElement) {
+                  inputElement.removeEventListener(
+                    "input",
+                    handleSubjectiveChange
+                  );
+                }
+              };
+            }
           }
-        });
-      }
+        }
+      });
     }
-  }, [coreData, activeId]);
+  }, [coreData, activeId, identifier]);
 
   return (
     <div
       id={id}
-      className={`flex flex-col justify-between p-1 h-full w-full ${
+      className={`flex flex-col justify-between p-1 h-full w-full relative ${
         !isEditable && "handle cursor-move"
       }`}
       onDoubleClick={() => setIsEditable(!isEditable)}

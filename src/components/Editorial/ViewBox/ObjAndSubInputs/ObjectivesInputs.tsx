@@ -4,10 +4,8 @@ import {
   handleSetWrongOption,
 } from "provider/optionsDataSlice";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setObjandSubComponentData } from "./handler";
-import ContentEditableDiv from "components/ContentEditableDiv";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -16,53 +14,47 @@ interface Props {
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
-  const { correctOption, wrongOption } = selector.payload.optionsData.value as {
+  const { objectiveIndex, correctOption, wrongOption } = selector.payload
+    .optionsData.value as {
+    objectiveIndex: number;
     correctOption: string;
     wrongOption: string;
   };
+  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const question = coreData.questions[objectiveIndex];
 
-  const handleSetRightOptionData = (e: any) => {
+  const handleSetOptionData = (e: any, index: number) => {
     const value = e.target.value;
     if (!value) return;
-    dispatch(handleSetCorrectOption(value));
-    {
-      /* manager.canvasManager.canvas.functions.updateActiveComponentData(
-      setObjandSubComponentData("OBJECTIVE", "", [correctOption], [""], [""])
-    ); */
-    }
+    manager.canvasManager.canvas.functions.updateObjectiveData(
+      {
+        answers: [value],
+      },
+      index
+    );
+    manager.canvasManager.canvas.functions.updateObjectiveOption(
+      value,
+      objectiveIndex,
+      index
+    );
+    if (index > 0) dispatch(handleSetCorrectOption(value));
+    else dispatch(handleSetWrongOption(value));
   };
 
-  const handleSetWrongOptionData = (e: any) => {
-    const value = e.target.value;
-    if (!value) return;
-    dispatch(handleSetWrongOption(value));
-    {
-      /* manager.canvasManager.canvas.functions.updateActiveComponentData(
-      setObjandSubComponentData("OBJECTIVE", "", [wrongOption], [""], [""])
-    ); */
-    }
-  };
+  useEffect(() => console.log(question), [question]);
 
   return (
-    <a href="javascript:void(0)">
-      <div className="w-full flex justify-around gap-2 my-5 z-1000 cursor-auto">
+    <div className="w-full flex justify-around gap-2 my-5 z-1000 cursor-auto absolute top-[8rem]">
+      {question.options.map((option: any, i: number) => (
         <input
-          className="border border-black w-20 p-2"
+          className="border-2 border-black w-[8rem] p-2 rounded text-center"
           type="text"
           placeholder="Correct"
-          value={correctOption}
-          onChange={handleSetRightOptionData}
+          value={option}
+          onChange={(e) => handleSetOptionData(e, i)}
         />
-
-        <input
-          className="border border-black w-20 p-2"
-          type="text"
-          placeholder="Wrong"
-          value={wrongOption}
-          onChange={handleSetWrongOptionData}
-        />
-      </div>
-    </a>
+      ))}
+    </div>
   );
 };
 

@@ -11,6 +11,7 @@ import Video from "./Boxtypes/Video/Video";
 import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
 import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/ImageProperties";
 import Flashcard from "./Boxtypes/Flashcard/Flashcard";
+import AddImages from "../Sidebars/RightSidebar/EditProperties/AddImages";
 
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
@@ -62,6 +63,7 @@ export const EditProperties = (
   manager: EditorialManagerInterface
 ) => {
   const componentName = getOriginalName(id);
+  console.log(componentName);
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {
@@ -85,8 +87,9 @@ export const EditProperties = (
         <Delete id={id} />
       </>
     ),
-    FlashCard: (
+    FlashCards: (
       <>
+        <AddImages id={id} manager={manager} />
         <ImageProperties manager={manager} />
         <Delete id={id} />
       </>

@@ -1,5 +1,7 @@
-import { ComponentBaseDataInterface } from "components/interface";
-
+import {
+  ComponentBaseDataInterface,
+  QuestionInterface
+} from "components/interface";
 
 export const setObjandSubComponentData = (
   type: "OBJECTIVE" | "SUBJECTIVE",
@@ -21,6 +23,24 @@ export const setObjandSubComponentData = (
       },
     ],
   };
+  return data;
+};
+
+export const addObjandSubComponentData = (
+  type: "OBJECTIVE" | "SUBJECTIVE",
+  identifier: string = "",
+  options: string[] = [],
+  answers: string[] = [],
+  feedbacks: string[] = []
+) => {
+  const data: QuestionInterface = {
+    type,
+    identifier,
+    options,
+    answers,
+    feedbacks,
+  };
+
   return data;
 };
 

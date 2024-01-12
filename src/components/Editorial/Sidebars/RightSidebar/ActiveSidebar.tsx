@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import { BsArrowLeft, BsPencil } from "react-icons/bs";
 import { MdRedo, MdUndo } from "react-icons/md";
 import { RiArrowDropDownFill } from "react-icons/ri";
-import PromptBox from "components/Editorial/promptBox";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { EditProperties, getOriginalName } from "../../ViewBox/handler";
@@ -31,7 +30,9 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
         </div>
         <div>
           <b className="text-[12px] mt-2 text-[#4F46E5]">
-            {getOriginalName(id)}
+            {getOriginalName(id) !== "FlashCards"
+              ? getOriginalName(id)
+              : "Flash Card"}
           </b>
         </div>
       </header>

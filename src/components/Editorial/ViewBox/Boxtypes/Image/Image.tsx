@@ -1,8 +1,10 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { CanvasMedia } from "components/Editorial/interfaces";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, createRef, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { toggleWrapperSize, uploadFile } from "./handler";
+import Draggable from "react-draggable";
+import { Resizable } from "react-resizable";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const [previewImage, setPreviewImage] = useState("");
@@ -69,7 +71,12 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   }, [id]);
 
   const [inputList, setInputList] = useState<any[]>([]);
+  const [inputBoxDimensions, setInputBoxDimensions] = useState<any[]>([]);
   const imageRef = useRef<HTMLImageElement>(null);
+  const [viewBoxSize, setViewBoxSize] = useState({
+    width: 200,
+    height: 5,
+  });
 
   const handleAddInput: React.MouseEventHandler<HTMLDivElement> = (event) => {
     if (imageRef.current) {
@@ -79,30 +86,79 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       const relativeY = pageY - imageRect.top;
       const newInput = { x: relativeX, y: relativeY };
       setInputList((prevList) => [...prevList, newInput]);
+      setInputBoxDimensions((prevList) => [
+        ...prevList,
+        { width: 200, height: 5 },
+      ]);
     }
   };
 
+  const onResize = (
+    event: any,
+    { node, size, handle }: any,
+    boxIndex: number
+  ) => {
+    setInputBoxDimensions((prevDimensions) =>
+      prevDimensions.map((dimensions, index) =>
+        index === boxIndex
+          ? { ...dimensions, width: size.width, height: size.height }
+          : dimensions
+      )
+    );
+  };
+
   return (
-    <div className="relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center">
+    <div
+      className={`relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center ${
+        overlayActive ? "" : "handle"
+      }`}
+    >
       <UploadIcon
         handleChange={handleChange}
         handleDrop={handleDrop}
         manager={manager}
       />
 
-      {inputList.map((input, index) => (
-        <input
-          className="w-20 p-1.5"
-          key={index}
-          style={{
-            position: "absolute",
-            top: `${input.y}px`,
-            left: `${input.x}px`,
-            zIndex: "200",
-          }}
-          placeholder={`Input ${index + 1}`}
-        />
-      ))}
+      {inputList.map((input, index) => {
+        const nodeRef: any = createRef();
+
+        return (
+          <Draggable
+            key={index}
+            axis="both"
+            nodeRef={nodeRef}
+            handle=".inputHandle"
+          >
+            <Resizable
+              width={inputBoxDimensions[index].width}
+              height={inputBoxDimensions[index].height}
+              minConstraints={[20, 5]}
+              onResize={(event: any, { node, size, handle }: any) =>
+                onResize(event, { node, size, handle }, index)
+              }
+              resizeHandles={["e"]}
+            >
+              <div
+                ref={nodeRef}
+                style={{
+                  width: inputBoxDimensions[index].width + "px",
+                  height: inputBoxDimensions[index].height + "px",
+                  position: "absolute",
+                  top: `${input.y}px`,
+                  left: `${input.x}px`,
+                  zIndex: "200",
+                  padding: "0.05rem",
+                }}
+              >
+                <input
+                  className="w-full p-1.5 inputHandle"
+                  placeholder={`Input ${index + 1}`}
+                />
+              </div>
+            </Resizable>
+          </Draggable>
+        );
+      })}
 
       {previewImage?.length > 1 && (
         <div
