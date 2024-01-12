@@ -1,6 +1,11 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { toggleWrapperStyle } from "./stylesHandler";
-import { addTooltip, replaceContent, toggleWrapper } from "./wrapperHandler";
+import {
+  addTooltip,
+  replaceContent,
+  toggleList,
+  toggleWrapper,
+} from "./wrapperHandler";
 import {
   addObjandSubComponentData,
   setObjandSubComponentData,
@@ -86,5 +91,12 @@ export const registerFunctions = (
   ) => {
     const range = getRange();
     range && range.toString() && addTooltip(range, tip);
+  };
+
+  manager.canvasManager.activeComponent.functions["toggleList"] = (
+    elementType: string
+  ) => {
+    const range = getRange();
+    range && range.toString() && toggleList(range, elementType);
   };
 };

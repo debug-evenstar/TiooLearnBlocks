@@ -1,8 +1,6 @@
 import ToolTipComponent from "components/extensions/ToolTip/render";
 import ReactDOM from "react-dom";
 
-const positions = ["left", "right", "center", "justify"];
-
 const checkersForToggleWrapper = (
   elementType: string,
   element: HTMLElement,
@@ -60,6 +58,15 @@ export const toggleWrapper = (
   }
 
   range.surroundContents(element);
+};
+
+export const toggleList = (range: Range, elementType: string) => {
+  const value = range.toString();
+  range.deleteContents();
+  const tipComponent = <li>{value}</li>;
+  var element = document.createElement(elementType);
+  ReactDOM.render(tipComponent, element);
+  range.insertNode(element);
 };
 
 export function calculateCharacterWidth(element: HTMLInputElement): number {

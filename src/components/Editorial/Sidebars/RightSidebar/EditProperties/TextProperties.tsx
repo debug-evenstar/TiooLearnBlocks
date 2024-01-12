@@ -227,6 +227,9 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
   const toggleWrapper =
     manager.canvasManager.activeComponent.functions?.toggleWrapper;
 
+  const toggleList =
+    manager.canvasManager.activeComponent.functions?.toggleList;
+
   const [linkBoxActive, setLinkBoxActive] = useState(false);
   const [linkBoxValue, setLinkBoxValue] = useState("");
 
@@ -309,13 +312,14 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
       </a>
 
       <div className="border p-2 cursor-pointer">
-        <RiListOrdered />
+        <a href="javascript:void(0)" onClick={() => toggleList("ol")}>
+          <RiListOrdered />
+        </a>
       </div>
       <div className="border p-2 cursor-pointer">
-        <RiListUnordered />
-      </div>
-      <div className="border p-2 cursor-pointer">
-        <RiListCheck />
+        <a href="javascript:void(0)" onClick={() => toggleList("ul")}>
+          <RiListUnordered />
+        </a>
       </div>
 
       <div className="border p-2 cursor-pointer relative">
