@@ -153,13 +153,13 @@ const Text: FC<CanvasText> = ({
             }
 
             if (question.type === "SUBJECTIVE") {
-              inputElement.addEventListener("change", handleSubjectiveChange);
+              inputElement.addEventListener("input", handleSubjectiveChange);
               console.log("added click event to objective", inputElement);
 
               return () => {
                 if (inputElement) {
                   inputElement.removeEventListener(
-                    "click",
+                    "input",
                     handleSubjectiveChange
                   );
                 }

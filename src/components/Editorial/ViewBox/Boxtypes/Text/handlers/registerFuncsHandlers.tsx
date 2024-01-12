@@ -68,12 +68,12 @@ export const registerFunctions = (
       if (questions.length > 0) {
         console.log("called add");
         manager.canvasManager.canvas.functions.updateActiveComponentObjective(
-          addObjandSubComponentData(type, id, [""], [""], [""])
+          addObjandSubComponentData(type, id, ["", ""], [""], [""])
         );
       } else {
         console.log("called set");
         manager.canvasManager.canvas.functions.updateActiveComponentData(
-          setObjandSubComponentData(type, id, [""], [""], [""])
+          setObjandSubComponentData(type, id, ["", ""], [""], [""])
         );
       }
 

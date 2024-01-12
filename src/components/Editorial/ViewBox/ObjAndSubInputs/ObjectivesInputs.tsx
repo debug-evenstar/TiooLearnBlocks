@@ -4,7 +4,7 @@ import {
   handleSetWrongOption,
 } from "provider/optionsDataSlice";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
@@ -20,53 +20,40 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     correctOption: string;
     wrongOption: string;
   };
+  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const question = coreData.questions[objectiveIndex];
 
-  const handleSetRightOptionData = (e: any) => {
+  const handleSetOptionData = (e: any, index: number) => {
     const value = e.target.value;
     if (!value) return;
     manager.canvasManager.canvas.functions.updateObjectiveData(
       {
         answers: [value],
       },
-      0
+      index
     );
     manager.canvasManager.canvas.functions.updateObjectiveOption(
       value,
       objectiveIndex,
-      0
+      index
     );
-    dispatch(handleSetCorrectOption(value));
+    if (index > 0) dispatch(handleSetCorrectOption(value));
+    else dispatch(handleSetWrongOption(value));
   };
 
-  const handleSetWrongOptionData = (e: any) => {
-    const value = e.target.value;
-    if (!value) return;
-    manager.canvasManager.canvas.functions.updateObjectiveOption(
-      value,
-      objectiveIndex,
-      1
-    );
-
-    dispatch(handleSetWrongOption(value));
-  };
+  useEffect(() => console.log(question), [question]);
 
   return (
     <div className="w-full flex justify-around gap-2 my-5 z-1000 cursor-auto absolute top-[8rem]">
-      <input
-        className="border border-black w-[8rem] p-2 rounded"
-        type="text"
-        placeholder="Correct"
-        value={correctOption}
-        onChange={handleSetRightOptionData}
-      />
-
-      <input
-        className="border border-black w-[8rem] p-2 rounded"
-        type="text"
-        placeholder="Wrong"
-        value={wrongOption}
-        onChange={handleSetWrongOptionData}
-      />
+      {question.options.map((option: any, i: number) => (
+        <input
+          className="border-2 border-black w-[8rem] p-2 rounded text-center"
+          type="text"
+          placeholder="Correct"
+          value={option}
+          onChange={(e) => handleSetOptionData(e, i)}
+        />
+      ))}
     </div>
   );
 };

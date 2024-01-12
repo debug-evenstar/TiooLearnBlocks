@@ -88,7 +88,11 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             onStop={handleStop}
             handle=".handle"
           >
-            <div ref={nodeRef} onClick={() => handleClickedViewbox(item.id)}>
+            <div
+              key={item.id}
+              ref={nodeRef}
+              onClick={() => handleClickedViewbox(item.id)}
+            >
               {item.id.includes("Flash") ? (
                 <CardSlider id={item.id} manager={manager} />
               ) : (

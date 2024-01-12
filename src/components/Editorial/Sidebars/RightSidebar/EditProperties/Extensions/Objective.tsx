@@ -63,6 +63,37 @@ const Objective: FC<Props> = ({ manager }) => {
     dispatch(handleSetWrongOption(""));
   };
 
+  const handleDelete = (id: string, optionIndex: number) => {
+    setQuestions((prevQuestions) => {
+      // Find the question to update
+      const questionIndex = prevQuestions.findIndex(
+        (question) => question.identifier === id
+      );
+
+      if (questionIndex !== -1) {
+        // Create a copy of the question with the updated options
+        const updatedQuestions = [...prevQuestions];
+        const updatedQuestion = {
+          ...updatedQuestions[questionIndex],
+          options: [
+            ...updatedQuestions[questionIndex].options.slice(0, optionIndex),
+            ...updatedQuestions[questionIndex].options.slice(optionIndex + 1),
+          ],
+        };
+        updatedQuestions[questionIndex] = updatedQuestion;
+        manager.canvasManager.activeComponent.functions.updateObjectiveData(
+          updatedQuestion,
+          questionIndex
+        );
+
+        return updatedQuestions;
+      } else {
+        // Handle the case where the question is not found
+        return prevQuestions;
+      }
+    });
+  };
+
   useEffect(() => {
     console.log(identifier, correctOption, wrongOption, " - Options");
   }, [identifier]);
@@ -105,6 +136,8 @@ const Objective: FC<Props> = ({ manager }) => {
                   objective={obj}
                   index={i}
                   data={coreData}
+                  handleDelete={handleDelete}
+                  manager={manager}
                 />
               ))}
           </section>
@@ -120,8 +153,19 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   objective,
   index,
   data,
+  handleDelete,
+  manager,
 }) => {
   const [isActive, setIsActive] = useState(false);
+
+  const addOption = (data: string, optionIndex: number) => {
+    manager.canvasManager.activeComponent.functions.updateObjectiveOption(
+      data,
+      index,
+      optionIndex
+    );
+    console.log("cliked");
+  };
 
   return (
     <div className="py-1">
@@ -145,14 +189,19 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
                 </div>
                 <div className="flex items-center gap-1">
                   <RiFeedbackLine />
-                  <RiDeleteBinLine />
+                  <RiDeleteBinLine
+                    onClick={() => handleDelete(objective.identifier, i)}
+                  />
                 </div>
               </div>
               {false && <Feedback />}
             </div>
           ))}
 
-          <div className="flex justify-between py-2 items-center">
+          <div
+            className="flex justify-between py-2 items-center"
+            onClick={() => addOption("", objective.options.length)}
+          >
             <p className="text-[12px]">Add option</p>
             <RiAddCircleLine size={"13px"} color="grey" />
           </div>

@@ -1,13 +1,11 @@
 import React, { FC, useEffect, useState } from "react";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { useDispatch, useSelector } from "react-redux";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import {
   handleSetCorrectOption,
   handleSetObjectiveIndex,
-  handleSetWrongOption,
-  refreshOptionsData,
 } from "provider/optionsDataSlice";
+import { RiAddCircleLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -27,6 +25,7 @@ const Subjective: FC<Props> = ({ manager }) => {
     identifier: string;
     correctOption: string;
     wrongOption: string;
+    objectiveIndex: number;
   };
 
   const [isActive, setIsActive] = useState(false);
@@ -36,7 +35,7 @@ const Subjective: FC<Props> = ({ manager }) => {
     console.log(questions, "in objective");
     replaceContent(questions, "SUBJECTIVE");
     setIsActive(true);
-    dispatch(refreshOptionsData());
+    dispatch(handleSetCorrectOption(""));
   };
 
   const handleClick = () => {
@@ -47,11 +46,19 @@ const Subjective: FC<Props> = ({ manager }) => {
     if (questions.length > 0) {
       replaceContent(questions, "SUBJECTIVE");
       setIsActive(true);
-      dispatch(handleToggleShowOptionBox());
       dispatch(handleSetObjectiveIndex(questions.length));
     }
     dispatch(handleSetCorrectOption(""));
-    dispatch(handleSetWrongOption(""));
+  };
+
+  const handleDelete = (id: string) => {
+    const filteredQuestions = questions.filter(
+      (question) => question.identifier !== id
+    );
+    setQuestions(filteredQuestions);
+    manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
+      filteredQuestions
+    );
   };
 
   useEffect(() => {
@@ -71,42 +78,104 @@ const Subjective: FC<Props> = ({ manager }) => {
   }, [coreData, identifier]);
 
   return (
-    <div className="p-2 shadow-md">
+    <div className="w-full p-2 shadow-md">
       <div
         className="w-full flex justify-between items-center cursor-pointer"
         onClick={handleSetObjective}
       >
-        <p className="text-[13px]">Set Subjective</p>
+        <p className="text-[13px]">
+          {isActive ? <b>Set Subjective</b> : "Set Subjective"}
+        </p>
       </div>
 
       {isActive && (
-        <main>
+        <>
           <div
-            className="w-full flex justify-between items-center cursor-pointer"
-            onClick={() => setIsActive(!isActive)}
+            className="flex justify-between items-center py-2"
+            onClick={handleClick}
           >
-            <p className="text-[12px]">
+            <p className="text-[12px]">Add a subjective</p>
+            <RiAddCircleLine size={"13px"} color="grey" />
+          </div>
+
+          <div className="w-full flex justify-between items-center cursor-pointer">
+            <div className="w-full text-[12px]">
               {questions &&
                 questions?.map((sub: any, index: number) => (
-                  <div
-                    className="w-full flex justify-between items-center cursor-pointer"
-                    onClick={() => setIsActive(!isActive)}
-                  >
-                    <p className="text-[12px]">
-                      {isActive ? (
-                        <b>Subjective {index + 1}</b>
-                      ) : (
-                        `Subjective ${index + 1}`
-                      )}
-                    </p>
-                  </div>
+                  <SubjectiveItem
+                    sub={sub}
+                    index={index}
+                    manager={manager}
+                    handleDelete={handleDelete}
+                  />
                 ))}
-            </p>
+            </div>
           </div>
-        </main>
+        </>
       )}
     </div>
   );
 };
 
 export default Subjective;
+
+const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
+  const [isEditable, setIsEditable] = useState(false);
+
+  const selector: any = useSelector(handleSetCorrectOption);
+  const { objectiveIndex } = selector.payload.optionsData.value as {
+    objectiveIndex: number;
+  };
+
+  const coreData = manager.canvasManager.activeComponent.data.coreData;
+
+  const handleSubjectiveChange = (e: any) => {
+    const value = e.target.value;
+    if (!value) return;
+    manager.canvasManager.canvas.functions.updateObjectiveData(
+      {
+        answers: [value],
+      },
+      0
+    );
+    manager.canvasManager.canvas.functions.updateObjectiveOption(
+      value,
+      objectiveIndex,
+      0
+    );
+    //dispatch(handleSetCorrectOption(value));
+
+    console.log("typing..", value, objectiveIndex, coreData);
+  };
+
+  return (
+    <div key={sub.identifier} className="my-2 w-full">
+      <div className="w-full flex justify-between items-center cursor-pointer">
+        <p className="text-[12px]">
+          {isEditable ? (
+            <b>Subjective {index + 1}</b>
+          ) : (
+            `Subjective ${index + 1}`
+          )}
+        </p>
+
+        <div className="flex gap-1">
+          <RiEditLine onClick={() => setIsEditable(!isEditable)} />
+          <RiDeleteBinLine
+            className="cursor-pointer"
+            onClick={() => handleDelete(sub.identifier)}
+          />
+        </div>
+      </div>
+      {isEditable && (
+        <div className="w-[90%] m-2">
+          <textarea
+            className="w-full border border-black"
+            rows={5}
+            onChange={handleSubjectiveChange}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
