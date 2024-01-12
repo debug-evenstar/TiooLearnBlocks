@@ -53,12 +53,3 @@ export interface ComponentBaseDataInterface {
     canvas? : boolean;
     questions? : QuestionInterface[]; // Handle question types on different components
 }
-
-
-// [
-//     {
-//         type : "input",
-//         layout : 
-//         questions : QuestionsInterface
-//     }
-// ]

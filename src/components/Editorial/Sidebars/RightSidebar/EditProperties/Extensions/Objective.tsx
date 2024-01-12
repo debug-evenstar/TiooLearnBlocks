@@ -196,7 +196,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
                   />
                 </div>
               </div>
-              {false && <Feedback />}
+              {true && <Feedback />}
             </div>
           ))}
 

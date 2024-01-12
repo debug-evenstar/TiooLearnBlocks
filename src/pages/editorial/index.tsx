@@ -62,16 +62,19 @@ const EditorialComp: FC<Props> = ({
       setParseSlides(() =>
         data.LessonSlides.map((slide: any) => slide.slide_data)
       );
-      console.log(parseSlides)
+      setManager(CreateEditorialManager(data && data.LessonSlides.map((slide: any) => slide.slide_data)))
     }
   }, [data]);
 
   useEffect(()=>{
-    setManager(CreateEditorialManager(data && data.LessonSlides.map((slide: any) => slide.slide_data)))
     manager.slideManager.handleSlidesUpdate = (updatedSlides : any[]) => {
+      console.log(updatedSlides);
       setParseSlides(updatedSlides);
     }
-  },[data]);
+  },[manager, manager.slideManager]);
+
+
+  
 
   if (!data || parseSlides.length === 0) {
     return <p>Loading...</p>;

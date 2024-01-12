@@ -23,7 +23,7 @@ const Feedback: FC<any> = ({ manager }) => {
     });
   }, [coreData, identifier]);
   return (
-    <div className="w-full h-[15rem] bg-white border border-black">
+    <div className="w-full h-[15rem] bg-white border border-black absolute left-[-20]">
       <header className="border-b border-black text-[12px]">
         Set Feedback
       </header>

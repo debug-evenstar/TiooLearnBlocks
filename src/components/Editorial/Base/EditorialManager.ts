@@ -175,8 +175,6 @@ class EditorialManager implements EditorialManagerInterface {
         this.saveActiveComponentData();
     }
   updateActiveComponentObjective(data: any) {
-    console.log(data, "objective called in manager");
-
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions = [
         ...this.canvasManager.activeComponent.data.coreData.questions,
@@ -249,6 +247,7 @@ class EditorialManager implements EditorialManagerInterface {
         const activeComponent = this.canvasManager.activeComponent;
         if(activeComponent) {
             activeSlide[activeComponent.data.index] = {
+                ...activeSlide[activeComponent.data.index],
                 ...activeComponent.data.coreData,
                 ...{ layout : activeComponent.data.layoutData },
                 ...{ styles :activeComponent.data.styleData }
