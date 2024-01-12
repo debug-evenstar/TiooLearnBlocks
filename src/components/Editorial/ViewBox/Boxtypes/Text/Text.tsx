@@ -92,7 +92,6 @@ const Text: FC<CanvasText> = ({
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
   const handleClickedObjective = (options: string[]) => {
-    console.log("clicked");
     dispatch(handleToggleShowOptionBox());
     dispatch(handleSetCorrectOption(options[0]));
     dispatch(handleSetWrongOption(options[1]));

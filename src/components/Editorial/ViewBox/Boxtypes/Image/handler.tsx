@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ComponentBaseDataInterface } from "components/Editorial/Base/EditorialManager";
+import { ComponentBaseDataInterface } from "components/interface";
 
 interface ImageComponentDataInterface extends ComponentBaseDataInterface {
   url: string;

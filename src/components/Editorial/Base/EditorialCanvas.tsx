@@ -12,6 +12,7 @@ import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import Flashcard from "../ViewBox/Boxtypes/Flashcard/Flashcard";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { refreshOptionsData } from "provider/optionsDataSlice";
+import { setComponentLayout } from "./EditorialManager";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
@@ -19,14 +20,19 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
 }) => {
   const dispatch = useDispatch();
   const [slideComponents, setSlideComponents] = useState<any[]>([]);
-
   const onDrop = (id: string) => {
     const existingClone = slideComponents.find((item) => item.id === id);
     const itemId = id + "-clone-" + Date.now();
 
     if (!existingClone) {
       // dispatch(handleSetDragItems([...slideComponents, { id: itemId }]));
+
       updateSlideComponents([...slideComponents, { id: itemId }]);
+      manager.canvasManager.updateActiveSlide([
+        ...manager.canvasManager.activeSlide ?? [],
+        { id: itemId }
+      ]);
+      manager.canvasManager.setActiveComponent(itemId);
       dispatch(handleSetActiveViewbox(itemId));
     }
   };
@@ -48,14 +54,11 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     dispatch(handleToggleSidebarState());
   };
 
+
   const handleClickedViewbox = (id: string) => {
     dispatch(handleSetActiveViewbox(id));
     dispatch(handleSetSidebarState(true));
-    if(manager.canvasManager.activeSlide) {
-      // Set active component index whenever the component is selected or marked active
-      const componentIndexInSlide : number = manager.canvasManager.activeSlide.findIndex((data : any) => data.id === id);
-      manager.canvasManager.activeComponent.data.index = componentIndexInSlide;
-    }
+    manager.canvasManager.setActiveComponent(id);
   };
 
   const updateSlideComponents = (components: any[]) => {
@@ -65,10 +68,10 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   };
 
   useEffect(() => {
+    const parsedSlides = manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
     manager.canvasManager &&
-      setSlideComponents(
-        manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData)
-      );
+      setSlideComponents(parsedSlides);
+    manager.canvasManager.updateActiveSlide(parsedSlides);
   }, [slideData]);
 
   const [images, setImages] = useState<any[]>([
@@ -89,7 +92,20 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
         const nodeRef: any = createRef();
 
         const handleStop = (event: any, data: any) => {
-          // console.log(`Position of item ${item.id}:`, data.x, data.y);
+          const layout = setComponentLayout(
+            manager.canvasManager.canvas.functions?.getCanvasSize(),
+            {
+              ...manager.canvasManager.getComponentData(item.id).layout,
+              position: { 
+                xAxis : { offset : data.x},
+                yAxis : { offset : data.y }
+              },
+            }
+          );
+          manager.slideManager.saveComponentData(
+            manager.canvasManager.getComponentIndex(item.id),
+            { layout }
+          );
         };
 
         return (

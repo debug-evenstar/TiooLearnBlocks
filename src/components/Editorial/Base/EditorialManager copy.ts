@@ -162,7 +162,6 @@ class CanvasManager implements CanvasManagerInterface {
     }
 
     parseSlideToCanvas(slide : any[]){
-        console.log(this);
         const parsed = slide.map((item) => {
             const itemId = item.component + "-clone-" + Date.now();
             return {

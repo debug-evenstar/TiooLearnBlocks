@@ -1,4 +1,5 @@
-import { ComponentBaseDataInterface } from "components/Editorial/Base/EditorialManager";
+import { ComponentBaseDataInterface } from "components/interface";
+
 
 export const setObjandSubComponentData = (
   type: "OBJECTIVE" | "SUBJECTIVE",
@@ -7,7 +8,7 @@ export const setObjandSubComponentData = (
   answers: string[] = [],
   feedbacks: string[] = []
 ) => {
-  const data: ComponentBaseDataInterface = {
+  const data: ComponentBaseDataInterface= {
     component: "Text",
     theme: "white",
     questions: [

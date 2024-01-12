@@ -103,7 +103,14 @@ const TextComponent: FC<TextComponentProps> = ({
   return (
     <>
       <div className={parseStyles()} ref={textContainerRef}>
-        {processed.map((item, index) =>
+        {
+        data.canvas 
+        ? (<span
+            className="text-font"
+            dangerouslySetInnerHTML={{ __html: ` ${data.content} ` }}
+          />)
+        
+        : processed.map((item, index) =>
           typeof item == "string" ? (
             <span
               className="text-font"

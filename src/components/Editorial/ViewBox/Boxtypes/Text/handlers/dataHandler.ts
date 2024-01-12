@@ -1,4 +1,5 @@
-import { ComponentBaseDataInterface } from "components/Editorial/Base/EditorialManager";
+import { ComponentBaseDataInterface } from "components/interface";
+
 
 interface TextComponentDataInterface extends ComponentBaseDataInterface {
   content: string;
@@ -14,6 +15,7 @@ export const setTextComponentData = (
     content,
     tips,
     theme: "white",
+    canvas : true
   };
   return data;
 };

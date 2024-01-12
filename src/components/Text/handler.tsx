@@ -1,6 +1,7 @@
 
 /* -------------------------- COMPONENT INTERFACES -------------------------- */
 
+import { ComponentBaseDataInterface } from "components/interface";
 import { LessonSlideInterface } from "../SlideManager/handler";
 
 interface TextStyles {
@@ -8,7 +9,7 @@ interface TextStyles {
     fontSize? : string;
 }
 
-export interface TextData {
+export interface TextData extends ComponentBaseDataInterface {
     component : string;
     content : string;
     tips? :  string[];

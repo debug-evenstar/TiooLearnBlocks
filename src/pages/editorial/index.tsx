@@ -62,6 +62,7 @@ const EditorialComp: FC<Props> = ({
       setParseSlides(() =>
         data.LessonSlides.map((slide: any) => slide.slide_data)
       );
+      console.log(parseSlides)
     }
   }, [data]);
 

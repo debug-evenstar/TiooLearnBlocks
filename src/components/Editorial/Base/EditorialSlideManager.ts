@@ -9,6 +9,7 @@ export interface EditorialSlideManagerInterface {
     activeSlide : number;
     saveSlide : Function;
     setActiveSlide : Function;
+    saveComponentData : Function;
     handleSlidesUpdate : Function;
 }
 
@@ -31,6 +32,15 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
         return this.slides[this.activeSlide];
     }
 
+    saveComponentData( index : number, data : any) {
+        const currentComponentData = this.slides[this.activeSlide][index];
+        this.slides[this.activeSlide][index] = {
+            ...currentComponentData,
+            ...data,
+        }
+        this.handleSlidesUpdate(this.slides);
+    }
+
     saveSlide(slideId : number, payload : SlideData, callback : Function){
         const url : string = `${baseApiHost()}/${UPDATE_SLIDE_URL(slideId)}`;
         axios
@@ -42,4 +52,5 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
             }
           });
     }
+
 }

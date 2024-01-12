@@ -19,9 +19,11 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
     manager.canvasManager.activeComponent.data.layoutData = setComponentLayout(
       manager.canvasManager.canvas.functions?.getCanvasSize(),
       {
+        ...manager.canvasManager.getComponentData(id).layout,
         size: { width, height },
       }
     );
+    manager.canvasManager.canvas.functions.saveActiveComponentData();
   };
 
   const onResize = (event: any, { node, size, handle }: any) => {
@@ -43,7 +45,15 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
   }, [manager]);
 
   useEffect(() => {
-    updateComponentLayout(300, height);
+    // Default Layout
+    const layout = setComponentLayout(
+      manager.canvasManager.canvas.functions?.getCanvasSize(),
+      {size : {width : 300, height}}
+    );
+    manager.slideManager.saveComponentData(
+      manager.canvasManager.getComponentIndex(id),
+      { layout }
+    );
   }, []);
 
   return (
