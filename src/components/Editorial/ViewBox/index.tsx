@@ -34,17 +34,6 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
   const height = id.includes("Text") ? 60 : 65;
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleViewboxStyle"] = (
-      style: string = "",
-      styleType: string
-    ) => {
-      const element = viewBoxRef.current;
-      if (!element) return;
-      toggleWrapperStyle(element, style, styleType);
-    };
-  }, [manager]);
-
-  useEffect(() => {
     // Default Layout
     const layout = setComponentLayout(
       manager.canvasManager.canvas.functions?.getCanvasSize(),

@@ -61,6 +61,7 @@ export interface CanvasManagerInterface {
     updateActiveSlide : Function;
     getComponentIndex : Function;
     getComponentData : Function;
+    activeComponentElement : Function;
 
 }
 
@@ -93,6 +94,15 @@ class CanvasManager implements CanvasManagerInterface {
     getComponentData(id : string){
         const slideComponent = this.activeSlide?.filter((component : any) => component.id === id)
         return slideComponent && slideComponent.length ? slideComponent[0] : {};
+    }
+
+    activeComponentElement() {
+        if(this.activeSlide) {
+            const activeComponent = this.activeSlide[this.activeComponent.data.index];
+            if(activeComponent.id) {
+                return document.getElementById(activeComponent.id) as HTMLDivElement;
+            }
+        }
     }
 }
 
