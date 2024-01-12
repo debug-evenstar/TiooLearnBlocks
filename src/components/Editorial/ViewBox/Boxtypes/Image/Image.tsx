@@ -2,7 +2,11 @@ import { EditorialManagerInterface } from "components/Editorial/Base/EditorialMa
 import { CanvasMedia } from "components/Editorial/interfaces";
 import React, { FC, createRef, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
-import { toggleWrapperSize, uploadFile } from "./handler";
+import {
+  setImageComponentData,
+  toggleWrapperSize,
+  uploadFile,
+} from "./handler";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 
@@ -21,9 +25,9 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       const url = await uploadFile(473, selectedFile);
       setPreviewImage(url);
       console.log(url, "url");
-      manager.canvasManager.canvas.functions.updateActiveComponentData({
-        url,
-      });
+      manager.canvasManager.canvas.functions.updateActiveComponentData(
+        setImageComponentData(url)
+      );
     }
   };
 
@@ -39,9 +43,9 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     if (file) {
       const url = await uploadFile(473, file);
       setPreviewImage(url);
-      manager.canvasManager.canvas.functions.updateActiveComponentData({
-        url,
-      });
+      manager.canvasManager.canvas.functions.updateActiveComponentData(
+        setImageComponentData(url)
+      );
     }
   };
 

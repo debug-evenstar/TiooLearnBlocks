@@ -1,7 +1,8 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { setFlashCardComponentData } from "components/Editorial/ViewBox/Boxtypes/Flashcard/handlers/dataHandler";
 import { UploadIconProps } from "components/Editorial/ViewBox/Boxtypes/Image/Image";
-import React, { FC, useEffect, useState } from "react";
+import { uploadFile } from "components/Editorial/ViewBox/Boxtypes/Image/handler";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { RiAddCircleLine } from "react-icons/ri";
 
 interface Props {
@@ -15,7 +16,7 @@ const AddImages: FC<Props> = ({ id, manager }) => {
 
   const [previewImage, setPreviewImage] = useState("");
 
-  const handleAddImage = (e: any) => {
+  const handleAddImageFormer = (e: any) => {
     e.preventDefault();
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -33,6 +34,28 @@ const AddImages: FC<Props> = ({ id, manager }) => {
     console.log(coreData, "added");
   };
 
+  const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (!e.target.files) return;
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setPreviewImage(imageUrl);
+      //const url = await uploadFile(473, selectedFile);
+      //(url);
+      //console.log(url, "url");
+      manager.canvasManager.canvas.functions.updateActiveComponentData(
+        setFlashCardComponentData([
+          {
+            url: imageUrl,
+            alternatives: [],
+          },
+        ])
+      );
+      console.log(coreData, "added");
+    }
+  };
+
   useEffect(() => {
     const flashCardComponentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
@@ -41,12 +64,10 @@ const AddImages: FC<Props> = ({ id, manager }) => {
 
   return (
     <div className="w-full my-5 py-2">
-      <main>
-        <UploadText handleUpload={handleAddImage} />
-        {images.map((image: any, index) => (
-          <div className="w-full py-2 text-[15px]">Image {index + 1}</div>
-        ))}
-      </main>
+      <UploadText handleUpload={handleAddImage} />
+      {images.map((image: any, index) => (
+        <div className="w-full py-2 text-[15px]">Image {index + 1}</div>
+      ))}
     </div>
   );
 };
@@ -54,13 +75,20 @@ const AddImages: FC<Props> = ({ id, manager }) => {
 export default AddImages;
 
 const UploadText: FC<any> = ({ handleUpload }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleClick = () => {
+    if (inputRef.current) {
+      inputRef.current.click();
+    }
+  };
   return (
     <div
       className="w-fit relative overflow-hidden cursor-pointer"
-      onClick={handleUpload}
+      onClick={handleClick}
     >
       <div className="flex flex-col justify-center items-center h-full">
         <input
+          ref={inputRef}
           type="file"
           accept="image/*"
           onChange={handleUpload}

@@ -2,39 +2,59 @@
 /*                          COMPONENT DATA INTERFACES                         */
 /* -------------------------------------------------------------------------- */
 
-import { ComponentBaseDataInterface, ComponentLayoutInterface } from "components/interface";
-import { EditorialSlideManager, EditorialSlideManagerInterface } from "./EditorialSlideManager";
+import {
+  ComponentBaseDataInterface,
+  ComponentLayoutInterface,
+} from "components/interface";
+import {
+  EditorialSlideManager,
+  EditorialSlideManagerInterface,
+} from "./EditorialSlideManager";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
   layoutData?: ComponentLayoutInterface
 ) => {
-    const percentValue = (value: number, base : number) => value/base * 100;
-    return {
-        ...(layoutData?.position ? {
-            position : {
-                xAxis : { 
-                    offset : layoutData?.position?.xAxis.offset ?? 0 ,
-                    offsetPercent : percentValue(layoutData?.position?.xAxis.offset ?? 0 , canvasProps.width)
-                },
-                yAxis : { 
-                    offset : layoutData?.position?.xAxis.offset ?? 0 ,
-                    offsetPercent : percentValue(layoutData?.position?.yAxis.offset ?? 0 , canvasProps.height)
-                } 
-            }
-        }: {}),
-        ...(layoutData?.size ? {
-            size : {
-                width : layoutData?.size?.width ?? 0,
-                widthPercent : percentValue(layoutData?.size?.width ?? 0 , canvasProps.width),
-                height : layoutData?.size?.height ?? 0,
-                heightPercent : percentValue(layoutData?.size?.height ?? 0 , canvasProps.height)
-            }
-        } : {})
-
-    }
+  const percentValue = (value: number, base: number) => (value / base) * 100;
+  return {
+    ...(layoutData?.position
+      ? {
+          position: {
+            xAxis: {
+              offset: layoutData?.position?.xAxis.offset ?? 0,
+              offsetPercent: percentValue(
+                layoutData?.position?.xAxis.offset ?? 0,
+                canvasProps.width
+              ),
+            },
+            yAxis: {
+              offset: layoutData?.position?.xAxis.offset ?? 0,
+              offsetPercent: percentValue(
+                layoutData?.position?.yAxis.offset ?? 0,
+                canvasProps.height
+              ),
+            },
+          },
+        }
+      : {}),
+    ...(layoutData?.size
+      ? {
+          size: {
+            width: layoutData?.size?.width ?? 0,
+            widthPercent: percentValue(
+              layoutData?.size?.width ?? 0,
+              canvasProps.width
+            ),
+            height: layoutData?.size?.height ?? 0,
+            heightPercent: percentValue(
+              layoutData?.size?.height ?? 0,
+              canvasProps.height
+            ),
+          },
+        }
+      : {}),
+  };
 };
-
 
 /* -------------------------------------------------------------------------- */
 /*                    EDITORIAL & CANVAS MANAGER INTERFACES                   */
@@ -54,66 +74,66 @@ const DataGroup: DataGroupInterface = {
 };
 
 export interface CanvasManagerInterface {
-    canvas : DataGroupInterface;
-    activeComponent : DataGroupInterface;
-    activeSlide? : ComponentBaseDataInterface[];
-    setActiveComponent : Function;
-    updateActiveSlide : Function;
-    getComponentIndex : Function;
-    getComponentData : Function;
-
+  canvas: DataGroupInterface;
+  activeComponent: DataGroupInterface;
+  activeSlide?: ComponentBaseDataInterface[];
+  setActiveComponent: Function;
+  updateActiveSlide: Function;
+  getComponentIndex: Function;
+  getComponentData: Function;
 }
 
 // More improvements coming
 class CanvasManager implements CanvasManagerInterface {
-    canvas : DataGroupInterface = DataGroup;
-    activeComponent : DataGroupInterface = DataGroup;
-    activeSlide? : ComponentBaseDataInterface[];
+  canvas: DataGroupInterface = DataGroup;
+  activeComponent: DataGroupInterface = DataGroup;
+  activeSlide?: ComponentBaseDataInterface[];
 
-    // constructor(){
+  // constructor(){
 
-    // }
+  // }
 
-    setActiveComponent(id : string){
-        if(this.activeSlide) {
-            // Set active component index whenever the component is selected or marked active
-            const componentIndexInSlide : number = this.activeSlide.findIndex((data : any) => data.id === id);
-            this.activeComponent.data.index = componentIndexInSlide;
-          }
+  setActiveComponent(id: string) {
+    if (this.activeSlide) {
+      // Set active component index whenever the component is selected or marked active
+      const componentIndexInSlide: number = this.activeSlide.findIndex(
+        (data: any) => data.id === id
+      );
+      this.activeComponent.data.index = componentIndexInSlide;
     }
+  }
 
-    updateActiveSlide(slideData : ComponentBaseDataInterface[]) {
-        this.activeSlide = slideData;
-    }
+  updateActiveSlide(slideData: ComponentBaseDataInterface[]) {
+    this.activeSlide = slideData;
+  }
 
-    getComponentIndex(id : string){
-        return this.activeSlide?.findIndex((data : any) => data.id === id);
-    }
+  getComponentIndex(id: string) {
+    return this.activeSlide?.findIndex((data: any) => data.id === id);
+  }
 
-    getComponentData(id : string){
-        const slideComponent = this.activeSlide?.filter((component : any) => component.id === id)
-        return slideComponent && slideComponent.length ? slideComponent[0] : {};
-    }
+  getComponentData(id: string) {
+    const slideComponent = this.activeSlide?.filter(
+      (component: any) => component.id === id
+    );
+    return slideComponent && slideComponent.length ? slideComponent[0] : {};
+  }
 }
 
-
 export interface EditorialManagerInterface {
-    sidebarManager : DataGroupInterface;
-    canvasManager : CanvasManagerInterface;
-    slideManager : EditorialSlideManagerInterface
+  sidebarManager: DataGroupInterface;
+  canvasManager: CanvasManagerInterface;
+  slideManager: EditorialSlideManagerInterface;
 }
 
 class EditorialManager implements EditorialManagerInterface {
+  sidebarManager: DataGroupInterface = DataGroup;
+  canvasManager: CanvasManagerInterface = new CanvasManager();
+  slideManager: EditorialSlideManagerInterface;
 
-    sidebarManager: DataGroupInterface = DataGroup;
-    canvasManager: CanvasManagerInterface = new CanvasManager();
-    slideManager: EditorialSlideManagerInterface;
-
-    constructor(slides : any[]) {
-        this.slideManager = new EditorialSlideManager(slides);
-        this.initCanvasManager();
-    }
-
+  constructor(slides: any[]) {
+    this.slideManager = new EditorialSlideManager(slides);
+    this.initCanvasManager();
+  }
 
   initCanvasManager() {
     const componentData = this.canvasManager.activeComponent.data ?? {
@@ -155,15 +175,15 @@ class EditorialManager implements EditorialManagerInterface {
     }, 5000);
   }
 
-    updateActiveComponentData(data : any){
-        if(this.canvasManager.activeComponent.data) {
-            this.canvasManager.activeComponent.data.coreData = {
-                ...this.canvasManager.activeComponent.data.coreData,
-                ...data
-            }
-        }
-        this.saveActiveComponentData();
+  updateActiveComponentData(data: any) {
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.coreData = {
+        ...this.canvasManager.activeComponent.data.coreData,
+        ...data,
+      };
     }
+    this.saveActiveComponentData();
+  }
   updateActiveComponentObjective(data: any) {
     console.log(data, "objective called in manager");
 
@@ -208,6 +228,15 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
+  updateFlashCardIMages(data: any, index: number, optionIndex: number) {
+    if (this.canvasManager.activeComponent.data.coreData) {
+      this.canvasManager.activeComponent.data.coreData.questions[index].options[
+        optionIndex
+      ] = data;
+    }
+    this.saveActiveComponentData();
+  }
+
   updateWrongOptions(data: any, index: number) {
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions[
@@ -232,35 +261,35 @@ class EditorialManager implements EditorialManagerInterface {
     );
     return slideComponent.length ? slideComponent[0] : {};
   }
-    // Remember to set canvas data compontents here
-    saveActiveComponentData(){
-        const slides : any[] = this.slideManager.slides;
-        const activeSlide = slides[this.slideManager.activeSlide];
-        const activeComponent = this.canvasManager.activeComponent;
-        if(activeComponent) {
-            activeSlide[activeComponent.data.index] = {
-                ...activeComponent.data.coreData,
-                ...{ layout : activeComponent.data.layoutData },
-                ...{ styles :activeComponent.data.styleData }
-            }
-            slides[this.slideManager.activeSlide] = activeSlide;
-            this.slideManager.slides = slides;
-            this.slideManager.handleSlidesUpdate(slides);
-        }
+  // Remember to set canvas data compontents here
+  saveActiveComponentData() {
+    const slides: any[] = this.slideManager.slides;
+    const activeSlide = slides[this.slideManager.activeSlide];
+    const activeComponent = this.canvasManager.activeComponent;
+    if (activeComponent) {
+      activeSlide[activeComponent.data.index] = {
+        ...activeComponent.data.coreData,
+        ...{ layout: activeComponent.data.layoutData },
+        ...{ styles: activeComponent.data.styleData },
+      };
+      slides[this.slideManager.activeSlide] = activeSlide;
+      this.slideManager.slides = slides;
+      this.slideManager.handleSlidesUpdate(slides);
     }
+  }
 
-    parseSlideToCanvas(slide : any[]){
-        const parsed = slide.map((item, index) => {
-            const itemId = item.component + "-clone-" + Date.now() + index;
-            return {
-                ...item,
-                id : itemId,
-            }
-        });
-        this.canvasManager.canvas.data.components = parsed;
-        this.canvasManager.activeSlide = parsed;
-        return parsed;
-    }
+  parseSlideToCanvas(slide: any[]) {
+    const parsed = slide.map((item, index) => {
+      const itemId = item.component + "-clone-" + Date.now() + index;
+      return {
+        ...item,
+        id: itemId,
+      };
+    });
+    this.canvasManager.canvas.data.components = parsed;
+    this.canvasManager.activeSlide = parsed;
+    return parsed;
+  }
 }
 
 export const CreateEditorialManager = (slides: any[]) =>
