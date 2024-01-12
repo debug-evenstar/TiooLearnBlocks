@@ -47,9 +47,9 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     <div className="w-full flex justify-around gap-2 my-5 z-1000 cursor-auto absolute top-[8rem]">
       {question.options.map((option: any, i: number) => (
         <input
-          className="border-2 border-black w-[8rem] p-2 rounded text-center"
+          className="border border-black w-[8rem] p-2 rounded text-center"
           type="text"
-          placeholder="Correct"
+          placeholder={i > 0 ? "Wrong" : "Correct"}
           value={option}
           onChange={(e) => handleSetOptionData(e, i)}
         />
