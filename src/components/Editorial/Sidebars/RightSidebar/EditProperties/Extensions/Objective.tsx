@@ -130,16 +130,19 @@ const Objective: FC<Props> = ({ manager }) => {
 
           <section>
             {questions &&
-              questions?.map((obj: any, i: number) => (
-                <ObjectiveItem
-                  key={obj.identifier}
-                  objective={obj}
-                  index={i}
-                  data={coreData}
-                  handleDelete={handleDelete}
-                  manager={manager}
-                />
-              ))}
+              questions?.map((obj: any, i: number) => {
+                if (!obj.identifier.includes(id)) return <></>;
+                return (
+                  <ObjectiveItem
+                    key={obj.identifier}
+                    objective={obj}
+                    index={i}
+                    data={coreData}
+                    handleDelete={handleDelete}
+                    manager={manager}
+                  />
+                );
+              })}
           </section>
         </main>
       )}
