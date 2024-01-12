@@ -44,6 +44,7 @@ export interface QuestionInterface {
 }
 
 export interface ComponentBaseDataInterface {
+    id? : string; // For managing canvas id
     component : string; // Component Name
     theme : string | any; // Allow theme configuration basic implementation for now
     extensions? : any[]; // Allow multiple extension types ... To be defined clearly later

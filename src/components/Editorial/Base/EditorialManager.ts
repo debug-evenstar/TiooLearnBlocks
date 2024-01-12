@@ -74,6 +74,7 @@ const DataGroup: DataGroupInterface = {
 };
 
 export interface CanvasManagerInterface {
+<<<<<<< HEAD
   canvas: DataGroupInterface;
   activeComponent: DataGroupInterface;
   activeSlide?: ComponentBaseDataInterface[];
@@ -81,6 +82,17 @@ export interface CanvasManagerInterface {
   updateActiveSlide: Function;
   getComponentIndex: Function;
   getComponentData: Function;
+=======
+    canvas : DataGroupInterface;
+    activeComponent : DataGroupInterface;
+    activeSlide? : ComponentBaseDataInterface[];
+    setActiveComponent : Function;
+    updateActiveSlide : Function;
+    getComponentIndex : Function;
+    getComponentData : Function;
+    activeComponentElement : Function;
+
+>>>>>>> 807d2f9508a447bfb8def63835d3667cecde36c3
 }
 
 // More improvements coming
@@ -111,12 +123,28 @@ class CanvasManager implements CanvasManagerInterface {
     return this.activeSlide?.findIndex((data: any) => data.id === id);
   }
 
+<<<<<<< HEAD
   getComponentData(id: string) {
     const slideComponent = this.activeSlide?.filter(
       (component: any) => component.id === id
     );
     return slideComponent && slideComponent.length ? slideComponent[0] : {};
   }
+=======
+    getComponentData(id : string){
+        const slideComponent = this.activeSlide?.filter((component : any) => component.id === id)
+        return slideComponent && slideComponent.length ? slideComponent[0] : {};
+    }
+
+    activeComponentElement() {
+        if(this.activeSlide) {
+            const activeComponent = this.activeSlide[this.activeComponent.data.index];
+            if(activeComponent.id) {
+                return document.getElementById(activeComponent.id) as HTMLDivElement;
+            }
+        }
+    }
+>>>>>>> 807d2f9508a447bfb8def63835d3667cecde36c3
 }
 
 export interface EditorialManagerInterface {
@@ -185,8 +213,6 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
   updateActiveComponentObjective(data: any) {
-    console.log(data, "objective called in manager");
-
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions = [
         ...this.canvasManager.activeComponent.data.coreData.questions,
@@ -261,6 +287,7 @@ class EditorialManager implements EditorialManagerInterface {
     );
     return slideComponent.length ? slideComponent[0] : {};
   }
+<<<<<<< HEAD
   // Remember to set canvas data compontents here
   saveActiveComponentData() {
     const slides: any[] = this.slideManager.slides;
@@ -275,6 +302,24 @@ class EditorialManager implements EditorialManagerInterface {
       slides[this.slideManager.activeSlide] = activeSlide;
       this.slideManager.slides = slides;
       this.slideManager.handleSlidesUpdate(slides);
+=======
+    // Remember to set canvas data compontents here
+    saveActiveComponentData(){
+        const slides : any[] = this.slideManager.slides;
+        const activeSlide = slides[this.slideManager.activeSlide];
+        const activeComponent = this.canvasManager.activeComponent;
+        if(activeComponent) {
+            activeSlide[activeComponent.data.index] = {
+                ...activeSlide[activeComponent.data.index],
+                ...activeComponent.data.coreData,
+                ...{ layout : activeComponent.data.layoutData },
+                ...{ styles :activeComponent.data.styleData }
+            }
+            slides[this.slideManager.activeSlide] = activeSlide;
+            this.slideManager.slides = slides;
+            this.slideManager.handleSlidesUpdate(slides);
+        }
+>>>>>>> 807d2f9508a447bfb8def63835d3667cecde36c3
     }
   }
 

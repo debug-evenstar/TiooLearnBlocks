@@ -79,7 +79,6 @@ const Text: FC<CanvasText> = ({
       registerFunctions(
         manager,
         getRange,
-        editableRef,
         viewBoxRef,
         setIdentifier,
         id

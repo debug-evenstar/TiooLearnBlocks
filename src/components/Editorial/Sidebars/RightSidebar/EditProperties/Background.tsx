@@ -4,21 +4,21 @@ import React, { FC, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import { ColorResult, SketchPicker } from "react-color";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ViewBoxHandler } from "components/Editorial/ViewBox/handler";
 
 interface Props {
   manager: EditorialManagerInterface;
 }
 
 const Background: FC<Props> = ({ manager }) => {
-  const toggleViewboxStyle =
-    manager.canvasManager.activeComponent.functions?.toggleViewboxStyle;
 
   const [isActive, setIsActive] = useState(false);
   const [color, setColor] = useState<any>("#561ecb");
 
   const handleChangeColor = (color: ColorResult) => {
     setColor(color.hex);
-    toggleViewboxStyle(color.hex, "bgColor");
+    const viewBoxManager = new ViewBoxHandler(manager);
+    viewBoxManager.setViewBoxStyle(color.hex, "bgColor");
   };
 
   return (

@@ -109,6 +109,8 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             nodeRef={nodeRef}
             onStop={handleStop}
             handle=".handle"
+            defaultClassName="w-fit"
+            
           >
             <div
               key={item.id}

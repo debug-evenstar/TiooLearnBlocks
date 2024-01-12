@@ -13,7 +13,6 @@ export interface EditorialSlideManagerInterface {
     handleSlidesUpdate : Function;
 }
 
-
 export class EditorialSlideManager implements EditorialSlideManagerInterface {
     
     slides: any[];

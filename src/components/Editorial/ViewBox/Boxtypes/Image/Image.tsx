@@ -14,6 +14,13 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [overlayActive, setOverlayActive] = useState(false);
   const [data, setData] = useState<any>();
+  const [inputList, setInputList] = useState<any[]>([]);
+  const [inputBoxDimensions, setInputBoxDimensions] = useState<any[]>([]);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [viewBoxSize, setViewBoxSize] = useState({
+    width: 200,
+    height: 5,
+  });
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -72,16 +79,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       manager.canvasManager.canvas.functions.getComponentData(id);
     imageComponentData && setData(imageComponentData.content);
     setPreviewImage(imageComponentData.url);
-    console.log(imageComponentData, "Image");
   }, [id]);
-
-  const [inputList, setInputList] = useState<any[]>([]);
-  const [inputBoxDimensions, setInputBoxDimensions] = useState<any[]>([]);
-  const imageRef = useRef<HTMLImageElement>(null);
-  const [viewBoxSize, setViewBoxSize] = useState({
-    width: 200,
-    height: 5,
-  });
 
   const handleAddInput: React.MouseEventHandler<HTMLDivElement> = (event) => {
     if (imageRef.current) {
@@ -89,8 +87,20 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       const imageRect = imageRef.current.getBoundingClientRect();
       const relativeX = pageX - imageRect.left;
       const relativeY = pageY - imageRect.top;
-      const newInput = { x: relativeX, y: relativeY };
-      setInputList((prevList) => [...prevList, newInput]);
+      const newInput = {
+        type: "input",
+        x: relativeX,
+        y: relativeY,
+        width: 200,
+        height: 5,
+      };
+      const newList = [...inputList, newInput];
+      setInputList(newList);
+      manager.canvasManager.canvas.functions.updateActiveComponentData(
+        setImageComponentData({
+          extensions: newList,
+        })
+      );
       setInputBoxDimensions((prevList) => [
         ...prevList,
         { width: 200, height: 5 },

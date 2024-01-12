@@ -2,13 +2,17 @@ import axios from "axios";
 import { ComponentBaseDataInterface } from "components/interface";
 
 interface ImageComponentDataInterface extends ComponentBaseDataInterface {
-  url: string;
+  url?: string;
 }
 
-export const setImageComponentData = (url: string = "") => {
+export const setImageComponentData = (imageData : {
+  url? : string;
+  extensions? : any[]
+}) => {
   const data: ImageComponentDataInterface = {
     component: "Image",
-    url,
+    ...(imageData.url ? {url : imageData.url} : {}),
+    ...(imageData.extensions ? {extensions : imageData.extensions} : {}),
     theme: "white",
   };
   return data;
@@ -18,7 +22,7 @@ export const uploadFile = async (lessonId: number, file: File) => {
   // Use File instead of FileList
   try {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("image", file);
 
     const response = await axios.put(
       `https://beta.api.hellotioo.com/open/lesson/templateimage/${lessonId}`,
