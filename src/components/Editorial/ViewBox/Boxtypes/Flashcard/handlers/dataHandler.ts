@@ -1,4 +1,4 @@
-import { ComponentBaseDataInterface } from "components/Editorial/Base/EditorialManager";
+import { ComponentBaseDataInterface } from "components/interface";
 
 interface Card {
   url: string;

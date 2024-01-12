@@ -26,6 +26,7 @@ import CarouselEffect from "components/CarouselEffect";
 import { GridStepsData } from "components/GridSteps/handler";
 import { PrefaceData } from "components/Preface/handler";
 import { PostfaceData } from "components/Postface/handler";
+import LayoutComponent from "components/LayoutBox";
 
 interface SlideManagerProps {
   lessonSlides: SlideData[];
@@ -232,13 +233,16 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                 {slide.map((component: any, index: number) => {
                   const Component = loadComponent(component);
                   return (
-                    <Component
-                      key={index}
-                      data={component}
-                      slide={loadSlideManager(slideIndex)}
-                      altHeaderStyle={altHeaderStyle}
-                      activeSlideIndex={activeSlideIndex}
-                    />
+                    <LayoutComponent layout={component.layout}>
+                      <Component
+                        key={index}
+                        data={component}
+                        slide={loadSlideManager(slideIndex)}
+                        altHeaderStyle={altHeaderStyle}
+                        activeSlideIndex={activeSlideIndex}
+                      />
+                    </LayoutComponent>
+
                   );
                 })}
               </div>

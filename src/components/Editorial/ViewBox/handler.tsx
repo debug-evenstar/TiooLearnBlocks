@@ -1,5 +1,4 @@
 import {
-  ComponentBaseDataInterface,
   EditorialManagerInterface,
 } from "../Base/EditorialManager";
 import Image from "./Boxtypes/Image/Image";

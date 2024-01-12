@@ -571,13 +571,13 @@ const RenderComponent = () => {
         <>
             <div className="flex justify-center items-center">
                 <div className="w-[calc(100%_-_300px)]">
-                    <SlideManager
+                    {/* <SlideManager
                         lessonSlides={slides}
                         ref={slideManagerRef}
                         handleFeedback={triggerFeedback}
                         updateActiveSlide={() => {}}
                         canProceed={(v: boolean) => setCanProceed(v)}
-                    />
+                    /> */}
                     {canProceed && (
                         <button
                             className="mx-auto mt-[20px] py-[10px] w-[150px] text-white rounded-[15px] bg-sky-500 hover:bg-sky-700"

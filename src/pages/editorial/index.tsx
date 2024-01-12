@@ -8,22 +8,6 @@ import { CreateEditorialManager } from "components/Editorial/Base/EditorialManag
 interface Props {
   data?: any;
   lessons?: any;
-  changeFile: (file: any, payload: any, id: any) => void;
-  changeCard: (
-    file: any,
-    payload: any,
-    id: any,
-    length: number,
-    changedIndex: any
-  ) => void;
-  updateSlide: (
-    file: any,
-    payload: any,
-    id: any,
-    length: number,
-    changedIndex: number
-  ) => void;
-  createOverlay: (file: any, ext: any, text: string, index: number) => void;
   back: () => void;
   lessonlist: any;
   name: string;
@@ -32,14 +16,10 @@ interface Props {
 const EditorialComp: FC<Props> = ({
   data,
   lessons,
-  changeFile,
   back,
   lessonlist,
   name,
   isBusy,
-  changeCard,
-  updateSlide,
-  createOverlay,
 }) => {
   const [parseSlides, setParseSlides] = useState<any[]>([]);
   const slideManagerRef = useRef<any>(null);
@@ -76,13 +56,22 @@ const EditorialComp: FC<Props> = ({
     setOverlay(true);
   };
 
+
   useEffect(() => {
     if (data) {
       setParseSlides(() =>
         data.LessonSlides.map((slide: any) => slide.slide_data)
       );
+      console.log(parseSlides)
     }
   }, [data]);
+
+  useEffect(()=>{
+    setManager(CreateEditorialManager(data && data.LessonSlides.map((slide: any) => slide.slide_data)))
+    manager.slideManager.handleSlidesUpdate = (updatedSlides : any[]) => {
+      setParseSlides(updatedSlides);
+    }
+  },[data]);
 
   if (!data || parseSlides.length === 0) {
     return <p>Loading...</p>;
@@ -121,11 +110,7 @@ const EditorialComp: FC<Props> = ({
                 active={activeSlide}
                 slides={parseSlides}
                 data={data}
-                showEdit={() => setShowEdit(false)}
-                changeFile={changeFile}
                 isBusy={isBusy}
-                changeCard={changeCard}
-                changeSlide={updateSlide}
                 manager={manager}
               />
             </>
