@@ -101,17 +101,17 @@ const InactiveSidebar: FC<Props> = ({
     <div className="w-full h-full border border-gray-400">
       {!showComp && <Item />}
       {showComp && (
-        <div className="w-full">
-          <h3 className="text-[15px] mt-2 text-center text-[#87909E] font-medium">
+        <div className="w-full mb-12">
+          <h3 className="shadow-lg text-[15px] my-2 py-2 text-center text-[#87909E] font-medium">
             Components
           </h3>
           <div className="mt-4 text-[14px]">
             <FaAngleUp
-              className="text-xl text-gray-500  mb-4 mx-auto cursor-pointer"
+              className="text-lg text-gray-500 mb-2 mx-auto cursor-pointer"
               onClick={() => scroll(-30)}
             />
             <div
-              className="grid gap-4 border-y border-gray-400 p-3 h-[300px] overflow-y-scroll hide-scroll"
+              className="grid gap-4  p-3 h-[300px] overflow-y-scroll hide-scroll"
               ref={scrRef}
             >
               {compTypes.map((item, index) => {
@@ -138,9 +138,6 @@ const InactiveSidebar: FC<Props> = ({
               className="text-xl text-gray-500 mx-auto mt-2 cursor-pointer"
               onClick={() => scroll(30)}
             />
-          </div>
-          <div className="mt-12">
-            <PromptBox />
           </div>
         </div>
       )}

@@ -9,9 +9,10 @@ import { RiAddCircleLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri";
 
 interface Props {
   manager: EditorialManagerInterface;
+  component: string;
 }
 
-const Subjective: FC<Props> = ({ manager }) => {
+const Subjective: FC<Props> = ({ manager, component }) => {
   const selector: any = useSelector(handleSetCorrectOption);
   const id = selector.payload.activeViewbox.value;
 
@@ -33,7 +34,7 @@ const Subjective: FC<Props> = ({ manager }) => {
 
   const handleSetObjective = () => {
     console.log(questions, "in objective");
-    replaceContent(questions, "SUBJECTIVE");
+    replaceContent(questions, "SUBJECTIVE", component);
     setIsActive(true);
     dispatch(handleSetCorrectOption(""));
   };
@@ -44,7 +45,7 @@ const Subjective: FC<Props> = ({ manager }) => {
       "changed data"
     );
     if (questions.length > 0) {
-      replaceContent(questions, "SUBJECTIVE");
+      replaceContent(questions, "SUBJECTIVE", component);
       setIsActive(true);
       dispatch(handleSetObjectiveIndex(questions.length));
     }

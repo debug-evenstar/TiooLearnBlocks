@@ -31,8 +31,8 @@ const Extensions: FC<Props> = ({ manager }) => {
       {isActive && (
         <main>
           <a href="javascript:void(0)">
-            <Objective manager={manager} />
-            <Subjective manager={manager} />
+            <Objective manager={manager} component="Text" />
+            <Subjective manager={manager} component="Text" />
             <Tips manager={manager} />
           </a>
         </main>

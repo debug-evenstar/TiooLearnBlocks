@@ -9,7 +9,8 @@ const Flashcard: FC<any> = ({ id, manager, image }) => {
     width: 300,
     height: id.includes("Text") ? 65 : 280,
   });
-  const [isEditable, setIsEditable] = useState(false);
+
+  //const [isEditable, setIsEditable] = useState(false);
 
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
 

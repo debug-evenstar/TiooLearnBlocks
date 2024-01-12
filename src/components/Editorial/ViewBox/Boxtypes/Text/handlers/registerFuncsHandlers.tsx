@@ -63,13 +63,14 @@ export const registerFunctions = (
 
   manager.canvasManager.activeComponent.functions["replaceContent"] = (
     questions: any,
-    type: "OBJECTIVE" | "SUBJECTIVE"
+    type: "OBJECTIVE" | "SUBJECTIVE",
+    component: string
   ) => {
     const range = getRange();
-    if (range && range.toString()) {
+    if (range && range.toString() && component === "Text") {
+      console.log(questions.length, "data core");
       const id = componentId + "-" + range?.toString() + "-" + Date.now();
       setIdentifier(id);
-      console.log(questions.length, "data core");
       if (questions.length > 0) {
         console.log("called add");
         manager.canvasManager.canvas.functions.updateActiveComponentObjective(
@@ -81,8 +82,21 @@ export const registerFunctions = (
           setObjandSubComponentData(type, id, ["", ""], [""], [""])
         );
       }
-
       replaceContent(range, id);
+    } else if (component === "FlashCards") {
+      const id = componentId;
+      setIdentifier(id);
+      if (questions.length > 0) {
+        console.log("called add");
+        manager.canvasManager.canvas.functions.updateActiveComponentObjective(
+          addObjandSubComponentData(type, id, ["", ""], [""], [""])
+        );
+      } else {
+        console.log("called set");
+        manager.canvasManager.canvas.functions.updateActiveComponentData(
+          setObjandSubComponentData(type, id, ["", ""], [""], [""])
+        );
+      }
     }
   };
 

@@ -1,6 +1,4 @@
-import {
-  EditorialManagerInterface,
-} from "../Base/EditorialManager";
+import { EditorialManagerInterface } from "../Base/EditorialManager";
 import Image from "./Boxtypes/Image/Image";
 import Text from "./Boxtypes/Text/Text";
 import Background from "../Sidebars/RightSidebar/EditProperties/Background";
@@ -12,6 +10,8 @@ import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProp
 import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/ImageProperties";
 import Flashcard from "./Boxtypes/Flashcard/Flashcard";
 import AddImages from "../Sidebars/RightSidebar/EditProperties/AddImages";
+import Objective from "../Sidebars/RightSidebar/EditProperties/Extensions/Objective";
+import Subjective from "../Sidebars/RightSidebar/EditProperties/Extensions/Subjective";
 
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
@@ -90,6 +90,8 @@ export const EditProperties = (
     FlashCards: (
       <>
         <AddImages id={id} manager={manager} />
+        <Objective manager={manager} component="FlashCards" />
+        <Subjective manager={manager} component="FlashCards" />
         <ImageProperties manager={manager} />
         <Delete id={id} />
       </>

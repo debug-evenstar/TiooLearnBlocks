@@ -85,7 +85,7 @@ export const createInput = (id: string) => {
   element.contentEditable = "true";
   element.id = id;
   element.className =
-    "h-5 w-20 p-2 text-[2px] cursor-pointer border-2 border-[#FA14D5] inline-block outline-none rounded-full relative top-1";
+    "h-5 w-20 p-2 text-[2px] cursor-pointer border-2 border-[#4F46E5] inline-block outline-[#FA14D5] rounded-full relative top-1";
 
   return element;
 };

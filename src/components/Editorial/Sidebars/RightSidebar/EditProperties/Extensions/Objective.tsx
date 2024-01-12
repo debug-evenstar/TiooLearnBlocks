@@ -19,9 +19,10 @@ import Feedback from "./Feedback";
 
 interface Props {
   manager: EditorialManagerInterface;
+  component: string;
 }
 
-const Objective: FC<Props> = ({ manager }) => {
+const Objective: FC<Props> = ({ manager, component }) => {
   const selector: any = useSelector(handleSetCorrectOption);
   const id = selector.payload.activeViewbox.value;
 
@@ -42,7 +43,7 @@ const Objective: FC<Props> = ({ manager }) => {
 
   const handleSetObjective = () => {
     console.log(questions, "in objective");
-    replaceContent(questions, "OBJECTIVE");
+    replaceContent(questions, "OBJECTIVE", component);
     setIsActive(true);
     dispatch(handleToggleShowOptionBox());
     dispatch(refreshOptionsData());
@@ -54,7 +55,7 @@ const Objective: FC<Props> = ({ manager }) => {
       "changed data"
     );
     if (questions.length > 0) {
-      replaceContent(questions, "OBJECTIVE");
+      replaceContent(questions, "OBJECTIVE", component);
       setIsActive(true);
       dispatch(handleToggleShowOptionBox());
       dispatch(handleSetObjectiveIndex(questions.length));
@@ -71,7 +72,6 @@ const Objective: FC<Props> = ({ manager }) => {
       );
 
       if (questionIndex !== -1) {
-        // Create a copy of the question with the updated options
         const updatedQuestions = [...prevQuestions];
         const updatedQuestion = {
           ...updatedQuestions[questionIndex],
@@ -88,7 +88,6 @@ const Objective: FC<Props> = ({ manager }) => {
 
         return updatedQuestions;
       } else {
-        // Handle the case where the question is not found
         return prevQuestions;
       }
     });
