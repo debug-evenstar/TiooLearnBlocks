@@ -60,7 +60,11 @@ const Feedback: FC<Props> = ({ manager }) => {
     e: React.ChangeEvent<HTMLInputElement>,
     type: string
   ) => {
-    console.log(e.target.checked, "checked");
+    console.log(e.target.value, "checked");
+    if (e.target.value === "on") {
+      e.target.value = "off";
+      return;
+    }
     manager.canvasManager.canvas.functions.updateFeedbackType(
       type,
       objectiveIndex,
@@ -70,7 +74,6 @@ const Feedback: FC<Props> = ({ manager }) => {
   };
 
   const handleChangeAnswer = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(!checked);
     manager.canvasManager.canvas.functions.updateFeedbackAnswer(
       e.target.checked,
       objectiveIndex,
