@@ -86,7 +86,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
       </a>
 
       {isActive && (
-        <main className="w-full shadow-md">
+        <main className="w-full shadow-md relative">
           <section className="flex flex-wrap py-4">
             <TextEditProperties manager={manager} />
           </section>
@@ -207,13 +207,28 @@ const TextProperties: FC<Props> = ({ manager }) => {
             <a href="javascript:void(0)">
               <div className="flex items-center gap-2">
                 <p className="text-[12px]">Spacing: </p>
-                <input
-                  className="border h-6 w-8 text-center"
-                  type="text"
-                  placeholder="0"
-                  value={textSpacing}
-                  onChange={(e) => handleChangeTextSpacing(e.target.value)}
-                />
+                <div className="flex items-center gap-2">
+                  <p
+                    onClick={() =>
+                      handleChangeTextSpacing(`${+textSpacing - 1}`)
+                    }
+                  >
+                    <b>-</b>
+                  </p>
+                  <input
+                    className="border h-6 w-8 text-center"
+                    placeholder="0"
+                    value={textSpacing}
+                    onChange={(e) => handleChangeTextSpacing(e.target.value)}
+                  />
+                  <p
+                    onClick={() =>
+                      handleChangeTextSpacing(`${+textSpacing + 1}`)
+                    }
+                  >
+                    <b>+</b>
+                  </p>
+                </div>
               </div>
             </a>
           </section>
@@ -322,7 +337,7 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         </a>
       </div>
 
-      <div className="border p-2 cursor-pointer relative">
+      <div className="border p-2 cursor-pointer">
         <a
           href="javascript:void(0)"
           onClick={() => setLinkBoxActive(!linkBoxActive)}
@@ -331,7 +346,7 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         </a>
 
         {linkBoxActive && (
-          <section className="bg-white border p-2 absolute">
+          <section className="bg-white border p-2 absolute left-0">
             <input
               className="border p-2 h-10 w-40 text-[12px]"
               placeholder="Input link here"

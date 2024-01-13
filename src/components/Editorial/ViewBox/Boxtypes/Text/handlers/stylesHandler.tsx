@@ -19,9 +19,9 @@ export const toggleWrapperStyle = (
       element.style.fontSize = style + "px";
       break;
     case "spacing":
-      element.style.letterSpacing = style + "px";
+      element.style.lineHeight = style + "px";
       break;
-    default :
+    default:
       element.style.color = style;
       break;
   }

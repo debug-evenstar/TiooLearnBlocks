@@ -9,7 +9,7 @@ import Video from "./Boxtypes/Video/Video";
 import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
 import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/ImageProperties";
 import Flashcard from "./Boxtypes/Flashcard/Flashcard";
-import AddImages from "../Sidebars/RightSidebar/EditProperties/AddImages";
+import AddImages from "../Sidebars/RightSidebar/EditProperties/FlashCard/AddImages";
 import Objective from "../Sidebars/RightSidebar/EditProperties/Extensions/Objective";
 import Subjective from "../Sidebars/RightSidebar/EditProperties/Extensions/Subjective";
 import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";

@@ -1,0 +1,197 @@
+import React, { FC, useEffect, useState } from "react";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  handleSetCorrectOption,
+  handleSetObjectiveIndex,
+} from "provider/optionsDataSlice";
+import { RiAddCircleLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri";
+
+interface Props {
+  manager: EditorialManagerInterface;
+  index: number;
+  data: any;
+}
+
+const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
+  const selector: any = useSelector(handleSetCorrectOption);
+  const id = selector.payload.activeViewbox.value;
+
+  const [questions, setQuestions] = useState<any[]>([]);
+  const replaceContent =
+    manager.canvasManager.activeComponent.functions?.replaceContent;
+
+  const addQuestion =
+    manager.canvasManager.canvas.functions.updateFlashcardQuestion;
+
+  const dispatch = useDispatch();
+  const { identifier, correctOption, wrongOption } = selector.payload
+    .optionsData.value as {
+    identifier: string;
+    correctOption: string;
+    wrongOption: string;
+    objectiveIndex: number;
+  };
+
+  const [isActive, setIsActive] = useState(false);
+  const coreData = manager.canvasManager.activeComponent.data;
+
+  const handleSetObjective = () => {
+    console.log(questions, "in objective");
+    //replaceContent(questions, "SUBJECTIVE", component);
+    addQuestion(
+      {
+        type: "OBJECTIVE",
+        identifier: `Input ${index + 1}`,
+        options: [],
+        answers: [],
+        feedbacks: [],
+      },
+      index
+    );
+    setIsActive(true);
+    console.log(coreData, "Flashcard");
+    dispatch(handleSetCorrectOption(""));
+  };
+
+  const handleClick = () => {
+    console.log(
+      manager.canvasManager.activeComponent.data.coreData,
+      "changed data"
+    );
+    if (questions.length > 0) {
+      //replaceContent(questions, "SUBJECTIVE", component);
+      setIsActive(true);
+      dispatch(handleSetObjectiveIndex(questions.length));
+    }
+    dispatch(handleSetCorrectOption(""));
+  };
+
+  const handleDelete = (id: string) => {
+    const filteredQuestions = questions.filter(
+      (question) => question.identifier !== id
+    );
+    setQuestions(filteredQuestions);
+    manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
+      filteredQuestions
+    );
+  };
+
+  useEffect(() => {
+    console.log(coreData, "data");
+  }, [coreData]);
+
+  useEffect(() => {
+    coreData?.questions?.forEach((question: any) => {
+      if (
+        question?.type === "SUBJECTIVE" &&
+        question?.identifier.includes(id)
+      ) {
+        setQuestions([...questions, question]);
+        console.log(question);
+      }
+    });
+  }, [coreData, identifier]);
+
+  return (
+    <div className="w-full my-1">
+      <div
+        className="w-full flex justify-between items-center cursor-pointer"
+        onClick={handleSetObjective}
+      >
+        <p className="text-[13px]">
+          {isActive ? <b>Set Subjective</b> : "Set Subjective"}
+        </p>
+      </div>
+
+      {isActive && (
+        <>
+          <div
+            className="flex justify-between items-center py-2"
+            onClick={handleClick}
+          >
+            <p className="text-[12px]">Add a subjective</p>
+            <RiAddCircleLine size={"13px"} color="grey" />
+          </div>
+
+          <div className="w-full flex justify-between items-center cursor-pointer">
+            <div className="w-full text-[12px]">
+              {questions &&
+                questions?.map((sub: any, index: number) => (
+                  <SubjectiveItem
+                    sub={sub}
+                    index={index}
+                    manager={manager}
+                    handleDelete={handleDelete}
+                  />
+                ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default FlashcardSubjective;
+
+const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
+  const [isEditable, setIsEditable] = useState(false);
+
+  const selector: any = useSelector(handleSetCorrectOption);
+  const { objectiveIndex } = selector.payload.optionsData.value as {
+    objectiveIndex: number;
+  };
+
+  const coreData = manager.canvasManager.activeComponent.data.coreData;
+
+  const handleSubjectiveChange = (e: any) => {
+    const value = e.target.value;
+    if (!value) return;
+    manager.canvasManager.canvas.functions.updateObjectiveData(
+      {
+        answers: [value],
+      },
+      0
+    );
+    manager.canvasManager.canvas.functions.updateObjectiveOption(
+      value,
+      objectiveIndex,
+      0
+    );
+    //dispatch(handleSetCorrectOption(value));
+
+    console.log("typing..", value, objectiveIndex, coreData);
+  };
+
+  return (
+    <div key={sub.identifier} className="my-2 w-full">
+      <div className="w-full flex justify-between items-center cursor-pointer">
+        <p className="text-[12px]">
+          {isEditable ? (
+            <b>Subjective {index + 1}</b>
+          ) : (
+            `Subjective ${index + 1}`
+          )}
+        </p>
+
+        <div className="flex gap-1">
+          <RiEditLine onClick={() => setIsEditable(!isEditable)} />
+          <RiDeleteBinLine
+            className="cursor-pointer"
+            onClick={() => handleDelete(sub.identifier)}
+          />
+        </div>
+      </div>
+      {isEditable && (
+        <div className="w-[90%] m-2">
+          <textarea
+            className="w-full border border-black"
+            rows={5}
+            onChange={handleSubjectiveChange}
+          />
+        </div>
+      )}
+    </div>
+  );
+};

@@ -122,6 +122,7 @@ export default Subjective;
 
 const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
+  const [value, setValue] = useState("");
 
   const selector: any = useSelector(handleSetCorrectOption);
   const { objectiveIndex } = selector.payload.optionsData.value as {
@@ -130,8 +131,7 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
 
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
-  const handleSubjectiveChange = (e: any) => {
-    const value = e.target.value;
+  const handleSetSubjective = () => {
     if (!value) return;
     manager.canvasManager.canvas.functions.updateObjectiveData(
       {
@@ -144,7 +144,8 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       objectiveIndex,
       0
     );
-    //dispatch(handleSetCorrectOption(value));
+    setIsEditable(false);
+    console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);
   };
@@ -170,11 +171,30 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       </div>
       {isEditable && (
         <div className="w-[90%] m-2">
+          <div>
+            <div className="flex justify-between items-center py-1 my-1">
+              <p className="">Manual response</p>
+              <input type="radio" checked />
+            </div>
+            <div className="flex justify-between items-center py-1 my-1">
+              <p className="">AI</p>
+              <input type="radio" />
+            </div>
+          </div>
           <textarea
             className="w-full border border-black"
             rows={5}
-            onChange={handleSubjectiveChange}
+            onChange={(e: any) => setValue(e.target.value)}
+            value={value}
           />
+          <div className="w-full flex justify-end">
+            <button
+              onClick={handleSetSubjective}
+              className="w-[30%] bg-[#4f46e5] text-[12px] text-white rounded-xl px-1 py-0.5"
+            >
+              Save
+            </button>
+          </div>
         </div>
       )}
     </div>

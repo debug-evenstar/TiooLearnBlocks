@@ -205,6 +205,10 @@ class EditorialManager implements EditorialManagerInterface {
       index: number,
       optionIndex: number
     ) => this.updateFeedbackAnswer(answer, index, optionIndex);
+    this.canvasManager.canvas.functions["updateFlashcardQuestion"] = (
+      data: QuestionInterface,
+      index: number
+    ) => this.updateFlashcardQuestion(data, index);
     setInterval(() => {
       //console.log(this.canvasManager.activeComponent.data.coreData);
     }, 5000);
@@ -331,6 +335,17 @@ class EditorialManager implements EditorialManagerInterface {
       this.canvasManager.activeComponent.data.coreData.extensions[
         index
       ].question.options[optionIndex] = data;
+    }
+    this.saveActiveComponentData();
+  }
+
+  updateFlashcardQuestion(data: QuestionInterface, index: number) {
+    console.log(this.canvasManager.activeComponent.data, "IN EM");
+    if (this.canvasManager.activeComponent.data.coreData) {
+      this.canvasManager.activeComponent.data.coreData.cards[index].question = [
+        ...this.canvasManager.activeComponent.data.coreData.question,
+        data,
+      ];
     }
     this.saveActiveComponentData();
   }

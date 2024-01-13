@@ -9,8 +9,7 @@ export interface Card {
 }
 
 interface FlashCardComponentDataInterface extends ComponentBaseDataInterface {
-  cards: [Card];
-  tips?: string[];
+  cards?: [Card];
   question?: QuestionInterface;
 }
 
@@ -23,10 +22,10 @@ export const setFlashCardComponentData = (cards: any) => {
   return data;
 };
 
-export const setFlashCardQuestionData = (cards: any) => {
+export const setFlashCardQuestionData = (question: QuestionInterface) => {
   const data: FlashCardComponentDataInterface = {
     component: "FlashCards",
-    cards,
+    question,
     theme: "white",
   };
   return data;

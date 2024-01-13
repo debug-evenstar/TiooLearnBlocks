@@ -3,7 +3,10 @@ import { setFlashCardComponentData } from "components/Editorial/ViewBox/Boxtypes
 import { UploadIconProps } from "components/Editorial/ViewBox/Boxtypes/Image/Image";
 import { uploadFile } from "components/Editorial/ViewBox/Boxtypes/Image/handler";
 import React, { FC, useEffect, useRef, useState } from "react";
+import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { RiAddCircleLine } from "react-icons/ri";
+import FlashcardObjective from "./FlashcardObjective";
+import FlashcardSubjective from "./FlashcardSubjective";
 
 interface Props {
   id: string;
@@ -64,13 +67,52 @@ const AddImages: FC<Props> = ({ id, manager }) => {
     <div className="w-full my-5 py-2">
       <UploadText handleUpload={handleAddImage} />
       {images.map((image: any, index) => (
-        <div className="w-full py-2 text-[15px]">Image {index + 1}</div>
+        <FlashcardImage key={index} index={index} manager={manager} />
       ))}
     </div>
   );
 };
 
 export default AddImages;
+
+interface FlashcardImageProps {
+  index: number;
+  manager: EditorialManagerInterface;
+}
+
+const FlashcardImage: FC<FlashcardImageProps> = ({ index, manager }) => {
+  const [isActive, setIsActive] = useState(false);
+
+  return (
+    <div>
+      <div
+        className="w-full flex justify-between items-center py-2 text-[14px] cursor-pointer"
+        onClick={() => setIsActive(!isActive)}
+      >
+        <p>Image {index + 1}</p>
+        {isActive ? <MdArrowDropUp /> : <MdArrowDropDown />}
+      </div>
+      {isActive && (
+        <main>
+          <FlashcardObjective
+            index={index}
+            manager={manager}
+            data={{
+              content: "",
+            }}
+          />
+          <FlashcardSubjective
+            index={index}
+            manager={manager}
+            data={{
+              content: "",
+            }}
+          />
+        </main>
+      )}
+    </div>
+  );
+};
 
 const UploadText: FC<any> = ({ handleUpload }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -81,7 +123,7 @@ const UploadText: FC<any> = ({ handleUpload }) => {
   };
   return (
     <div
-      className="w-fit relative overflow-hidden cursor-pointer"
+      className="w-full relative overflow-hidden cursor-pointer"
       onClick={handleClick}
     >
       <div className="flex flex-col justify-center items-center h-full">
@@ -92,8 +134,9 @@ const UploadText: FC<any> = ({ handleUpload }) => {
           onChange={handleUpload}
           className="w-full h-full absolute top-0 -left-24 opacity-0 z-500"
         />
-        <div className="w-full flex justify-between items-center py-2 text-[15px] text-[#4f46e5]">
-          <p>Add image</p> <RiAddCircleLine />
+        <div className="w-full flex justify-between items-center py-2 text-[14px] text-[#4f46e5] font-medium">
+          <p>Add image</p>
+          <RiAddCircleLine />
         </div>
       </div>
     </div>

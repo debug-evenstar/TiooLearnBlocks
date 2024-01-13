@@ -45,7 +45,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
 
   return (
     <div className="w-full flex justify-around gap-2 my-5 relative top-[2rem] z-[5000]s">
-      {question.options.map((option: any, i: number) => (
+      {question?.options.map((option: any, i: number) => (
         <input
           className="border border-black w-[8rem] p-2 rounded text-center z-[5000] relative"
           type="text"

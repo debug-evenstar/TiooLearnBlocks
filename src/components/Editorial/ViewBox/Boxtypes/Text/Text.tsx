@@ -76,13 +76,7 @@ const Text: FC<CanvasText> = ({
 
   useEffect(() => {
     if (id === activeId) {
-      registerFunctions(
-        manager,
-        getRange,
-        viewBoxRef,
-        setIdentifier,
-        id
-      );
+      registerFunctions(manager, getRange, viewBoxRef, setIdentifier, id);
     }
   }, [manager, viewBoxRef, activeId]);
 

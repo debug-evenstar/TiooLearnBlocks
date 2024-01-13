@@ -1,5 +1,6 @@
 import ToolTipComponent from "components/extensions/ToolTip/render";
 import ReactDOM from "react-dom";
+import Tooltip from "../Tooltip";
 
 const checkersForToggleWrapper = (
   elementType: string,
@@ -19,6 +20,9 @@ const checkersForToggleWrapper = (
 
     if (styleType === "font-size") {
       element.style.fontSize = style + "px";
+    }
+    if (styleType === "spacing") {
+      element.style.lineHeight = style + "px";
     }
 
     element.style.color = style;
@@ -49,11 +53,10 @@ export const toggleWrapper = (
 
   checkersForToggleWrapper(elementType, element, style, styleType, link);
 
-  if (
-    styleType === "font-size" ||
-    (styleType === "spacing" &&
-      range.commonAncestorContainer.nodeName === "DIV")
-  ) {
+  if (elementType !== "b" && elementType !== "i") {
+    element.innerText = range.toString();
+    range.deleteContents();
+    range.insertNode(element);
     return;
   }
 
@@ -131,7 +134,8 @@ export const addTooltip = (range: Range, tip: string) => {
   const value = range.toString();
   range.deleteContents();
   const tipComponent = (
-    <ToolTipComponent label={value} content={tip}></ToolTipComponent>
+    //<ToolTipComponent label={value} content={tip}></ToolTipComponent>
+    <Tooltip text={value} tip={tip} />
   );
   var div = document.createElement("div");
   ReactDOM.render(tipComponent, div);
