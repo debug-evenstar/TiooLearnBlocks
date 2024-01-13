@@ -9,8 +9,15 @@ import {
 } from "./handler";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
+import { useSelector } from "react-redux";
+import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
+import ObjectivesInputs from "./ObjectivesInputs";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
+  const selector: any = useSelector(refreshToggleSidebarState);
+  const activeId: string = selector.payload.activeViewbox.value;
+  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+
   const [previewImage, setPreviewImage] = useState("");
   const [overlayActive, setOverlayActive] = useState(false);
   const [data, setData] = useState<any>();
@@ -21,6 +28,8 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     width: 200,
     height: 5,
   });
+  const extensions: any[] =
+    manager.canvasManager.activeComponent.data.coreData?.extensions;
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -93,6 +102,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         y: relativeY,
         width: 200,
         height: 5,
+        question: [],
       };
       const newList = [...inputList, newInput];
       setInputList(newList);
@@ -100,6 +110,10 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         setImageComponentData({
           extensions: newList,
         })
+      );
+      console.log(
+        manager.canvasManager.activeComponent.data.coreData.extensions,
+        "updated data"
       );
       setInputBoxDimensions((prevList) => [
         ...prevList,
@@ -134,46 +148,48 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         manager={manager}
       />
 
-      {inputList.map((input, index) => {
-        const nodeRef: any = createRef();
+      {extensions &&
+        extensions.length > 0 &&
+        extensions.map((input, index) => {
+          const nodeRef: any = createRef();
 
-        return (
-          <Draggable
-            key={index}
-            axis="both"
-            nodeRef={nodeRef}
-            handle=".inputHandle"
-          >
-            <Resizable
-              width={inputBoxDimensions[index].width}
-              height={inputBoxDimensions[index].height}
-              minConstraints={[20, 5]}
-              onResize={(event: any, { node, size, handle }: any) =>
-                onResize(event, { node, size, handle }, index)
-              }
-              resizeHandles={["e"]}
+          return (
+            <Draggable
+              key={index}
+              axis="both"
+              nodeRef={nodeRef}
+              handle=".inputHandle"
             >
-              <div
-                ref={nodeRef}
-                style={{
-                  width: inputBoxDimensions[index].width + "px",
-                  height: inputBoxDimensions[index].height + "px",
-                  position: "absolute",
-                  top: `${input.y}px`,
-                  left: `${input.x}px`,
-                  zIndex: "200",
-                  padding: "0.05rem",
-                }}
+              <Resizable
+                width={input.width}
+                height={input.height}
+                minConstraints={[20, 5]}
+                onResize={(event: any, { node, size, handle }: any) =>
+                  onResize(event, { node, size, handle }, index)
+                }
+                resizeHandles={["e"]}
               >
-                <input
-                  className="w-full p-1.5 inputHandle"
-                  placeholder={`Input ${index + 1}`}
-                />
-              </div>
-            </Resizable>
-          </Draggable>
-        );
-      })}
+                <div
+                  ref={nodeRef}
+                  style={{
+                    width: input.width + "px",
+                    height: input.height + "px",
+                    position: "absolute",
+                    top: `${input.y}px`,
+                    left: `${input.x}px`,
+                    zIndex: "200",
+                    padding: "0.05rem",
+                  }}
+                >
+                  <input
+                    className="w-full p-1.5 inputHandle"
+                    placeholder={`Input ${index + 1}`}
+                  />
+                </div>
+              </Resizable>
+            </Draggable>
+          );
+        })}
 
       {previewImage?.length > 1 && (
         <div
@@ -187,6 +203,12 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
             className="w-full h-full"
             draggable={false}
           />
+        </div>
+      )}
+
+      {showOptionsBox && activeId === id && (
+        <div>
+          <ObjectivesInputs manager={manager} /> deop
         </div>
       )}
     </div>

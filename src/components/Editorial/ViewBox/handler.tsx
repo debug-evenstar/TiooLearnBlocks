@@ -101,28 +101,22 @@ export const EditProperties = (
   return viewboxTypes[componentName];
 };
 
-
-
-
-
 /* -------------------------------------------------------------------------- */
 /*                                SOMETHING NEW                               */
 /* -------------------------------------------------------------------------- */
 
-
 interface ViewBoxHandlerInterface {
   // Some other properties and methods
-  manager : EditorialManagerInterface;
-  setViewBoxStyle : Function;
+  manager: EditorialManagerInterface;
+  setViewBoxStyle: Function;
 }
-export class ViewBoxHandler implements ViewBoxHandlerInterface{
-
-  manager : EditorialManagerInterface;
-  constructor(manager : EditorialManagerInterface) {
-    this.manager =  manager;
+export class ViewBoxHandler implements ViewBoxHandlerInterface {
+  manager: EditorialManagerInterface;
+  constructor(manager: EditorialManagerInterface) {
+    this.manager = manager;
   }
 
-  setViewBoxStyle(style : string, styleType : string){
+  setViewBoxStyle(style: string, styleType: string) {
     const element = this.manager.canvasManager.activeComponentElement();
     if (!element) return;
     toggleWrapperStyle(element, style, styleType);

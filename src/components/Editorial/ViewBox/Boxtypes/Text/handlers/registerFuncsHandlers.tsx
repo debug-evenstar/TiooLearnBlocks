@@ -28,18 +28,21 @@ export const registerFunctions = (
     if (range && range.toString()) {
       toggleWrapper(range, elementType, style, styleType, link);
     }
-    const element : HTMLDivElement  =  document.getElementById(manager.canvasManager.activeComponent.data.id) as HTMLDivElement;
+    const element: HTMLDivElement = document.getElementById(
+      manager.canvasManager.activeComponent.data.id
+    ) as HTMLDivElement;
     if (styleType !== "position") return;
     if (!element) return;
     toggleWrapperStyle(element, style, styleType);
-
   };
 
   manager.canvasManager.activeComponent.functions["toggleWrapperStyle"] = (
     style: string = "",
     styleType: string
   ) => {
-    const element : HTMLDivElement  =  document.getElementById(manager.canvasManager.activeComponent.data.id) as HTMLDivElement;
+    const element: HTMLDivElement = document.getElementById(
+      manager.canvasManager.activeComponent.data.id
+    ) as HTMLDivElement;
     if (!element) return;
     toggleWrapperStyle(element, style, styleType);
   };
@@ -73,12 +76,56 @@ export const registerFunctions = (
       if (questions.length > 0) {
         console.log("called add");
         manager.canvasManager.canvas.functions.updateActiveComponentObjective(
-          addObjandSubComponentData(type, id, ["", ""], [""], [""])
+          addObjandSubComponentData(
+            type,
+            id,
+            [
+              {
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              },
+              {
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              },
+            ],
+            [""]
+          )
         );
       } else {
         console.log("called set");
         manager.canvasManager.canvas.functions.updateActiveComponentData(
-          setObjandSubComponentData(type, id, ["", ""], [""], [""])
+          setObjandSubComponentData(
+            type,
+            id,
+            [
+              {
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              },
+              {
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              },
+            ],
+            [""]
+          )
         );
       }
       replaceContent(range, id);
@@ -88,12 +135,56 @@ export const registerFunctions = (
       if (questions.length > 0) {
         console.log("called add");
         manager.canvasManager.canvas.functions.updateActiveComponentObjective(
-          addObjandSubComponentData(type, id, ["", ""], [""], [""])
+          addObjandSubComponentData(
+            type,
+            id,
+            [
+              {
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              },
+              {
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              },
+            ],
+            [""]
+          )
         );
       } else {
         console.log("called set");
         manager.canvasManager.canvas.functions.updateActiveComponentData(
-          setObjandSubComponentData(type, id, ["", ""], [""], [""])
+          setObjandSubComponentData(
+            type,
+            id,
+            [
+              {
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              },
+              {
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              },
+            ],
+            [""]
+          )
         );
       }
     }

@@ -46,6 +46,10 @@ input[type="file"] {
   text-align: center;
   padding: 10px 0px;
 }
+.tiooBoxShadow {
+  box-shadow: 1px 1px 2px 1px rgb(0 0 0 / 0.1),
+    -1px -1px 2px 1px rgb(0 0 0 / 0.1);
+}
 .hide-scroll::-webkit-scrollbar {
   display: none;
 }
@@ -982,6 +986,6 @@ input[type="file"] {
     @apply list-disc pl-4;
   }
   li {
-    @apply mb-4;
+    @apply mb-2;
   }
 }

@@ -49,8 +49,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
         <input
           className="border border-black w-[8rem] p-2 rounded text-center z-[5000] relative"
           type="text"
-          placeholder={i > 0 ? "Wrong" : "Correct"}
-          value={option}
+          value={option.content}
           onChange={(e) => handleSetOptionData(e, i)}
         />
       ))}

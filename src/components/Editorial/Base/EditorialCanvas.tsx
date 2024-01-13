@@ -30,8 +30,8 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
 
       updateSlideComponents([...slideComponents, { id: itemId }]);
       manager.canvasManager.updateActiveSlide([
-        ...manager.canvasManager.activeSlide ?? [],
-        { id: itemId }
+        ...(manager.canvasManager.activeSlide ?? []),
+        { id: itemId },
       ]);
       manager.canvasManager.setActiveComponent(itemId);
       dispatch(handleSetActiveViewbox(itemId));
@@ -55,7 +55,6 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     dispatch(handleToggleSidebarState());
   };
 
-
   const handleClickedViewbox = (id: string) => {
     dispatch(handleSetActiveViewbox(id));
     dispatch(handleSetSidebarState(true));
@@ -65,13 +64,13 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   const updateSlideComponents = (components: any[]) => {
     setSlideComponents(() => components);
     // Also update slide manager
-    manager.slideManager.slides[manager.slideManager.activeSlide] = components; 
+    manager.slideManager.slides[manager.slideManager.activeSlide] = components;
   };
 
   useEffect(() => {
-    const parsedSlides = manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
-    manager.canvasManager &&
-      setSlideComponents(parsedSlides);
+    const parsedSlides =
+      manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
+    manager.canvasManager && setSlideComponents(parsedSlides);
     manager.canvasManager.updateActiveSlide(parsedSlides);
   }, [slideData]);
 
@@ -90,9 +89,9 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             manager.canvasManager.canvas.functions?.getCanvasSize(),
             {
               ...manager.canvasManager.getComponentData(item.id).layout,
-              position: { 
-                xAxis : { offset : data.x},
-                yAxis : { offset : data.y }
+              position: {
+                xAxis: { offset: data.x },
+                yAxis: { offset: data.y },
               },
             }
           );
@@ -110,7 +109,6 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             onStop={handleStop}
             handle=".handle"
             defaultClassName="w-fit"
-            
           >
             <div
               key={item.id}

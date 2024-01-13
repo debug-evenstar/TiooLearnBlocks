@@ -6,6 +6,7 @@ import dragItemsSlice from "./dragItemsSlice";
 import activeViewboxSlice from "./activeViewboxSlice";
 import showOptionsBoxSlice from "./showOptionsBoxSlice";
 import optionsDataSlice from "./optionsDataSlice";
+import feedbackSlice from "./feedbackSlice";
 
 const rootReducer = combineReducers({
   rightSidebarState: rightSidebarSlice,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   activeViewbox: activeViewboxSlice,
   showOptionsBox: showOptionsBoxSlice,
   optionsData: optionsDataSlice,
+  feedback: feedbackSlice,
 });
 
 const persistedReducer = persistReducer(
@@ -20,7 +22,12 @@ const persistedReducer = persistReducer(
     key: "root",
     storage: AsyncStorage,
     version: 0,
-    blacklist: ["rightSidebarState", "showOptionsBox", "optionsData"],
+    blacklist: [
+      "rightSidebarState",
+      "showOptionsBox",
+      "optionsData",
+      "feedback",
+    ],
   },
   rootReducer
 );

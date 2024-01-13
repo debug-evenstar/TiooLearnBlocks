@@ -36,22 +36,20 @@ const AddImages: FC<Props> = ({ id, manager }) => {
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    const cards =
+      manager.canvasManager.canvas.functions.getComponentData(id).cards;
+    console.log(cards, "Cards");
+
     if (!e.target.files) return;
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setPreviewImage(imageUrl);
-      //const url = await uploadFile(473, selectedFile);
-      //(url);
-      //console.log(url, "url");
+      const url = await uploadFile(473, selectedFile);
+      console.log(url, "url");
+
       manager.canvasManager.canvas.functions.updateActiveComponentData(
-        setFlashCardComponentData([
-          {
-            url: imageUrl,
-            alternatives: [],
-          },
-        ])
+        setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
+      console.log(cards, "Updated Cards");
       console.log(coreData, "added");
     }
   };

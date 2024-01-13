@@ -16,6 +16,11 @@ import {
 } from "provider/optionsDataSlice";
 import { MdChatBubbleOutline } from "react-icons/md";
 import Feedback from "./Feedback";
+import {
+  handleSetFeedbackStatus,
+  handleSetOptionIndex,
+} from "provider/feedbackSlice";
+import { OptionInterface } from "components/interface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -46,6 +51,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
     replaceContent(questions, "OBJECTIVE", component);
     setIsActive(true);
     dispatch(handleToggleShowOptionBox());
+    dispatch(handleSetObjectiveIndex(questions.length));
     dispatch(refreshOptionsData());
   };
 
@@ -104,7 +110,8 @@ const Objective: FC<Props> = ({ manager, component }) => {
         console.log(question);
       }
     });
-  }, [coreData, identifier]);
+    console.log(questions);
+  }, [coreData?.questions, identifier]);
 
   return (
     <div className="p-2 shadow-md">
@@ -158,6 +165,13 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
+  const dispatch = useDispatch();
+  const selector: any = useSelector(handleSetFeedbackStatus);
+  const { optionIndex, status: optionStatus } = selector.payload.feedback
+    .value as {
+    optionIndex: number;
+    status: number;
+  };
   const [isActive, setIsActive] = useState(false);
 
   const addOption = (data: string, optionIndex: number) => {
@@ -166,14 +180,27 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       index,
       optionIndex
     );
-    console.log("cliked");
+    console.log(
+      manager.canvasManager.activeComponent.data.coreData.questions,
+      "clicked"
+    );
+  };
+
+  const handleShowFeedback = (index: number) => {
+    dispatch(handleSetOptionIndex(index));
+    dispatch(handleSetFeedbackStatus(true));
+  };
+
+  const handleOpenObjective = () => {
+    dispatch(handleSetObjectiveIndex(index));
+    setIsActive(!isActive);
   };
 
   return (
     <div className="py-1">
       <div
         className="w-full flex justify-between items-center cursor-pointer"
-        onClick={() => setIsActive(!isActive)}
+        onClick={handleOpenObjective}
       >
         <p className="text-[12px]">
           {isActive ? <b>Objective {index + 1}</b> : `Objective ${index + 1}`}
@@ -182,21 +209,20 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 
       {isActive && (
         <main className="w-full p-2">
-          {objective.options?.map((option: string, i: any) => (
+          {objective.options?.map((option: OptionInterface, i: any) => (
             <div key={i}>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-1">
                   <MdChatBubbleOutline />
-                  <p className="text-[12px] my-2">{option}</p>
+                  <p className="text-[12px] my-2">{option.content}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <RiFeedbackLine />
+                  <RiFeedbackLine onClick={() => handleShowFeedback(i)} />
                   <RiDeleteBinLine
                     onClick={() => handleDelete(objective.identifier, i)}
                   />
                 </div>
               </div>
-              {true && <Feedback />}
             </div>
           ))}
 
@@ -209,6 +235,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
           </div>
         </main>
       )}
+      {optionStatus && <Feedback manager={manager} />}
     </div>
   );
 };

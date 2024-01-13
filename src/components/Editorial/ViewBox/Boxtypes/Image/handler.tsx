@@ -1,18 +1,30 @@
 import axios from "axios";
-import { ComponentBaseDataInterface } from "components/interface";
+import {
+  ComponentBaseDataInterface,
+  QuestionInterface,
+} from "components/interface";
 
 interface ImageComponentDataInterface extends ComponentBaseDataInterface {
   url?: string;
 }
 
-export const setImageComponentData = (imageData : {
-  url? : string;
-  extensions? : any[]
+interface ImageExtensions {
+  type: "input";
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  question?: QuestionInterface;
+}
+
+export const setImageComponentData = (imageData: {
+  url?: string;
+  extensions?: ImageExtensions[];
 }) => {
   const data: ImageComponentDataInterface = {
     component: "Image",
-    ...(imageData.url ? {url : imageData.url} : {}),
-    ...(imageData.extensions ? {extensions : imageData.extensions} : {}),
+    ...(imageData.url ? { url: imageData.url } : {}),
+    ...(imageData.extensions ? { extensions: imageData.extensions } : {}),
     theme: "white",
   };
   return data;

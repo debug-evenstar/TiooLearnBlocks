@@ -1,6 +1,6 @@
 import { ComponentBaseDataInterface } from "components/interface";
 
-interface Card {
+export interface Card {
   url: string;
   alternatives: any[];
 }
@@ -10,7 +10,7 @@ interface FlashCardComponentDataInterface extends ComponentBaseDataInterface {
   tips?: string[];
 }
 
-export const setFlashCardComponentData = (cards: [Card]) => {
+export const setFlashCardComponentData = (cards: any) => {
   const data: FlashCardComponentDataInterface = {
     component: "FlashCards",
     cards,

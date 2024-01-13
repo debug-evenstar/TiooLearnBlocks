@@ -1,16 +1,26 @@
 import {
   ComponentBaseDataInterface,
-  QuestionInterface
+  FeedbackInterface,
+  OptionInterface,
+  QuestionInterface,
 } from "components/interface";
 
 export const setObjandSubComponentData = (
   type: "OBJECTIVE" | "SUBJECTIVE",
   identifier: string = "",
-  options: string[] = [],
-  answers: string[] = [],
-  feedbacks: string[] = []
+  options: OptionInterface[] = [
+    {
+      answer: false,
+      content: "",
+      feedback: {
+        type: "",
+        content: "",
+      },
+    },
+  ],
+  answers: string[] = []
 ) => {
-  const data: ComponentBaseDataInterface= {
+  const data: ComponentBaseDataInterface = {
     component: "Text",
     theme: "white",
     questions: [
@@ -19,7 +29,6 @@ export const setObjandSubComponentData = (
         identifier,
         options,
         answers,
-        feedbacks,
       },
     ],
   };
@@ -29,16 +38,23 @@ export const setObjandSubComponentData = (
 export const addObjandSubComponentData = (
   type: "OBJECTIVE" | "SUBJECTIVE",
   identifier: string = "",
-  options: string[] = [],
-  answers: string[] = [],
-  feedbacks: string[] = []
+  options: OptionInterface[] = [
+    {
+      answer: false,
+      content: "",
+      feedback: {
+        type: "",
+        content: "",
+      },
+    },
+  ],
+  answers: string[] = []
 ) => {
   const data: QuestionInterface = {
     type,
     identifier,
     options,
     answers,
-    feedbacks,
   };
 
   return data;

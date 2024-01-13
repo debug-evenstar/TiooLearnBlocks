@@ -2,14 +2,24 @@ import { EditorialManagerInterface } from "components/Editorial/Base/EditorialMa
 import React, { FC, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { toggleWrapperSize, uploadFile } from "../Image/handler";
+import { setFlashCardComponentData } from "./handlers/dataHandler";
 
-const Image: FC<any> = ({ id, manager, viewBoxRef, image }) => {
+interface Props {
+  id: string;
+  manager: EditorialManagerInterface;
+  viewBoxRef: any;
+  image: any;
+}
+
+const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
   const [previewImage, setPreviewImage] = useState(image);
   const [overlayActive, setOverlayActive] = useState(false);
   const [data, setData] = useState<any>();
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    const cards =
+      manager.canvasManager.canvas.functions.getComponentData(id).cards;
     if (!e.target.files) return;
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -17,9 +27,10 @@ const Image: FC<any> = ({ id, manager, viewBoxRef, image }) => {
       //setPreviewImage(imageUrl);
       const url = await uploadFile(473, selectedFile);
       setPreviewImage(url);
-      manager.canvasManager.canvas.functions.updateActiveComponentData({
-        url,
-      });
+      manager.canvasManager.canvas.functions.updateActiveComponentData(
+        setFlashCardComponentData([...cards, { url, alternatives: [] }])
+      );
+      console.log(cards, "Updated Cards");
     }
   };
 
@@ -31,13 +42,16 @@ const Image: FC<any> = ({ id, manager, viewBoxRef, image }) => {
   };
 
   const handleUpload = async (files: FileList) => {
+    const cards =
+      manager.canvasManager.canvas.functions.getComponentData(id).cards;
     const file = files[0];
     if (file) {
       const url = await uploadFile(473, file);
       setPreviewImage(url);
-      manager.canvasManager.canvas.functions.updateActiveComponentData({
-        url,
-      });
+      manager.canvasManager.canvas.functions.updateActiveComponentData(
+        setFlashCardComponentData([...cards, { url, alternatives: [] }])
+      );
+      console.log(cards, "Updated Cards");
     }
   };
 
