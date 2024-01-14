@@ -21,7 +21,7 @@ import {
   handleSetFeedbackType,
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
-import { OptionInterface } from "components/interface";
+import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
 
@@ -117,7 +117,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
         console.log(question);
       }
     });
-    //console.log(questions);
+    console.log(questions);
   }, [coreData?.questions, identifier, id]);
 
   return (
@@ -184,12 +184,21 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
     type: string;
   };
   const [isActive, setIsActive] = useState(false);
+  const [question, setQuestion] = useState<any>();
+  const [addedOption, setAddedOption] = useState(false);
+
+  const coreData = manager.canvasManager.activeComponent.data.coreData;
+
+  useEffect(() => {
+    setQuestion(coreData.questions[index]);
+  }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
     manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
       data,
       index
     );
+    setAddedOption(!addedOption);
     console.log(
       manager.canvasManager.activeComponent.data.coreData.questions,
       "clicked"
@@ -220,24 +229,25 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 
       {isActive && (
         <main className="w-full p-2">
-          {objective.options?.map((option: OptionInterface, i: any) => (
-            <div key={i}>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <ChatIcon />
-                  <p className="text-[12px] my-2">{option.content}</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <div onClick={() => handleShowFeedback(i)}>
-                    <FeedbackIcon />
+          {question &&
+            question.options?.map((option: OptionInterface, i: any) => (
+              <div key={i}>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <ChatIcon />
+                    <p className="text-[12px] my-2">{option.content}</p>
                   </div>
-                  <RiDeleteBinLine
-                    onClick={() => handleDelete(objective.identifier, i)}
-                  />
+                  <div className="flex items-center gap-1">
+                    <div onClick={() => handleShowFeedback(i)}>
+                      <FeedbackIcon />
+                    </div>
+                    <RiDeleteBinLine
+                      onClick={() => handleDelete(objective.identifier, i)}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
 
           <div
             className="flex justify-between py-2 items-center"
