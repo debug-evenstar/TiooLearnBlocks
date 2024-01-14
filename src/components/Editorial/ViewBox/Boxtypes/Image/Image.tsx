@@ -9,11 +9,13 @@ import {
 } from "./handler";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import ObjectivesInputs from "./ObjectivesInputs";
+import { handleSetOptionIndex } from "provider/feedbackSlice";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
+  const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
   const activeId: string = selector.payload.activeViewbox.value;
   const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
@@ -111,6 +113,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
           extensions: newList,
         })
       );
+      dispatch(handleSetOptionIndex(newList.length));
       console.log(
         manager.canvasManager.activeComponent.data.coreData.extensions,
         "updated data"
