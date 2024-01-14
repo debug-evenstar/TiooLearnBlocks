@@ -40,6 +40,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
   const handleSetObjective = () => {
+    if (isActive) return;
     console.log(questions, "in objective");
     replaceContent(questions, "SUBJECTIVE", component);
     setIsActive(true);
@@ -205,11 +206,12 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
             </div>
             <div className="flex justify-between items-center py-1 my-1">
               <p className="">AI</p>
-              <input type="radio" />
+              <input type="radio" disabled />
             </div>
           </div>
           <textarea
-            className="w-full border border-black"
+            className="w-full border border-black p-2"
+            placeholder="Type the answer"
             rows={5}
             onChange={(e: any) => setValue(e.target.value)}
             value={value}
