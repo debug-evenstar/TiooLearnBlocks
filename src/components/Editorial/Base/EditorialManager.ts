@@ -228,6 +228,7 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
   updateActiveComponentObjective(data: any) {
+    console.log(data);
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions = [
         ...this.canvasManager.activeComponent.data.coreData.questions,

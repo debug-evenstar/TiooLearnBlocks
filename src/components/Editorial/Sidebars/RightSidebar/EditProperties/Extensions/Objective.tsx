@@ -117,8 +117,8 @@ const Objective: FC<Props> = ({ manager, component }) => {
         console.log(question);
       }
     });
-    console.log(questions);
-  }, [coreData?.questions, identifier]);
+    //console.log(questions);
+  }, [coreData?.questions, identifier, id]);
 
   return (
     <div className="p-2 shadow-md">

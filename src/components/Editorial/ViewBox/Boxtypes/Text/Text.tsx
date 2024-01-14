@@ -129,7 +129,7 @@ const Text: FC<CanvasText> = ({
       if (!editable) return;
 
       coreData?.questions?.forEach((question: any, i: number) => {
-        if (question?.identifier.includes(id)) {
+        if (question?.identifier?.includes(id)) {
           const inputElement = document.getElementById(question.identifier);
           console.log(inputElement, "FOUND ELEMENT");
 

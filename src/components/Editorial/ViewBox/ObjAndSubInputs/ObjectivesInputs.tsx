@@ -26,12 +26,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
   const handleSetOptionData = (e: any, index: number) => {
     const value = e.target.value;
     if (!value) return;
-    manager.canvasManager.canvas.functions.updateObjectiveData(
-      {
-        answers: [value],
-      },
-      index
-    );
+
     manager.canvasManager.canvas.functions.updateObjectiveOption(
       value,
       objectiveIndex,
@@ -41,7 +36,10 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     else dispatch(handleSetWrongOption(value));
   };
 
-  useEffect(() => console.log(question), [question]);
+  useEffect(
+    () => console.log(coreData, objectiveIndex, "objective"),
+    [question]
+  );
 
   return (
     <div className="w-full flex justify-around gap-2 my-5 relative top-[2rem] z-[5000]s">
