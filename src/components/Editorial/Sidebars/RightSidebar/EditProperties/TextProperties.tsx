@@ -42,8 +42,8 @@ const TextProperties: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
   const [colorIsActive, setColorIsActive] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
-  const [textSize, setTextSize] = useState("0");
-  const [textSpacing, setTextSpacing] = useState("0");
+  const [textSize, setTextSize] = useState("1");
+  const [textSpacing, setTextSpacing] = useState("1");
   const [selectedFont, setSelectedFont] = useState("Arial");
   const fonts = [
     "Arial",
