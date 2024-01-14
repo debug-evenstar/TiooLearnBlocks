@@ -90,6 +90,10 @@ const Text: FC<CanvasText> = ({
     resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount);
   }, [textareaRowCount, viewBoxRef, id, textValue]);
 
+  useEffect(() => {
+    if (id === activeId) setIsEditable(true);
+  }, []);
+
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
   const handleClickedObjective = (options: string[], index: number) => {

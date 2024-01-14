@@ -5,12 +5,15 @@ import { handleSetCorrectOption } from "provider/optionsDataSlice";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
+import { ObjectiveItemProp } from "./interfaces";
+import EmojiTextArea from "components/Editorial/ViewBox/Boxtypes/Text/EmojiTextArea";
 
 interface Props {
   manager: EditorialManagerInterface;
+  type: "OBJECTIVE" | "SUBJECTIVE";
 }
 
-const Feedback: FC<Props> = ({ manager }) => {
+const Feedback: FC<Props> = ({ manager, type }) => {
   const correctRadio = useRef<HTMLInputElement | null>(null);
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
@@ -27,7 +30,7 @@ const Feedback: FC<Props> = ({ manager }) => {
   };
 
   const [questions, setQuestions] = useState<any[]>([]);
-  const [checked, setChecked] = useState(false);
+  const [feedbackValue, setFeedbackValue] = useState("");
 
   const dispatch = useDispatch();
   const { identifier } = selector.payload.optionsData.value as {
@@ -47,13 +50,17 @@ const Feedback: FC<Props> = ({ manager }) => {
     });
   }, [coreData, identifier]);
 
-  const handleFeedbackContent = (e: any) => {
+  const handleChangeFeedbackContent = (value: string) => {
+    setFeedbackValue(value);
+  };
+
+  const handleSaveFeedbackContent = () => {
     manager.canvasManager.canvas.functions.updateFeedbackContent(
-      e.target.value,
+      feedbackValue,
       objectiveIndex,
       optionIndex
     );
-    console.log(coreData.questions[objectiveIndex], "typing...");
+    console.log(coreData.questions[objectiveIndex], "changed");
   };
 
   const handleChangeType = (
@@ -84,7 +91,7 @@ const Feedback: FC<Props> = ({ manager }) => {
   };
 
   return (
-    <div className="w-fit h-fit bg-white border border-black absolute right-[300px] bottom-[200px]">
+    <div className="w-fit h-fit min-w-[20rem] min-h-[22rem] bg-white border border-black absolute right-[300px] bottom-[200px] pb-4">
       <header className="flex justify-between items-center border-b border-black text-[12px] p-2">
         <p>Set Feedback</p>
         <RiCloseLine
@@ -93,64 +100,92 @@ const Feedback: FC<Props> = ({ manager }) => {
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">
-        <div className="text-[13px]">
-          <b>Option {optionIndex + 1}</b>: {option.content}
-        </div>
-
-        <div className="flex gap-2 items-center">
-          <input
-            className="border-10 border-black"
-            type="checkbox"
-            onChange={handleChangeAnswer}
-            checked={option.answer}
-          />
-          <p className="text-[13px]">Answer</p>
-        </div>
-
-        <div>
-          <p className="text-[13px]">Types</p>
-
-          <div className="my-1 flex justify-evenly gap-4 items-center">
-            <div className="my-1 flex gap-2 items-center">
-              <input
-                ref={correctRadio}
-                type="radio"
-                onChange={(e) => handleChangeType(e, "correct")}
-                value={option.feedback.type === "correct" ? "on" : "off"}
-              />
-              <p className="text-[13px]">Correct</p>
-            </div>
-
-            <div className="my-1 flex gap-2 items-center">
-              <input
-                ref={incorrectRadio}
-                type="radio"
-                onChange={(e) => handleChangeType(e, "incorrect")}
-                value={option.feedback.type === "incorrect" ? "on" : "off"}
-              />
-              <p className="text-[13px]">Incorrect</p>
-            </div>
-
-            <div className="my-1 flex gap-2 items-center">
-              <input
-                ref={neutralRadio}
-                type="radio"
-                onChange={(e) => handleChangeType(e, "neutral")}
-                value={option.feedback.type === "neutral" ? "on" : "off"}
-              />
-              <p className="text-[13px]">Neutral</p>
-            </div>
+        {type === "OBJECTIVE" ? (
+          <div className="text-[13px]">
+            <b>Option {optionIndex + 1}</b>: {option.content}
           </div>
-        </div>
+        ) : (
+          <div className="text-[13px]">
+            <b>Answer</b>: {option.content}
+          </div>
+        )}
+
+        {type === "OBJECTIVE" && (
+          <>
+            <div className="flex gap-2 items-center">
+              <input
+                className="border-10 border-black"
+                type="checkbox"
+                onChange={handleChangeAnswer}
+                defaultChecked={option.answer}
+              />
+              <p className="text-[13px]">Answer</p>
+            </div>
+
+            <div>
+              <p className="text-[13px]">Types</p>
+
+              <div className="my-1 flex justify-evenly gap-4 items-center">
+                <div className="my-1 flex gap-2 items-center">
+                  <input
+                    ref={correctRadio}
+                    type="radio"
+                    onChange={(e) => handleChangeType(e, "correct")}
+                    value={option.feedback.type === "correct" ? "on" : "off"}
+                  />
+                  <p className="text-[13px]">Correct</p>
+                </div>
+
+                <div className="my-1 flex gap-2 items-center">
+                  <input
+                    ref={incorrectRadio}
+                    type="radio"
+                    onChange={(e) => handleChangeType(e, "incorrect")}
+                    value={option.feedback.type === "incorrect" ? "on" : "off"}
+                  />
+                  <p className="text-[13px]">Incorrect</p>
+                </div>
+
+                <div className="my-1 flex gap-2 items-center">
+                  <input
+                    ref={neutralRadio}
+                    type="radio"
+                    onChange={(e) => handleChangeType(e, "neutral")}
+                    value={option.feedback.type === "neutral" ? "on" : "off"}
+                  />
+                  <p className="text-[13px]">Neutral</p>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
 
         <textarea
           className="w-full border border-black rounded p-2 text-[13px]"
           placeholder="Input Feedback"
           rows={5}
-          onChange={handleFeedbackContent}
+          onChange={(e) => handleChangeFeedbackContent(e.target.value)}
           defaultValue={option.feedback.content}
         />
+
+        {false && (
+          <EmojiTextArea
+            value={feedbackValue}
+            defaultValue={option.feedback.content}
+            onChange={handleChangeFeedbackContent}
+          />
+        )}
       </main>
+
+      <div className="w-full px-6">
+        <button
+          onClick={handleSaveFeedbackContent}
+          className="w-full bg-[#4f46e5] text-white rounded p-2"
+          type="button"
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 };

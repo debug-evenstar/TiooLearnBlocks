@@ -1,6 +1,7 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import EmojiTextArea from "components/Editorial/ViewBox/Boxtypes/Text/EmojiTextArea";
 import React, { FC, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 
@@ -21,9 +22,13 @@ const Tips: FC<Props> = ({ manager }) => {
     setIsActive(false);
   };
 
-  const handleClose = () => {
-    setIsActive(!isActive);
-    alert("closed");
+  const handleClose = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+    e.stopPropagation();
+    setIsActive(false);
+  };
+
+  const handleOnChange = (updatedMessage: string) => {
+    setInput(updatedMessage);
   };
 
   return (
@@ -40,12 +45,7 @@ const Tips: FC<Props> = ({ manager }) => {
             <RiCloseLine onClick={handleClose} />
           </header>
           <div className="p-2">
-            <textarea
-              className="border h-20 w-full p-2"
-              placeholder="Add tooltip"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
+            <EmojiTextArea value={input} onChange={handleOnChange} />
           </div>
           <div className="p-2">
             <a href="javascript:void(0)">

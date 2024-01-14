@@ -6,6 +6,13 @@ import {
   handleSetObjectiveIndex,
 } from "provider/optionsDataSlice";
 import { RiAddCircleLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri";
+import Feedback from "./Feedback";
+import FeedbackIcon from "FigmaIcons/FeedbackIcon";
+import {
+  handleSetFeedbackStatus,
+  handleSetFeedbackType,
+  handleSetOptionIndex,
+} from "provider/feedbackSlice";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -70,7 +77,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
     coreData?.questions?.forEach((question: any) => {
       if (
         question?.type === "SUBJECTIVE" &&
-        question?.identifier.includes(id)
+        question?.identifier?.includes(id)
       ) {
         setQuestions([...questions, question]);
         console.log(question);
@@ -124,9 +131,19 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [value, setValue] = useState("");
 
+  const dispatch = useDispatch();
   const selector: any = useSelector(handleSetCorrectOption);
   const { objectiveIndex } = selector.payload.optionsData.value as {
     objectiveIndex: number;
+  };
+  const {
+    optionIndex,
+    status: optionStatus,
+    type,
+  } = selector.payload.feedback.value as {
+    optionIndex: number;
+    status: number;
+    type: string;
   };
 
   const coreData = manager.canvasManager.activeComponent.data.coreData;
@@ -145,9 +162,16 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       0
     );
     setIsEditable(false);
+    dispatch(handleSetFeedbackStatus(false));
     console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);
+  };
+
+  const handleShowFeedback = () => {
+    dispatch(handleSetFeedbackType("SUBJECTIVE"));
+    dispatch(handleSetOptionIndex(0));
+    dispatch(handleSetFeedbackStatus(true));
   };
 
   return (
@@ -161,8 +185,11 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
           )}
         </p>
 
-        <div className="flex gap-1">
+        <div className="flex gap-1 items-center">
           <RiEditLine onClick={() => setIsEditable(!isEditable)} />
+          <div onClick={handleShowFeedback}>
+            <FeedbackIcon />
+          </div>
           <RiDeleteBinLine
             className="cursor-pointer"
             onClick={() => handleDelete(sub.identifier)}
@@ -196,6 +223,9 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
             </button>
           </div>
         </div>
+      )}
+      {type === "SUBJECTIVE" && optionStatus && (
+        <Feedback manager={manager} type="SUBJECTIVE" />
       )}
     </div>
   );

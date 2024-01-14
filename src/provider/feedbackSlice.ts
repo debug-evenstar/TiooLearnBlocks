@@ -6,6 +6,7 @@ export const feedbackSlice = createSlice({
     value: {
       optionIndex: 0,
       status: false,
+      type: "OBJECTIVE",
     },
   },
   reducers: {
@@ -15,6 +16,9 @@ export const feedbackSlice = createSlice({
     handleSetFeedbackStatus: (state, action) => {
       state.value.status = action.payload;
     },
+    handleSetFeedbackType: (state, action) => {
+      state.value.type = action.payload;
+    },
     handleToggleFeedbackStatus: (state) => {
       state.value.status = !state.value.status;
     },
@@ -22,6 +26,7 @@ export const feedbackSlice = createSlice({
       state.value = {
         optionIndex: 0,
         status: false,
+        type: "OBJECTIVE",
       };
     },
   },
@@ -30,6 +35,7 @@ export const feedbackSlice = createSlice({
 export const {
   handleSetOptionIndex,
   handleSetFeedbackStatus,
+  handleSetFeedbackType,
   handleToggleFeedbackStatus,
   refreshFeedbackData,
 } = feedbackSlice.actions;

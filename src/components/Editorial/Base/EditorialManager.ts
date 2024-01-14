@@ -172,6 +172,10 @@ class EditorialManager implements EditorialManagerInterface {
       data: any,
       index: number
     ) => this.updateObjectiveData(data, index);
+    this.canvasManager.canvas.functions["updateObjectiveOptions"] = (
+      data: any,
+      index: number
+    ) => this.updateObjectiveOptions(data, index);
     this.canvasManager.canvas.functions["updateObjectiveOption"] = (
       data: any,
       index: number,
@@ -250,7 +254,7 @@ class EditorialManager implements EditorialManagerInterface {
       ].options = [
         ...this.canvasManager.activeComponent.data.coreData.questions[index]
           .options,
-        ...data,
+        data,
       ];
     }
     this.saveActiveComponentData();

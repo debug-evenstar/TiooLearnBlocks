@@ -18,9 +18,12 @@ import { MdChatBubbleOutline } from "react-icons/md";
 import Feedback from "./Feedback";
 import {
   handleSetFeedbackStatus,
+  handleSetFeedbackType,
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
 import { OptionInterface } from "components/interface";
+import FeedbackIcon from "FigmaIcons/FeedbackIcon";
+import ChatIcon from "FigmaIcons/ChatIcon";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -47,6 +50,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
   const handleSetObjective = () => {
+    if (isActive) return;
     console.log(questions, "in objective");
     replaceContent(questions, "OBJECTIVE", component);
     setIsActive(true);
@@ -56,10 +60,6 @@ const Objective: FC<Props> = ({ manager, component }) => {
   };
 
   const handleClick = () => {
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData,
-      "changed data"
-    );
     if (questions.length > 0) {
       replaceContent(questions, "OBJECTIVE", component);
       setIsActive(true);
@@ -68,6 +68,10 @@ const Objective: FC<Props> = ({ manager, component }) => {
     }
     dispatch(handleSetCorrectOption(""));
     dispatch(handleSetWrongOption(""));
+    console.log(
+      manager.canvasManager.activeComponent.data.coreData,
+      "changed data"
+    );
   };
 
   const handleDelete = (id: string, optionIndex: number) => {
@@ -105,7 +109,10 @@ const Objective: FC<Props> = ({ manager, component }) => {
 
   useEffect(() => {
     coreData?.questions?.forEach((question: any) => {
-      if (question?.type === "OBJECTIVE" && question?.identifier.includes(id)) {
+      if (
+        question?.type === "OBJECTIVE" &&
+        question?.identifier?.includes(id)
+      ) {
         setQuestions([...questions, question]);
         console.log(question);
       }
@@ -137,7 +144,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
           <section>
             {questions &&
               questions?.map((obj: any, i: number) => {
-                if (!obj.identifier.includes(id)) return <></>;
+                if (!obj.identifier?.includes(id)) return <></>;
                 return (
                   <ObjectiveItem
                     key={obj.identifier}
@@ -167,18 +174,21 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(handleSetFeedbackStatus);
-  const { optionIndex, status: optionStatus } = selector.payload.feedback
-    .value as {
+  const {
+    optionIndex,
+    status: optionStatus,
+    type,
+  } = selector.payload.feedback.value as {
     optionIndex: number;
     status: number;
+    type: string;
   };
   const [isActive, setIsActive] = useState(false);
 
-  const addOption = (data: string, optionIndex: number) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOption(
+  const addOption = (data: OptionInterface) => {
+    manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
       data,
-      index,
-      optionIndex
+      index
     );
     console.log(
       manager.canvasManager.activeComponent.data.coreData.questions,
@@ -187,6 +197,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
+    dispatch(handleSetFeedbackType("OBJECTIVE"));
     dispatch(handleSetOptionIndex(index));
     dispatch(handleSetFeedbackStatus(true));
   };
@@ -212,12 +223,14 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
           {objective.options?.map((option: OptionInterface, i: any) => (
             <div key={i}>
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1">
-                  <MdChatBubbleOutline />
+                <div className="flex items-center gap-2">
+                  <ChatIcon />
                   <p className="text-[12px] my-2">{option.content}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <RiFeedbackLine onClick={() => handleShowFeedback(i)} />
+                  <div onClick={() => handleShowFeedback(i)}>
+                    <FeedbackIcon />
+                  </div>
                   <RiDeleteBinLine
                     onClick={() => handleDelete(objective.identifier, i)}
                   />
@@ -228,14 +241,25 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 
           <div
             className="flex justify-between py-2 items-center"
-            onClick={() => addOption("", objective.options.length)}
+            onClick={() =>
+              addOption({
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              })
+            }
           >
             <p className="text-[12px]">Add option</p>
             <RiAddCircleLine size={"13px"} color="grey" />
           </div>
         </main>
       )}
-      {optionStatus && <Feedback manager={manager} />}
+      {type === "OBJECTIVE" && optionStatus && (
+        <Feedback manager={manager} type="OBJECTIVE" />
+      )}
     </div>
   );
 };
