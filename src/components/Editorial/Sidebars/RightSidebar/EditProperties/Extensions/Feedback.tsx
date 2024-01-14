@@ -60,6 +60,7 @@ const Feedback: FC<Props> = ({ manager, type }) => {
       objectiveIndex,
       optionIndex
     );
+    dispatch(handleSetFeedbackStatus(false));
     console.log(coreData.questions[objectiveIndex], "changed");
   };
 
