@@ -5,6 +5,7 @@ import {
   replaceContent,
   toggleList,
   toggleWrapper,
+  unLink,
 } from "./wrapperHandler";
 import {
   addObjandSubComponentData,
@@ -181,5 +182,9 @@ export const registerFunctions = (
   ) => {
     const range = getRange();
     range && range.toString() && toggleList(range, elementType);
+  };
+  manager.canvasManager.activeComponent.functions["unLink"] = () => {
+    const range = getRange();
+    range && range.toString() && unLink(range);
   };
 };

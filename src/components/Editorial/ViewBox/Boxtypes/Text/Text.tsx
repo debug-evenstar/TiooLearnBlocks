@@ -91,7 +91,12 @@ const Text: FC<CanvasText> = ({
   }, [textareaRowCount, viewBoxRef, id, textValue]);
 
   useEffect(() => {
+    resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount);
+  }, [editableRef.current?.innerHTML]);
+
+  useEffect(() => {
     if (id === activeId) setIsEditable(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const coreData = manager.canvasManager.activeComponent.data.coreData;

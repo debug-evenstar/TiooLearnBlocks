@@ -7,6 +7,7 @@ import activeViewboxSlice from "./activeViewboxSlice";
 import showOptionsBoxSlice from "./showOptionsBoxSlice";
 import optionsDataSlice from "./optionsDataSlice";
 import feedbackSlice from "./feedbackSlice";
+import triggerSlice from "./triggerSlice";
 
 const rootReducer = combineReducers({
   rightSidebarState: rightSidebarSlice,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   showOptionsBox: showOptionsBoxSlice,
   optionsData: optionsDataSlice,
   feedback: feedbackSlice,
+  trigger: triggerSlice,
 });
 
 const persistedReducer = persistReducer(
@@ -27,6 +29,7 @@ const persistedReducer = persistReducer(
       "showOptionsBox",
       "optionsData",
       "feedback",
+      "trigger",
     ],
   },
   rootReducer

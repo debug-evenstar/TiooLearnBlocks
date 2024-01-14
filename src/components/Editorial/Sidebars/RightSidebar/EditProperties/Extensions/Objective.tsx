@@ -19,6 +19,7 @@ import {
 import { OptionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
+import { handleToggleTrigger } from "provider/triggerSlice";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -84,11 +85,13 @@ const Objective: FC<Props> = ({ manager, component }) => {
             ...updatedQuestions[questionIndex].options.slice(optionIndex + 1),
           ],
         };
-        updatedQuestions[questionIndex] = updatedQuestion;
-        manager.canvasManager.activeComponent.functions.updateObjectiveData(
-          updatedQuestion,
+        manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+          updatedQuestion.options,
           questionIndex
         );
+        dispatch(handleToggleTrigger());
+
+        updatedQuestions[questionIndex] = updatedQuestion;
 
         return updatedQuestions;
       } else {
@@ -196,10 +199,10 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
     );
   };
 
-  const deleteOption = (identifier: string, i: number) => {
+  const deleteOption = (i: number) => {
+    console.log(i, " is the option's index.");
     handleDelete(objective.identifier, i);
     setAddedOption(!addedOption);
-    dispatch(handleSetOptionIndex(i));
   };
 
   const handleShowFeedback = (index: number) => {
@@ -238,9 +241,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
                     <div onClick={() => handleShowFeedback(i)}>
                       <FeedbackIcon />
                     </div>
-                    <RiDeleteBinLine
-                      onClick={() => deleteOption(objective.identifier, i)}
-                    />
+                    <RiDeleteBinLine onClick={() => deleteOption(i)} />
                   </div>
                 </div>
               </div>

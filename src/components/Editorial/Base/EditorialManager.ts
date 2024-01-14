@@ -176,6 +176,10 @@ class EditorialManager implements EditorialManagerInterface {
       data: any,
       index: number
     ) => this.updateObjectiveOptions(data, index);
+    this.canvasManager.canvas.functions["deleteObjectiveOptions"] = (
+      data: any,
+      index: number
+    ) => this.deleteObjectiveOptions(data, index);
     this.canvasManager.canvas.functions["updateObjectiveOption"] = (
       data: any,
       index: number,
@@ -257,6 +261,15 @@ class EditorialManager implements EditorialManagerInterface {
           .options,
         data,
       ];
+    }
+    this.saveActiveComponentData();
+  }
+
+  deleteObjectiveOptions(data: any, index: number) {
+    if (this.canvasManager.activeComponent.data.coreData) {
+      this.canvasManager.activeComponent.data.coreData.questions[
+        index
+      ].options = data;
     }
     this.saveActiveComponentData();
   }

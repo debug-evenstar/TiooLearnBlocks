@@ -245,6 +245,8 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
   const toggleList =
     manager.canvasManager.activeComponent.functions?.toggleList;
 
+  const unLink = manager.canvasManager.activeComponent.functions?.unLink;
+
   const [linkBoxActive, setLinkBoxActive] = useState(false);
   const [linkBoxValue, setLinkBoxValue] = useState("");
 
@@ -373,7 +375,9 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
       </div>
 
       <div className="border p-2 cursor-pointer">
-        <RiLinkUnlink />
+        <a href="javascript:void(0)" onClick={() => unLink()}>
+          <RiLinkUnlink />
+        </a>
       </div>
     </>
   );

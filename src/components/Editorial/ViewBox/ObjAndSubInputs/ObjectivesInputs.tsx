@@ -20,17 +20,14 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     correctOption: string;
     wrongOption: string;
   };
-  const { optionIndex } = selector.payload.feedback.value as {
-    optionIndex: number;
-  };
-
+  const trigger: number = selector.payload.trigger.value;
   const [question, setQuestion] = useState<any>();
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
   useEffect(() => {
     setQuestion(coreData.questions[objectiveIndex]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [optionIndex]);
+  }, [trigger]);
 
   const handleSetOptionData = (e: any, index: number) => {
     const value = e.target.value;

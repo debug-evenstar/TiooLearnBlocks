@@ -37,7 +37,7 @@ const checkersForToggleWrapper = (
     //@ts-ignore
     element.href = link;
     element.style.color = style;
-    element.style.textDecoration = "line-through";
+    element.style.textDecoration = "underline";
     element.style.cursor = "cursor-move";
   }
 };
@@ -61,6 +61,14 @@ export const toggleWrapper = (
   }
 
   range.surroundContents(element);
+};
+
+export const unLink = (range: Range) => {
+  const anchor = range.commonAncestorContainer.parentElement;
+
+  if (anchor && anchor.tagName === "A") {
+    anchor.replaceWith(range.toString());
+  }
 };
 
 export const toggleList = (range: Range, elementType: string) => {
