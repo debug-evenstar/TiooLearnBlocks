@@ -10,6 +10,7 @@ import {
   addObjandSubComponentData,
   setObjandSubComponentData,
 } from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
+import { checkAndReturnOptions } from "./generalHandler";
 
 export const registerFunctions = (
   manager: EditorialManagerInterface,
@@ -103,29 +104,7 @@ export const registerFunctions = (
       } else {
         console.log("called set");
         manager.canvasManager.canvas.functions.updateActiveComponentData(
-          setObjandSubComponentData(
-            type,
-            id,
-            [
-              {
-                answer: false,
-                content: "",
-                feedback: {
-                  type: "",
-                  content: "",
-                },
-              },
-              {
-                answer: false,
-                content: "",
-                feedback: {
-                  type: "",
-                  content: "",
-                },
-              },
-            ],
-            [""]
-          )
+          setObjandSubComponentData(type, id, checkAndReturnOptions(type), [""])
         );
       }
       replaceContent(range, id);

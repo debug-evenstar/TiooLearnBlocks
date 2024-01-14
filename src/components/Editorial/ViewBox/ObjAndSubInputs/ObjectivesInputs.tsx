@@ -4,7 +4,7 @@ import {
   handleSetWrongOption,
 } from "provider/optionsDataSlice";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
@@ -20,8 +20,17 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     correctOption: string;
     wrongOption: string;
   };
+  const { optionIndex } = selector.payload.feedback.value as {
+    optionIndex: number;
+  };
+
+  const [question, setQuestion] = useState<any>();
   const coreData = manager.canvasManager.activeComponent.data.coreData;
-  const question = coreData.questions[objectiveIndex];
+
+  useEffect(() => {
+    setQuestion(coreData.questions[objectiveIndex]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optionIndex]);
 
   const handleSetOptionData = (e: any, index: number) => {
     const value = e.target.value;

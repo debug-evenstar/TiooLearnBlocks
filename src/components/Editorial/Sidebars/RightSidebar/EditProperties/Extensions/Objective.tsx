@@ -1,9 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import {
-  RiAddCircleLine,
-  RiDeleteBinLine,
-  RiFeedbackLine,
-} from "react-icons/ri";
+import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
 import { ObjectiveItemProp } from "./interfaces";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,14 +10,13 @@ import {
   handleSetWrongOption,
   refreshOptionsData,
 } from "provider/optionsDataSlice";
-import { MdChatBubbleOutline } from "react-icons/md";
 import Feedback from "./Feedback";
 import {
   handleSetFeedbackStatus,
   handleSetFeedbackType,
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
-import { OptionInterface, QuestionInterface } from "components/interface";
+import { OptionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
 
@@ -39,8 +34,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
   const dispatch = useDispatch();
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
+  const { identifier } = selector.payload.optionsData.value as {
     identifier: string;
     correctOption: string;
     wrongOption: string;
@@ -104,10 +98,6 @@ const Objective: FC<Props> = ({ manager, component }) => {
   };
 
   useEffect(() => {
-    console.log(identifier, correctOption, wrongOption, " - Options");
-  }, [identifier]);
-
-  useEffect(() => {
     coreData?.questions?.forEach((question: any) => {
       if (
         question?.type === "OBJECTIVE" &&
@@ -118,6 +108,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
       }
     });
     console.log(questions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coreData?.questions, identifier, id]);
 
   return (
@@ -174,11 +165,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(handleSetFeedbackStatus);
-  const {
-    optionIndex,
-    status: optionStatus,
-    type,
-  } = selector.payload.feedback.value as {
+  const { status: optionStatus, type } = selector.payload.feedback.value as {
     optionIndex: number;
     status: number;
     type: string;
@@ -191,6 +178,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 
   useEffect(() => {
     setQuestion(coreData.questions[index]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
@@ -199,10 +187,19 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       index
     );
     setAddedOption(!addedOption);
+    dispatch(
+      handleSetOptionIndex(question.options ? question.options.length : 0)
+    );
     console.log(
       manager.canvasManager.activeComponent.data.coreData.questions,
       "clicked"
     );
+  };
+
+  const deleteOption = (identifier: string, i: number) => {
+    handleDelete(objective.identifier, i);
+    setAddedOption(!addedOption);
+    dispatch(handleSetOptionIndex(i));
   };
 
   const handleShowFeedback = (index: number) => {
@@ -242,7 +239,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
                       <FeedbackIcon />
                     </div>
                     <RiDeleteBinLine
-                      onClick={() => handleDelete(objective.identifier, i)}
+                      onClick={() => deleteOption(objective.identifier, i)}
                     />
                   </div>
                 </div>

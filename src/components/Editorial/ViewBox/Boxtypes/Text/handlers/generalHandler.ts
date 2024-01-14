@@ -44,3 +44,37 @@ export const handleTextChange = (
     }
   }
 };
+
+export const checkAndReturnOptions = (type: "OBJECTIVE" | "SUBJECTIVE") => {
+  if (type === "OBJECTIVE") {
+    return [
+      {
+        answer: false,
+        content: "",
+        feedback: {
+          type: "",
+          content: "",
+        },
+      },
+      {
+        answer: false,
+        content: "",
+        feedback: {
+          type: "",
+          content: "",
+        },
+      },
+    ];
+  } else {
+    return [
+      {
+        answer: false,
+        content: "",
+        feedback: {
+          type: "correct",
+          content: "",
+        },
+      },
+    ];
+  }
+};
