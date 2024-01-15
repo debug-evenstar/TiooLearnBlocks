@@ -60,6 +60,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
       setIsActive(true);
       dispatch(handleToggleShowOptionBox());
       dispatch(handleSetObjectiveIndex(questions.length));
+      dispatch(handleToggleTrigger());
     }
     dispatch(handleSetCorrectOption(""));
     dispatch(handleSetWrongOption(""));

@@ -5,13 +5,11 @@ import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import InputResize from "./InputResize";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { Switch } from "@mui/material";
-import { MdMore, MdOutlineRecommend } from "react-icons/md";
 import { FaEllipsisH } from "react-icons/fa";
-import Objective from "./Extensions/Objective";
 import ImageObjective from "components/Editorial/ViewBox/Boxtypes/Image/ImageObjective";
 import ImageSubjective from "components/Editorial/ViewBox/Boxtypes/Image/ImageSubjective";
 import { handleSetOptionIndex } from "provider/feedbackSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -20,11 +18,8 @@ interface Props {
 const label = { inputProps: { "aria-label": "Switch Overlay" } };
 
 const ImageProperties: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
   const selector: any = useSelector(handleSetOptionIndex);
-  const { optionIndex } = selector.payload.feedback.value as {
-    optionIndex: number;
-  };
+  const trigger: boolean = selector.payload.trigger.value;
 
   const toggleOverlay =
     manager.canvasManager.activeComponent.functions?.toggleOverlay;
@@ -41,8 +36,10 @@ const ImageProperties: FC<Props> = ({ manager }) => {
   };
 
   useEffect(() => {
+    console.log(trigger, "changed");
     setExtensions(data);
-  }, [optionIndex]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
 
   return (
     <div className="w-full my-5 py-2">

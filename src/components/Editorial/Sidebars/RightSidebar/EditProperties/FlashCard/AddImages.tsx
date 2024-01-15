@@ -1,12 +1,13 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { setFlashCardComponentData } from "components/Editorial/ViewBox/Boxtypes/Flashcard/handlers/dataHandler";
-import { UploadIconProps } from "components/Editorial/ViewBox/Boxtypes/Image/Image";
 import { uploadFile } from "components/Editorial/ViewBox/Boxtypes/Image/handler";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { RiAddCircleLine } from "react-icons/ri";
 import FlashcardObjective from "./FlashcardObjective";
 import FlashcardSubjective from "./FlashcardSubjective";
+import { useDispatch, useSelector } from "react-redux";
+import { handleToggleTrigger } from "provider/triggerSlice";
 
 interface Props {
   id: string;
@@ -14,28 +15,11 @@ interface Props {
 }
 
 const AddImages: FC<Props> = ({ id, manager }) => {
+  const dispatch = useDispatch();
+  const selector: any = useSelector(handleToggleTrigger);
+  const trigger: boolean = selector.payload.trigger.value;
   const [images, setImages] = useState<any[]>([{ url: "" }]);
   const coreData = manager.sidebarManager.data.coreData;
-
-  const [previewImage, setPreviewImage] = useState("");
-
-  const handleAddImageFormer = (e: any) => {
-    e.preventDefault();
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const imageUrl = URL.createObjectURL(selectedFile);
-      setPreviewImage(imageUrl);
-    }
-    manager.canvasManager.canvas.functions.updateActiveComponentData(
-      setFlashCardComponentData([
-        {
-          url: "",
-          alternatives: [],
-        },
-      ])
-    );
-    console.log(coreData, "added");
-  };
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -52,6 +36,7 @@ const AddImages: FC<Props> = ({ id, manager }) => {
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
+      dispatch(handleToggleTrigger());
       console.log(cards, "Updated Cards");
       console.log(coreData, "added");
     }
@@ -61,7 +46,8 @@ const AddImages: FC<Props> = ({ id, manager }) => {
     const flashCardComponentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
     flashCardComponentData && setImages(flashCardComponentData.cards);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
 
   return (
     <div className="w-full my-5 py-2">
