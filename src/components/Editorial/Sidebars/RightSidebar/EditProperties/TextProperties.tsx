@@ -42,8 +42,8 @@ const TextProperties: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
   const [colorIsActive, setColorIsActive] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
-  const [textSize, setTextSize] = useState("1");
-  const [textSpacing, setTextSpacing] = useState("1");
+  const [textSize, setTextSize] = useState("16");
+  const [textSpacing, setTextSpacing] = useState(`${+textSize * 1.2}`);
   const [selectedFont, setSelectedFont] = useState("Arial");
   const fonts = [
     "Arial",
@@ -113,7 +113,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
                   <b>-</b>
                 </p>
                 <input
-                  className="border h-6 w-8 text-center"
+                  className="border h-6 w-8 text-center text-[12px]"
                   placeholder="0"
                   value={textSize}
                   onChange={(e) => handleChangeTextSize(e.target.value)}
@@ -216,7 +216,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
                     <b>-</b>
                   </p>
                   <input
-                    className="border h-6 w-8 text-center"
+                    className="border h-6 w-8 text-center text-[12px]"
                     placeholder="0"
                     value={textSpacing}
                     onChange={(e) => handleChangeTextSpacing(e.target.value)}
