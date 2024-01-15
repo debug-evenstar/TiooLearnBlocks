@@ -2,19 +2,18 @@ import React, { FC, createRef, useEffect, useState } from "react";
 import { EditorialCanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   handleSetSidebarState,
   handleToggleSidebarState,
 } from "provider/rightSidebarSlice";
 import { handleSetDragItems } from "provider/dragItemsSlice";
 import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
-import Flashcard from "../ViewBox/Boxtypes/Flashcard/Flashcard";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
-import { refreshOptionsData } from "provider/optionsDataSlice";
 import { setComponentLayout } from "./EditorialManager";
 import Feedback from "../Sidebars/RightSidebar/EditProperties/Extensions/Feedback";
 import { ComponentBaseDataInterface } from "components/interface";
+import Slider from "../ViewBox/Boxtypes/Slider/Slider";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
@@ -83,6 +82,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
       manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
     manager.canvasManager && setSlideComponents(parsedSlides);
     manager.canvasManager.updateActiveSlide(parsedSlides);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideData]);
 
   return (
@@ -126,7 +126,9 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
               ref={nodeRef}
               onClick={() => handleClickedViewbox(item.id)}
             >
-              {item.id.includes("Flash") ? (
+              {item.id.includes("Slider") ? (
+                <Slider id={item.id} manager={manager} />
+              ) : item.id.includes("Flash") ? (
                 <CardSlider id={item.id} manager={manager} />
               ) : (
                 <ViewBox
