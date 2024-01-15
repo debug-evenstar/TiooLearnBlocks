@@ -113,25 +113,29 @@ const Text: FC<CanvasText> = ({
   useEffect(() => {
     if (!coreData || !coreData.questions || id !== activeId) return;
 
-    const clickHandlers = coreData.questions
-      .filter((question: any) => question.identifier.includes(id))
-      .map((question: any, i: number) => {
+    coreData?.questions
+      ?.filter((question: any) => question?.identifier?.includes(id))
+      .forEach((question: any, i: number) => {
         const inputElement = document.getElementById(question.identifier);
-        if (inputElement && question.type === "OBJECTIVE") {
-          inputElement.addEventListener("click", (e) =>
-            handleClickedObjective(e, question.options, i)
-          );
-          return () =>
-            inputElement.removeEventListener("click", (e) =>
+        console.log(inputElement, "FOUND ELEMENT", i);
+
+        if (inputElement) {
+          if (question.type === "OBJECTIVE") {
+            inputElement.addEventListener("click", (e) =>
               handleClickedObjective(e, question.options, i)
             );
+            console.log("added click event to", inputElement);
+
+            return () => {
+              if (inputElement) {
+                inputElement.removeEventListener("click", (e) =>
+                  handleClickedObjective(e, question.options, i)
+                );
+              }
+            };
+          }
         }
       });
-
-    return () =>
-      clickHandlers.forEach(
-        (removeClickHandler: any) => removeClickHandler && removeClickHandler()
-      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coreData, activeId, identifier, trigger]);
 

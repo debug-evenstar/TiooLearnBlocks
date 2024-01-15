@@ -38,7 +38,9 @@ const Feedback: FC<Props> = ({ manager, type }) => {
   };
   const coreData = manager.canvasManager.activeComponent.data.coreData;
   const option: OptionInterface =
-    coreData.questions[objectiveIndex].options[optionIndex];
+    coreData.questions[objectiveIndex]?.options[
+      type === "OBJECTIVE" ? optionIndex : 0
+    ];
   useEffect(() => {
     console.log(coreData, option);
 

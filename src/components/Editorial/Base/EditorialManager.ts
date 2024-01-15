@@ -275,11 +275,7 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateObjectiveOption(data: any, index: number, optionIndex: number) {
-    if (
-      this.canvasManager.activeComponent.data.coreData.questions[index].options[
-        optionIndex
-      ]
-    ) {
+    if (this.canvasManager.activeComponent.data.coreData.questions[index]) {
       this.canvasManager.activeComponent.data.coreData.questions[index].options[
         optionIndex
       ].content = data;

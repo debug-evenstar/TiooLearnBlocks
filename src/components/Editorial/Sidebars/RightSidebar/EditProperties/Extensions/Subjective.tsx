@@ -44,6 +44,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
     console.log(questions, "in objective");
     replaceContent(questions, "SUBJECTIVE", component);
     setIsActive(true);
+    dispatch(handleSetObjectiveIndex(questions.length));
     dispatch(handleSetCorrectOption(""));
   };
 
