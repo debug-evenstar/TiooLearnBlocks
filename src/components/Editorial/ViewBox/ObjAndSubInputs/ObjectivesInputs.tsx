@@ -14,13 +14,12 @@ interface Props {
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
-  const { objectiveIndex, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
+  const { objectiveIndex } = selector.payload.optionsData.value as {
     objectiveIndex: number;
     correctOption: string;
     wrongOption: string;
   };
-  const trigger: number = selector.payload.trigger.value;
+  const trigger: boolean = selector.payload.trigger.value;
   const [question, setQuestion] = useState<any>();
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
@@ -41,11 +40,6 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     if (index > 0) dispatch(handleSetCorrectOption(value));
     else dispatch(handleSetWrongOption(value));
   };
-
-  useEffect(
-    () => console.log(coreData, objectiveIndex, "objective"),
-    [question]
-  );
 
   return (
     <div className="w-full flex justify-around gap-2 my-5 relative top-[2rem] z-[5000]s">

@@ -12,7 +12,7 @@ import { Resizable } from "react-resizable";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import ObjectivesInputs from "./ObjectivesInputs";
-import { handleSetOptionIndex } from "provider/feedbackSlice";
+import { handleToggleTrigger } from "provider/triggerSlice";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const dispatch = useDispatch();
@@ -26,10 +26,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const [inputList, setInputList] = useState<any[]>([]);
   const [inputBoxDimensions, setInputBoxDimensions] = useState<any[]>([]);
   const imageRef = useRef<HTMLImageElement>(null);
-  const [viewBoxSize, setViewBoxSize] = useState({
-    width: 200,
-    height: 5,
-  });
+
   const extensions: any[] =
     manager.canvasManager.activeComponent.data.coreData?.extensions;
 
@@ -90,6 +87,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       manager.canvasManager.canvas.functions.getComponentData(id);
     imageComponentData && setData(imageComponentData.content);
     setPreviewImage(imageComponentData.url);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleAddInput: React.MouseEventHandler<HTMLDivElement> = (event) => {
@@ -113,7 +111,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
           extensions: newList,
         })
       );
-      dispatch(handleSetOptionIndex(newList.length));
+      dispatch(handleToggleTrigger());
       console.log(
         manager.canvasManager.activeComponent.data.coreData.extensions,
         "updated data"

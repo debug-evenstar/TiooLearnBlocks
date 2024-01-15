@@ -2,6 +2,8 @@ import React, { FC, useState, useRef, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import Flashcard from "./Flashcard";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { useSelector } from "react-redux";
+import { handleToggleTrigger } from "provider/triggerSlice";
 
 interface ImageCarouselProps {
   id: string;
@@ -9,6 +11,9 @@ interface ImageCarouselProps {
 }
 
 const CardSlider: FC<ImageCarouselProps> = ({ id, manager }) => {
+  const selector: any = useSelector(handleToggleTrigger);
+  const trigger: boolean = selector.payload.trigger.value;
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
   const [images, setImages] = useState<any[]>([{ url: "" }]);
@@ -27,7 +32,8 @@ const CardSlider: FC<ImageCarouselProps> = ({ id, manager }) => {
     const flashCardComponentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
     flashCardComponentData && setImages(flashCardComponentData.cards);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
 
   return (
     <div className="flex items-center gap-2 cursor-move">

@@ -1,4 +1,3 @@
-import ToolTipComponent from "components/extensions/ToolTip/render";
 import ReactDOM from "react-dom";
 import Tooltip from "../Tooltip";
 
@@ -116,27 +115,6 @@ export const replaceContent = (range: Range, id: string) => {
     // console.log(getComputedStyle(parentElement).height);
   }
 };
-
-function wrapInTooltip(text: string, tip: string): Node {
-  let div = document.createElement("div");
-  div.className = "relative group inline-block";
-
-  let tooltip = document.createElement("span");
-  tooltip.className =
-    "absolute hidden group-hover:flex -top-2 -translate-y-full w-48 px-2 py-1 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:left-1/2 after:top-[100%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-gray-700 left: 50%; transform: translateX(-50%);";
-
-  tooltip.innerText = tip;
-
-  let paragraph = document.createElement("p");
-  paragraph.className =
-    "group relative inline-block text-blue-500 underline hover:text-red-500 duration-300";
-  paragraph.innerText = text;
-
-  paragraph.appendChild(tooltip);
-  div.appendChild(paragraph);
-
-  return div;
-}
 
 export const addTooltip = (range: Range, tip: string) => {
   const value = range.toString();

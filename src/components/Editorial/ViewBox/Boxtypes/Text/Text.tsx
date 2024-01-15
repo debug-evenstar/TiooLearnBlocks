@@ -12,13 +12,7 @@ import {
 } from "provider/optionsDataSlice";
 import { handleTextChange } from "./handlers/generalHandler";
 import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
-import ContentEditableDiv from "components/ContentEditableDiv";
-import {
-  handleToggleShowOptionBox,
-  refreshToggleShowOptionBox,
-} from "provider/showOptionsBoxSlice";
-import { associatedData } from "../../ObjAndSubInputs/handler";
-import Feedback from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/Feedback";
+import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -32,6 +26,7 @@ const Text: FC<CanvasText> = ({
   const selector: any = useSelector(refreshToggleSidebarState);
   const activeId: string = selector.payload.activeViewbox.value;
   const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+  const trigger: boolean = selector.payload.trigger.value;
   const { identifier, objectiveIndex } = selector.payload.optionsData.value as {
     identifier: string;
     objectiveIndex: number;
@@ -61,23 +56,22 @@ const Text: FC<CanvasText> = ({
     const handleClickOutside = (event: MouseEvent) => {
       const viewBox = viewBoxRef.current;
       const textArea = textareaRef.current;
-
       if (viewBox && !viewBox.contains(event.target as Node) && textArea) {
         setIsEditable(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditable, viewBoxRef, textareaRef]);
 
   useEffect(() => {
     if (id === activeId) {
       registerFunctions(manager, getRange, viewBoxRef, setIdentifier, id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manager, viewBoxRef, activeId]);
 
   useEffect(() => {
@@ -88,11 +82,13 @@ const Text: FC<CanvasText> = ({
 
   useEffect(() => {
     resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount);
-  }, [textareaRowCount, viewBoxRef, id, textValue]);
-
-  useEffect(() => {
-    resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount);
-  }, [editableRef.current?.innerHTML]);
+  }, [
+    textareaRowCount,
+    viewBoxRef,
+    id,
+    textValue,
+    editableRef.current?.innerHTML,
+  ]);
 
   useEffect(() => {
     if (id === activeId) setIsEditable(true);
@@ -101,77 +97,43 @@ const Text: FC<CanvasText> = ({
 
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
-  const handleClickedObjective = (options: string[], index: number) => {
+  const handleClickedObjective = (
+    e: MouseEvent,
+    options: string[],
+    index: number
+  ) => {
+    e.stopPropagation();
     handleSetObjectiveIndex(index);
-    console.log("clicked");
+    console.log(index, "clicked, option box");
     dispatch(handleToggleShowOptionBox());
     dispatch(handleSetCorrectOption(options[0]));
     dispatch(handleSetWrongOption(options[1]));
   };
 
-  const handleSubjectiveChange = (e: any) => {
-    console.log("typing..");
-
-    const value = e.target.innerText;
-    manager.canvasManager.canvas.functions.updateObjectiveData(
-      {
-        answers: [value],
-      },
-      0
-    );
-    manager.canvasManager.canvas.functions.updateObjectiveOption(
-      value,
-      objectiveIndex,
-      0
-    );
-    console.log(coreData);
-  };
-
   useEffect(() => {
-    if (!coreData) return;
-    if (coreData?.questions && id === activeId) {
-      const editable = editableRef.current;
-      if (!editable) return;
+    if (!coreData || !coreData.questions || id !== activeId) return;
 
-      coreData?.questions?.forEach((question: any, i: number) => {
-        if (question?.identifier?.includes(id)) {
-          const inputElement = document.getElementById(question.identifier);
-          console.log(inputElement, "FOUND ELEMENT");
-
-          if (inputElement) {
-            if (question.type === "OBJECTIVE") {
-              inputElement.addEventListener("click", () =>
-                handleClickedObjective(question.options, i)
-              );
-              console.log("added click event to", inputElement);
-
-              return () => {
-                if (inputElement) {
-                  inputElement.removeEventListener("click", () =>
-                    handleClickedObjective(question.options, i)
-                  );
-                }
-              };
-            }
-
-            if (question.type === "SUBJECTIVE") {
-              inputElement.addEventListener("input", handleSubjectiveChange);
-              console.log("added click event to objective", inputElement);
-
-              return () => {
-                if (inputElement) {
-                  inputElement.removeEventListener(
-                    "input",
-                    handleSubjectiveChange
-                  );
-                }
-              };
-            }
-          }
+    const clickHandlers = coreData.questions
+      .filter((question: any) => question.identifier.includes(id))
+      .map((question: any, i: number) => {
+        const inputElement = document.getElementById(question.identifier);
+        if (inputElement && question.type === "OBJECTIVE") {
+          inputElement.addEventListener("click", (e) =>
+            handleClickedObjective(e, question.options, i)
+          );
+          return () =>
+            inputElement.removeEventListener("click", (e) =>
+              handleClickedObjective(e, question.options, i)
+            );
         }
       });
-    }
-  }, [coreData, activeId, identifier]);
+
+    return () =>
+      clickHandlers.forEach(
+        (removeClickHandler: any) => removeClickHandler && removeClickHandler()
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coreData, activeId, identifier, trigger]);
 
   return (
     <div

@@ -275,7 +275,11 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateObjectiveOption(data: any, index: number, optionIndex: number) {
-    if (this.canvasManager.activeComponent.data.coreData) {
+    if (
+      this.canvasManager.activeComponent.data.coreData.questions[index].options[
+        optionIndex
+      ]
+    ) {
       this.canvasManager.activeComponent.data.coreData.questions[index].options[
         optionIndex
       ].content = data;
@@ -374,7 +378,7 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   getComponentData(id: string) {
-    const slideComponent = this.canvasManager.canvas.data.components.filter(
+    const slideComponent = this.canvasManager.canvas.data.components?.filter(
       (component: any) => component.id === id
     );
     return slideComponent.length ? slideComponent[0] : {};
