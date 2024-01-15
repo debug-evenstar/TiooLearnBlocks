@@ -14,6 +14,7 @@ import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { refreshOptionsData } from "provider/optionsDataSlice";
 import { setComponentLayout } from "./EditorialManager";
 import Feedback from "../Sidebars/RightSidebar/EditProperties/Extensions/Feedback";
+import { ComponentBaseDataInterface } from "components/interface";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
@@ -67,6 +68,16 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     manager.slideManager.slides[manager.slideManager.activeSlide] = components;
   };
 
+  const loadPosition = (component : ComponentBaseDataInterface) => {
+    if(component.layout && component.layout.position) {
+      return {
+        x : component.layout.position.xAxis.offset, 
+        y : component.layout.position.yAxis.offset
+      }
+    }
+    return {x : 0, y : 0};
+  }
+
   useEffect(() => {
     const parsedSlides =
       manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
@@ -83,15 +94,14 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     >
       {slideComponents.map((item) => {
         const nodeRef: any = createRef();
-
         const handleStop = (event: any, data: any) => {
           const layout = setComponentLayout(
             manager.canvasManager.canvas.functions?.getCanvasSize(),
             {
               ...manager.canvasManager.getComponentData(item.id).layout,
               position: {
-                xAxis: { offset: data.x },
-                yAxis: { offset: data.y },
+                xAxis: { offset: data.x + loadPosition(item).x },
+                yAxis: { offset: data.y + loadPosition(item).y },
               },
             }
           );
@@ -109,6 +119,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             onStop={handleStop}
             handle=".handle"
             defaultClassName="w-fit"
+            positionOffset={loadPosition(item)}
           >
             <div
               key={item.id}

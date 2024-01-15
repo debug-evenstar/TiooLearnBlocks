@@ -29,7 +29,7 @@ export const setComponentLayout = (
               ),
             },
             yAxis: {
-              offset: layoutData?.position?.xAxis.offset ?? 0,
+              offset: layoutData?.position?.yAxis.offset ?? 0,
               offsetPercent: percentValue(
                 layoutData?.position?.yAxis.offset ?? 0,
                 canvasProps.height
@@ -107,6 +107,7 @@ class CanvasManager implements CanvasManagerInterface {
 
   updateActiveSlide(slideData: ComponentBaseDataInterface[]) {
     this.activeSlide = slideData;
+    console.log(slideData);
   }
 
   getComponentIndex(id: string) {

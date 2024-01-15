@@ -73,19 +73,19 @@ export const EditProperties = (
         <TextProperties manager={manager} />
         <Background manager={manager} />
         <Extensions manager={manager} />
-        <Delete id={id} />
+        <Delete id={id} manager={manager} />
       </>
     ),
     Image: (
       <>
         <ImageProperties manager={manager} />
-        <Delete id={id} />
+        <Delete id={id} manager={manager} />
       </>
     ),
     Video: (
       <>
         <VideoProperties manager={manager} />
-        <Delete id={id} />
+        <Delete id={id} manager={manager} />
       </>
     ),
     FlashCards: (
@@ -94,7 +94,7 @@ export const EditProperties = (
         <Objective manager={manager} component="FlashCards" />
         <Subjective manager={manager} component="FlashCards" />
         <ImageProperties manager={manager} />
-        <Delete id={id} />
+        <Delete id={id} manager={manager} />
       </>
     ),
   };
