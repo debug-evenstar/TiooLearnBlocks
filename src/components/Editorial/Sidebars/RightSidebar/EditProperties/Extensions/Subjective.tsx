@@ -13,6 +13,7 @@ import {
   handleSetFeedbackType,
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
+import { QuestionInterface } from "components/interface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -72,20 +73,20 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   };
 
   useEffect(() => {
-    console.log(identifier, correctOption, wrongOption, " - Options");
+    console.log(identifier, correctOption, wrongOption, " - Optionsd");
   }, [identifier]);
 
   useEffect(() => {
-    coreData?.questions?.forEach((question: any) => {
-      if (
-        question?.type === "SUBJECTIVE" &&
-        question?.identifier?.includes(id)
-      ) {
-        setQuestions([...questions, question]);
-        console.log(question);
-      }
-    });
-  }, [coreData, identifier]);
+    if (coreData?.questions) {
+      const filteredQuestions = coreData.questions?.filter(
+        (question: QuestionInterface) =>
+          question?.type === "SUBJECTIVE" && question?.identifier?.includes(id)
+      );
+      setQuestions(filteredQuestions);
+      console.log(questions);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coreData?.questions, identifier]);
 
   return (
     <div className="w-full p-2 shadow-md">

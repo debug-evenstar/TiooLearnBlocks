@@ -11,8 +11,10 @@ import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import ObjectivesInputs from "./ObjectivesInputs";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import ObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ObjectiveInputs";
+import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const dispatch = useDispatch();
@@ -137,6 +139,13 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     );
   };
 
+  const handleClickedInput = (input: any, index: number) => {
+    if (input?.question[0] && input.question[0]?.type === "OBJECTIVE") {
+      dispatch(handleToggleShowOptionBox());
+    }
+    dispatch(handleSetObjectiveIndex(index));
+  };
+
   return (
     <div
       className={`relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center ${
@@ -171,6 +180,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
                 resizeHandles={["e"]}
               >
                 <div
+                  onClick={() => handleClickedInput(input, index)}
                   ref={nodeRef}
                   style={{
                     width: input.width + "px",
@@ -208,8 +218,8 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       )}
 
       {showOptionsBox && activeId === id && (
-        <div>
-          <ObjectivesInputs manager={manager} /> deop
+        <div className="z-[500]">
+          <ObjectivesInputs manager={manager} />
         </div>
       )}
     </div>

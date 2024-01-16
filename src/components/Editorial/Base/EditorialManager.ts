@@ -171,12 +171,14 @@ class EditorialManager implements EditorialManagerInterface {
     ) => this.updateActiveComponentObjective(data);
     this.canvasManager.canvas.functions["updateObjectiveData"] = (
       data: any,
-      index: number
-    ) => this.updateObjectiveData(data, index);
+      index: number,
+      type?: string
+    ) => this.updateObjectiveData(data, index, type);
     this.canvasManager.canvas.functions["updateObjectiveOptions"] = (
       data: any,
-      index: number
-    ) => this.updateObjectiveOptions(data, index);
+      index: number,
+      type?: string
+    ) => this.updateObjectiveOptions(data, index, type);
     this.canvasManager.canvas.functions["deleteObjectiveOptions"] = (
       data: any,
       index: number
@@ -184,8 +186,9 @@ class EditorialManager implements EditorialManagerInterface {
     this.canvasManager.canvas.functions["updateObjectiveOption"] = (
       data: any,
       index: number,
-      optionIndex: number
-    ) => this.updateObjectiveOption(data, index, optionIndex);
+      optionIndex: number,
+      type?: string
+    ) => this.updateObjectiveOption(data, index, optionIndex, type);
     this.canvasManager.canvas.functions["updateWrongOptions"] = (
       data: any,
       index: number
@@ -202,18 +205,21 @@ class EditorialManager implements EditorialManagerInterface {
     this.canvasManager.canvas.functions["updateFeedbackType"] = (
       type: string,
       index: number,
-      optionIndex: number
-    ) => this.updateFeedbackType(type, index, optionIndex);
+      optionIndex: number,
+      componentType?: string
+    ) => this.updateFeedbackType(type, index, optionIndex, componentType);
     this.canvasManager.canvas.functions["updateFeedbackContent"] = (
       content: string,
       index: number,
-      optionIndex: number
-    ) => this.updateFeedbackContent(content, index, optionIndex);
+      optionIndex: number,
+      componentType?: string
+    ) => this.updateFeedbackContent(content, index, optionIndex, componentType);
     this.canvasManager.canvas.functions["updateFeedbackAnswer"] = (
       answer: boolean,
       index: number,
-      optionIndex: number
-    ) => this.updateFeedbackAnswer(answer, index, optionIndex);
+      optionIndex: number,
+      componentType?: string
+    ) => this.updateFeedbackAnswer(answer, index, optionIndex, componentType);
     this.canvasManager.canvas.functions["updateFlashcardQuestion"] = (
       data: QuestionInterface,
       index: number
@@ -243,7 +249,20 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  updateObjectiveData(data: any, index: number) {
+  updateObjectiveData(data: any, index: number, type?: string) {
+    if (type && type === "Overlay") {
+      if (this.canvasManager.activeComponent.data.coreData) {
+        this.canvasManager.activeComponent.data.coreData.extensions[
+          index
+        ].question[0] = {
+          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+            .question[0],
+          ...data,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions[index] = {
         ...this.canvasManager.activeComponent.data.coreData.questions[index],
@@ -253,7 +272,21 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  updateObjectiveOptions(data: any, index: number) {
+  updateObjectiveOptions(data: any, index: number, type?: string) {
+    if (type && type === "Overlay") {
+      if (this.canvasManager.activeComponent.data.coreData?.extensions) {
+        this.canvasManager.activeComponent.data.coreData.extensions[
+          index
+        ].question[0].options = [
+          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+            .question[0].options,
+          data,
+        ];
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions[
         index
@@ -275,7 +308,21 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  updateObjectiveOption(data: any, index: number, optionIndex: number) {
+  updateObjectiveOption(
+    data: any,
+    index: number,
+    optionIndex: number,
+    type?: string
+  ) {
+    if (type && type === "Overlay") {
+      if (this.canvasManager.activeComponent.data.coreData?.extensions) {
+        this.canvasManager.activeComponent.data.coreData.extensions[
+          index
+        ].question[0].options[optionIndex].content = data;
+      }
+      this.saveActiveComponentData();
+      return;
+    }
     if (this.canvasManager.activeComponent.data.coreData.questions[index]) {
       this.canvasManager.activeComponent.data.coreData.questions[index].options[
         optionIndex
@@ -284,7 +331,26 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  updateFeedbackType(type: any, index: number, optionIndex: number) {
+  updateFeedbackType(
+    type: any,
+    index: number,
+    optionIndex: number,
+    componentType?: string
+  ) {
+    if (componentType === "Overlay") {
+      if (this.canvasManager.activeComponent.data.coreData) {
+        this.canvasManager.activeComponent.data.coreData.extensions[
+          index
+        ].question[0].options[optionIndex].feedback = {
+          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+            .question[0].options[optionIndex].feedback,
+          type,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions[index].options[
         optionIndex
@@ -297,7 +363,26 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  updateFeedbackContent(content: any, index: number, optionIndex: number) {
+  updateFeedbackContent(
+    content: any,
+    index: number,
+    optionIndex: number,
+    componentType?: string
+  ) {
+    if (componentType === "Overlay") {
+      if (this.canvasManager.activeComponent.data.coreData) {
+        this.canvasManager.activeComponent.data.coreData.extensions[
+          index
+        ].question[0].options[optionIndex].feedback = {
+          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+            .question[0].options[optionIndex].feedback,
+          content,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions[index].options[
         optionIndex
@@ -310,7 +395,26 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  updateFeedbackAnswer(answer: boolean, index: number, optionIndex: number) {
+  updateFeedbackAnswer(
+    answer: boolean,
+    index: number,
+    optionIndex: number,
+    componentType?: string
+  ) {
+    if (componentType === "Overlay") {
+      if (this.canvasManager.activeComponent.data.coreData) {
+        this.canvasManager.activeComponent.data.coreData.extensions[
+          index
+        ].question[0].options[optionIndex] = {
+          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+            .question[0].options[optionIndex],
+          answer,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions[index].options[
         optionIndex
