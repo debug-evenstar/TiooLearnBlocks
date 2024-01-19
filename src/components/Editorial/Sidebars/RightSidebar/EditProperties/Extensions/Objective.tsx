@@ -16,7 +16,7 @@ import {
   handleSetFeedbackType,
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
-import { OptionInterface } from "components/interface";
+import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
 import { handleToggleTrigger } from "provider/triggerSlice";
@@ -102,18 +102,16 @@ const Objective: FC<Props> = ({ manager, component }) => {
   };
 
   useEffect(() => {
-    coreData?.questions?.forEach((question: any) => {
-      if (
-        question?.type === "OBJECTIVE" &&
-        question?.identifier?.includes(id)
-      ) {
-        setQuestions([...questions, question]);
-        console.log(question);
-      }
-    });
-    console.log(questions);
+    if (coreData?.questions) {
+      const filteredQuestions = coreData.questions?.filter(
+        (question: QuestionInterface) =>
+          question?.type === "OBJECTIVE" && question?.identifier?.includes(id)
+      );
+      setQuestions(filteredQuestions);
+      console.log(questions);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coreData?.questions, identifier, id]);
+  }, [coreData?.questions, identifier]);
 
   return (
     <div className="p-2 shadow-md">

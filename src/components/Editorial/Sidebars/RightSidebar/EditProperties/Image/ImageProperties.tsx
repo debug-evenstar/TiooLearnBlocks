@@ -2,12 +2,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { FC, useEffect, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
-import InputResize from "./InputResize";
+import InputResize from "../InputResize";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { Switch } from "@mui/material";
 import { FaEllipsisH } from "react-icons/fa";
-import ImageObjective from "components/Editorial/ViewBox/Boxtypes/Image/ImageObjective";
-import ImageSubjective from "components/Editorial/ViewBox/Boxtypes/Image/ImageSubjective";
+import ImageObjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageObjective";
+import ImageSubjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageSubjective";
 import { handleSetOptionIndex } from "provider/feedbackSlice";
 import { useSelector } from "react-redux";
 
@@ -97,10 +97,20 @@ const ImageInputs: FC<ImageInputsProps> = ({ manager, index, input }) => {
         />
       </div>
       {toggleQuestions && (
-        <div className="flex justify-end absolute right-0 bg-white z-50">
+        <div className="h-fit flex justify-end absolute right-0 bg-white z-50">
           <div className="tiooBoxShadow p-2">
-            <ImageObjective manager={manager} index={index} data={input} />
-            <ImageSubjective manager={manager} index={index} data={input} />
+            {!input?.question[0] || input?.question[0]?.type === "OBJECTIVE" ? (
+              <ImageObjective manager={manager} index={index} data={input} />
+            ) : (
+              <></>
+            )}
+
+            {!input?.question[0] ||
+            input?.question[0]?.type === "SUBJECTIVE" ? (
+              <ImageSubjective manager={manager} index={index} data={input} />
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       )}

@@ -27,9 +27,9 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   };
 
   useEffect(() => {
-    const flashCardComponentData =
+    const componentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
-    //flashCardComponentData && setImages(flashCardComponentData.cards);
+    componentData && console.log(componentData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 

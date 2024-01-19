@@ -11,7 +11,6 @@ import { handleSetDragItems } from "provider/dragItemsSlice";
 import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { setComponentLayout } from "./EditorialManager";
-import Feedback from "../Sidebars/RightSidebar/EditProperties/Extensions/Feedback";
 import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
 
@@ -67,15 +66,15 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     manager.slideManager.slides[manager.slideManager.activeSlide] = components;
   };
 
-  const loadPosition = (component : ComponentBaseDataInterface) => {
-    if(component.layout && component.layout.position) {
+  const loadPosition = (component: ComponentBaseDataInterface) => {
+    if (component.layout && component.layout.position) {
       return {
-        x : component.layout.position.xAxis.offset, 
-        y : component.layout.position.yAxis.offset
-      }
+        x: component.layout.position.xAxis.offset,
+        y: component.layout.position.yAxis.offset,
+      };
     }
-    return {x : 0, y : 0};
-  }
+    return { x: 0, y: 0 };
+  };
 
   useEffect(() => {
     const parsedSlides =

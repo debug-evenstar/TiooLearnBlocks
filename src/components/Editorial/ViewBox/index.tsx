@@ -3,10 +3,20 @@ import { FC, useEffect, useRef, useState } from "react";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent } from "./handler";
-import { setComponentLayout } from "../Base/EditorialManager";
+import {
+  EditorialManagerInterface,
+  setComponentLayout,
+} from "../Base/EditorialManager";
 import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
+import { ComponentBaseDataInterface } from "components/interface";
 
-const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
+interface Props {
+  id: string;
+  manager: EditorialManagerInterface;
+  handleDelete: Function;
+}
+
+const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
     height: id.includes("Text") ? 65 : 280,
@@ -31,18 +41,37 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
     updateComponentLayout(size.width, size.height);
   };
 
+  const loadSize = (component: ComponentBaseDataInterface) => {
+    if (component.layout && component.layout.size) {
+      setViewBoxSize({
+        height: component.layout.size.height,
+        width: component.layout.size.width,
+      });
+    }
+  };
+
   const height = id.includes("Text") ? 60 : 65;
 
   useEffect(() => {
-    // Default Layout
-    // const layout = setComponentLayout(
-    //   manager.canvasManager.canvas.functions?.getCanvasSize(),
-    //   {size : {width : 300, height}}
-    // );
-    // manager.slideManager.saveComponentData(
-    //   manager.canvasManager.getComponentIndex(id),
-    //   { layout }
-    // );
+    const component = manager.canvasManager.getComponentData(id);
+
+    if (!component.layout?.size) {
+      // Default Layout
+      const layout = setComponentLayout(
+        manager.canvasManager.canvas.functions?.getCanvasSize(),
+        { size: { width: 300, height } }
+      );
+      manager.slideManager.saveComponentData(
+        manager.canvasManager.getComponentIndex(id),
+        { layout }
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    const component = manager.canvasManager.getComponentData(id);
+    loadSize(component);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

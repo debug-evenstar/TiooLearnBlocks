@@ -137,7 +137,7 @@ const Text: FC<CanvasText> = ({
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coreData, activeId, identifier, trigger]);
+  }, [coreData, identifier, trigger]);
 
   return (
     <div

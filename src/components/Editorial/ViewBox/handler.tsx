@@ -7,7 +7,7 @@ import Extensions from "../Sidebars/RightSidebar/EditProperties/Extensions";
 import TextProperties from "../Sidebars/RightSidebar/EditProperties/TextProperties";
 import Video from "./Boxtypes/Video/Video";
 import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
-import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/ImageProperties";
+import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageProperties";
 import Flashcard from "./Boxtypes/Flashcard/Flashcard";
 import AddImages from "../Sidebars/RightSidebar/EditProperties/FlashCard/AddImages";
 import Objective from "../Sidebars/RightSidebar/EditProperties/Extensions/Objective";

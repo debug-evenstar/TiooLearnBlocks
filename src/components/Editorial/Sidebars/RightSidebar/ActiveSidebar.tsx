@@ -20,7 +20,7 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
   }
 
   return (
-    <div className="w-full h-full border border-gray-400 overflow-y-auto no-scrollbar">
+    <div className="w-full h-full border border-gray-400 no-scrollbar">
       <header className="w-full flex justify-between p-4 border-b border-gray-400 items-center">
         <div className="h-fit flex gap-2">
           <BsArrowLeft
