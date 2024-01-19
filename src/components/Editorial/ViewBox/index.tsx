@@ -35,14 +35,14 @@ const ViewBox: FC<any> = ({ id, manager, handleDelete }) => {
 
   useEffect(() => {
     // Default Layout
-    const layout = setComponentLayout(
-      manager.canvasManager.canvas.functions?.getCanvasSize(),
-      {size : {width : 300, height}}
-    );
-    manager.slideManager.saveComponentData(
-      manager.canvasManager.getComponentIndex(id),
-      { layout }
-    );
+    // const layout = setComponentLayout(
+    //   manager.canvasManager.canvas.functions?.getCanvasSize(),
+    //   {size : {width : 300, height}}
+    // );
+    // manager.slideManager.saveComponentData(
+    //   manager.canvasManager.getComponentIndex(id),
+    //   { layout }
+    // );
   }, []);
 
   return (

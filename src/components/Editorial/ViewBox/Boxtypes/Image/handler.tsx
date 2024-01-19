@@ -31,6 +31,15 @@ export const setImageComponentData = (imageData: {
 };
 
 export const uploadFile = async (lessonId: number, file: File) => {
+
+  const a = {name : "John", age : "25", score : "40"};
+  const clone = (({score , ...others}) => others) (a);
+
+  function extract({score , ...others}) {
+    return others;
+  }
+  extract(a)
+
   // Use File instead of FileList
   try {
     const formData = new FormData();

@@ -1,10 +1,12 @@
 import axios from "axios";
 import { SlideData } from "components/SlideManager/handler";
 import { baseApiHost } from "utilities/url";
+import { EditorialManagerInterface } from "./EditorialManager";
 
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
 
 export interface EditorialSlideManagerInterface {
+  manager : EditorialManagerInterface;
   slides: any[];
   activeSlide: number;
   saveSlide: Function;
@@ -14,11 +16,13 @@ export interface EditorialSlideManagerInterface {
 }
 
 export class EditorialSlideManager implements EditorialSlideManagerInterface {
+  manager : EditorialManagerInterface;
   slides: any[];
   activeSlide: number = 0;
   handleSlidesUpdate: Function = () => {};
 
-  constructor(slides: any[]) {
+  constructor(manager : EditorialManagerInterface, slides: any[]) {
+    this.manager = manager;
     this.slides = slides;
   }
 
@@ -32,6 +36,7 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
 
   saveComponentData(index: number, data: any) {
     const currentComponentData = this.slides[this.activeSlide][index];
+    this.manager.canvasManager.canvas.history.push(this.slides);
     this.slides[this.activeSlide][index] = {
       ...currentComponentData,
       ...data,

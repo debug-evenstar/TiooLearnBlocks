@@ -15,6 +15,9 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
   const id: string = selector.payload.activeViewbox.value;
+  const popHistory = () => {
+    console.log(manager.canvasManager.canvas.history);
+  }
 
   return (
     <div className="w-full h-full border border-gray-400 overflow-y-auto no-scrollbar">
@@ -39,8 +42,8 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
       <main className="w-full p-4">
         <section className="w-full flex justify-between py-4">
           <div className="flex gap-4">
-            <MdUndo />
-            <MdRedo />
+            <MdUndo className="cursor-pointer" onClick={() => popHistory()} />
+            <MdRedo className="cursor-pointer" onClick={()=>{}}/>
           </div>
           <div className="flex gap-4">
             <BsPencil />
