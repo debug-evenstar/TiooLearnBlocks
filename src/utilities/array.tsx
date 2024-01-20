@@ -25,3 +25,5 @@ export const functionsWithDelay = (dataList : any[], action : Function, delay : 
 
     return () => {clearInterval(runner)};
 }
+
+export const deepClone = (data : any[]) => JSON.parse(JSON.stringify(data));

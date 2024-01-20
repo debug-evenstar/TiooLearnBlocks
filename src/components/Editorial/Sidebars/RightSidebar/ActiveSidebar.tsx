@@ -16,7 +16,12 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
   const selector: any = useSelector(refreshToggleSidebarState);
   const id: string = selector.payload.activeViewbox.value;
   const popHistory = () => {
-    console.log(manager.canvasManager.canvas.history);
+    const history = manager.canvasManager.canvas.history;
+    if(history.length){
+      const previousState = history[history.length - 1];
+      manager.slideManager.handleSlidesUpdate(previousState);
+      manager.canvasManager.canvas.history.pop();
+    }
   }
 
   return (

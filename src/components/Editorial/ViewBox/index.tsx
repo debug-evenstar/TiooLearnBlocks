@@ -63,7 +63,7 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
       );
       manager.slideManager.saveComponentData(
         manager.canvasManager.getComponentIndex(id),
-        { layout }
+        { layout }, true
       );
     }
   }, []);

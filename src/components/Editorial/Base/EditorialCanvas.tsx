@@ -104,10 +104,13 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
               },
             }
           );
-          manager.slideManager.saveComponentData(
-            manager.canvasManager.getComponentIndex(item.id),
-            { layout }
-          );
+          // Only update if position has changed
+          if ( data.x !== 0 || data.y !== 0 ) {
+            manager.slideManager.saveComponentData(
+              manager.canvasManager.getComponentIndex(item.id),
+              { layout }
+            );
+          }
         };
 
         return (

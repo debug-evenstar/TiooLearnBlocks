@@ -2,6 +2,7 @@ import axios from "axios";
 import { SlideData } from "components/SlideManager/handler";
 import { baseApiHost } from "utilities/url";
 import { EditorialManagerInterface } from "./EditorialManager";
+import { deepClone } from "utilities/array";
 
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
 
@@ -34,9 +35,12 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
     return this.slides[this.activeSlide];
   }
 
-  saveComponentData(index: number, data: any) {
+  saveComponentData(index: number, data: any, initialization : boolean = false) {
+    if(!initialization) {
+      const currentSlides = deepClone(this.slides);
+      this.manager.canvasManager.canvas.history.push(currentSlides);
+    }
     const currentComponentData = this.slides[this.activeSlide][index];
-    this.manager.canvasManager.canvas.history.push(this.slides);
     this.slides[this.activeSlide][index] = {
       ...currentComponentData,
       ...data,
