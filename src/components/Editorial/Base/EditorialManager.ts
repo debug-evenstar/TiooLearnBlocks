@@ -185,7 +185,7 @@ class EditorialManager implements EditorialManagerInterface {
           ...data,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
     if (this.canvasManager.activeComponent.data.coreData) {
@@ -208,7 +208,7 @@ class EditorialManager implements EditorialManagerInterface {
           data,
         ];
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -245,7 +245,7 @@ class EditorialManager implements EditorialManagerInterface {
           index
         ].question[0].options[optionIndex].content = data;
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
     if (this.canvasManager.activeComponent.data.coreData.questions[index]) {
@@ -272,7 +272,7 @@ class EditorialManager implements EditorialManagerInterface {
           type,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -304,7 +304,7 @@ class EditorialManager implements EditorialManagerInterface {
           content,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -336,7 +336,7 @@ class EditorialManager implements EditorialManagerInterface {
           answer,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
