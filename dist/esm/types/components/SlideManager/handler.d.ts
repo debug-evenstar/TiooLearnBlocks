@@ -1,8 +1,19 @@
+import { ButtonGroupData } from "components/ButtonGroup/handler";
+import { FlashCardData } from "components/FlashCards/handler";
+import { GridStepsData } from "components/GridSteps/handler";
+import { OptionData } from "components/Options/handler";
+import { PostfaceData } from "components/Postface/handler";
+import { PrefaceData } from "components/Preface/handler";
+import { SliderData } from "components/Slider/handler";
+import { TextData } from "components/Text/handler";
+import { VideoData } from "components/Video/handler";
+import { WordMatchData } from "components/WordMatch/handler";
 declare global {
     interface Window {
         SlideEventListener: any;
     }
 }
+export type SlideData = (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData | GridStepsData | PrefaceData | PostfaceData)[];
 export interface LessonSlideInterface {
     options?: any[];
     answers?: any[];
@@ -66,7 +77,7 @@ declare class LessonSlide implements LessonSlideInterface {
     setVideo(video: any): void;
     addFields(textFieldInstance: any): void;
     fillWithHint(): void;
-    verifySubjectiveAnswer(index: number, input: string, answer: string | string[]): void;
+    verifySubjectiveAnswer(input: string, answer: string | string[], callback?: Function): void;
     activateNextField(): void;
     selectAnswer(index: number, value: string, callback: Function): void;
     selectOptionAnswer(index: number, value: string, callback: Function): void;

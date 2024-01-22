@@ -69,8 +69,9 @@
   "types": "dist/index.d.ts",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
-    "@rollup/plugin-typescript": "^11.1.2",
+    "@rollup/plugin-typescript": "^10.0.1",
     "@rollup/plugin-url": "^8.0.1",
     "@svgr/rollup": "^8.0.1",
     "@types/react-color": "^3.0.10",

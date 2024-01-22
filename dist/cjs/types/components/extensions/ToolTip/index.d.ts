@@ -8,7 +8,7 @@ declare class ToolTipsHandler {
     tips: string[];
     ids: string[];
     constructor(type: string, data: any, tips: string[]);
-    getIdentifiers(): string[];
+    getIdentifiers(): string[][];
     generateToolTip(content: string): void;
     formatToolTip(text: string, tipContent: string): {
         id: string;

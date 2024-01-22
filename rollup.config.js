@@ -7,6 +7,7 @@ import { terser } from "rollup-plugin-terser";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import svgr from '@svgr/rollup'
 import url from '@rollup/plugin-url'
+import json from '@rollup/plugin-json';
 
 const Config = [
     {
@@ -24,6 +25,7 @@ const Config = [
             },
         ],
         plugins: [
+            json(),
             peerDepsExternal(),
             resolve(),
             commonjs(),
