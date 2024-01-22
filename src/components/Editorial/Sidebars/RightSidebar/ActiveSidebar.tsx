@@ -17,7 +17,7 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
   const id: string = selector.payload.activeViewbox.value;
 
   return (
-    <div className="w-full h-full border border-gray-400 no-scrollbar">
+    <div className="w-full h-full border border-gray-400 overflow-y-visible">
       <header className="w-full flex justify-between p-4 border-b border-gray-400 items-center">
         <div className="h-fit flex gap-2">
           <BsArrowLeft

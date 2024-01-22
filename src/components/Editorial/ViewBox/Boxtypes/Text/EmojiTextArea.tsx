@@ -3,14 +3,12 @@ import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import "./EmojiTextArea.css";
 
 interface EmojiTextAreaProps {
-  height?: string;
   value: string;
   defaultValue?: string;
   onChange: (value: string) => void;
 }
 
 const EmojiTextArea: React.FC<EmojiTextAreaProps> = ({
-  height = "",
   value,
   onChange,
   defaultValue,
@@ -34,7 +32,7 @@ const EmojiTextArea: React.FC<EmojiTextAreaProps> = ({
         value={value}
         defaultValue={defaultValue ? defaultValue : ""}
         onChange={handleTextAreaChange}
-        className={`h-[${height}] w-full p-2 border border-gray-300 rounded-lg resize-none`}
+        className="w-full p-2 border border-gray-300 rounded-lg resize-none"
       />
       <button
         type="button"

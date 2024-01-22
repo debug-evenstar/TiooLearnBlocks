@@ -25,6 +25,7 @@ import {
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
 import OverlayFeedback from "./OverlayFeedback";
+import { handleToggleTrigger } from "provider/triggerSlice";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -101,6 +102,22 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
   };
 
   const handleDelete = (id: string, optionIndex: number) => {
+    // Find the question to update
+
+    if (!question?.options) return;
+    const updatedQuestion = {
+      ...question,
+      options: [
+        ...question.options.slice(0, optionIndex),
+        ...question.options.slice(optionIndex + 1),
+      ],
+    };
+    manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+      updatedQuestion.options,
+      0,
+      "Overlay"
+    );
+    dispatch(handleToggleTrigger());
     console.log(id);
   };
 
@@ -216,7 +233,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <ChatIcon />
-                    <p className="text-[12px] my-2">{option.content}</p>
+                    <p className="text-[12px] my-2 mr-2">{option.content}</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <div onClick={() => handleShowFeedback(i)}>
@@ -229,7 +246,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
             ))}
 
           <div
-            className="flex justify-between py-2 items-center"
+            className="flex justify-between py-2 items-center cursor-pointer"
             onClick={() =>
               addOption({
                 answer: false,

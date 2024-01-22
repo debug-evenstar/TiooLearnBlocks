@@ -12,18 +12,19 @@ import { Resizable } from "react-resizable";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { handleToggleTrigger } from "provider/triggerSlice";
-import ObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ObjectiveInputs";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
+import { handleToggleOverlayState } from "provider/overlayActiveSlice";
+import "react-resizable/css/styles.css";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const dispatch = useDispatch();
   const selector: any = useSelector(refreshToggleSidebarState);
   const activeId: string = selector.payload.activeViewbox.value;
   const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+  const overlayActive: boolean = selector.payload.overlayActive.value;
 
   const [previewImage, setPreviewImage] = useState("");
-  const [overlayActive, setOverlayActive] = useState(false);
   const [data, setData] = useState<any>();
   const [inputList, setInputList] = useState<any[]>([]);
   const [inputBoxDimensions, setInputBoxDimensions] = useState<any[]>([]);
@@ -76,11 +77,8 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       toggleWrapperSize(element, style, styleType);
     };
 
-    manager.canvasManager.activeComponent.functions["toggleOverlay"] = (
-      status: boolean
-    ) => {
-      setOverlayActive(status);
-      console.log(status, "overlay status");
+    manager.canvasManager.activeComponent.functions["toggleOverlay"] = () => {
+      dispatch(handleToggleOverlayState());
     };
   }, [manager, viewBoxRef]);
 
@@ -120,7 +118,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       );
       setInputBoxDimensions((prevList) => [
         ...prevList,
-        { width: 200, height: 5 },
+        { width: 200, height: 40 },
       ]);
     }
   };
@@ -137,6 +135,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
           : dimensions
       )
     );
+    console.log(inputBoxDimensions[boxIndex], "die");
   };
 
   const handleClickedInput = (input: any, index: number) => {
@@ -158,7 +157,9 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         manager={manager}
       />
 
-      {extensions &&
+      {activeId === id &&
+        overlayActive &&
+        extensions &&
         extensions.length > 0 &&
         extensions.map((input, index) => {
           const nodeRef: any = createRef();
@@ -171,20 +172,20 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
               handle=".inputHandle"
             >
               <Resizable
-                width={input.width}
-                height={input.height}
+                width={inputBoxDimensions[index].width}
+                height={inputBoxDimensions[index].height}
                 minConstraints={[20, 5]}
                 onResize={(event: any, { node, size, handle }: any) =>
                   onResize(event, { node, size, handle }, index)
                 }
-                resizeHandles={["e"]}
+                resizeHandles={["s", "e", "se"]}
               >
                 <div
                   onClick={() => handleClickedInput(input, index)}
                   ref={nodeRef}
                   style={{
-                    width: input.width + "px",
-                    height: input.height + "px",
+                    width: inputBoxDimensions[index].width + "px",
+                    height: inputBoxDimensions[index].height + "px",
                     position: "absolute",
                     top: `${input.y}px`,
                     left: `${input.x}px`,
@@ -193,7 +194,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
                   }}
                 >
                   <input
-                    className="w-full p-1.5 inputHandle"
+                    className="w-full h-full p-1.5 inputHandle"
                     placeholder={`Input ${index + 1}`}
                   />
                 </div>
@@ -205,7 +206,9 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       {previewImage?.length > 1 && (
         <div
           className="w-full mx-auto my-6 rounded-lg overflow-hidden h-full absolute"
-          onClick={overlayActive ? handleAddInput : () => null}
+          onClick={
+            activeId === id && overlayActive ? handleAddInput : () => null
+          }
         >
           <img
             ref={imageRef}
@@ -214,12 +217,6 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
             className="w-full h-full"
             draggable={false}
           />
-        </div>
-      )}
-
-      {showOptionsBox && activeId === id && (
-        <div className="z-[500]">
-          <ObjectivesInputs manager={manager} />
         </div>
       )}
     </div>

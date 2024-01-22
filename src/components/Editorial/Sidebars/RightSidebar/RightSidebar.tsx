@@ -26,7 +26,7 @@ const RightSidebar: FC<Props> = ({
   const isActive = selector.payload.rightSidebarState.value;
 
   return (
-    <div className="border-l bg-white border-[#030036] border-opacity-10 shadow relative w-full h-screen max-w-[20%] no-scrollbar pt-5 pb-20 mb-10 px-[29px]">
+    <div className="z-[500] border-l bg-white border-[#030036] border-opacity-10 shadow h-screen w-full max-w-[20%] relative no-scrollbar pt-5 pb-20 mb-10 px-[29px]">
       {isActive ? (
         <ActiveSidebar manager={manager} />
       ) : (

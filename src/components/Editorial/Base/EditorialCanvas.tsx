@@ -13,6 +13,7 @@ import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { setComponentLayout } from "./EditorialManager";
 import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
+import { handleToggleOverlayState } from "provider/overlayActiveSlice";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
@@ -52,6 +53,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     if (!data) return;
     onDrop(data);
     dispatch(handleToggleSidebarState());
+    dispatch(handleToggleOverlayState());
   };
 
   const handleClickedViewbox = (id: string) => {

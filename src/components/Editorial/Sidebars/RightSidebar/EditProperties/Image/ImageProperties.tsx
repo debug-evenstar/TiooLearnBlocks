@@ -6,8 +6,8 @@ import InputResize from "../InputResize";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { Switch } from "@mui/material";
 import { FaEllipsisH } from "react-icons/fa";
-import ImageObjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageObjective";
-import ImageSubjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageSubjective";
+import ImageObjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ImageObjective";
+import ImageSubjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ImageSubjective";
 import { handleSetOptionIndex } from "provider/feedbackSlice";
 import { useSelector } from "react-redux";
 
@@ -28,11 +28,11 @@ const ImageProperties: FC<Props> = ({ manager }) => {
 
   const [isActive, setIsActive] = useState(false);
   const [extensions, setExtensions] = useState<any[]>([]);
-  const [overlayActive, setOverlayActive] = useState(true);
+
+  const overlayActive: boolean = selector.payload.overlayActive.value;
 
   const handleSwitchOverlay = () => {
-    setOverlayActive(!overlayActive);
-    toggleOverlay(overlayActive);
+    toggleOverlay();
   };
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const ImageInputs: FC<ImageInputsProps> = ({ manager, index, input }) => {
         />
       </div>
       {toggleQuestions && (
-        <div className="h-fit flex justify-end absolute right-0 bg-white z-50">
+        <div className="h-fit bg-white">
           <div className="tiooBoxShadow p-2">
             {!input?.question[0] || input?.question[0]?.type === "OBJECTIVE" ? (
               <ImageObjective manager={manager} index={index} data={input} />

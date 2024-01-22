@@ -29,7 +29,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
   manager,
 }) => {
   return (
-    <div className="h-screen w-full top-0 overflow-hidden relative">
+    <div className="h-screen w-full top-0 overflow-hidden">
       <Header activeSlide={active} back={back} name={name} />
       <div className="w-full h-full flex">
         <LeftSidebar
@@ -38,7 +38,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
           data={data}
           manager={manager}
         />
-        <div className="w-full overflow-y-auto">{children}</div>
+        <div className="w-full overflow-y-auto no-scrollbar">{children}</div>
         <RightSidebar
           lessonlist={lessonlist}
           slides={slides}

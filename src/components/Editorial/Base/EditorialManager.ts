@@ -167,8 +167,9 @@ class EditorialManager implements EditorialManagerInterface {
       data: any
     ) => this.updateActiveComponentData(data);
     this.canvasManager.canvas.functions["updateActiveComponentObjective"] = (
-      data: any
-    ) => this.updateActiveComponentObjective(data);
+      data: any,
+      type?: string
+    ) => this.updateActiveComponentObjective(data, type);
     this.canvasManager.canvas.functions["updateObjectiveData"] = (
       data: any,
       index: number,
@@ -181,8 +182,9 @@ class EditorialManager implements EditorialManagerInterface {
     ) => this.updateObjectiveOptions(data, index, type);
     this.canvasManager.canvas.functions["deleteObjectiveOptions"] = (
       data: any,
-      index: number
-    ) => this.deleteObjectiveOptions(data, index);
+      index: number,
+      type?: string
+    ) => this.deleteObjectiveOptions(data, index, type);
     this.canvasManager.canvas.functions["updateObjectiveOption"] = (
       data: any,
       index: number,
@@ -224,6 +226,9 @@ class EditorialManager implements EditorialManagerInterface {
       data: QuestionInterface,
       index: number
     ) => this.updateFlashcardQuestion(data, index);
+    this.canvasManager.canvas.functions["updateImageQuestion"] = (
+      data: QuestionInterface
+    ) => this.updateImageQuestion(data);
     setInterval(() => {
       //console.log(this.canvasManager.activeComponent.data.coreData);
     }, 5000);
@@ -238,7 +243,16 @@ class EditorialManager implements EditorialManagerInterface {
     }
     this.saveActiveComponentData();
   }
-  updateActiveComponentObjective(data: any) {
+  updateActiveComponentObjective(data: any, type?: string) {
+    if (type === "Overlay") {
+      if (this.canvasManager.activeComponent.data.coreData) {
+        this.canvasManager.activeComponent.data.coreData.extensions[0].question =
+          [];
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     console.log(data);
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions = [
@@ -272,6 +286,12 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
+  updateImageQuestion(data: any) {
+    if (this.canvasManager.activeComponent.data.coreData) {
+      this.canvasManager.activeComponent.data.coreData.question = data;
+    }
+  }
+
   updateObjectiveOptions(data: any, index: number, type?: string) {
     if (type && type === "Overlay") {
       if (this.canvasManager.activeComponent.data.coreData?.extensions) {
@@ -299,7 +319,19 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  deleteObjectiveOptions(data: any, index: number) {
+  deleteObjectiveOptions(data: any, index: number, type?: string) {
+    if (type === "Overlay") {
+      if (type && type === "Overlay") {
+        if (this.canvasManager.activeComponent.data.coreData?.extensions) {
+          this.canvasManager.activeComponent.data.coreData.extensions[
+            index
+          ].question[0].options = data;
+        }
+        this.saveActiveComponentData();
+        return;
+      }
+    }
+
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions[
         index
@@ -462,8 +494,22 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
+  updateFlashcardQuestions(data: QuestionInterface, index: number) {
+    if (this.canvasManager.activeComponent.data.coreData?.extensions) {
+      this.canvasManager.activeComponent.data.coreData.extensions[
+        index
+      ].question = [
+        ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+          .question,
+        data,
+      ];
+    }
+    this.saveActiveComponentData();
+  }
+
   updateFlashcardQuestion(data: QuestionInterface, index: number) {
     console.log(this.canvasManager.activeComponent.data, "IN EM");
+    return;
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.cards[index].question = [
         ...this.canvasManager.activeComponent.data.coreData.question,

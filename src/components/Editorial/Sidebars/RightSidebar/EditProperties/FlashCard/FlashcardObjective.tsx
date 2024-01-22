@@ -43,21 +43,36 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
   };
 
   const [isActive, setIsActive] = useState(false);
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.getComponentData(id).cards[index];
 
   const handleSetObjective = () => {
-    console.log(questions, "in objective");
-    //replaceContent(questions, "OBJECTIVE", component);
     addQuestion(
       {
         type: "OBJECTIVE",
         identifier: `Input ${index + 1}`,
-        options: ["", ""],
+        options: [
+          {
+            answer: false,
+            content: "",
+            feedback: {
+              type: "",
+              content: "",
+            },
+          },
+          {
+            answer: false,
+            content: "",
+            feedback: {
+              type: "",
+              content: "",
+            },
+          },
+        ],
         answers: [""],
-        feedbacks: [],
       },
       index
     );
+
     setIsActive(true);
     dispatch(handleToggleShowOptionBox());
     dispatch(handleSetObjectiveIndex(index));
@@ -70,6 +85,7 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
       manager.canvasManager.activeComponent.data.coreData,
       "changed data"
     );
+    return;
     if (questions.length > 0) {
       //replaceContent(questions, "OBJECTIVE", component);
       setIsActive(true);
