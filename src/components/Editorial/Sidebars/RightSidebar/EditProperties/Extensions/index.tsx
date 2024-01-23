@@ -20,7 +20,9 @@ const Extensions: FC<Props> = ({ manager }) => {
     <div className="w-full my-5 py-2">
       <a href="javascript:void(0)" onClick={() => setIsActive(!isActive)}>
         <div
-          className="w-full flex justify-between items-center cursor-pointer"
+          className={`w-full flex justify-between items-center cursor-pointer ${
+            isActive ? "bg-[#E6E6FA] p-2 rounded-sm" : ""
+          }`}
           onClick={() => setIsActive(!isActive)}
         >
           <p className="text-[15px]">Extensions</p>

@@ -17,7 +17,7 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
   const id: string = selector.payload.activeViewbox.value;
 
   return (
-    <div className="w-full h-full border border-gray-400 overflow-y-visible">
+    <div className="w-full h-full overflow-y-visible pt-5 pb-20">
       <header className="w-full flex justify-between p-4 border-b border-gray-400 items-center">
         <div className="h-fit flex gap-2">
           <BsArrowLeft
@@ -36,13 +36,13 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
           </b>
         </div>
       </header>
-      <main className="w-full p-4">
+      <main className="w-full p-4 px-[25px]">
         <section className="w-full flex justify-between py-4">
           <div className="flex gap-4">
             <MdUndo />
             <MdRedo />
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 bg-[#E6E6FA] p-2 rounded-full">
             <BsPencil />
             <RiArrowDropDownFill />
           </div>
