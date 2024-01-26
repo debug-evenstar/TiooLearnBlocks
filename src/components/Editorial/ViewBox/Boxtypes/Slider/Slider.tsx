@@ -1,8 +1,10 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import FlashcardViewBox from "./SliderViewbox";
+import { handleSetActiveCompName } from "provider/sliderSlice";
 
 interface SliderProps {
   id: string;
@@ -10,42 +12,93 @@ interface SliderProps {
 }
 
 const Slider: FC<SliderProps> = ({ id, manager }) => {
+  const dispatch = useDispatch();
   const selector: any = useSelector(handleToggleTrigger);
   const trigger: boolean = selector.payload.trigger.value;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isEditable, setIsEditable] = useState(true);
   const sliderRef = useRef<HTMLDivElement>(null);
-  const [images, setImages] = useState<any[]>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const [slides, setSlides] = useState<any[]>([]);
 
   const handlePrevClick = () => {
     setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) => (prevIndex - 1 + slides.length) % slides.length
     );
   };
 
   const handleNextClick = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % slides.length);
+  };
+
+  const generateId = (componentName: string): string => {
+    return componentName + "-clone-" + Date.now();
   };
 
   useEffect(() => {
     const componentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
-    componentData && console.log(componentData);
+    componentData && setSlides(componentData.slides);
+    slides.length > 0 &&
+      dispatch(
+        handleSetActiveCompName(slides[currentImageIndex][0]?.component)
+      );
+    console.log(slides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const slider = sliderRef.current;
+      if (slider && !slider.contains(event.target as Node)) {
+        //setIsEditable(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditable, sliderRef]);
+
+  useEffect(() => {
+    dispatch(
+      handleSetActiveCompName(
+        manager.canvasManager.canvas.functions.getComponentData(id).slides[
+          currentImageIndex
+        ][0]?.component
+      )
+    );
+  }, [currentImageIndex]);
+
   return (
-    <div className="flex items-center gap-2 cursor-move">
+    <div className="flex items-center gap-2">
       <button onClick={handlePrevClick}>
-        <FaAngleLeft className="text-[#87909E] text-[20px]" />
+        <FaAngleLeft className="text-[20px]" strokeWidth="1px" />
       </button>
 
-      <div ref={sliderRef}>
-        <div>Slider {currentImageIndex}</div>
+      <div
+        onDoubleClick={() => setIsEditable(!isEditable)}
+        ref={sliderRef}
+        className={`flex justify-center items-center ${
+          isEditable ? "handle cursor-move" : ""
+        }  h-fit w-fit min-w-[45vw] min-h-[20rem] border border-[#4f46e5]`}
+      >
+        {slides[currentImageIndex] && (
+          <FlashcardViewBox
+            id={generateId(slides[currentImageIndex][0]?.component)}
+            handleDelete={() => null}
+            manager={manager}
+            data={slides[currentImageIndex]}
+            currIndex={currentImageIndex}
+            isFlashcardDraggable={isEditable}
+            setIsFlashcardDraggable={setIsEditable}
+          />
+        )}
       </div>
 
-      {images.length > 1 && (
+      {slides.length > 1 && (
         <button onClick={handleNextClick}>
-          <FaAngleRight className="text-[#87909E] text-[20px]" />
+          <FaAngleRight className="text-[20px]" />
         </button>
       )}
     </div>

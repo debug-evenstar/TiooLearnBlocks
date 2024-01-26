@@ -9,12 +9,12 @@ import Video from "./Boxtypes/Video/Video";
 import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
 import Flashcard from "./Boxtypes/Flashcard/Flashcard";
 import AddImages from "../Sidebars/RightSidebar/EditProperties/FlashCard/AddImages";
-import Objective from "../Sidebars/RightSidebar/EditProperties/Extensions/Objective";
-import Subjective from "../Sidebars/RightSidebar/EditProperties/Extensions/Subjective";
 import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 import ImageProperties from "../Sidebars/RightSidebar/EditProperties/Image/ImageProperties";
-import FlashcardObjective from "../Sidebars/RightSidebar/EditProperties/FlashCard/FlashcardObjective";
+import { useSelector } from "react-redux";
+import { handleSetActiveCompName } from "provider/sliderSlice";
 
+// for extracting the name of the component
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
 
@@ -59,13 +59,50 @@ export const ViewBoxContent = (
   return viewboxTypes[componentName];
 };
 
+// for the slider edit properties
+const SliderProperties = (
+  manager: EditorialManagerInterface,
+  sliderCompName: string = "Text"
+) => {
+  const viewboxTypes: {
+    [key: string]: JSX.Element;
+  } = {
+    Text: (
+      <>
+        <TextProperties manager={manager} />
+        <Background manager={manager} />
+        <Extensions manager={manager} />
+      </>
+    ),
+    Image: (
+      <>
+        <ImageProperties manager={manager} />
+      </>
+    ),
+    Video: (
+      <>
+        <VideoProperties manager={manager} />
+      </>
+    ),
+    FlashCards: (
+      <>
+        <ImageProperties manager={manager} />
+      </>
+    ),
+  };
+
+  return viewboxTypes[sliderCompName];
+};
+
 // for editing in rightsidebar
 export const EditProperties = (
   id: string,
   manager: EditorialManagerInterface
 ) => {
   const componentName = getOriginalName(id);
-  console.log(componentName);
+  const selector: any = useSelector(handleSetActiveCompName);
+  const activeCompName = selector.payload.slider.value.activeCompName;
+
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {
@@ -96,6 +133,7 @@ export const EditProperties = (
         <Delete id={id} manager={manager} />
       </>
     ),
+    Slider: SliderProperties(manager, activeCompName),
   };
   return viewboxTypes[componentName];
 };

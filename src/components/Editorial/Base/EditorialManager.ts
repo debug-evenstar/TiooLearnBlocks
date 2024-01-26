@@ -168,8 +168,9 @@ class EditorialManager implements EditorialManagerInterface {
     ) => this.updateActiveComponentData(data);
     this.canvasManager.canvas.functions["updateActiveComponentObjective"] = (
       data: any,
-      type?: string
-    ) => this.updateActiveComponentObjective(data, type);
+      type?: string,
+      index?: number
+    ) => this.updateActiveComponentObjective(data, type, index);
     this.canvasManager.canvas.functions["updateObjectiveData"] = (
       data: any,
       index: number,
@@ -229,6 +230,15 @@ class EditorialManager implements EditorialManagerInterface {
     this.canvasManager.canvas.functions["updateImageQuestion"] = (
       data: QuestionInterface
     ) => this.updateImageQuestion(data);
+    this.canvasManager.canvas.functions["updateSliderImageURL"] = (
+      content: string,
+      index: number
+    ) => this.updateSliderTextContent(content, index);
+    this.canvasManager.canvas.functions["updateSliderImageURL"] = (
+      url: string,
+      index: number
+    ) => this.updateSliderImageURL(url, index);
+
     setInterval(() => {
       //console.log(this.canvasManager.activeComponent.data.coreData);
     }, 5000);
@@ -243,7 +253,52 @@ class EditorialManager implements EditorialManagerInterface {
     }
     this.saveActiveComponentData();
   }
-  updateActiveComponentObjective(data: any, type?: string) {
+
+  updateSliderTextContent(content: string, index: number) {
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (
+      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+        index
+      ]
+    ) {
+      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+        index
+      ][0].content = content;
+    }
+    this.saveActiveComponentData();
+  }
+
+  updateSliderImageURL(url: string, index: number) {
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (
+      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+        index
+      ]
+    ) {
+      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+        index
+      ][0].url = url;
+    }
+    this.saveActiveComponentData();
+  }
+
+  updateActiveComponentObjective(data: any, type?: string, index?: number) {
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Flashcard" && index) {
+      if (
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards
+      ) {
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+          index
+        ].question = {};
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (type === "Overlay") {
       if (this.canvasManager.activeComponent.data.coreData) {
         this.canvasManager.activeComponent.data.coreData.extensions[0].question =
@@ -264,6 +319,24 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateObjectiveData(data: any, index: number, type?: string) {
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Flashcard") {
+      if (
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards
+      ) {
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+          index
+        ].question = {
+          ...this.canvasManager.activeComponent.data.components[cardsIndex]
+            .cards[index].question,
+          ...data,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (type && type === "Overlay") {
       if (this.canvasManager.activeComponent.data.coreData) {
         this.canvasManager.activeComponent.data.coreData.extensions[
@@ -277,6 +350,7 @@ class EditorialManager implements EditorialManagerInterface {
       this.saveActiveComponentData();
       return;
     }
+
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.questions[index] = {
         ...this.canvasManager.activeComponent.data.coreData.questions[index],
@@ -293,6 +367,24 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateObjectiveOptions(data: any, index: number, type?: string) {
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Flashcard") {
+      if (
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards
+      ) {
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+          index
+        ].question.options = [
+          ...this.canvasManager.activeComponent.data.components[cardsIndex]
+            .cards[index].question.options,
+          data,
+        ];
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (type && type === "Overlay") {
       if (this.canvasManager.activeComponent.data.coreData?.extensions) {
         this.canvasManager.activeComponent.data.coreData.extensions[
@@ -320,16 +412,28 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   deleteObjectiveOptions(data: any, index: number, type?: string) {
-    if (type === "Overlay") {
-      if (type && type === "Overlay") {
-        if (this.canvasManager.activeComponent.data.coreData?.extensions) {
-          this.canvasManager.activeComponent.data.coreData.extensions[
-            index
-          ].question[0].options = data;
-        }
-        this.saveActiveComponentData();
-        return;
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Flashcard") {
+      if (
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards
+      ) {
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+          index
+        ].question.options = data;
       }
+      this.saveActiveComponentData();
+      return;
+    }
+
+    if (type && type === "Overlay") {
+      if (this.canvasManager.activeComponent.data.coreData?.extensions) {
+        this.canvasManager.activeComponent.data.coreData.extensions[
+          index
+        ].question[0].options = data;
+      }
+      this.saveActiveComponentData();
+      return;
     }
 
     if (this.canvasManager.activeComponent.data.coreData) {
@@ -346,6 +450,20 @@ class EditorialManager implements EditorialManagerInterface {
     optionIndex: number,
     type?: string
   ) {
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Flashcard") {
+      if (
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards
+      ) {
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+          index
+        ].question.options[optionIndex].content = data;
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (type && type === "Overlay") {
       if (this.canvasManager.activeComponent.data.coreData?.extensions) {
         this.canvasManager.activeComponent.data.coreData.extensions[
@@ -369,6 +487,24 @@ class EditorialManager implements EditorialManagerInterface {
     optionIndex: number,
     componentType?: string
   ) {
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (componentType && componentType === "Flashcard") {
+      if (
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards
+      ) {
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+          index
+        ].question.options[optionIndex].feedback = {
+          ...this.canvasManager.activeComponent.data.components[cardsIndex]
+            .cards[index].question.options[optionIndex].feedback,
+          type,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (componentType === "Overlay") {
       if (this.canvasManager.activeComponent.data.coreData) {
         this.canvasManager.activeComponent.data.coreData.extensions[
@@ -401,6 +537,24 @@ class EditorialManager implements EditorialManagerInterface {
     optionIndex: number,
     componentType?: string
   ) {
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (componentType && componentType === "Flashcard") {
+      if (
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards
+      ) {
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+          index
+        ].question.options[optionIndex].feedback = {
+          ...this.canvasManager.activeComponent.data.components[cardsIndex]
+            .cards[index].question.options[optionIndex].feedback,
+          content,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (componentType === "Overlay") {
       if (this.canvasManager.activeComponent.data.coreData) {
         this.canvasManager.activeComponent.data.coreData.extensions[
@@ -433,6 +587,24 @@ class EditorialManager implements EditorialManagerInterface {
     optionIndex: number,
     componentType?: string
   ) {
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (componentType && componentType === "Flashcard") {
+      if (
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards
+      ) {
+        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+          index
+        ].question.options[optionIndex] = {
+          ...this.canvasManager.activeComponent.data.components[cardsIndex]
+            .cards[index].question.options[optionIndex],
+          answer,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (componentType === "Overlay") {
       if (this.canvasManager.activeComponent.data.coreData) {
         this.canvasManager.activeComponent.data.coreData.extensions[
@@ -508,15 +680,20 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateFlashcardQuestion(data: QuestionInterface, index: number) {
-    console.log(this.canvasManager.activeComponent.data, "IN EM");
-    return;
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.cards[index].question = [
-        ...this.canvasManager.activeComponent.data.coreData.question,
-        data,
-      ];
+    const cardsIndex = this.canvasManager.activeComponent.data.index;
+
+    if (this.canvasManager.activeComponent.data?.components[cardsIndex]) {
+      this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+        index
+      ].question = data;
     }
     this.saveActiveComponentData();
+    console.log(
+      this.canvasManager.activeComponent.data.components[cardsIndex].cards[
+        index
+      ].question,
+      "IN EM"
+    );
   }
 
   getCanvasSize() {
