@@ -152,7 +152,7 @@ const Image: FC<CanvasMedia> = ({
   return (
     <div
       className={`relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center ${
-        overlayActive ? "" : "handle"
+        overlayActive ? "" : "sliderHandle"
       }`}
     >
       <UploadIcon

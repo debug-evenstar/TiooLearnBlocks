@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleToggleTrigger } from "provider/triggerSlice";
 import FlashcardViewBox from "./SliderViewbox";
 import { handleSetActiveCompName } from "provider/sliderSlice";
+import Draggable from "react-draggable";
 
 interface SliderProps {
   id: string;
@@ -18,6 +19,7 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEditable, setIsEditable] = useState(true);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const draggableRef = useRef<HTMLDivElement>(null);
   const [slides, setSlides] = useState<any[]>([]);
 
   const handlePrevClick = () => {
@@ -84,15 +86,24 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
         }  h-fit w-fit min-w-[45vw] min-h-[20rem] border border-[#4f46e5]`}
       >
         {slides[currentImageIndex] && (
-          <FlashcardViewBox
-            id={generateId(slides[currentImageIndex][0]?.component)}
-            handleDelete={() => null}
-            manager={manager}
-            data={slides[currentImageIndex]}
-            currIndex={currentImageIndex}
-            isFlashcardDraggable={isEditable}
-            setIsFlashcardDraggable={setIsEditable}
-          />
+          <Draggable
+            axis="both"
+            nodeRef={draggableRef}
+            handle=".sliderHandle"
+            defaultClassName="w-fit"
+          >
+            <div ref={draggableRef}>
+              <FlashcardViewBox
+                id={generateId(slides[currentImageIndex][0]?.component)}
+                handleDelete={() => null}
+                manager={manager}
+                data={slides[currentImageIndex]}
+                currIndex={currentImageIndex}
+                isFlashcardDraggable={isEditable}
+                setIsFlashcardDraggable={setIsEditable}
+              />
+            </div>
+          </Draggable>
         )}
       </div>
 
