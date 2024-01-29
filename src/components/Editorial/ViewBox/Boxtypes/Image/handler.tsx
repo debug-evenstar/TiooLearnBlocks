@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import {
   ComponentBaseDataInterface,
   QuestionInterface,
@@ -37,18 +37,18 @@ export const uploadFile = async (lessonId: number, file: File) => {
     const formData = new FormData();
     formData.append("image", file);
 
-    const response = await axios.put(
-      `https://beta.api.hellotioo.com/open/lesson/templateimage/${lessonId}`,
-      formData
-    );
+    // const response = await axios.put(
+    //   `https://beta.api.hellotioo.com/open/lesson/templateimage/${lessonId}`,
+    //   formData
+    // );
 
-    if (response.data && !response.data.error) {
-      const url = response.data.data[0];
-      console.log(response.data, "data");
-      return url;
-    } else {
-      console.error("Upload failed:", response.data.error);
-    }
+    // if (response.data && !response.data.error) {
+    //   const url = response.data.data[0];
+    //   console.log(response.data, "data");
+    //   return url;
+    // } else {
+    //   console.error("Upload failed:", response.data.error);
+    // }
   } catch (error) {
     console.error("Upload error:", error);
   }

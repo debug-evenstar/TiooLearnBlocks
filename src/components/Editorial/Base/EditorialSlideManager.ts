@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import { SlideData } from "components/SlideManager/handler";
 import { baseApiHost } from "utilities/url";
 import { EditorialManagerInterface } from "./EditorialManager";
@@ -50,11 +50,11 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
 
   saveSlide(slideId: number, payload: SlideData, callback: Function) {
     const url: string = `${baseApiHost()}/${UPDATE_SLIDE_URL(slideId)}`;
-    axios.put(url, { slide_data: payload }).then((res: any) => {
-      if (!res.error) {
-        console.log(res);
-        callback();
-      }
-    });
+    // axios.put(url, { slide_data: payload }).then((res: any) => {
+    //   if (!res.error) {
+    //     console.log(res);
+    //     callback();
+    //   }
+    // });
   }
 }
