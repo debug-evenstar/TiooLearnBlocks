@@ -4,7 +4,10 @@ import { EditorialManagerInterface } from "components/Editorial/Base/EditorialMa
 import { useDispatch, useSelector } from "react-redux";
 import { handleToggleTrigger } from "provider/triggerSlice";
 import FlashcardViewBox from "./SliderViewbox";
-import { handleSetActiveCompName } from "provider/sliderSlice";
+import {
+  handleSetActiveCompIndex,
+  handleSetActiveCompName,
+} from "provider/sliderSlice";
 import Draggable from "react-draggable";
 
 interface SliderProps {
@@ -44,6 +47,7 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
       dispatch(
         handleSetActiveCompName(slides[currentImageIndex][0]?.component)
       );
+    dispatch(handleSetActiveCompIndex(currentImageIndex));
     console.log(slides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
@@ -70,6 +74,7 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
         ][0]?.component
       )
     );
+    dispatch(handleSetActiveCompIndex(currentImageIndex));
   }, [currentImageIndex]);
 
   return (

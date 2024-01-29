@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import FlashcardObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/FlashCard/ObjectiveInputs";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
+import { getOriginalName } from "../../handler";
 
 const Flashcard: FC<any> = ({ id, manager, image, index }) => {
   const dispatch = useDispatch();
@@ -90,14 +91,18 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
   const trigger: boolean = selector.payload.trigger.value;
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const cardData =
-    manager.canvasManager.activeComponent.data.components[cardsIndex]?.cards[
-      index
-    ];
+    getOriginalName(id) === "Flash Card"
+      ? manager.canvasManager.activeComponent.data.components[cardsIndex]
+          ?.cards[index]
+      : {
+          question: [],
+        };
+
   const [card, setCard] = useState<any>(null);
   const [question, setQuestion] = useState<QuestionInterface | null>(null);
 
   useEffect(() => {
-    console.log(cardData, "card data");
+    console.log(cardsIndex, cardData, "card data");
     dispatch(handleSetObjectiveIndex(index));
     const question: QuestionInterface | null = cardData?.question
       ? cardData.question
@@ -108,7 +113,7 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
     if (question && question.type === "OBJECTIVE") {
       setCard(cardData);
       console.log(
-        manager.canvasManager.activeComponent.data.components[cardsIndex]
+        manager.canvasManager.activeComponent.data?.components[cardsIndex]
           ?.cards,
 
         index,

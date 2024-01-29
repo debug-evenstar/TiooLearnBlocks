@@ -28,6 +28,7 @@ const EmojiTextArea: React.FC<EmojiTextAreaProps> = ({
   return (
     <div className="w-full relative">
       <textarea
+        value={value}
         className="w-full border border-black rounded p-2 text-[13px]"
         placeholder="Input Feedback"
         rows={5}

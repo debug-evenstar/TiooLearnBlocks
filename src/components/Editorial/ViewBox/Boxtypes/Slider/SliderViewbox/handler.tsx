@@ -10,10 +10,10 @@ import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProp
 import AddImages from "components/Editorial/Sidebars/RightSidebar/EditProperties/FlashCard/AddImages";
 import Objective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/Objective";
 import Subjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/Subjective";
-import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageProperties";
 import FlashcardObjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/FlashCard/FlashcardObjective";
 import SliderHeader from "components/Editorial/Sidebars/RightSidebar/EditProperties/Slider/SliderHeader";
+import { toggleWrapperStyle } from "../../Text/handlers/stylesHandler";
 
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");

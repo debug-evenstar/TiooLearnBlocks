@@ -14,7 +14,10 @@ import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { handleToggleTrigger } from "provider/triggerSlice";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
-import { handleToggleOverlayState } from "provider/overlayActiveSlice";
+import {
+  handleSetOverlayState,
+  handleToggleOverlayState,
+} from "provider/overlayActiveSlice";
 import "react-resizable/css/styles.css";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
@@ -79,6 +82,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
 
     manager.canvasManager.activeComponent.functions["toggleOverlay"] = () => {
       dispatch(handleToggleOverlayState());
+      //dispatch(handleSetOverlayState(false));
     };
   }, [manager, viewBoxRef]);
 

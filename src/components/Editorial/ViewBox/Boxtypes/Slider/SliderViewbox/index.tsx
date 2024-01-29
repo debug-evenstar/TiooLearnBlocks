@@ -3,7 +3,6 @@ import { FC, useEffect, useRef, useState } from "react";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent } from "./handler";
-import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 import { ComponentBaseDataInterface } from "components/interface";
 import { useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";

@@ -1,7 +1,5 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { resizeBox } from "./handlers/wrapperHandler";
-import { registerFunctions } from "./handlers/registerFuncsHandlers";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import {
@@ -13,6 +11,8 @@ import {
 import { handleTextChange } from "./handlers/generalHandler";
 import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+import { registerFunctions } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/registerFuncsHandlers";
+import { resizeBox } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/wrapperHandler";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -69,9 +69,7 @@ const Text: FC<CanvasText> = ({
   }, [isEditable, viewBoxRef, textareaRef]);
 
   useEffect(() => {
-    if (id === activeId) {
-      registerFunctions(manager, getRange, viewBoxRef, setIdentifier, id);
-    }
+    registerFunctions(manager, getRange, viewBoxRef, setIdentifier, id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manager, viewBoxRef, activeId]);
 

@@ -13,6 +13,7 @@ import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 import ImageProperties from "../Sidebars/RightSidebar/EditProperties/Image/ImageProperties";
 import { useSelector } from "react-redux";
 import { handleSetActiveCompName } from "provider/sliderSlice";
+import { SliderProperties } from "./Boxtypes/Slider/handler";
 
 // for extracting the name of the component
 export function getOriginalName(str: string): string {
@@ -57,41 +58,6 @@ export const ViewBoxContent = (
   };
 
   return viewboxTypes[componentName];
-};
-
-// for the slider edit properties
-const SliderProperties = (
-  manager: EditorialManagerInterface,
-  sliderCompName: string = "Text"
-) => {
-  const viewboxTypes: {
-    [key: string]: JSX.Element;
-  } = {
-    Text: (
-      <>
-        <TextProperties manager={manager} />
-        <Background manager={manager} />
-        <Extensions manager={manager} />
-      </>
-    ),
-    Image: (
-      <>
-        <ImageProperties manager={manager} />
-      </>
-    ),
-    Video: (
-      <>
-        <VideoProperties manager={manager} />
-      </>
-    ),
-    FlashCards: (
-      <>
-        <ImageProperties manager={manager} />
-      </>
-    ),
-  };
-
-  return viewboxTypes[sliderCompName];
 };
 
 // for editing in rightsidebar

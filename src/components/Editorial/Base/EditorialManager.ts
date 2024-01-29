@@ -164,8 +164,10 @@ class EditorialManager implements EditorialManagerInterface {
     this.canvasManager.canvas.functions["getComponentData"] = (id: string) =>
       this.getComponentData(id);
     this.canvasManager.canvas.functions["updateActiveComponentData"] = (
-      data: any
-    ) => this.updateActiveComponentData(data);
+      data: any,
+      type?: string,
+      index?: number
+    ) => this.updateActiveComponentData(data, type, index);
     this.canvasManager.canvas.functions["updateActiveComponentObjective"] = (
       data: any,
       type?: string,
@@ -174,24 +176,28 @@ class EditorialManager implements EditorialManagerInterface {
     this.canvasManager.canvas.functions["updateObjectiveData"] = (
       data: any,
       index: number,
-      type?: string
-    ) => this.updateObjectiveData(data, index, type);
+      type?: string,
+      slideIndex?: number
+    ) => this.updateObjectiveData(data, index, type, slideIndex);
     this.canvasManager.canvas.functions["updateObjectiveOptions"] = (
       data: any,
       index: number,
-      type?: string
-    ) => this.updateObjectiveOptions(data, index, type);
+      type?: string,
+      slideIndex?: number
+    ) => this.updateObjectiveOptions(data, index, type, slideIndex);
     this.canvasManager.canvas.functions["deleteObjectiveOptions"] = (
       data: any,
       index: number,
-      type?: string
-    ) => this.deleteObjectiveOptions(data, index, type);
+      type?: string,
+      slideIndex?: number
+    ) => this.deleteObjectiveOptions(data, index, type, slideIndex);
     this.canvasManager.canvas.functions["updateObjectiveOption"] = (
       data: any,
       index: number,
       optionIndex: number,
-      type?: string
-    ) => this.updateObjectiveOption(data, index, optionIndex, type);
+      type?: string,
+      slideIndex?: number
+    ) => this.updateObjectiveOption(data, index, optionIndex, type, slideIndex);
     this.canvasManager.canvas.functions["updateWrongOptions"] = (
       data: any,
       index: number
@@ -209,27 +215,53 @@ class EditorialManager implements EditorialManagerInterface {
       type: string,
       index: number,
       optionIndex: number,
-      componentType?: string
-    ) => this.updateFeedbackType(type, index, optionIndex, componentType);
+      componentType?: string,
+      slideIndex?: number
+    ) =>
+      this.updateFeedbackType(
+        type,
+        index,
+        optionIndex,
+        componentType,
+        slideIndex
+      );
     this.canvasManager.canvas.functions["updateFeedbackContent"] = (
       content: string,
       index: number,
       optionIndex: number,
-      componentType?: string
-    ) => this.updateFeedbackContent(content, index, optionIndex, componentType);
+      componentType?: string,
+      slideIndex?: number
+    ) =>
+      this.updateFeedbackContent(
+        content,
+        index,
+        optionIndex,
+        componentType,
+        slideIndex
+      );
     this.canvasManager.canvas.functions["updateFeedbackAnswer"] = (
       answer: boolean,
       index: number,
       optionIndex: number,
-      componentType?: string
-    ) => this.updateFeedbackAnswer(answer, index, optionIndex, componentType);
+      componentType?: string,
+      slideIndex?: number
+    ) =>
+      this.updateFeedbackAnswer(
+        answer,
+        index,
+        optionIndex,
+        componentType,
+        slideIndex
+      );
     this.canvasManager.canvas.functions["updateFlashcardQuestion"] = (
       data: QuestionInterface,
       index: number
     ) => this.updateFlashcardQuestion(data, index);
     this.canvasManager.canvas.functions["updateImageQuestion"] = (
-      data: QuestionInterface
-    ) => this.updateImageQuestion(data);
+      data: QuestionInterface,
+      type?: string,
+      slideIndex?: string
+    ) => this.updateImageQuestion(data, type, slideIndex);
     this.canvasManager.canvas.functions["updateSliderImageURL"] = (
       content: string,
       index: number
@@ -244,7 +276,29 @@ class EditorialManager implements EditorialManagerInterface {
     }, 5000);
   }
 
-  updateActiveComponentData(data: any) {
+  updateActiveComponentData(data: any, type?: string, index?: number) {
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Slider") {
+      if (index === null || index === undefined) return;
+
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          index
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          index
+        ][0] = {
+          ...this.canvasManager.activeComponent.data.components[sliderIndex]
+            .slides[index][0],
+          ...data,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (this.canvasManager.activeComponent.data) {
       this.canvasManager.activeComponent.data.coreData = {
         ...this.canvasManager.activeComponent.data.coreData,
@@ -286,6 +340,25 @@ class EditorialManager implements EditorialManagerInterface {
 
   updateActiveComponentObjective(data: any, type?: string, index?: number) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Slider" && index) {
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          index
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          index
+        ][0].questions = [
+          ...this.canvasManager.activeComponent.data.components[sliderIndex]
+            .slides[index][0].questions,
+          data,
+        ];
+      }
+      this.saveActiveComponentData();
+      return;
+    }
 
     if (type && type === "Flashcard" && index) {
       if (
@@ -310,16 +383,37 @@ class EditorialManager implements EditorialManagerInterface {
 
     console.log(data);
     if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions = [
-        ...this.canvasManager.activeComponent.data.coreData.questions,
-        data,
-      ];
+      this.canvasManager.activeComponent.data.coreData.questions = data;
     }
     this.saveActiveComponentData();
   }
 
-  updateObjectiveData(data: any, index: number, type?: string) {
+  updateObjectiveData(
+    data: any,
+    index: number,
+    type?: string,
+    slideIndex?: number
+  ) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Slider" && slideIndex) {
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ][0].questions[index] = {
+          ...this.canvasManager.activeComponent.data.components[sliderIndex]
+            .slides[slideIndex][0].questions[index],
+          ...data,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
 
     if (type && type === "Flashcard") {
       if (
@@ -360,14 +454,55 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  updateImageQuestion(data: any) {
+  updateImageQuestion(data: any, type?: string, slideIndex?: string) {
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Slider" && slideIndex) {
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ][0].question = data;
+      }
+      this.saveActiveComponentData();
+      return;
+    }
+
     if (this.canvasManager.activeComponent.data.coreData) {
       this.canvasManager.activeComponent.data.coreData.question = data;
     }
   }
 
-  updateObjectiveOptions(data: any, index: number, type?: string) {
+  updateObjectiveOptions(
+    data: any,
+    index: number,
+    type?: string,
+    slideIndex?: number
+  ) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Slider") {
+      if (slideIndex === null || slideIndex === undefined) return;
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ][0].questions[index].options = [
+          ...this.canvasManager.activeComponent.data.components[sliderIndex]
+            .slides[slideIndex][0].questions[index].options,
+          data,
+        ];
+      }
+      this.saveActiveComponentData();
+      return;
+    }
 
     if (type && type === "Flashcard") {
       if (
@@ -411,8 +546,29 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  deleteObjectiveOptions(data: any, index: number, type?: string) {
+  deleteObjectiveOptions(
+    data: any,
+    index: number,
+    type?: string,
+    slideIndex?: number
+  ) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Slider") {
+      if (slideIndex === null || slideIndex === undefined) return;
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ][0].questions[index].options = data;
+      }
+      this.saveActiveComponentData();
+      return;
+    }
 
     if (type && type === "Flashcard") {
       if (
@@ -448,9 +604,26 @@ class EditorialManager implements EditorialManagerInterface {
     data: any,
     index: number,
     optionIndex: number,
-    type?: string
+    type?: string,
+    slideIndex?: number
   ) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Slider") {
+      if (slideIndex === null || slideIndex === undefined) return;
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ][0].questions[index].options[optionIndex].content = data;
+      }
+      this.saveActiveComponentData();
+      return;
+    }
 
     if (type && type === "Flashcard") {
       if (
@@ -485,9 +658,31 @@ class EditorialManager implements EditorialManagerInterface {
     type: any,
     index: number,
     optionIndex: number,
-    componentType?: string
+    componentType?: string,
+    slideIndex?: number
   ) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (type && type === "Slider") {
+      if (slideIndex === null || slideIndex === undefined) return;
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ][0].questions[index].options[optionIndex].feedback = {
+          ...this.canvasManager.activeComponent.data.components[sliderIndex]
+            .slides[slideIndex][0].questions[index].options[optionIndex]
+            .feedback,
+          type,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
 
     if (componentType && componentType === "Flashcard") {
       if (
@@ -535,9 +730,32 @@ class EditorialManager implements EditorialManagerInterface {
     content: any,
     index: number,
     optionIndex: number,
-    componentType?: string
+    componentType?: string,
+    slideIndex?: number
   ) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (componentType && componentType === "Slider") {
+      if (slideIndex === null || slideIndex === undefined) return;
+
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ][0].questions[index].options[optionIndex].feedback = {
+          ...this.canvasManager.activeComponent.data.components[sliderIndex]
+            .slides[slideIndex][0].questions[index].options[optionIndex]
+            .feedback,
+          content,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
 
     if (componentType && componentType === "Flashcard") {
       if (
@@ -585,9 +803,30 @@ class EditorialManager implements EditorialManagerInterface {
     answer: boolean,
     index: number,
     optionIndex: number,
-    componentType?: string
+    componentType?: string,
+    slideIndex?: number
   ) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (componentType && componentType === "Slider") {
+      if (slideIndex === null || slideIndex === undefined) return;
+      if (
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ]
+      ) {
+        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+          slideIndex
+        ][0].questions[index].options[optionIndex] = {
+          ...this.canvasManager.activeComponent.data.components[sliderIndex]
+            .slides[slideIndex][0].questions[index].options[optionIndex],
+          answer,
+        };
+      }
+      this.saveActiveComponentData();
+      return;
+    }
 
     if (componentType && componentType === "Flashcard") {
       if (
