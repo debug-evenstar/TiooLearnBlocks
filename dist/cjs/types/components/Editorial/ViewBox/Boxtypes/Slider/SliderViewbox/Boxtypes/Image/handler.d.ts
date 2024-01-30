@@ -14,6 +14,6 @@ export declare const setImageComponentData: (imageData: {
     url?: string;
     extensions?: ImageExtensions[];
 }) => ImageComponentDataInterface;
-export declare const uploadFile: (lessonId: number, file: File) => Promise<any>;
+export declare const uploadFile: (lessonId: number, file: File) => Promise<void>;
 export declare const toggleWrapperSize: (element: HTMLDivElement, style: string, styleType: string) => void;
 export {};
