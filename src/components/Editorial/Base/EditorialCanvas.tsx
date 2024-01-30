@@ -52,7 +52,9 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     const data = e.dataTransfer.getData("text/plain");
     if (!data) return;
     onDrop(data);
-    dispatch(handleToggleSidebarState());
+    manager.sidebarManager.setState({
+      rightSidebarState : !manager.sidebarManager.states.rightSidebarState
+    })
     dispatch(handleToggleOverlayState());
   };
 

@@ -12,6 +12,7 @@ import {
   EditorialSlideManagerInterface,
 } from "./EditorialSlideManager";
 import { CanvasManager, CanvasManagerInterface } from "./EditorialCanvasManager";
+import { EditorialSidebarManager, EditorialSidebarManagerInterface } from "./EditorialSidebarManager";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
@@ -70,26 +71,21 @@ export interface DataGroupInterface {
   functions: { [key: string]: Function };
 }
 
-const DataGroup: DataGroupInterface = {
-  data: {},
-  functions: {},
-};
-
-
 export interface EditorialManagerInterface {
-  sidebarManager: DataGroupInterface;
+  sidebarManager: EditorialSidebarManagerInterface;
   canvasManager: CanvasManagerInterface;
   slideManager: EditorialSlideManagerInterface;
 }
 
 class EditorialManager implements EditorialManagerInterface {
-  sidebarManager: DataGroupInterface = DataGroup;
+  sidebarManager: EditorialSidebarManagerInterface;
   canvasManager: CanvasManagerInterface;
   slideManager: EditorialSlideManagerInterface;
 
   constructor(slides: any[]) {
     this.slideManager = new EditorialSlideManager(this, slides);
     this.canvasManager = new CanvasManager(this);
+    this.sidebarManager = new EditorialSidebarManager(this);
     this.initCanvasManager();
   }
 
