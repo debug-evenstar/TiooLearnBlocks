@@ -22,8 +22,7 @@ const RightSidebar: FC<Props> = ({
   lessonlist,
   manager,
 }) => {
-  const selector: any = useSelector(handleToggleSidebarState);
-  const isActive = selector.payload.rightSidebarState.value;
+  const isActive = manager.sidebarManager.states.rightSidebarState;
   // const { status: optionStatus } = selector.payload.feedback.value as {
   //   status: number;
   // };
