@@ -50,10 +50,12 @@ const InactiveSidebar: FC<Props> = ({
   const handleDragStart = (e: any, id: string) => {
     e.dataTransfer.setData("text/plain", id);
   };
+  
 
   const Item = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [isActive, setIsActive] = useState(1);
+    console.log(lessonlist, "INACTIVE SIDE");
     return (
       <div className="w-full my-5 p-4">
         <h3 className="text-[12px] text-[#87909E] font-medium">

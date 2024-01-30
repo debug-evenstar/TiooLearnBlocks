@@ -33,6 +33,8 @@ const EditorialComp: FC<Props> = ({
     )
   );
 
+  console.log(lessonlist, "EDIT COMP SIDE");
+
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
     if (currentSlideIndex === parseSlides.length - 1) {

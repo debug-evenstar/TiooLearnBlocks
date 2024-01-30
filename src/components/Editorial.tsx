@@ -14,6 +14,7 @@ interface Props {
 }
 const Editorial: FC<Props> = ({ data, user, back, lessonList, refetch }) => {
   const [saving, setSaving] = useState(false);
+  console.log(lessonList, "EDITT SIDE");
   return (
     <>
       <EditorialComp

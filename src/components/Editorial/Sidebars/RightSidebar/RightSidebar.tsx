@@ -23,6 +23,7 @@ const RightSidebar: FC<Props> = ({
   manager,
 }) => {
   const isActive = manager.sidebarManager.states.rightSidebarState;
+  console.log(lessonlist, "RIGHT SIDE");
   // const { status: optionStatus } = selector.payload.feedback.value as {
   //   status: number;
   // };
