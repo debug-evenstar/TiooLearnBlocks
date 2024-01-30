@@ -1,4 +1,5 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import AddSlide from "components/Editorial/Sidebars/RightSidebar/EditProperties/Slider/EditProperties/AddSlide";
 import Background from "components/Editorial/Sidebars/RightSidebar/EditProperties/Slider/EditProperties/Background";
 import Extensions from "components/Editorial/Sidebars/RightSidebar/EditProperties/Slider/EditProperties/Extensions";
 import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/Slider/EditProperties/Image/ImageProperties";
@@ -15,6 +16,7 @@ export const SliderProperties = (
   } = {
     Text: (
       <>
+        <AddSlide manager={manager} type="Text" />
         <TextProperties manager={manager} />
         <Background manager={manager} />
         <Extensions manager={manager} />
@@ -22,16 +24,19 @@ export const SliderProperties = (
     ),
     Image: (
       <>
+        <AddSlide manager={manager} type="Image" />
         <ImageProperties manager={manager} />
       </>
     ),
     Video: (
       <>
+        <AddSlide manager={manager} type="Video" />
         <VideoProperties manager={manager} />
       </>
     ),
     FlashCards: (
       <>
+        <AddSlide manager={manager} type="Flash Card" />
         <ImageProperties manager={manager} />
       </>
     ),

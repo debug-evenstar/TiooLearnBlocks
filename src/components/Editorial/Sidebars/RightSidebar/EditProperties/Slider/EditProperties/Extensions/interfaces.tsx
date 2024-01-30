@@ -14,6 +14,6 @@ export interface ObjectiveItemProp {
   objective: any;
   data: any;
   index: number;
-  handleDelete: (id: string, optionIndex: number) => void;
+  handleDelete: (id: string, optionIndex: number, index: number) => void;
   manager: EditorialManagerInterface;
 }

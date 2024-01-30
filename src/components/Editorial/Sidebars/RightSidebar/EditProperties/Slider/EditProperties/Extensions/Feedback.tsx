@@ -204,14 +204,6 @@ const Feedback: FC<Props> = ({ manager, type }) => {
           </>
         )}
 
-        <textarea
-          className="w-full border border-black rounded p-2 text-[13px]"
-          placeholder="Input Feedback"
-          rows={5}
-          onChange={(e) => handleChangeFeedbackContent(e.target.value)}
-          defaultValue={option.feedback.content}
-        />
-
         {false && (
           <textarea
             className="w-full border border-black rounded p-2 text-[13px]"

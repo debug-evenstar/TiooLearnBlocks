@@ -55,10 +55,15 @@ const ImageProperties: FC<Props> = ({ manager }) => {
 
       {isActive && (
         <main>
-          <div className="flex justify-between items-center my-4">
+          <div className="flex justify-between items-center my-4 cursor-not-allowed">
             <p className="text-[14px]">Overlay</p>
             <a href="javascript:void(0)">
-              <Switch {...label} onChange={handleSwitchOverlay} />
+              <Switch
+                className="cursor-not-allowed"
+                {...label}
+                onChange={handleSwitchOverlay}
+                disabled
+              />
             </a>
           </div>
 

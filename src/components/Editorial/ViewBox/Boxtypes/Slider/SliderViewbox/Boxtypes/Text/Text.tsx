@@ -92,7 +92,13 @@ const Text: FC<CanvasText> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const activeCompIndex = selector.payload.slider.value.activeCompIndex;
+
+  const sliderIndex = manager.canvasManager.activeComponent.data.index;
+  const coreData =
+    manager.canvasManager.activeComponent.data.components[sliderIndex]?.slides[
+      activeCompIndex
+    ][0];
 
   const handleClickedObjective = (
     e: MouseEvent,
@@ -100,19 +106,26 @@ const Text: FC<CanvasText> = ({
     index: number
   ) => {
     e.stopPropagation();
+    console.log("just clicked on the objective");
     handleSetObjectiveIndex(index);
-    console.log(index, "clicked, option box");
     dispatch(handleToggleShowOptionBox());
     dispatch(handleSetCorrectOption(options[0]));
     dispatch(handleSetWrongOption(options[1]));
   };
 
   useEffect(() => {
-    if (!coreData || !coreData.questions || id !== activeId) return;
+    console.log(coreData, "this is coredata");
+    if (!coreData || !coreData.questions || !activeId.includes("Slider"))
+      return;
 
+    console.log(id, coreData.questions[0]?.identifier, "inside of coredata");
     coreData?.questions
-      ?.filter((question: any) => question?.identifier?.includes(id))
+      //?.filter((question: any) => question?.identifier?.includes(id))
       .forEach((question: any, i: number) => {
+        console.log(
+          question.identifier,
+          "this is the identifier in slider text"
+        );
         const inputElement = document.getElementById(question.identifier);
         console.log(inputElement, "FOUND ELEMENT", i);
 
@@ -134,7 +147,7 @@ const Text: FC<CanvasText> = ({
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coreData, identifier, trigger]);
+  }, [coreData, identifier]);
 
   return (
     <div

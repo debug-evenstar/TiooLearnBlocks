@@ -77,7 +77,7 @@ const FlashcardFeedback: FC<Props> = ({ manager, type, index }) => {
   };
 
   useEffect(() => {
-    console.log("opened!");
+    console.log(option, "opened!");
   }, []);
 
   return (

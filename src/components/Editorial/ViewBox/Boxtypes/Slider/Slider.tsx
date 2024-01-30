@@ -9,6 +9,7 @@ import {
   handleSetActiveCompName,
 } from "provider/sliderSlice";
 import Draggable from "react-draggable";
+import { Resizable } from "react-resizable";
 
 interface SliderProps {
   id: string;
@@ -24,6 +25,10 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const draggableRef = useRef<HTMLDivElement>(null);
   const [slides, setSlides] = useState<any[]>([]);
+  const [viewBoxSize, setViewBoxSize] = useState({
+    width: 500,
+    height: 300,
+  });
 
   const handlePrevClick = () => {
     setCurrentImageIndex(
@@ -39,10 +44,15 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
     return componentName + "-clone-" + Date.now();
   };
 
+  const onResize = (event: any, { node, size, handle }: any) => {
+    setViewBoxSize({ width: size.width, height: size.height });
+  };
+
   useEffect(() => {
     const componentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
     componentData && setSlides(componentData.slides);
+    console.log(componentData.slides, "here are the slides");
     slides.length > 0 &&
       dispatch(
         handleSetActiveCompName(slides[currentImageIndex][0]?.component)
@@ -83,34 +93,46 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
         <FaAngleLeft className="text-[20px]" strokeWidth="1px" />
       </button>
 
-      <div
-        onDoubleClick={() => setIsEditable(!isEditable)}
-        ref={sliderRef}
-        className={`flex justify-center items-center ${
-          isEditable ? "handle cursor-move" : ""
-        }  h-fit w-fit min-w-[45vw] min-h-[20rem] border border-[#4f46e5]`}
+      <Resizable
+        width={viewBoxSize.width}
+        height={viewBoxSize.height}
+        minConstraints={[500, 300]}
+        onResize={onResize}
+        resizeHandles={["s", "e", "se"]}
       >
-        {slides[currentImageIndex] && (
-          <Draggable
-            axis="both"
-            nodeRef={draggableRef}
-            handle=".sliderHandle"
-            defaultClassName="w-fit"
-          >
-            <div ref={draggableRef}>
-              <FlashcardViewBox
-                id={generateId(slides[currentImageIndex][0]?.component)}
-                handleDelete={() => null}
-                manager={manager}
-                data={slides[currentImageIndex]}
-                currIndex={currentImageIndex}
-                isFlashcardDraggable={isEditable}
-                setIsFlashcardDraggable={setIsEditable}
-              />
-            </div>
-          </Draggable>
-        )}
-      </div>
+        <div
+          onDoubleClick={() => setIsEditable(!isEditable)}
+          ref={sliderRef}
+          className={`flex justify-center items-center ${
+            isEditable ? "handle cursor-move" : ""
+          }  h-fit w-fit border border-[#4f46e5]`}
+          style={{
+            minWidth: viewBoxSize.width + "px",
+            minHeight: viewBoxSize.height + "px",
+          }}
+        >
+          {slides[currentImageIndex] && (
+            <Draggable
+              axis="both"
+              nodeRef={draggableRef}
+              handle=".sliderHandle"
+              defaultClassName="w-fit"
+            >
+              <div ref={draggableRef}>
+                <FlashcardViewBox
+                  id={generateId(slides[currentImageIndex][0]?.component)}
+                  handleDelete={() => null}
+                  manager={manager}
+                  data={slides[currentImageIndex]}
+                  currIndex={currentImageIndex}
+                  isFlashcardDraggable={isEditable}
+                  setIsFlashcardDraggable={setIsEditable}
+                />
+              </div>
+            </Draggable>
+          )}
+        </div>
+      </Resizable>
 
       {slides.length > 1 && (
         <button onClick={handleNextClick}>

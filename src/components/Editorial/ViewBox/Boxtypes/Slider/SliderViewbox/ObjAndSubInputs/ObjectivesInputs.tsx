@@ -27,7 +27,13 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const activeCompIndex = selector.payload.slider.value.activeCompIndex;
+
+  const sliderIndex = manager.canvasManager.activeComponent.data.index;
+  const coreData =
+    manager.canvasManager.activeComponent.data.components[sliderIndex].slides[
+      activeCompIndex
+    ][0];
 
   useEffect(() => {
     setQuestion(coreData.questions[objectiveIndex]);
@@ -52,7 +58,9 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     manager.canvasManager.canvas.functions.updateObjectiveOption(
       value,
       objectiveIndex,
-      index
+      index,
+      "Slider",
+      activeCompIndex
     );
     if (index > 0) dispatch(handleSetCorrectOption(value));
     else dispatch(handleSetWrongOption(value));

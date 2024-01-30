@@ -88,10 +88,11 @@ const FlashcardViewBox: FC<Props> = ({
   }, []);
 
   useEffect(() => {
+    console.log(activeId, showOptionsBox, "for checking slider");
     const component = manager.canvasManager.getComponentData(id);
     loadSize(component);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeId, showOptionsBox]);
 
   return (
     <>
@@ -128,17 +129,19 @@ const FlashcardViewBox: FC<Props> = ({
         </div>
       </Resizable>
 
-      {showOptionsBox && activeId === id && id.includes("Text") && (
+      {showOptionsBox && activeId.includes("Slider") && id.includes("Text") && (
         <div className="z-[500]">
           <ObjectivesInputs manager={manager} />
         </div>
       )}
 
-      {showOptionsBox && activeId === id && id.includes("Image") && (
-        <div className="z-[500]">
-          <ImageObjectivesInputs manager={manager} />
-        </div>
-      )}
+      {showOptionsBox &&
+        activeId.includes("Slider") &&
+        id.includes("Image") && (
+          <div className="z-[500]">
+            <ImageObjectivesInputs manager={manager} />
+          </div>
+        )}
     </>
   );
 };

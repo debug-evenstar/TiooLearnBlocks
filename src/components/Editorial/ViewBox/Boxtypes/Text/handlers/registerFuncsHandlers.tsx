@@ -74,7 +74,6 @@ export const registerFunctions = (
   ) => {
     console.log(slideIndex, "ftzpe of comp");
     const range = getRange();
-    const checkName = component === "Text" || component === "Slider";
     if (range && range.toString() && component === "Text") {
       console.log(questions.length, "data core");
       const id = componentId + "-" + range?.toString() + "-" + Date.now();

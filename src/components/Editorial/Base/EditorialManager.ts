@@ -270,6 +270,8 @@ class EditorialManager implements EditorialManagerInterface {
       url: string,
       index: number
     ) => this.updateSliderImageURL(url, index);
+    this.canvasManager.canvas.functions["addComponentToSlider"] = (data: any) =>
+      this.addComponentToSlider(data);
 
     setInterval(() => {
       //console.log(this.canvasManager.activeComponent.data.coreData);
@@ -342,7 +344,9 @@ class EditorialManager implements EditorialManagerInterface {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
     const sliderIndex = this.canvasManager.activeComponent.data.index;
 
-    if (type && type === "Slider" && index) {
+    if (type && type === "Slider") {
+      if (index === undefined || index === null) return;
+
       if (
         this.canvasManager.activeComponent.data.components[sliderIndex].slides[
           index
@@ -361,6 +365,8 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (type && type === "Flashcard" && index) {
+      if (index === undefined || index === null) return;
+
       if (
         this.canvasManager.activeComponent.data.components[cardsIndex].cards
       ) {
@@ -554,6 +560,12 @@ class EditorialManager implements EditorialManagerInterface {
   ) {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
     const sliderIndex = this.canvasManager.activeComponent.data.index;
+
+    if (this.canvasManager.activeComponent.data.coreData) {
+      this.canvasManager.activeComponent.data.coreData.questions[
+        index
+      ].options = data;
+    }
 
     if (type && type === "Slider") {
       if (slideIndex === null || slideIndex === undefined) return;
@@ -933,6 +945,22 @@ class EditorialManager implements EditorialManagerInterface {
       ].question,
       "IN EM"
     );
+  }
+
+  addComponentToSlider(data: any) {
+    const sliderIndex = this.canvasManager.activeComponent.data.index;
+    const index: number =
+      this.canvasManager.activeComponent.data.components[sliderIndex].slides
+        .length;
+
+    if (
+      this.canvasManager.activeComponent.data.components[sliderIndex].slides
+    ) {
+      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
+        index
+      ] = data;
+    }
+    this.saveActiveComponentData();
   }
 
   getCanvasSize() {
