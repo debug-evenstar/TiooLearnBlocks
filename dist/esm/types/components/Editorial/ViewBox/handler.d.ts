@@ -12,4 +12,5 @@ export declare class ViewBoxHandler implements ViewBoxHandlerInterface {
     constructor(manager: EditorialManagerInterface);
     setViewBoxStyle(style: string, styleType: string): void;
 }
+export declare const resizeInputWidth: (input: HTMLInputElement) => void;
 export {};
