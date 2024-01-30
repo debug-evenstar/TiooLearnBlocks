@@ -17,6 +17,7 @@ import { QuestionInterface } from "components/interface";
 import Feedback from "../Extensions/Feedback";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import OverlayFeedback from "./OverlayFeedback";
+import { handleToggleTrigger } from "provider/triggerSlice";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -40,14 +41,14 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
   const trigger: boolean = selector.payload.trigger.value;
 
   const [isActive, setIsActive] = useState(true);
-  const questionData: QuestionInterface =
+  const questionData: QuestionInterface[] =
     manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
-  const [question, setQuestion] = useState<QuestionInterface>();
+      ?.question;
+  const [question, setQuestion] = useState<QuestionInterface[]>();
 
   useEffect(() => {
     console.log(trigger, "changed");
-    if (questionData && questionData.type === "SUBJECTIVE") {
+    if (questionData && questionData[0]?.type === "SUBJECTIVE") {
       setQuestion(questionData);
     }
     console.log(question, "data extensions");
@@ -55,7 +56,7 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
   }, [questionData, trigger]);
 
   const handleSetObjective = () => {
-    if (question?.identifier) return;
+    if (question && question[0]?.identifier) return;
     console.log(question, "in subjective");
     //replaceContent(questions, "OBJECTIVE", component);
     addQuestion(
@@ -91,7 +92,12 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
   };
 
   const handleDelete = (id: string, index: number) => {
-    addQuestion();
+    manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
+      null,
+      "Overlay"
+    );
+    dispatch(handleToggleTrigger());
+    setQuestion(data.question);
   };
 
   useEffect(() => {
@@ -110,9 +116,9 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
       {isActive && (
         <div className="w-full flex justify-between items-center cursor-pointer">
           <div className="w-full text-[12px]">
-            {question?.identifier && (
+            {question && question[0]?.identifier && (
               <SubjectiveItem
-                sub={question}
+                sub={question[0]}
                 index={index}
                 manager={manager}
                 handleDelete={handleDelete}
@@ -129,6 +135,8 @@ export default ImageSubjective;
 
 const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
+  const [showManual, setShowManual] = useState(true);
+  const [showAI, setShowAI] = useState(false);
   const [value, setValue] = useState("");
 
   const dispatch = useDispatch();
@@ -181,7 +189,7 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   return (
     <div key={sub.identifier} className="my-2 w-full">
       <div className="w-full flex justify-between items-center cursor-pointer">
-        <p className="text-[12px]">
+        <p className="text-[12px] mr-2">
           {isEditable ? (
             <b>Subjective {index + 1}</b>
           ) : (
@@ -205,20 +213,43 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
           <div>
             <div className="flex justify-between items-center py-1 my-1">
               <p className="">Manual response</p>
-              <input type="radio" checked />
+              <input
+                type="radio"
+                checked={showManual}
+                onChange={() => setShowManual(!showManual)}
+              />
             </div>
+            {showManual && (
+              <textarea
+                className="w-full border border-black p-2"
+                placeholder="Type the answer"
+                rows={5}
+                onChange={(e: any) => setValue(e.target.value)}
+                value={value}
+              />
+            )}
             <div className="flex justify-between items-center py-1 my-1">
               <p className="">AI</p>
-              <input type="radio" disabled />
+              <input
+                type="radio"
+                checked={showAI}
+                onChange={() => setShowAI(!showAI)}
+              />
             </div>
+            {showAI && (
+              <>
+                <p className="text-[13px]">Add Query</p>
+                <textarea
+                  className="w-full border border-black p-2"
+                  placeholder="Type the query"
+                  rows={5}
+                  onChange={(e: any) => setValue(e.target.value)}
+                  value={value}
+                />
+              </>
+            )}
           </div>
-          <textarea
-            className="w-full border border-black p-2"
-            placeholder="Type the answer"
-            rows={5}
-            onChange={(e: any) => setValue(e.target.value)}
-            value={value}
-          />
+
           <div className="w-full flex justify-end">
             <button
               onClick={handleSetSubjective}

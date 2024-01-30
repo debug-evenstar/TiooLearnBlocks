@@ -8,6 +8,7 @@ import FlashcardObjective from "./FlashcardObjective";
 import FlashcardSubjective from "./FlashcardSubjective";
 import { useDispatch, useSelector } from "react-redux";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import { QuestionInterface } from "components/interface";
 
 interface Props {
   id: string;
@@ -69,6 +70,12 @@ interface FlashcardImageProps {
 const FlashcardImage: FC<FlashcardImageProps> = ({ index, manager }) => {
   const [isActive, setIsActive] = useState(false);
 
+  const cardsIndex = manager.canvasManager.activeComponent.data.index;
+  const question: QuestionInterface =
+    manager.canvasManager.activeComponent.data.components[cardsIndex].cards[
+      index
+    ].question;
+
   return (
     <div>
       <div
@@ -80,20 +87,29 @@ const FlashcardImage: FC<FlashcardImageProps> = ({ index, manager }) => {
       </div>
       {isActive && (
         <main>
-          <FlashcardObjective
-            index={index}
-            manager={manager}
-            data={{
-              content: "",
-            }}
-          />
-          <FlashcardSubjective
-            index={index}
-            manager={manager}
-            data={{
-              content: "",
-            }}
-          />
+          {!question || question?.type === "OBJECTIVE" ? (
+            <FlashcardObjective
+              index={index}
+              manager={manager}
+              data={{
+                content: "",
+              }}
+            />
+          ) : (
+            <></>
+          )}
+
+          {!question || question?.type === "SUBJECTIVE" ? (
+            <FlashcardSubjective
+              index={index}
+              manager={manager}
+              data={{
+                content: "",
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </main>
       )}
     </div>

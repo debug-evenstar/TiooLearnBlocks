@@ -27,7 +27,11 @@ const EditorialComp: FC<Props> = ({
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [showEdit, setShowEdit] = useState(false);
   const [overlay, setOverlay] = useState(false);
-  const [manager, setManager] = useState(CreateEditorialManager(data && data.LessonSlides.map((slide: any) => slide.slide_data)));
+  const [manager, setManager] = useState(
+    CreateEditorialManager(
+      data && data.LessonSlides.map((slide: any) => slide.slide_data)
+    )
+  );
 
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
@@ -56,24 +60,24 @@ const EditorialComp: FC<Props> = ({
     setOverlay(true);
   };
 
-
   useEffect(() => {
     if (data) {
       setParseSlides(() =>
         data.LessonSlides.map((slide: any) => slide.slide_data)
       );
-      setManager(CreateEditorialManager(data && data.LessonSlides.map((slide: any) => slide.slide_data)))
+      setManager(
+        CreateEditorialManager(
+          data && data.LessonSlides.map((slide: any) => slide.slide_data)
+        )
+      );
     }
   }, [data]);
 
-  useEffect(()=>{
-    manager.slideManager.handleSlidesUpdate = (updatedSlides : any[]) => {
+  useEffect(() => {
+    manager.slideManager.handleSlidesUpdate = (updatedSlides: any[]) => {
       setParseSlides(updatedSlides);
-    }
-  },[manager, manager.slideManager]);
-
-
-  
+    };
+  }, [manager, manager.slideManager]);
 
   if (!data || parseSlides.length === 0) {
     return <p>Loading...</p>;

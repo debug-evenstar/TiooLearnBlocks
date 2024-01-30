@@ -43,7 +43,11 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   const handleSetObjective = () => {
     if (isActive) return;
     console.log(questions, "in objective");
-    replaceContent(questions, "SUBJECTIVE", component);
+    replaceContent(
+      coreData?.questions ? coreData.questions : [],
+      "SUBJECTIVE",
+      component
+    );
     setIsActive(true);
     dispatch(handleSetObjectiveIndex(questions.length));
     dispatch(handleSetCorrectOption(""));
@@ -55,17 +59,24 @@ const Subjective: FC<Props> = ({ manager, component }) => {
       "changed data"
     );
     if (questions.length > 0) {
-      replaceContent(questions, "SUBJECTIVE", component);
+      replaceContent(
+        coreData?.questions ? coreData.questions : [],
+        "SUBJECTIVE",
+        component
+      );
       setIsActive(true);
       dispatch(handleSetObjectiveIndex(questions.length));
     }
     dispatch(handleSetCorrectOption(""));
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string, index: number = 0) => {
     const filteredQuestions = questions.filter(
       (question) => question.identifier !== id
     );
+
+    console.log(filteredQuestions, id, "from subjective");
+
     setQuestions(filteredQuestions);
     manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
       filteredQuestions

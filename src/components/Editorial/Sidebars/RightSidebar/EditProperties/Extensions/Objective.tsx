@@ -47,7 +47,11 @@ const Objective: FC<Props> = ({ manager, component }) => {
   const handleSetObjective = () => {
     if (isActive) return;
     console.log(questions, "in objective");
-    replaceContent(questions, "OBJECTIVE", component);
+    replaceContent(
+      coreData?.questions ? coreData.questions : [],
+      "OBJECTIVE",
+      component
+    );
     setIsActive(true);
     dispatch(handleToggleShowOptionBox());
     dispatch(handleSetObjectiveIndex(questions.length));
@@ -56,7 +60,11 @@ const Objective: FC<Props> = ({ manager, component }) => {
 
   const handleClick = () => {
     if (questions.length > 0) {
-      replaceContent(questions, "OBJECTIVE", component);
+      replaceContent(
+        coreData?.questions ? coreData.questions : [],
+        "OBJECTIVE",
+        component
+      );
       setIsActive(true);
       dispatch(handleToggleShowOptionBox());
       dispatch(handleSetObjectiveIndex(questions.length));
@@ -70,35 +78,27 @@ const Objective: FC<Props> = ({ manager, component }) => {
     );
   };
 
-  const handleDelete = (id: string, optionIndex: number) => {
-    setQuestions((prevQuestions) => {
-      // Find the question to update
-      const questionIndex = prevQuestions.findIndex(
-        (question) => question.identifier === id
+  const handleDelete = (id: string, optionIndex: number, index: number = 0) => {
+    // Find the question to update
+
+    if (index !== -1) {
+      const updatedQuestions = [...questions];
+      const updatedQuestion = {
+        ...updatedQuestions[index],
+        options: [
+          ...updatedQuestions[index].options.slice(0, optionIndex),
+          ...updatedQuestions[index].options.slice(optionIndex + 1),
+        ],
+      };
+      console.log(updatedQuestion.options, "updated options");
+      manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+        updatedQuestion.options,
+        index
       );
+      dispatch(handleToggleTrigger());
 
-      if (questionIndex !== -1) {
-        const updatedQuestions = [...prevQuestions];
-        const updatedQuestion = {
-          ...updatedQuestions[questionIndex],
-          options: [
-            ...updatedQuestions[questionIndex].options.slice(0, optionIndex),
-            ...updatedQuestions[questionIndex].options.slice(optionIndex + 1),
-          ],
-        };
-        manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
-          updatedQuestion.options,
-          questionIndex
-        );
-        dispatch(handleToggleTrigger());
-
-        updatedQuestions[questionIndex] = updatedQuestion;
-
-        return updatedQuestions;
-      } else {
-        return prevQuestions;
-      }
-    });
+      updatedQuestions[index] = updatedQuestion;
+    }
   };
 
   useEffect(() => {
@@ -200,7 +200,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 
   const deleteOption = (i: number) => {
     console.log(i, " is the option's index.");
-    handleDelete(objective.identifier, i);
+    handleDelete(objective.identifier, i, index);
     setAddedOption(!addedOption);
   };
 

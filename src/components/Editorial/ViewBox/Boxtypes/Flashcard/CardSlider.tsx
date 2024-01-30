@@ -46,6 +46,7 @@ const CardSlider: FC<ImageCarouselProps> = ({ id, manager }) => {
           id={id}
           manager={manager}
           image={images[currentImageIndex]}
+          index={currentImageIndex}
         />
       </div>
 

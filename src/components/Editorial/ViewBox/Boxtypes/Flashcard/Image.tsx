@@ -103,6 +103,8 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
         manager={manager}
       />
 
+      <div>{image.question?.identifier}</div>
+
       {inputList.map((input, index) => (
         <input
           className="w-20 p-1.5"

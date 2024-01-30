@@ -7,13 +7,15 @@ import Extensions from "../Sidebars/RightSidebar/EditProperties/Extensions";
 import TextProperties from "../Sidebars/RightSidebar/EditProperties/TextProperties";
 import Video from "./Boxtypes/Video/Video";
 import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/VideoProperties";
-import ImageProperties from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageProperties";
 import Flashcard from "./Boxtypes/Flashcard/Flashcard";
 import AddImages from "../Sidebars/RightSidebar/EditProperties/FlashCard/AddImages";
-import Objective from "../Sidebars/RightSidebar/EditProperties/Extensions/Objective";
-import Subjective from "../Sidebars/RightSidebar/EditProperties/Extensions/Subjective";
 import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
+import ImageProperties from "../Sidebars/RightSidebar/EditProperties/Image/ImageProperties";
+import { useSelector } from "react-redux";
+import { handleSetActiveCompName } from "provider/sliderSlice";
+import { SliderProperties } from "./Boxtypes/Slider/handler";
 
+// for extracting the name of the component
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");
 
@@ -64,7 +66,9 @@ export const EditProperties = (
   manager: EditorialManagerInterface
 ) => {
   const componentName = getOriginalName(id);
-  console.log(componentName);
+  const selector: any = useSelector(handleSetActiveCompName);
+  const activeCompName = selector.payload.slider.value.activeCompName;
+
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {
@@ -91,12 +95,11 @@ export const EditProperties = (
     FlashCards: (
       <>
         <AddImages id={id} manager={manager} />
-        <Objective manager={manager} component="FlashCards" />
-        <Subjective manager={manager} component="FlashCards" />
         <ImageProperties manager={manager} />
         <Delete id={id} manager={manager} />
       </>
     ),
+    Slider: SliderProperties(manager, activeCompName),
   };
   return viewboxTypes[componentName];
 };
@@ -122,3 +125,10 @@ export class ViewBoxHandler implements ViewBoxHandlerInterface {
     toggleWrapperStyle(element, style, styleType);
   }
 }
+
+export const resizeInputWidth = (input: HTMLInputElement) => {
+  if (input) {
+    const width = input.value.length * 8.5 + 20;
+    input.style.width = `${width}px`;
+  }
+};

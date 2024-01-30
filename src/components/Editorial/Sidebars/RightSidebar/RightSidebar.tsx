@@ -24,9 +24,16 @@ const RightSidebar: FC<Props> = ({
 }) => {
   const selector: any = useSelector(handleToggleSidebarState);
   const isActive = selector.payload.rightSidebarState.value;
+  const { status: optionStatus } = selector.payload.feedback.value as {
+    status: number;
+  };
 
   return (
-    <div className="border-l bg-white border-[#030036] border-opacity-10 shadow relative w-full h-screen max-w-[20%] no-scrollbar pt-5 pb-20 mb-10 px-[29px]">
+    <div
+      className={`z-[500] border-l bg-white border-[#030036] border-opacity-10 shadow h-screen w-full max-w-[20%] relative no-scrollbar mb-10 ${
+        optionStatus ? "" : "overflow-y-auto"
+      }`}
+    >
       {isActive ? (
         <ActiveSidebar manager={manager} />
       ) : (

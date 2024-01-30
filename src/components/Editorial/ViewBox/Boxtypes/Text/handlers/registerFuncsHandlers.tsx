@@ -68,8 +68,11 @@ export const registerFunctions = (
   manager.canvasManager.activeComponent.functions["replaceContent"] = (
     questions: any,
     type: "OBJECTIVE" | "SUBJECTIVE",
-    component: string
+    component: string,
+    isSlider?: boolean,
+    slideIndex?: number
   ) => {
+    console.log(slideIndex, "ftzpe of comp");
     const range = getRange();
     if (range && range.toString() && component === "Text") {
       console.log(questions.length, "data core");
@@ -100,12 +103,18 @@ export const registerFunctions = (
               },
             ],
             [""]
-          )
+          ),
+          isSlider ? "Slider" : null,
+          isSlider ? slideIndex : null
         );
       } else {
         console.log("called set");
         manager.canvasManager.canvas.functions.updateActiveComponentData(
-          setObjandSubComponentData(type, id, checkAndReturnOptions(type), [""])
+          setObjandSubComponentData(type, id, checkAndReturnOptions(type), [
+            "",
+          ]),
+          isSlider ? "Slider" : null,
+          isSlider ? slideIndex : null
         );
       }
       replaceContent(range, id);
