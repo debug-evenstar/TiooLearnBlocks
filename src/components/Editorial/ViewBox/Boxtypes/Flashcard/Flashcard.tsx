@@ -3,9 +3,22 @@ import Image from "./Image";
 import { Resizable } from "react-resizable";
 import { toggleWrapperStyle } from "../Text/handlers/stylesHandler";
 import { setComponentLayout } from "components/Editorial/Base/EditorialManager";
-import { ComponentBaseDataInterface } from "components/interface";
+import {
+  ComponentBaseDataInterface,
+  QuestionInterface,
+} from "components/interface";
+import { useDispatch, useSelector } from "react-redux";
+import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
+import FlashcardObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/FlashCard/ObjectiveInputs";
+import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
+import { getOriginalName } from "../../handler";
 
-const Flashcard: FC<any> = ({ id, manager, image }) => {
+const Flashcard: FC<any> = ({ id, manager, image, index }) => {
+  const dispatch = useDispatch();
+  const selector: any = useSelector(refreshToggleSidebarState);
+  const activeId: string = selector.payload.activeViewbox.value;
+  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
     height: id.includes("Text") ? 65 : 280,
@@ -75,30 +88,74 @@ const Flashcard: FC<any> = ({ id, manager, image }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const trigger: boolean = selector.payload.trigger.value;
+  const cardsIndex = manager.canvasManager.activeComponent.data.index;
+  const cardData =
+    getOriginalName(id) === "Flash Card"
+      ? manager.canvasManager.activeComponent.data.components[cardsIndex]
+          ?.cards[index]
+      : {
+          question: [],
+        };
+
+  const [card, setCard] = useState<any>(null);
+  const [question, setQuestion] = useState<QuestionInterface | null>(null);
+
+  useEffect(() => {
+    console.log(cardsIndex, cardData, "card data");
+    dispatch(handleSetObjectiveIndex(index));
+    const question: QuestionInterface | null = cardData?.question
+      ? cardData.question
+      : null;
+    setQuestion(question);
+
+    console.log(question, "question in card data");
+    if (question && question.type === "OBJECTIVE") {
+      setCard(cardData);
+      console.log(
+        manager.canvasManager.activeComponent.data?.components[cardsIndex]
+          ?.cards,
+
+        index,
+        "changed"
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cardData, trigger, index]);
+
   return (
-    <Resizable
-      width={viewBoxSize.width}
-      height={viewBoxSize.height}
-      minConstraints={[280, height]}
-      onResize={onResize}
-      resizeHandles={["s", "e", "se"]}
-    >
-      <div
-        ref={viewBoxRef}
-        className={`border-dotted m-5 p-2 border-2 border-slate-500 rounded`}
-        style={{
-          width: viewBoxSize.width + "px",
-          height: viewBoxSize.height + "px",
-        }}
+    <>
+      <Resizable
+        width={viewBoxSize.width}
+        height={viewBoxSize.height}
+        minConstraints={[280, height]}
+        onResize={onResize}
+        resizeHandles={["s", "e", "se"]}
       >
-        <Image
-          id={id}
-          manager={manager}
-          viewBoxRef={viewBoxRef}
-          image={image}
-        />
-      </div>
-    </Resizable>
+        <div
+          ref={viewBoxRef}
+          className={`border-dotted m-5 p-2 border-2 border-slate-500 rounded`}
+          style={{
+            width: viewBoxSize.width + "px",
+            height: viewBoxSize.height + "px",
+          }}
+        >
+          <Image
+            id={id}
+            manager={manager}
+            viewBoxRef={viewBoxRef}
+            image={image}
+          />
+        </div>
+      </Resizable>
+
+      {activeId === id && question && (
+        <div className="z-[500]">
+          <FlashcardObjectivesInputs manager={manager} />
+        </div>
+      )}
+    </>
   );
 };
 

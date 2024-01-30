@@ -1,8 +1,15 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import FlashcardViewBox from "./SliderViewbox";
+import {
+  handleSetActiveCompIndex,
+  handleSetActiveCompName,
+} from "provider/sliderSlice";
+import Draggable from "react-draggable";
+import { Resizable } from "react-resizable";
 
 interface SliderProps {
   id: string;
@@ -10,42 +17,126 @@ interface SliderProps {
 }
 
 const Slider: FC<SliderProps> = ({ id, manager }) => {
+  const dispatch = useDispatch();
   const selector: any = useSelector(handleToggleTrigger);
   const trigger: boolean = selector.payload.trigger.value;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isEditable, setIsEditable] = useState(true);
   const sliderRef = useRef<HTMLDivElement>(null);
-  const [images, setImages] = useState<any[]>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const draggableRef = useRef<HTMLDivElement>(null);
+  const [slides, setSlides] = useState<any[]>([]);
+  const [viewBoxSize, setViewBoxSize] = useState({
+    width: 500,
+    height: 300,
+  });
 
   const handlePrevClick = () => {
     setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) => (prevIndex - 1 + slides.length) % slides.length
     );
   };
 
   const handleNextClick = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % slides.length);
+  };
+
+  const generateId = (componentName: string): string => {
+    return componentName + "-clone-" + Date.now();
+  };
+
+  const onResize = (event: any, { node, size, handle }: any) => {
+    setViewBoxSize({ width: size.width, height: size.height });
   };
 
   useEffect(() => {
     const componentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
-    componentData && console.log(componentData);
+    componentData && setSlides(componentData.slides);
+    console.log(componentData.slides, "here are the slides");
+    slides.length > 0 &&
+      dispatch(
+        handleSetActiveCompName(slides[currentImageIndex][0]?.component)
+      );
+    dispatch(handleSetActiveCompIndex(currentImageIndex));
+    console.log(slides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const slider = sliderRef.current;
+      if (slider && !slider.contains(event.target as Node)) {
+        //setIsEditable(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditable, sliderRef]);
+
+  useEffect(() => {
+    dispatch(
+      handleSetActiveCompName(
+        manager.canvasManager.canvas.functions.getComponentData(id).slides[
+          currentImageIndex
+        ][0]?.component
+      )
+    );
+    dispatch(handleSetActiveCompIndex(currentImageIndex));
+  }, [currentImageIndex]);
+
   return (
-    <div className="flex items-center gap-2 cursor-move">
+    <div className="flex items-center gap-2">
       <button onClick={handlePrevClick}>
-        <FaAngleLeft className="text-[#87909E] text-[20px]" />
+        <FaAngleLeft className="text-[20px]" strokeWidth="1px" />
       </button>
 
-      <div ref={sliderRef}>
-        <div>Slider {currentImageIndex}</div>
-      </div>
+      <Resizable
+        width={viewBoxSize.width}
+        height={viewBoxSize.height}
+        minConstraints={[500, 300]}
+        onResize={onResize}
+        resizeHandles={["s", "e", "se"]}
+      >
+        <div
+          onDoubleClick={() => setIsEditable(!isEditable)}
+          ref={sliderRef}
+          className={`flex justify-center items-center ${
+            isEditable ? "handle cursor-move" : ""
+          }  h-fit w-fit border border-[#4f46e5]`}
+          style={{
+            minWidth: viewBoxSize.width + "px",
+            minHeight: viewBoxSize.height + "px",
+          }}
+        >
+          {slides[currentImageIndex] && (
+            <Draggable
+              axis="both"
+              nodeRef={draggableRef}
+              handle=".sliderHandle"
+              defaultClassName="w-fit"
+            >
+              <div ref={draggableRef}>
+                <FlashcardViewBox
+                  id={generateId(slides[currentImageIndex][0]?.component)}
+                  handleDelete={() => null}
+                  manager={manager}
+                  data={slides[currentImageIndex]}
+                  currIndex={currentImageIndex}
+                  isFlashcardDraggable={isEditable}
+                  setIsFlashcardDraggable={setIsEditable}
+                />
+              </div>
+            </Draggable>
+          )}
+        </div>
+      </Resizable>
 
-      {images.length > 1 && (
+      {slides.length > 1 && (
         <button onClick={handleNextClick}>
-          <FaAngleRight className="text-[#87909E] text-[20px]" />
+          <FaAngleRight className="text-[20px]" />
         </button>
       )}
     </div>

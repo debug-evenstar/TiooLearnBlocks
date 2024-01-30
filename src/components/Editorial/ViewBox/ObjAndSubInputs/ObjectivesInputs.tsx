@@ -4,8 +4,10 @@ import {
   handleSetWrongOption,
 } from "provider/optionsDataSlice";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { FC, useEffect, useState } from "react";
+import { FC, createRef, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { resizeInputWidth } from "../handler";
+import Draggable from "react-draggable";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -21,6 +23,10 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
   };
   const trigger: boolean = selector.payload.trigger.value;
   const [question, setQuestion] = useState<any>();
+  const [maxWidth, setMaxWidth] = useState(0);
+
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const coreData = manager.canvasManager.activeComponent.data.coreData;
 
   useEffect(() => {
@@ -32,6 +38,17 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     const value = e.target.value;
     if (!value) return;
 
+    let max = 0;
+    inputRefs.current.forEach((input) => {
+      if (input) {
+        const width = input.scrollWidth;
+        if (width > max) {
+          max = width;
+        }
+      }
+    });
+    setMaxWidth(max);
+
     manager.canvasManager.canvas.functions.updateObjectiveOption(
       value,
       objectiveIndex,
@@ -42,15 +59,31 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
   };
 
   return (
-    <div className="w-full flex justify-around gap-2 my-5 relative top-[2rem] z-[5000]s">
-      {question?.options?.map((option: any, i: number) => (
-        <input
-          className="border border-black w-[8rem] p-2 rounded text-center z-[5000] relative"
-          type="text"
-          value={option.content}
-          onChange={(e) => handleSetOptionData(e, i)}
-        />
-      ))}
+    <div className="w-full flex justify-around my-5 z-[5000]s">
+      {question?.options?.map((option: any, i: number) => {
+        const nodeRef: any = createRef();
+
+        return (
+          <Draggable
+            key={i}
+            axis="both"
+            nodeRef={nodeRef}
+            handle=".objInputHandleText"
+          >
+            <div ref={nodeRef} className="mx-1">
+              <input
+                ref={(el) => (inputRefs.current[i] = el)}
+                className="border border-black p-2 rounded text-center z-[5000] relative objInputHandleImage"
+                type="text"
+                value={option.content}
+                onChange={(e) => handleSetOptionData(e, i)}
+                style={{ width: maxWidth === 0 ? 100 : maxWidth }}
+                onLoad={(e: any) => resizeInputWidth(e.target)}
+              />
+            </div>
+          </Draggable>
+        );
+      })}
     </div>
   );
 };

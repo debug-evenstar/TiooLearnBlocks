@@ -6,17 +6,26 @@ import {
 } from "../SlideManager/handler";
 import { FaPlus } from "react-icons/fa";
 import { EditorialManagerInterface } from "./Base/EditorialManager";
-
-
+import { useDispatch } from "react-redux";
+import { refreshActiveViewbox } from "provider/activeViewboxSlice";
+import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 
 interface Props {
   slides: any;
   changeTo: (index: number) => void;
   data: any;
-  manager : EditorialManagerInterface
+  manager: EditorialManagerInterface;
 }
-const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager}) => {
+const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
+  const dispatch = useDispatch();
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
+
+  const handleChangeSlide = (index: number) => {
+    changeTo(index);
+    dispatch(refreshToggleSidebarState());
+    dispatch(refreshActiveViewbox());
+  };
+
   return (
     <div className="bg-white shadow relative w-full max-w-[20%] overflow-auto mb-20  pl-[33px] pr-[20px] overflow-y-auto  scrollbar">
       <h2 className="text-center pt-[35px] text-base text-[#87909E] font-normal">
@@ -26,7 +35,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager}) => {
         {slides.map((item: any, index: number) => (
           <div
             className="relative h-[208px] border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100"
-            onClick={() => changeTo(index)}
+            onClick={() => handleChangeSlide(index)}
             key={index}
           >
             <p className="absolute text-[#030036BD] text-sm -top-1 -left-[14px]">
@@ -43,9 +52,14 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager}) => {
             </div>
           </div>
         ))}
-        <div className="relative h-[208px] grid place-content-center border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100" onClick={() => manager.sidebarManager.functions?.addSlide()}>
+        <div
+          className="relative h-[208px] grid place-content-center border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100"
+          onClick={() => manager.sidebarManager.functions?.addSlide()}
+        >
           <div className="text-center">
-            <span className="fw-600 text-xl"><FaPlus className="mx-auto"/></span>
+            <span className="fw-600 text-xl">
+              <FaPlus className="mx-auto" />
+            </span>
             <p className="fs-500 fw-500 mt-2">Add Slide</p>
           </div>
         </div>

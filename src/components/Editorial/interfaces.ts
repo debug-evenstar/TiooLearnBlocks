@@ -20,6 +20,9 @@ export interface CanvasMedia {
   id: string;
   manager: EditorialManagerInterface;
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>;
+  data?: any;
+  currIndex?: number;
+  isFlashcardDraggable?: boolean;
 }
 
 export interface CanvasText {
@@ -28,4 +31,6 @@ export interface CanvasText {
   viewBoxRef: React.MutableRefObject<any>;
   isEditable: boolean;
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
+  data?: any;
+  currIndex?: number;
 }

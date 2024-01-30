@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { EditProperties, getOriginalName } from "../../ViewBox/handler";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import SliderHeader from "./EditProperties/Slider/SliderHeader";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -25,7 +26,7 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
   }
 
   return (
-    <div className="w-full h-full border border-gray-400 no-scrollbar">
+    <div className="w-full h-full overflow-y-visible pt-5 pb-20">
       <header className="w-full flex justify-between p-4 border-b border-gray-400 items-center">
         <div className="h-fit flex gap-2">
           <BsArrowLeft
@@ -44,13 +45,15 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
           </b>
         </div>
       </header>
-      <main className="w-full p-4">
+
+      {id.includes("Slider") && <SliderHeader manager={manager} />}
+      <main className="w-full p-4 px-[25px]">
         <section className="w-full flex justify-between py-4">
           <div className="flex gap-4">
             <MdUndo className="cursor-pointer" onClick={() => popHistory()} />
             <MdRedo className="cursor-pointer" onClick={()=>{}}/>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 bg-[#E6E6FA] p-2 rounded-full">
             <BsPencil />
             <RiArrowDropDownFill />
           </div>
