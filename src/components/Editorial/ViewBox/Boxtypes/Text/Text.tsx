@@ -95,7 +95,7 @@ const Text: FC<CanvasText> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleClickedObjective = (
     e: MouseEvent,

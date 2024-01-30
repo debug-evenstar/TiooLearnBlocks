@@ -42,7 +42,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
   };
 
   const [isActive, setIsActive] = useState(false);
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleSetObjective = () => {
     if (isActive) return;
@@ -72,10 +72,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
     }
     dispatch(handleSetCorrectOption(""));
     dispatch(handleSetWrongOption(""));
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData,
-      "changed data"
-    );
+    console.log(manager.canvasManager.activeComponent.data, "changed data");
   };
 
   const handleDelete = (id: string, optionIndex: number, index: number = 0) => {
@@ -91,7 +88,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
         ],
       };
       console.log(updatedQuestion.options, "updated options");
-      manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+      manager.canvasManager.canvas.functions.deleteObjectiveOptions(
         updatedQuestion.options,
         index
       );
@@ -176,7 +173,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   useEffect(() => {
     setQuestion(coreData.questions[index]);
@@ -193,7 +190,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       handleSetOptionIndex(question.options ? question.options.length : 0)
     );
     console.log(
-      manager.canvasManager.activeComponent.data.coreData.questions,
+      manager.canvasManager.activeComponent.data.questions,
       "clicked"
     );
   };

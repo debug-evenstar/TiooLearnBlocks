@@ -14,6 +14,11 @@ import ImageProperties from "../Sidebars/RightSidebar/EditProperties/Image/Image
 import { useSelector } from "react-redux";
 import { handleSetActiveCompName } from "provider/sliderSlice";
 import { SliderProperties } from "./Boxtypes/Slider/handler";
+import Grid from "./Boxtypes/Grid/Grid";
+import AddGrid from "../Sidebars/RightSidebar/EditProperties/Grid/AddGrid";
+import GridType from "../Sidebars/RightSidebar/EditProperties/Grid/GridType";
+import GridTheme from "../Sidebars/RightSidebar/EditProperties/Grid/GridTheme";
+import EditGrid from "../Sidebars/RightSidebar/EditProperties/Grid/EditGrid";
 
 // for extracting the name of the component
 export function getOriginalName(str: string): string {
@@ -22,6 +27,9 @@ export function getOriginalName(str: string): string {
   if (indexOfClone !== -1) {
     if (str.substring(0, indexOfClone) === "Flash Card") {
       return "FlashCard";
+    }
+    if (str.substring(0, indexOfClone) === "GridSteps") {
+      return "Grid";
     }
     return str.substring(0, indexOfClone);
   } else {
@@ -55,6 +63,7 @@ export const ViewBoxContent = (
     Image: <Image id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     FlashCard: <Flashcard id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     Video: <Video id={id} manager={manager} viewBoxRef={viewBoxRef} />,
+    Grid: <Grid id={id} manager={manager} />,
   };
 
   return viewboxTypes[componentName];
@@ -97,6 +106,14 @@ export const EditProperties = (
         <AddImages id={id} manager={manager} />
         <ImageProperties manager={manager} />
         <Delete id={id} manager={manager} />
+      </>
+    ),
+    Grid: (
+      <>
+        <AddGrid />
+        <EditGrid />
+        <GridType />
+        <GridTheme />
       </>
     ),
     Slider: SliderProperties(manager, activeCompName),

@@ -34,7 +34,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const imageRef = useRef<HTMLImageElement>(null);
 
   const extensions: any[] =
-    manager.canvasManager.activeComponent.data.coreData?.extensions;
+    manager.canvasManager.activeComponent.data?.extensions;
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -117,7 +117,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       );
       dispatch(handleToggleTrigger());
       console.log(
-        manager.canvasManager.activeComponent.data.coreData.extensions,
+        manager.canvasManager.activeComponent.data.extensions,
         "updated data"
       );
       setInputBoxDimensions((prevList) => [

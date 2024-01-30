@@ -25,9 +25,8 @@ const ImageObjectivesInputs: FC<Props> = ({ manager }) => {
   };
   const trigger: boolean = selector.payload.trigger.value;
   const data: QuestionInterface =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[
-      objectiveIndex
-    ]?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[objectiveIndex]
+      ?.question[0];
   const [question, setQuestion] = useState<QuestionInterface>(data);
   const [maxWidth, setMaxWidth] = useState(0);
 
@@ -37,7 +36,7 @@ const ImageObjectivesInputs: FC<Props> = ({ manager }) => {
     console.log(trigger, "changed");
     setQuestion(data);
     console.log(
-      manager.canvasManager.activeComponent.data.coreData?.extensions,
+      manager.canvasManager.activeComponent.data?.extensions,
       "data extensions"
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -42,8 +42,7 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
 
   const [isActive, setIsActive] = useState(true);
   const questionData: QuestionInterface[] =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question;
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question;
   const [question, setQuestion] = useState<QuestionInterface[]>();
 
   useEffect(() => {
@@ -155,8 +154,7 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   };
 
   const coreData =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
 
   const handleSetSubjective = () => {
     if (!value) return;

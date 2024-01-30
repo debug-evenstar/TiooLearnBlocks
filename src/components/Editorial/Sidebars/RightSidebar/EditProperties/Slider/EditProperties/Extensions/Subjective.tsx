@@ -55,10 +55,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   };
 
   const handleClick = () => {
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData,
-      "changed data"
-    );
+    console.log(manager.canvasManager.activeComponent.data, "changed data");
     if (questions.length > 0) {
       replaceContent(questions, "SUBJECTIVE", component, true, activeCompIndex);
       setIsActive(true);

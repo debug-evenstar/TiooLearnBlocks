@@ -27,7 +27,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   useEffect(() => {
     setQuestion(coreData.questions[objectiveIndex]);

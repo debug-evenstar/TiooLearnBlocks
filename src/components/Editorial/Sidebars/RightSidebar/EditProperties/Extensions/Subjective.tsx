@@ -38,7 +38,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   };
 
   const [isActive, setIsActive] = useState(false);
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleSetObjective = () => {
     if (isActive) return;
@@ -54,10 +54,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   };
 
   const handleClick = () => {
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData,
-      "changed data"
-    );
+    console.log(manager.canvasManager.activeComponent.data, "changed data");
     if (questions.length > 0) {
       replaceContent(
         coreData?.questions ? coreData.questions : [],
@@ -160,7 +157,7 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
     type: string;
   };
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleSetSubjective = () => {
     if (!value) return;

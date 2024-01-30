@@ -62,6 +62,8 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     dispatch(handleSetActiveViewbox(id));
     dispatch(handleSetSidebarState(true));
     manager.canvasManager.setActiveComponent(id);
+    manager.canvasManager.canvas.functions.saveActiveComponentData();
+    console.log(manager.canvasManager.canvas.functions, "here in canvas");
   };
 
   const updateSlideComponents = (components: any[]) => {
@@ -109,7 +111,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             }
           );
           // Only update if position has changed
-          if ( data.x !== 0 || data.y !== 0 ) {
+          if (data.x !== 0 || data.y !== 0) {
             manager.slideManager.saveComponentData(
               manager.canvasManager.getComponentIndex(item.id),
               { layout }

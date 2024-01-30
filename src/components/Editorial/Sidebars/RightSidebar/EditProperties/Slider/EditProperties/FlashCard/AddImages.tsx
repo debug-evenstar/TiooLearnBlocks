@@ -20,7 +20,7 @@ const AddImages: FC<Props> = ({ id, manager }) => {
   const selector: any = useSelector(handleToggleTrigger);
   const trigger: boolean = selector.payload.trigger.value;
   const [images, setImages] = useState<any[]>([{ url: "" }]);
-  const coreData = manager.sidebarManager.data.coreData;
+  const coreData = manager.sidebarManager.data;
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();

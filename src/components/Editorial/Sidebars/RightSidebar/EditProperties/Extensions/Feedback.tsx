@@ -37,7 +37,7 @@ const Feedback: FC<Props> = ({ manager, type }) => {
   const { identifier } = selector.payload.optionsData.value as {
     identifier: string;
   };
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
   let option: OptionInterface =
     coreData.questions[objectiveIndex]?.options[
       type === "OBJECTIVE" ? optionIndex : 0
@@ -59,9 +59,8 @@ const Feedback: FC<Props> = ({ manager, type }) => {
   const handleChangeFeedbackContent = (value: string) => {
     setFeedbackValue(value);
     const newOption: OptionInterface =
-      manager.canvasManager.activeComponent.data.coreData.questions[
-        objectiveIndex
-      ]?.options[type === "OBJECTIVE" ? optionIndex : 0];
+      manager.canvasManager.activeComponent.data.questions[objectiveIndex]
+        ?.options[type === "OBJECTIVE" ? optionIndex : 0];
     option = newOption;
   };
 
@@ -81,9 +80,8 @@ const Feedback: FC<Props> = ({ manager, type }) => {
       optionIndex
     );
     const newOption: OptionInterface =
-      manager.canvasManager.activeComponent.data.coreData.questions[
-        objectiveIndex
-      ]?.options[type === "OBJECTIVE" ? optionIndex : 0];
+      manager.canvasManager.activeComponent.data.questions[objectiveIndex]
+        ?.options[type === "OBJECTIVE" ? optionIndex : 0];
     option = newOption;
   };
 
@@ -96,9 +94,8 @@ const Feedback: FC<Props> = ({ manager, type }) => {
     );
 
     const newOption: OptionInterface =
-      manager.canvasManager.activeComponent.data.coreData.questions[
-        objectiveIndex
-      ]?.options[type === "OBJECTIVE" ? optionIndex : 0];
+      manager.canvasManager.activeComponent.data.questions[objectiveIndex]
+        ?.options[type === "OBJECTIVE" ? optionIndex : 0];
     option = newOption;
   };
 

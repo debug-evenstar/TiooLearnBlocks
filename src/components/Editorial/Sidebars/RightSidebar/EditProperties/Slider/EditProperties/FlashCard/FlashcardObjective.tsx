@@ -116,7 +116,7 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
         ...question.options.slice(optionIndex + 1),
       ],
     };
-    manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+    manager.canvasManager.canvas.functions.deleteObjectiveOptions(
       updatedQuestion.options,
       0,
       "Flashcard"

@@ -11,8 +11,14 @@ import {
   EditorialSlideManager,
   EditorialSlideManagerInterface,
 } from "./EditorialSlideManager";
-import { CanvasManager, CanvasManagerInterface } from "./EditorialCanvasManager";
-import { EditorialSidebarManager, EditorialSidebarManagerInterface } from "./EditorialSidebarManager";
+import {
+  CanvasManager,
+  CanvasManagerInterface,
+} from "./EditorialCanvasManager";
+import {
+  EditorialSidebarManager,
+  EditorialSidebarManagerInterface,
+} from "./EditorialSidebarManager";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
@@ -70,6 +76,11 @@ export interface DataGroupInterface {
   data: { [key: string]: any };
   functions: { [key: string]: Function };
 }
+
+const DataGroup: DataGroupInterface = {
+  data: {},
+  functions: {},
+};
 
 export interface EditorialManagerInterface {
   sidebarManager: EditorialSidebarManagerInterface;
@@ -200,9 +211,12 @@ class EditorialManager implements EditorialManagerInterface {
     ) => this.updateSliderImageURL(url, index);
     this.canvasManager.canvas.functions["addComponentToSlider"] = (data: any) =>
       this.addComponentToSlider(data);
+    this.canvasManager.canvas.functions["addOrRemoveRowOrColumns"] = (
+      type: string
+    ) => this.addOrRemoveRowOrColumns(type);
 
     setInterval(() => {
-      //console.log(this.canvasManager.activeComponent.data.coreData);
+      //console.log(this.canvasManager.activeComponent.data);
     }, 5000);
   }
 
@@ -230,8 +244,8 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (this.canvasManager.activeComponent.data) {
-      this.canvasManager.activeComponent.data.coreData = {
-        ...this.canvasManager.activeComponent.data.coreData,
+      this.canvasManager.activeComponent.data = {
+        ...this.canvasManager.activeComponent.data,
         ...data,
       };
     }
@@ -307,17 +321,16 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (type === "Overlay") {
-      if (this.canvasManager.activeComponent.data.coreData) {
-        this.canvasManager.activeComponent.data.coreData.extensions[0].question =
-          [];
+      if (this.canvasManager.activeComponent.data) {
+        this.canvasManager.activeComponent.data.extensions[0].question = [];
       }
       this.saveActiveComponentData();
       return;
     }
 
     console.log(data);
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions = data;
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions = data;
     }
     this.canvasManager.canvas.saveActiveComponentData();
   }
@@ -366,22 +379,21 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (type && type === "Overlay") {
-      if (this.canvasManager.activeComponent.data.coreData) {
-        this.canvasManager.activeComponent.data.coreData.extensions[
-          index
-        ].question[0] = {
-          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
-            .question[0],
-          ...data,
-        };
+      if (this.canvasManager.activeComponent.data) {
+        this.canvasManager.activeComponent.data.extensions[index].question[0] =
+          {
+            ...this.canvasManager.activeComponent.data.extensions[index]
+              .question[0],
+            ...data,
+          };
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions[index] = {
-        ...this.canvasManager.activeComponent.data.coreData.questions[index],
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions[index] = {
+        ...this.canvasManager.activeComponent.data.questions[index],
         ...data,
       };
     }
@@ -405,8 +417,8 @@ class EditorialManager implements EditorialManagerInterface {
       return;
     }
 
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.question = data;
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.question = data;
     }
   }
 
@@ -455,11 +467,11 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (type && type === "Overlay") {
-      if (this.canvasManager.activeComponent.data.coreData?.extensions) {
-        this.canvasManager.activeComponent.data.coreData.extensions[
+      if (this.canvasManager.activeComponent.data?.extensions) {
+        this.canvasManager.activeComponent.data.extensions[
           index
         ].question[0].options = [
-          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+          ...this.canvasManager.activeComponent.data.extensions[index]
             .question[0].options,
           data,
         ];
@@ -468,12 +480,9 @@ class EditorialManager implements EditorialManagerInterface {
       return;
     }
 
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions[
-        index
-      ].options = [
-        ...this.canvasManager.activeComponent.data.coreData.questions[index]
-          .options,
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions[index].options = [
+        ...this.canvasManager.activeComponent.data.questions[index].options,
         data,
       ];
     }
@@ -489,10 +498,8 @@ class EditorialManager implements EditorialManagerInterface {
     const cardsIndex = this.canvasManager.activeComponent.data.index;
     const sliderIndex = this.canvasManager.activeComponent.data.index;
 
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions[
-        index
-      ].options = data;
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions[index].options = data;
     }
 
     if (type && type === "Slider") {
@@ -523,8 +530,8 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (type && type === "Overlay") {
-      if (this.canvasManager.activeComponent.data.coreData?.extensions) {
-        this.canvasManager.activeComponent.data.coreData.extensions[
+      if (this.canvasManager.activeComponent.data?.extensions) {
+        this.canvasManager.activeComponent.data.extensions[
           index
         ].question[0].options = data;
       }
@@ -532,10 +539,8 @@ class EditorialManager implements EditorialManagerInterface {
       return;
     }
 
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions[
-        index
-      ].options = data;
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions[index].options = data;
     }
     this.canvasManager.canvas.saveActiveComponentData();
   }
@@ -578,16 +583,16 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (type && type === "Overlay") {
-      if (this.canvasManager.activeComponent.data.coreData?.extensions) {
-        this.canvasManager.activeComponent.data.coreData.extensions[
+      if (this.canvasManager.activeComponent.data?.extensions) {
+        this.canvasManager.activeComponent.data.extensions[
           index
         ].question[0].options[optionIndex].content = data;
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
-    if (this.canvasManager.activeComponent.data.coreData.questions[index]) {
-      this.canvasManager.activeComponent.data.coreData.questions[index].options[
+    if (this.canvasManager.activeComponent.data.questions[index]) {
+      this.canvasManager.activeComponent.data.questions[index].options[
         optionIndex
       ].content = data;
     }
@@ -641,11 +646,11 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (componentType === "Overlay") {
-      if (this.canvasManager.activeComponent.data.coreData) {
-        this.canvasManager.activeComponent.data.coreData.extensions[
+      if (this.canvasManager.activeComponent.data) {
+        this.canvasManager.activeComponent.data.extensions[
           index
         ].question[0].options[optionIndex].feedback = {
-          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+          ...this.canvasManager.activeComponent.data.extensions[index]
             .question[0].options[optionIndex].feedback,
           type,
         };
@@ -654,12 +659,13 @@ class EditorialManager implements EditorialManagerInterface {
       return;
     }
 
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions[index].options[
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions[index].options[
         optionIndex
       ].feedback = {
-        ...this.canvasManager.activeComponent.data.coreData.questions[index]
-          .options[optionIndex].feedback,
+        ...this.canvasManager.activeComponent.data.questions[index].options[
+          optionIndex
+        ].feedback,
         type,
       };
     }
@@ -714,11 +720,11 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (componentType === "Overlay") {
-      if (this.canvasManager.activeComponent.data.coreData) {
-        this.canvasManager.activeComponent.data.coreData.extensions[
+      if (this.canvasManager.activeComponent.data) {
+        this.canvasManager.activeComponent.data.extensions[
           index
         ].question[0].options[optionIndex].feedback = {
-          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+          ...this.canvasManager.activeComponent.data.extensions[index]
             .question[0].options[optionIndex].feedback,
           content,
         };
@@ -727,12 +733,13 @@ class EditorialManager implements EditorialManagerInterface {
       return;
     }
 
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions[index].options[
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions[index].options[
         optionIndex
       ].feedback = {
-        ...this.canvasManager.activeComponent.data.coreData.questions[index]
-          .options[optionIndex].feedback,
+        ...this.canvasManager.activeComponent.data.questions[index].options[
+          optionIndex
+        ].feedback,
         content,
       };
     }
@@ -785,11 +792,11 @@ class EditorialManager implements EditorialManagerInterface {
     }
 
     if (componentType === "Overlay") {
-      if (this.canvasManager.activeComponent.data.coreData) {
-        this.canvasManager.activeComponent.data.coreData.extensions[
+      if (this.canvasManager.activeComponent.data) {
+        this.canvasManager.activeComponent.data.extensions[
           index
         ].question[0].options[optionIndex] = {
-          ...this.canvasManager.activeComponent.data.coreData.extensions[index]
+          ...this.canvasManager.activeComponent.data.extensions[index]
             .question[0].options[optionIndex],
           answer,
         };
@@ -798,12 +805,13 @@ class EditorialManager implements EditorialManagerInterface {
       return;
     }
 
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions[index].options[
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions[index].options[
         optionIndex
       ] = {
-        ...this.canvasManager.activeComponent.data.coreData.questions[index]
-          .options[optionIndex],
+        ...this.canvasManager.activeComponent.data.questions[index].options[
+          optionIndex
+        ],
         answer,
       };
     }
@@ -811,12 +819,9 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateWrongOptions(data: any, index: number) {
-    if (this.canvasManager.activeComponent.data.coreData) {
-      this.canvasManager.activeComponent.data.coreData.questions[
-        index
-      ].options = [
-        ...this.canvasManager.activeComponent.data.coreData.questions[index]
-          .options,
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.questions[index].options = [
+        ...this.canvasManager.activeComponent.data.questions[index].options,
         ...data,
       ];
     }
@@ -824,12 +829,9 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateImageQuestions(data: QuestionInterface, index: number) {
-    if (this.canvasManager.activeComponent.data.coreData?.extensions) {
-      this.canvasManager.activeComponent.data.coreData.extensions[
-        index
-      ].question = [
-        ...this.canvasManager.activeComponent.data.coreData.extensions[index]
-          .question,
+    if (this.canvasManager.activeComponent.data?.extensions) {
+      this.canvasManager.activeComponent.data.extensions[index].question = [
+        ...this.canvasManager.activeComponent.data.extensions[index].question,
         data,
       ];
     }
@@ -837,8 +839,8 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateImageObjectiveOption(data: any, index: number, optionIndex: number) {
-    if (this.canvasManager.activeComponent.data.coreData?.extensions) {
-      this.canvasManager.activeComponent.data.coreData.extensions[
+    if (this.canvasManager.activeComponent.data?.extensions) {
+      this.canvasManager.activeComponent.data.extensions[
         index
       ].question.options[optionIndex] = data;
     }
@@ -846,12 +848,9 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   updateFlashcardQuestions(data: QuestionInterface, index: number) {
-    if (this.canvasManager.activeComponent.data.coreData?.extensions) {
-      this.canvasManager.activeComponent.data.coreData.extensions[
-        index
-      ].question = [
-        ...this.canvasManager.activeComponent.data.coreData.extensions[index]
-          .question,
+    if (this.canvasManager.activeComponent.data?.extensions) {
+      this.canvasManager.activeComponent.data.extensions[index].question = [
+        ...this.canvasManager.activeComponent.data.extensions[index].question,
         data,
       ];
     }
@@ -891,6 +890,24 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
+  addOrRemoveRowOrColumns(type: string) {
+    const gridIndex = this.canvasManager.activeComponent.data.index;
+
+    console.log(
+      this.canvasManager.activeComponent.data,
+      "it has been called outside"
+    );
+    if (type === "add") {
+      if (gridIndex === null || gridIndex === undefined) return;
+      if (this.canvasManager.activeComponent.data) {
+        console.log(
+          this.canvasManager.activeComponent.data,
+          "it has been called"
+        );
+      }
+    }
+  }
+
   getCanvasSize() {
     const canvas = document.getElementById("editorial-canvas");
     return { width: canvas?.offsetWidth, height: canvas?.offsetHeight };
@@ -910,7 +927,7 @@ class EditorialManager implements EditorialManagerInterface {
     if (activeComponent) {
       activeSlide[activeComponent.data.index] = {
         ...activeSlide[activeComponent.data.index],
-        ...activeComponent.data.coreData,
+        ...activeComponent.data,
         ...{ layout: activeComponent.data.layoutData },
         ...{ styles: activeComponent.data.styleData },
       };
@@ -919,7 +936,6 @@ class EditorialManager implements EditorialManagerInterface {
       this.slideManager.handleSlidesUpdate(slides);
     }
   }
-
 }
 
 export const CreateEditorialManager = (slides: any[]) =>

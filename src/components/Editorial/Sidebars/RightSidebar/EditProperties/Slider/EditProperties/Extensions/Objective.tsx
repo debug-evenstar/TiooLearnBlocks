@@ -86,7 +86,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
         ],
       };
       console.log(updatedQuestion.options, "updated options");
-      manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+      manager.canvasManager.canvas.functions.deleteObjectiveOptions(
         updatedQuestion.options,
         index,
         "Slider",

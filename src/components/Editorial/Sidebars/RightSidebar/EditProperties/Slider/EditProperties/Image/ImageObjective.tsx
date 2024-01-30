@@ -50,8 +50,7 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
 
   const [isActive, setIsActive] = useState(false);
   const questionData: QuestionInterface =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
   const [question, setQuestion] = useState<QuestionInterface>();
 
   useEffect(() => {
@@ -112,7 +111,7 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
         ...question.options.slice(optionIndex + 1),
       ],
     };
-    manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+    manager.canvasManager.canvas.functions.deleteObjectiveOptions(
       updatedQuestion.options,
       0,
       "Overlay"
@@ -173,8 +172,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   const [addedOption, setAddedOption] = useState(false);
 
   const coreData =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
 
   useEffect(() => {
     setQuestion(coreData);
@@ -192,7 +190,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       handleSetOptionIndex(question.options ? question.options.length : 0)
     );
     console.log(
-      manager.canvasManager.activeComponent.data.coreData.questions,
+      manager.canvasManager.activeComponent.data.questions,
       "clicked"
     );
   };

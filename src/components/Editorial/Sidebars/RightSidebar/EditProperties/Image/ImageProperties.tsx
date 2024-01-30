@@ -23,8 +23,7 @@ const ImageProperties: FC<Props> = ({ manager }) => {
 
   const toggleOverlay =
     manager.canvasManager.activeComponent.functions?.toggleOverlay;
-  const data: any[] =
-    manager.canvasManager.activeComponent.data.coreData?.extensions;
+  const data: any[] = manager.canvasManager.activeComponent.data?.extensions;
 
   const [isActive, setIsActive] = useState(false);
   const [extensions, setExtensions] = useState<any[]>([]);

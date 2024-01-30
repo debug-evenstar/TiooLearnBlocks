@@ -32,7 +32,7 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
 
   const dispatch = useDispatch();
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
   const option: OptionInterface =
     coreData.extensions[index]?.question[0].options[
       type === "OBJECTIVE" ? optionIndex : 0
