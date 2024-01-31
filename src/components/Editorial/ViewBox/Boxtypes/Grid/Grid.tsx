@@ -12,7 +12,7 @@ interface GridProps {
 }
 
 const Grid: FC<GridProps> = ({ id, manager }) => {
-  const activeId = manager.canvasManager.canvas.states.activeViewBox;
+  const activeId = manager.states.activeViewBox;
 
   const [size, setSize] = useState<{ rows: number; cols: number } | null>(null);
   const [data, setData] = useState<any>(null);

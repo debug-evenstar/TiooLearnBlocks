@@ -14,8 +14,8 @@ interface Props {
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
-  const { objectiveIndex } = manager.canvasManager.canvas.states.optionsData;
-  const trigger = manager.canvasManager.canvas.states.trigger;
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
   const [question, setQuestion] = useState<any>();
   const [maxWidth, setMaxWidth] = useState(0);
 

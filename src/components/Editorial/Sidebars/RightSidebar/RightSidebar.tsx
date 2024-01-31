@@ -23,7 +23,7 @@ const RightSidebar: FC<Props> = ({
   manager,
 }) => {
   const isActive = manager.sidebarManager.states.rightSidebarState;
-  const { status: optionStatus } = manager.canvasManager.canvas.states.feedback;
+  const { status: optionStatus } = manager.states.feedback;
 
   useEffect(() => {
     console.log(isActive, "activee state");
