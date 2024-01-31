@@ -21,16 +21,17 @@ const Text: FC<CanvasText> = ({
   isEditable,
   setIsEditable,
 }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const activeId = canvasState.states.activeViewBox;
-  const showOptionsBox = canvasState.states.showOptionsBox;
-  const trigger = canvasState.states.trigger;
-  const { identifier, objectiveIndex } = canvasState.states.optionsData;
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
+  const trigger = manager.states.trigger;
+  const { identifier, objectiveIndex } = manager.states.optionsData;
 
-  const setIdentifier = (id: string) => {
-    canvasState.setIdentifierState(id);
-    console.log(id, "the id");
+  const setIdentifier = (identifier : string) => {
+    manager.setState("optionsData", (prev: any) => {
+      return { ...prev, ...{ identifier } };
+    });
   };
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -101,9 +102,9 @@ const Text: FC<CanvasText> = ({
     e.stopPropagation();
     handleSetObjectiveIndex(index);
     console.log(index, "clicked, option box");
-    canvasState.toggleShowOptionsBoxState();
-    canvasState.setCorrectOptionState(options[0]);
-    canvasState.setWrongOptionState(options[1]);
+    manager.toggleShowOptionsBoxState();
+    manager.setCorrectOptionState(options[0]);
+    manager.setWrongOptionState(options[1]);
   };
 
   useEffect(() => {

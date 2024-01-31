@@ -27,17 +27,17 @@ interface Props {
 }
 
 const Objective: FC<Props> = ({ manager, component }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const id = canvasState.states.activeViewBox;
-  const activeCompName = canvasState.states.slider.activeCompName;
-  const activeCompIndex = canvasState.states.slider.activeCompIndex;
+  const id = manager.states.activeViewBox;
+  const activeCompName = manager.states.slider.activeCompName;
+  const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
-  const { identifier } = canvasState.states.optionsData;
+  const { identifier } = manager.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
 
@@ -52,21 +52,21 @@ const Objective: FC<Props> = ({ manager, component }) => {
     console.log(questions, "in objective");
     replaceContent(questions, "OBJECTIVE", component, true, activeCompIndex);
     setIsActive(true);
-    canvasState.toggleShowOptionsBoxState();
-    canvasState.setObjectiveIndexState(questions.length);
-    canvasState.refreshOptionsDataState();
+    manager.toggleShowOptionsBoxState();
+    manager.setObjectiveIndexState(questions.length);
+    manager.refreshOptionsDataState();
   };
 
   const handleClick = () => {
     if (questions.length > 0) {
       replaceContent(questions, "OBJECTIVE", component, true, activeCompIndex);
       setIsActive(true);
-      canvasState.toggleShowOptionsBoxState();
-      canvasState.setObjectiveIndexState(questions.length);
-      canvasState.toggleTriggerState();
+      manager.toggleShowOptionsBoxState();
+      manager.setObjectiveIndexState(questions.length);
+      manager.toggleTriggerState();
     }
-    canvasState.setCorrectOptionState("");
-    canvasState.setWrongOptionState("");
+    manager.setCorrectOptionState("");
+    manager.setWrongOptionState("");
   };
 
   const handleDelete = (id: string, optionIndex: number, index: number = 0) => {
@@ -88,7 +88,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
         "Slider",
         activeCompIndex
       );
-      canvasState.toggleTriggerState();
+      manager.toggleTriggerState();
 
       updatedQuestions[index] = updatedQuestion;
     }
@@ -156,14 +156,14 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const { status: optionStatus, type } = canvasState.states.feedback;
+  const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(false);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
 
-  const activeCompIndex = canvasState.states.slider.activeCompIndex;
+  const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -185,7 +185,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       activeCompIndex
     );
     setAddedOption(!addedOption);
-    canvasState.setFeedbackIndexState(
+    manager.setFeedbackIndexState(
       question.options ? question.options.length : 0
     );
   };
@@ -197,13 +197,13 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    canvasState.setFeedbackTypeState("OBJECTIVE");
-    canvasState.setFeedbackIndexState(index);
-    canvasState.setFeedbackStatusState(true);
+    manager.setFeedbackTypeState("OBJECTIVE");
+    manager.setFeedbackIndexState(index);
+    manager.setFeedbackStatusState(true);
   };
 
   const handleOpenObjective = () => {
-    canvasState.setObjectiveIndexState(index);
+    manager.setObjectiveIndexState(index);
     setIsActive(!isActive);
   };
 

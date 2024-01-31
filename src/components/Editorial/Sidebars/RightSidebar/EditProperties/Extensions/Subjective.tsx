@@ -21,16 +21,16 @@ interface Props {
 }
 
 const Subjective: FC<Props> = ({ manager, component }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const id = canvasState.states.activeViewBox;
+  const id = manager.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
   const { identifier, correctOption, wrongOption } =
-    canvasState.states.optionsData;
+    manager.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
   const coreData = manager.canvasManager.activeComponent.data;
@@ -44,8 +44,8 @@ const Subjective: FC<Props> = ({ manager, component }) => {
       component
     );
     setIsActive(true);
-    canvasState.setObjectiveIndexState(questions.length);
-    canvasState.setCorrectOptionState("");
+    manager.setObjectiveIndexState(questions.length);
+    manager.setCorrectOptionState("");
   };
 
   const handleClick = () => {
@@ -57,9 +57,9 @@ const Subjective: FC<Props> = ({ manager, component }) => {
         component
       );
       setIsActive(true);
-      canvasState.setObjectiveIndexState(questions.length);
+      manager.setObjectiveIndexState(questions.length);
     }
-    canvasState.setCorrectOptionState("");
+    manager.setCorrectOptionState("");
   };
 
   const handleDelete = (id: string, index: number = 0) => {
@@ -137,14 +137,14 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [value, setValue] = useState("");
 
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const { objectiveIndex } = canvasState.states.optionsData;
+  const { objectiveIndex } = manager.states.optionsData;
   const {
     optionIndex,
     status: optionStatus,
     type,
-  } = canvasState.states.feedback;
+  } = manager.states.feedback;
 
   const coreData = manager.canvasManager.activeComponent.data;
 
@@ -162,7 +162,7 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       0
     );
     setIsEditable(false);
-    canvasState.setFeedbackStatusState(false);
+    manager.setFeedbackStatusState(false);
 
     console.log(sub, "subjective");
 
@@ -170,9 +170,9 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   };
 
   const handleShowFeedback = () => {
-    canvasState.setFeedbackTypeState("SUBJECTIVE");
-    canvasState.setFeedbackIndexState(0);
-    canvasState.setFeedbackStatusState(true);
+    manager.setFeedbackTypeState("SUBJECTIVE");
+    manager.setFeedbackIndexState(0);
+    manager.setFeedbackStatusState(true);
   };
 
   return (

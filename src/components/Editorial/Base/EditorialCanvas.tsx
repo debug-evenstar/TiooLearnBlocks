@@ -2,13 +2,6 @@ import React, { FC, createRef, useEffect, useState } from "react";
 import { EditorialCanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
-import { useDispatch } from "react-redux";
-import {
-  handleSetSidebarState,
-  handleToggleSidebarState,
-} from "provider/rightSidebarSlice";
-import { handleSetDragItems } from "provider/dragItemsSlice";
-import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { setComponentLayout } from "./EditorialManager";
 import { ComponentBaseDataInterface } from "components/interface";
@@ -31,7 +24,9 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
         { id: itemId },
       ]);
       manager.canvasManager.setActiveComponent(itemId);
-      manager.canvasManager.canvas.setState({ activeViewbox: itemId });
+      manager.setState("activeViewBox",() => {
+        return itemId
+      });
     }
   };
 
@@ -48,27 +43,16 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     const data = e.dataTransfer.getData("text/plain");
     if (!data) return;
     onDrop(data);
-    manager.sidebarManager.setState({
-      rightSidebarState: !manager.sidebarManager.states.rightSidebarState,
+    manager.setState("rightSidebarState", (prev : any) => {
+      return !prev;
     });
     manager.canvasManager.canvas.toggleOverlayActiveState();
   };
 
   const handleClickedViewbox = (id: string) => {
     manager.canvasManager.canvas.setActiveViewboxState(id);
-
-    {
-      /*
-  setState("rightSidebarState", (prev)=>{
-      return !prev;
-    });
-    setState("rightSidebarState", true);
-  */
-    }
-
     manager.canvasManager.setActiveComponent(id);
     manager.canvasManager.canvas.functions.saveActiveComponentData();
-    console.log(manager.canvasManager.canvas.states, "here in canvas");
   };
 
   const updateSlideComponents = (components: any[]) => {

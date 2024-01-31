@@ -51,14 +51,14 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     const optionsData = manager.canvasManager.canvas.states.optionsData;
 
     if (index > 0) {
-      manager.canvasManager.canvas.setState({
+      manager.setState({
         optionsData: {
           ...optionsData,
           correctOption: value,
         },
       });
     } else {
-      manager.canvasManager.canvas.setState({
+      manager.setState({
         optionsData: {
           ...optionsData,
           wrongOption: value,

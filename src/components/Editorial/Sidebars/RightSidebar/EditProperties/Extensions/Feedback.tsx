@@ -15,20 +15,20 @@ interface Props {
 }
 
 const Feedback: FC<Props> = ({ manager, type }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
   const correctRadio = useRef<HTMLInputElement | null>(null);
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
 
-  const id = canvasState.states.activeViewBox;
-  const { objectiveIndex } = canvasState.states.optionsData;
+  const id = manager.states.activeViewBox;
+  const { objectiveIndex } = manager.states.optionsData;
 
-  const { optionIndex, status } = canvasState.states.feedback;
+  const { optionIndex, status } = manager.states.feedback;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const [feedbackValue, setFeedbackValue] = useState("");
 
-  const { identifier } = canvasState.states.optionsData;
+  const { identifier } = manager.states.optionsData;
   const coreData = manager.canvasManager.activeComponent.data;
   let option: OptionInterface =
     coreData.questions[objectiveIndex]?.options[
@@ -67,7 +67,7 @@ const Feedback: FC<Props> = ({ manager, type }) => {
 
   const setFeedbackStatus = () => {
     const feedback = manager.canvasManager.canvas.states.feedback;
-    manager.canvasManager.canvas.setState({
+    manager.setState({
       feedback: {
         ...feedback,
         status: false,

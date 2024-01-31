@@ -18,9 +18,9 @@ interface Props {
 const label = { inputProps: { "aria-label": "Switch Overlay" } };
 
 const ImageProperties: FC<Props> = ({ manager }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const trigger = canvasState.states.trigger;
+  const trigger = manager.states.trigger;
 
   const toggleOverlay =
     manager.canvasManager.activeComponent.functions?.toggleOverlay;
@@ -29,7 +29,7 @@ const ImageProperties: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
   const [extensions, setExtensions] = useState<any[]>([]);
 
-  const overlayActive = canvasState.states.overlayActive;
+  const overlayActive = manager.states.overlayActive;
 
   const handleSwitchOverlay = () => {
     toggleOverlay();

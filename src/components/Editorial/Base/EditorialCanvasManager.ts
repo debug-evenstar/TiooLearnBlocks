@@ -37,9 +37,6 @@ interface States {
 
 interface CanvasInterface {
   manager: CanvasManagerInterface;
-  states: States;
-  setState: Function;
-  setStateMod: Function;
   setActiveViewboxState: Function;
   toggleOverlayActiveState: Function;
   toggleShowOptionsBoxState: Function;
@@ -103,26 +100,6 @@ class Canvas implements CanvasInterface {
     this.setData();
   }
 
-  setState(data: { [key: string]: any }) {
-    this.states = {
-      ...this.states,
-      ...data,
-    };
-  }
-
-  setStateMod(key: string, setter: any | Function) {
-    const newState: any = {};
-    if (typeof setter == "function") {
-      const state = this.states as { [stateKey: string]: any };
-      newState[key] = setter(state[key]);
-    } else {
-      newState[key] = setter;
-    }
-    this.states = {
-      ...this.states,
-      ...newState,
-    };
-  }
 
   setActiveViewboxState(id: string) {
     this.states.activeViewBox = id;

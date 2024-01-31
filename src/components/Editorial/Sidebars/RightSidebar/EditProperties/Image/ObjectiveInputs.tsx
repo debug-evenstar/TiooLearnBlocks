@@ -14,10 +14,10 @@ interface Props {
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const { objectiveIndex } = canvasState.states.optionsData;
-  const trigger = canvasState.states.trigger;
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
   const data: QuestionInterface =
     manager.canvasManager.activeComponent.data?.extensions[objectiveIndex]
       ?.question[0];
@@ -43,8 +43,8 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Overlay"
     );
-    if (index > 0) canvasState.setCorrectOptionState(value);
-    else canvasState.setWrongOptionState(value);
+    if (index > 0) manager.setCorrectOptionState(value);
+    else manager.setWrongOptionState(value);
   };
 
   return (

@@ -9,8 +9,8 @@ interface Props {
 }
 
 const SliderHeader: FC<Props> = ({ manager }) => {
-  const canvasState = manager.canvasManager.canvas;
-  const activeCompName = canvasState.states.slider.activeCompName;
+  
+  const activeCompName = manager.states.slider.activeCompName;
   const scrollableRef = useRef<HTMLElement | null>(null);
   const [isScrolledToEnd, setIsScrolledToEnd] = useState(false);
   const [isScrolledToBeginning, setIsScrolledToBeginning] = useState(false);

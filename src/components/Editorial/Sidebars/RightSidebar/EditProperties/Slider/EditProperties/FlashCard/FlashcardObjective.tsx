@@ -14,14 +14,14 @@ interface Props {
 }
 
 const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
   const addQuestion =
     manager.canvasManager.canvas.functions.updateFlashcardQuestion;
 
   const { identifier, correctOption, wrongOption } =
-    canvasState.states.optionsData;
-  const trigger = canvasState.states.trigger;
+    manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(false);
 
@@ -74,10 +74,10 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
     );
 
     setIsActive(true);
-    canvasState.toggleShowOptionsBoxState();
-    canvasState.setObjectiveIndexState(index);
-    canvasState.refreshOptionsDataState();
-    canvasState.toggleTriggerState();
+    manager.toggleShowOptionsBoxState();
+    manager.setObjectiveIndexState(index);
+    manager.refreshOptionsDataState();
+    manager.toggleTriggerState();
     console.log(data, "updated");
   };
 
@@ -97,7 +97,7 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
       0,
       "Flashcard"
     );
-    canvasState.toggleTriggerState();
+    manager.toggleTriggerState();
     console.log(id);
   };
 
@@ -141,9 +141,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const { status: optionStatus, type } = canvasState.states.feedback;
+  const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(true);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
@@ -166,7 +166,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       "Flashcard"
     );
     setAddedOption(!addedOption);
-    canvasState.setFeedbackIndexState(
+    manager.setFeedbackIndexState(
       question.options ? question.options.length : 0
     );
     console.log(
@@ -184,13 +184,13 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    canvasState.setFeedbackTypeState("OBJECTIVE");
-    canvasState.setFeedbackIndexState(index);
-    canvasState.setFeedbackStatusState(true);
+    manager.setFeedbackTypeState("OBJECTIVE");
+    manager.setFeedbackIndexState(index);
+    manager.setFeedbackStatusState(true);
   };
 
   const handleOpenObjective = () => {
-    canvasState.setObjectiveIndexState(index);
+    manager.setObjectiveIndexState(index);
     setIsActive(!isActive);
   };
 

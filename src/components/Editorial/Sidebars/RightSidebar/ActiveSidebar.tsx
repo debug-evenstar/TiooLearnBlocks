@@ -13,8 +13,8 @@ interface Props {
 }
 
 const ActiveSidebar: FC<Props> = ({ manager }) => {
-  const canvasState = manager.canvasManager.canvas;
-  const id = canvasState.states.activeViewBox;
+  
+  const id = manager.states.activeViewBox;
 
   const popHistory = () => {
     const history = manager.canvasManager.canvas.history;

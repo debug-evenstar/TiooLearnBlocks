@@ -76,8 +76,8 @@ export const EditProperties = (
 ) => {
   const componentName = getOriginalName(id);
 
-  const canvasState = manager.canvasManager.canvas;
-  const activeCompName = canvasState.states.slider.activeCompName;
+  
+  const activeCompName = manager.states.slider.activeCompName;
 
   const viewboxTypes: {
     [key: string]: JSX.Element;

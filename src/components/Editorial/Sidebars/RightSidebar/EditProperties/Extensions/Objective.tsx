@@ -27,15 +27,15 @@ interface Props {
 }
 
 const Objective: FC<Props> = ({ manager, component }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const id = canvasState.states.activeViewBox;
+  const id = manager.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
-  const { identifier } = canvasState.states.optionsData;
+  const { identifier } = manager.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
   const coreData = manager.canvasManager.activeComponent.data;
@@ -49,9 +49,9 @@ const Objective: FC<Props> = ({ manager, component }) => {
       component
     );
     setIsActive(true);
-    canvasState.toggleShowOptionsBoxState();
-    canvasState.setObjectiveIndexState(questions.length);
-    canvasState.refreshOptionsDataState();
+    manager.toggleShowOptionsBoxState();
+    manager.setObjectiveIndexState(questions.length);
+    manager.refreshOptionsDataState();
   };
 
   const handleClick = () => {
@@ -62,12 +62,12 @@ const Objective: FC<Props> = ({ manager, component }) => {
         component
       );
       setIsActive(true);
-      canvasState.toggleShowOptionsBoxState();
-      canvasState.setObjectiveIndexState(questions.length);
-      canvasState.toggleTriggerState();
+      manager.toggleShowOptionsBoxState();
+      manager.setObjectiveIndexState(questions.length);
+      manager.toggleTriggerState();
     }
-    canvasState.setCorrectOptionState("");
-    canvasState.setWrongOptionState("");
+    manager.setCorrectOptionState("");
+    manager.setWrongOptionState("");
     console.log(manager.canvasManager.activeComponent.data, "changed data");
   };
 
@@ -84,11 +84,11 @@ const Objective: FC<Props> = ({ manager, component }) => {
         ],
       };
       console.log(updatedQuestion.options, "updated options");
-      canvasState.functions.deleteObjectiveOptions(
+      manager.functions.deleteObjectiveOptions(
         updatedQuestion.options,
         index
       );
-      canvasState.toggleTriggerState();
+      manager.toggleTriggerState();
 
       updatedQuestions[index] = updatedQuestion;
     }
@@ -158,9 +158,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const { status: optionStatus, type } = canvasState.states.feedback;
+  const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(false);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
@@ -178,7 +178,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       index
     );
     setAddedOption(!addedOption);
-    canvasState.setFeedbackIndexState(
+    manager.setFeedbackIndexState(
       question.options ? question.options.length : 0
     );
     console.log(
@@ -194,13 +194,13 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    canvasState.setFeedbackTypeState("OBJECTIVE");
-    canvasState.setFeedbackIndexState(index);
-    canvasState.setFeedbackStatusState(true);
+    manager.setFeedbackTypeState("OBJECTIVE");
+    manager.setFeedbackIndexState(index);
+    manager.setFeedbackStatusState(true);
   };
 
   const handleOpenObjective = () => {
-    canvasState.setObjectiveIndexState(index);
+    manager.setObjectiveIndexState(index);
     setIsActive(!isActive);
   };
 

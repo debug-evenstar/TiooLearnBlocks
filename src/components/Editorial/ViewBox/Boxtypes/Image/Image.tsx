@@ -21,11 +21,11 @@ import {
 import "react-resizable/css/styles.css";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const activeId = canvasState.states.activeViewBox;
-  const showOptionsBox = canvasState.states.showOptionsBox;
-  const overlayActive = canvasState.states.overlayActive;
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
+  const overlayActive = manager.states.overlayActive;
 
   const [previewImage, setPreviewImage] = useState("");
   const [data, setData] = useState<any>();
@@ -81,7 +81,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     };
 
     manager.canvasManager.activeComponent.functions["toggleOverlay"] = () => {
-      canvasState.toggleOverlayActiveState();
+      manager.toggleOverlayActiveState();
     };
   }, [manager, viewBoxRef]);
 
@@ -114,7 +114,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
           extensions: newList,
         })
       );
-      canvasState.toggleTriggerState();
+      manager.toggleTriggerState();
       console.log(
         manager.canvasManager.activeComponent.data.extensions,
         "updated data"
@@ -143,9 +143,9 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
 
   const handleClickedInput = (input: any, index: number) => {
     if (input?.question[0] && input.question[0]?.type === "OBJECTIVE") {
-      canvasState.toggleShowOptionsBoxState();
+      manager.toggleShowOptionsBoxState();
     }
-    canvasState.setObjectiveIndexState(index);
+    manager.setObjectiveIndexState(index);
   };
 
   return (

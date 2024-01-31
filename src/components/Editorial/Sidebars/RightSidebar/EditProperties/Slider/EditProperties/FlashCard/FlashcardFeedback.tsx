@@ -19,10 +19,10 @@ const FlashcardFeedback: FC<Props> = ({ manager, type, index }) => {
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
 
-  const canvasState = manager.canvasManager.canvas;
-  const { objectiveIndex } = canvasState.states.optionsData;
+  
+  const { objectiveIndex } = manager.states.optionsData;
 
-  const { optionIndex } = canvasState.states.feedback;
+  const { optionIndex } = manager.states.feedback;
 
   const [feedbackValue, setFeedbackValue] = useState("");
 
@@ -47,7 +47,7 @@ const FlashcardFeedback: FC<Props> = ({ manager, type, index }) => {
       optionIndex,
       "Flashcard"
     );
-    canvasState.setFeedbackStatusState(false);
+    manager.setFeedbackStatusState(false);
   };
 
   const handleChangeType = (type: string) => {
@@ -79,7 +79,7 @@ const FlashcardFeedback: FC<Props> = ({ manager, type, index }) => {
         <p>Set Feedback</p>
         <RiCloseLine
           size={15}
-          onClick={canvasState.setFeedbackStatusState(false)}
+          onClick={manager.setFeedbackStatusState(false)}
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">

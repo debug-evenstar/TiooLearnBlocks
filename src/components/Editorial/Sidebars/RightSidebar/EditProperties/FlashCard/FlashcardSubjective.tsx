@@ -27,10 +27,10 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
   const addQuestion =
     manager.canvasManager.canvas.functions.updateFlashcardQuestion;
 
-  const canvasState = manager.canvasManager.canvas;
+  
   const { identifier, correctOption, wrongOption } =
-    canvasState.states.optionsData;
-  const trigger = canvasState.states.trigger;
+    manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(true);
 
@@ -81,8 +81,8 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
       index
     );
     setIsActive(true);
-    canvasState.setObjectiveIndexState(index);
-    canvasState.refreshOptionsDataState();
+    manager.setObjectiveIndexState(index);
+    manager.refreshOptionsDataState();
     console.log(data, "updated");
   };
 
@@ -91,7 +91,7 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
       null,
       "Flashcard"
     );
-    canvasState.toggleTriggerState();
+    manager.toggleTriggerState();
     setQuestion(data.question);
   };
 
@@ -134,14 +134,14 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [showAI, setShowAI] = useState(false);
   const [value, setValue] = useState("");
 
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const { objectiveIndex } = canvasState.states.optionsData;
+  const { objectiveIndex } = manager.states.optionsData;
   const {
     optionIndex,
     status: optionStatus,
     type,
-  } = canvasState.states.feedback;
+  } = manager.states.feedback;
 
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -165,16 +165,16 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       "Flashcard"
     );
     setIsEditable(false);
-    canvasState.setFeedbackStatusState(false);
+    manager.setFeedbackStatusState(false);
     console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);
   };
 
   const handleShowFeedback = () => {
-    canvasState.setFeedbackTypeState("SUBJECTIVE");
-    canvasState.setFeedbackIndexState(0);
-    canvasState.setFeedbackStatusState(true);
+    manager.setFeedbackTypeState("SUBJECTIVE");
+    manager.setFeedbackIndexState(0);
+    manager.setFeedbackStatusState(true);
   };
 
   return (

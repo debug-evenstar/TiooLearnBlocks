@@ -14,10 +14,10 @@ interface Props {
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const { objectiveIndex } = canvasState.states.optionsData;
-  const trigger = canvasState.states.trigger;
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
   const data: QuestionInterface =
     manager.canvasManager.activeComponent.data?.extensions[objectiveIndex]
       ?.question[0];
@@ -46,14 +46,14 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     const optionsData = manager.canvasManager.canvas.states.optionsData;
 
     if (index > 0) {
-      manager.canvasManager.canvas.setState({
+      manager.setState({
         optionsData: {
           ...optionsData,
           correctOption: value,
         },
       });
     } else {
-      manager.canvasManager.canvas.setState({
+      manager.setState({
         optionsData: {
           ...optionsData,
           wrongOption: value,

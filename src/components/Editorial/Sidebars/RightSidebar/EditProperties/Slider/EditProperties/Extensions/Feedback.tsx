@@ -15,20 +15,20 @@ interface Props {
 }
 
 const Feedback: FC<Props> = ({ manager, type }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
 
-  const id = canvasState.states.activeViewBox;
-  const { objectiveIndex } = canvasState.states.optionsData;
+  const id = manager.states.activeViewBox;
+  const { objectiveIndex } = manager.states.optionsData;
 
-  const { optionIndex, status } = canvasState.states.feedback;
+  const { optionIndex, status } = manager.states.feedback;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const [feedbackValue, setFeedbackValue] = useState("");
 
-  const { identifier } = canvasState.states.optionsData;
-  const activeCompIndex = canvasState.states.slider.activeCompIndex;
+  const { identifier } = manager.states.optionsData;
+  const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -73,7 +73,7 @@ const Feedback: FC<Props> = ({ manager, type }) => {
       "Slider",
       activeCompIndex
     );
-    canvasState.setFeedbackStatusState(false);
+    manager.setFeedbackStatusState(false);
   };
 
   const handleChangeType = (type: string) => {
@@ -118,7 +118,7 @@ const Feedback: FC<Props> = ({ manager, type }) => {
         <p>Set Feedback</p>
         <RiCloseLine
           size={15}
-          onClick={canvasState.setFeedbackStatusState(false)}
+          onClick={manager.setFeedbackStatusState(false)}
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">

@@ -16,9 +16,9 @@ interface Props {
 }
 
 const AddImages: FC<Props> = ({ id, manager }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const trigger = canvasState.states.trigger;
+  const trigger = manager.states.trigger;
   const [images, setImages] = useState<any[]>([{ url: "" }]);
   const coreData = manager.canvasManager.activeComponent.data;
 
@@ -37,7 +37,7 @@ const AddImages: FC<Props> = ({ id, manager }) => {
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
-      canvasState.toggleTriggerState();
+      manager.toggleTriggerState();
       console.log(cards, "Updated Cards");
       console.log(coreData, "added");
     }

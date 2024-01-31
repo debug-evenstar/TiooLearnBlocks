@@ -110,6 +110,7 @@ export interface EditorialManagerInterface {
   canvasManager: CanvasManagerInterface;
   slideManager: EditorialSlideManagerInterface;
   states: States;
+  setState : Function;
 }
 
 class EditorialManager implements EditorialManagerInterface {

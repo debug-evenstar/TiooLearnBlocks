@@ -21,9 +21,9 @@ interface Props {
 }
 
 const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
-  const canvasState = manager.canvasManager.canvas;
-  const activeId = canvasState.states.activeViewBox;
-  const showOptionsBox = canvasState.states.showOptionsBox;
+  
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
 
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,

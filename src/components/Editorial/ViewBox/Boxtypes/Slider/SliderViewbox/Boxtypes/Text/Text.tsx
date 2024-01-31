@@ -22,15 +22,15 @@ const Text: FC<CanvasText> = ({
   setIsEditable,
   data,
 }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const activeId = canvasState.states.activeViewBox;
-  const showOptionsBox = canvasState.states.showOptionsBox;
-  const trigger = canvasState.states.trigger;
-  const { identifier, objectiveIndex } = canvasState.states.optionsData;
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
+  const trigger = manager.states.trigger;
+  const { identifier, objectiveIndex } = manager.states.optionsData;
 
   const setIdentifier = (id: string) => {
-    canvasState.setIdentifierState(id);
+    manager.set
     console.log(id, "the id");
   };
 
@@ -88,7 +88,7 @@ const Text: FC<CanvasText> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const activeCompIndex = canvasState.states.slider.activeCompIndex;
+  const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -104,9 +104,9 @@ const Text: FC<CanvasText> = ({
     e.stopPropagation();
     console.log("just clicked on the objective");
     handleSetObjectiveIndex(index);
-    canvasState.toggleShowOptionsBoxState();
-    canvasState.setCorrectOptionState(options[0]);
-    canvasState.setWrongOptionState(options[1]);
+    manager.toggleShowOptionsBoxState();
+    manager.setCorrectOptionState(options[0]);
+    manager.setWrongOptionState(options[1]);
   };
 
   useEffect(() => {

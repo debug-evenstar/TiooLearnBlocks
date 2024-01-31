@@ -16,10 +16,10 @@ interface Props {
 }
 
 const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const { objectiveIndex } = canvasState.states.optionsData;
-  const trigger = canvasState.states.trigger;
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const data: QuestionInterface =
@@ -62,8 +62,8 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Flashcard"
     );
-    if (index > 0) canvasState.setCorrectOptionState(value);
-    else canvasState.setWrongOptionState(value);
+    if (index > 0) manager.setCorrectOptionState(value);
+    else manager.setWrongOptionState(value);
   };
 
   const [widestInputWidth, setWidestInputWidth] = useState(0);

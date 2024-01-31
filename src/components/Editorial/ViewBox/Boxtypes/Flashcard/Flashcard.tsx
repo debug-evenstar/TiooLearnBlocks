@@ -14,10 +14,10 @@ import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
 import { getOriginalName } from "../../handler";
 
 const Flashcard: FC<any> = ({ id, manager, image, index }) => {
-  const canvasState = manager.canvasManager.canvas;
+  
 
-  const activeId = canvasState.states.activeViewBox;
-  const showOptionsBox = canvasState.states.showOptionsBox;
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
 
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
@@ -88,7 +88,7 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const trigger = canvasState.states.trigger;
+  const trigger = manager.states.trigger;
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const cardData =
     getOriginalName(id) === "Flash Card"
@@ -103,7 +103,7 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
 
   useEffect(() => {
     console.log(cardsIndex, cardData, "card data");
-    canvasState.setObjectiveIndexState(index);
+    manager.setObjectiveIndexState(index);
     const question: QuestionInterface | null = cardData?.question
       ? cardData.question
       : null;
