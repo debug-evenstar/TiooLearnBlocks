@@ -52,7 +52,12 @@ const Objective: FC<Props> = ({ manager, component }) => {
     setIsActive(true);
     manager.setState("showOptionsBox" , (prev : any) => !prev);
     manager.setObjectiveIndexState(questions.length);
-    manager.refreshOptionsDataState();
+        manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: 0,
+    });
   };
 
   const handleClick = () => {

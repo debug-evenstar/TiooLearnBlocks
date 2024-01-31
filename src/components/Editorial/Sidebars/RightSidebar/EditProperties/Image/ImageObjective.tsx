@@ -88,7 +88,12 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
     setIsActive(true);
     manager.setState("showOptionsBox" , (prev : any) => !prev);
     manager.setObjectiveIndexState(index);
-    manager.refreshOptionsDataState();
+        manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: 0,
+    });
     console.log(data, "updated");
   };
 

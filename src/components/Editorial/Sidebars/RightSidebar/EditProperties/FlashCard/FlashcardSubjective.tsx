@@ -82,7 +82,12 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
     );
     setIsActive(true);
     manager.setObjectiveIndexState(index);
-    manager.refreshOptionsDataState();
+        manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: 0,
+    });
     console.log(data, "updated");
   };
 
