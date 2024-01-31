@@ -66,12 +66,8 @@ const Feedback: FC<Props> = ({ manager, type }) => {
   };
 
   const setFeedbackStatus = () => {
-    const feedback = manager.canvasManager.canvas.states.feedback;
-    manager.setState({
-      feedback: {
-        ...feedback,
-        status: false,
-      },
+    manager.setState("feedback", (feedback : any) => {
+      return { ...feedback, ...{ status : true}};
     });
   };
 

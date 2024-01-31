@@ -24,9 +24,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
         { id: itemId },
       ]);
       manager.canvasManager.setActiveComponent(itemId);
-      manager.setState("activeViewBox",() => {
-        return itemId
-      });
+      manager.setState("activeViewBox", itemId);
     }
   };
 

@@ -1,12 +1,6 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { resizeInputWidth } from "components/Editorial/ViewBox/handler";
 import { QuestionInterface } from "components/interface";
-import {
-  handleSetCorrectOption,
-  handleSetWrongOption,
-} from "provider/optionsDataSlice";
-import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import { FC, createRef, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,21 +56,14 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Flashcard"
     );
-    const optionsData = manager.canvasManager.canvas.states.optionsData;
-
+    
     if (index > 0) {
-      manager.setState({
-        optionsData: {
-          ...optionsData,
-          correctOption: value,
-        },
+      manager.setState("optionsData", (optionsData : any) => {
+        return { ...optionsData, ...{ correctOption : value}};
       });
     } else {
-      manager.setState({
-        optionsData: {
-          ...optionsData,
-          wrongOption: value,
-        },
+      manager.setState("optionsData", (optionsData : any) => {
+        return { ...optionsData, ...{ wrongOption : value}};
       });
     }
   };
