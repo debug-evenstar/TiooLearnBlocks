@@ -3,6 +3,7 @@ import {
   DataGroupInterface,
   EditorialManagerInterface,
 } from "./EditorialManager";
+import { ActiveViewBoxState, FeedbackState, OptionsDataState, OverlayActiveState, ShowOptionsBoxState, SliderState, TriggerState } from "./StateInterface";
 
 const DataGroup: DataGroupInterface = {
   data: {},
@@ -14,25 +15,13 @@ const DataGroup: DataGroupInterface = {
 /* -------------------------------------------------------------------------- */
 
 interface States {
-  activeViewBox: string;
-  feedback: {
-    optionIndex: number;
-    status: boolean;
-    type: "OBJECTIVE" | "SUBJECTIVE";
-  };
-  optionsData: {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-    objectiveIndex: number;
-  };
-  overlayActive: boolean;
-  showOptionsBox: boolean;
-  slider: {
-    activeCompName: string;
-    activeCompIndex: number;
-  };
-  trigger: boolean;
+  activeViewBox: ActiveViewBoxState;
+  feedback: FeedbackState;
+  optionsData: OptionsDataState;
+  overlayActive: OverlayActiveState;
+  showOptionsBox: ShowOptionsBoxState;
+  slider: SliderState;
+  trigger: TriggerState;
 }
 
 interface CanvasInterface {
