@@ -10,6 +10,7 @@ import {
 } from "provider/sliderSlice";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
+import { SliderState } from "components/Editorial/Base/StateInterface";
 
 interface SliderProps {
   id: string;
@@ -17,8 +18,6 @@ interface SliderProps {
 }
 
 const Slider: FC<SliderProps> = ({ id, manager }) => {
-  
-
   const trigger = manager.states.trigger;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEditable, setIsEditable] = useState(true);
@@ -54,11 +53,23 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
     componentData && setSlides(componentData.slides);
     console.log(componentData.slides, "here are the slides");
     slides.length > 0 &&
-      manager.setActiveCompNameState(
-        slides[currentImageIndex][0]?.component
-      );
+      manager.setState("slider", (prev: SliderState) => {
+        return {
+          ...prev,
+          ...({
+            activeCompName: slides[currentImageIndex][0]?.component,
+          } as SliderState),
+        };
+      });
 
-    manager.setActiveCompIndexState(currentImageIndex);
+    manager.setState("slider", (prev: SliderState) => {
+      return {
+        ...prev,
+        ...({
+          activeCompIndex: currentImageIndex,
+        } as SliderState),
+      };
+    });
     console.log(slides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
@@ -78,13 +89,18 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   }, [isEditable, sliderRef]);
 
   useEffect(() => {
-    manager.setActiveCompNameState(
-      manager.canvasManager.canvas.functions.getComponentData(id).slides[
-        currentImageIndex
-      ][0]?.component
-    );
-
-    manager.setActiveCompIndexState(currentImageIndex);
+    manager.setState("slider", (prev: SliderState) => {
+      return {
+        ...prev,
+        ...({
+          activeCompName:
+            manager.canvasManager.canvas.functions.getComponentData(id).slides[
+              currentImageIndex
+            ][0]?.component,
+          activeCompIndex: currentImageIndex,
+        } as SliderState),
+      };
+    });
   }, [currentImageIndex]);
 
   return (

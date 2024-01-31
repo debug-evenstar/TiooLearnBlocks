@@ -14,8 +14,6 @@ import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
 import { getOriginalName } from "../../handler";
 
 const Flashcard: FC<any> = ({ id, manager, image, index }) => {
-  
-
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
 
@@ -103,7 +101,9 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
 
   useEffect(() => {
     console.log(cardsIndex, cardData, "card data");
-    manager.setObjectiveIndexState(index);
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     const question: QuestionInterface | null = cardData?.question
       ? cardData.question
       : null;

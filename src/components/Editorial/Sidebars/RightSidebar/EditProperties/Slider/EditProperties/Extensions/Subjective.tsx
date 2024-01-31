@@ -21,8 +21,6 @@ interface Props {
 }
 
 const Subjective: FC<Props> = ({ manager, component }) => {
-  
-
   const id = manager.states.activeViewBox;
   const activeCompName = manager.states.slider.activeCompName;
   const activeCompIndex = manager.states.slider.activeCompIndex;
@@ -31,8 +29,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
-  const { identifier, correctOption, wrongOption } =
-    manager.states.optionsData;
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
@@ -134,14 +131,8 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [value, setValue] = useState("");
 
-  
-
   const { objectiveIndex } = manager.states.optionsData;
-  const {
-    optionIndex,
-    status: optionStatus,
-    type,
-  } = manager.states.feedback;
+  const { optionIndex, status: optionStatus, type } = manager.states.feedback;
   const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
@@ -175,9 +166,16 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   };
 
   const handleShowFeedback = () => {
-    manager.setFeedbackTypeState("SUBJECTIVE");
-    manager.setFeedbackIndexState(0);
-    manager.setFeedbackStatusState(true);
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "SUBJECTIVE",
+          optionIndex: 0,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   return (

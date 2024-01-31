@@ -81,7 +81,9 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
       index
     );
     setIsActive(true);
-    manager.setObjectiveIndexState(index);
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
+    })
     manager.refreshOptionsDataState();
     console.log(data, "updated");
   };
@@ -172,9 +174,16 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   };
 
   const handleShowFeedback = () => {
-    manager.setFeedbackTypeState("SUBJECTIVE");
-    manager.setFeedbackIndexState(0);
-    manager.setFeedbackStatusState(true);
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "SUBJECTIVE",
+          optionIndex: 0,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   return (

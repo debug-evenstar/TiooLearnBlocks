@@ -143,7 +143,9 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     if (input?.question[0] && input.question[0]?.type === "OBJECTIVE") {
       manager.setState("showOptionsBox" , (prev : any) => !prev);
     }
-    manager.setObjectiveIndexState(index);
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
+    })
   };
 
   return (
