@@ -173,7 +173,9 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       "Flashcard"
     );
     setIsEditable(false);
-    manager.setFeedbackStatusState(false);
+    manager.setState("feedback", ((prev: FeedbackState) => {
+      return {...prev, ...{status: false} as FeedbackState}
+    }))
     console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);
