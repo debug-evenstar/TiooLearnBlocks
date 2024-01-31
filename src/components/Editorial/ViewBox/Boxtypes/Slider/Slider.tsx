@@ -52,14 +52,6 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
     const componentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
     componentData && setSlides(componentData.slides);
-    console.log(componentData.slides, "here are the slides");
-    slides.length > 0 &&
-      manager.setActiveCompNameState(
-        slides[currentImageIndex][0]?.component
-      );
-
-    manager.setActiveCompIndexState(currentImageIndex);
-    console.log(slides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
@@ -77,15 +69,6 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditable, sliderRef]);
 
-  useEffect(() => {
-    manager.setActiveCompNameState(
-      manager.canvasManager.canvas.functions.getComponentData(id).slides[
-        currentImageIndex
-      ][0]?.component
-    );
-
-    manager.setActiveCompIndexState(currentImageIndex);
-  }, [currentImageIndex]);
 
   return (
     <div className="flex items-center gap-2">
