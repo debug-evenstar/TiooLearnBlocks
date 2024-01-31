@@ -22,16 +22,15 @@ const Text: FC<CanvasText> = ({
   setIsEditable,
   data,
 }) => {
-  
-
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
   const trigger = manager.states.trigger;
   const { identifier, objectiveIndex } = manager.states.optionsData;
 
   const setIdentifier = (id: string) => {
-    manager.set
-    console.log(id, "the id");
+    manager.setState("optionsData", (prev: any) => {
+      return { ...prev, ...{ identifier: id } };
+    });
   };
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -104,7 +103,7 @@ const Text: FC<CanvasText> = ({
     e.stopPropagation();
     console.log("just clicked on the objective");
     handleSetObjectiveIndex(index);
-    manager.setState("showOptionsBox" , (prev : any) => !prev);
+    manager.setState("showOptionsBox", (prev: any) => !prev);
     manager.setCorrectOptionState(options[0]);
     manager.setWrongOptionState(options[1]);
   };

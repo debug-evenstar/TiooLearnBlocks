@@ -27,8 +27,6 @@ interface Props {
 }
 
 const Objective: FC<Props> = ({ manager, component }) => {
-  
-
   const id = manager.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
@@ -158,8 +156,6 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  
-
   const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(false);
   const [question, setQuestion] = useState<any>();

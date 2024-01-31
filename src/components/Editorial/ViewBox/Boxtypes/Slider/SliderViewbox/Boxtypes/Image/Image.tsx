@@ -27,8 +27,6 @@ const Image: FC<CanvasMedia> = ({
   data,
   currIndex,
 }) => {
-  
-
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
   const overlayActive = manager.states.overlayActive;

@@ -21,8 +21,6 @@ import {
 import "react-resizable/css/styles.css";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
-  
-
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
   const overlayActive = manager.states.overlayActive;

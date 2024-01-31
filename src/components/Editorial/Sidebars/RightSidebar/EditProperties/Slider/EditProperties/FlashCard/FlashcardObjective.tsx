@@ -14,13 +14,10 @@ interface Props {
 }
 
 const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
-  
-
   const addQuestion =
     manager.canvasManager.canvas.functions.updateFlashcardQuestion;
 
-  const { identifier, correctOption, wrongOption } =
-    manager.states.optionsData;
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
   const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(false);
@@ -141,8 +138,6 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  
-
   const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(true);
   const [question, setQuestion] = useState<any>();

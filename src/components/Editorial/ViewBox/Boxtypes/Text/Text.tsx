@@ -21,14 +21,12 @@ const Text: FC<CanvasText> = ({
   isEditable,
   setIsEditable,
 }) => {
-  
-
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
   const trigger = manager.states.trigger;
   const { identifier, objectiveIndex } = manager.states.optionsData;
 
-  const setIdentifier = (identifier : string) => {
+  const setIdentifier = (identifier: string) => {
     manager.setState("optionsData", (prev: any) => {
       return { ...prev, ...{ identifier } };
     });
@@ -102,7 +100,7 @@ const Text: FC<CanvasText> = ({
     e.stopPropagation();
     handleSetObjectiveIndex(index);
     console.log(index, "clicked, option box");
-    manager.setState("showOptionsBox" , (prev : any) => !prev);
+    manager.setState("showOptionsBox", (prev: any) => !prev);
     manager.setCorrectOptionState(options[0]);
     manager.setWrongOptionState(options[1]);
   };
