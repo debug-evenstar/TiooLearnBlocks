@@ -52,7 +52,8 @@ const Objective: FC<Props> = ({ manager, component }) => {
     replaceContent(questions, "OBJECTIVE", component, true, activeCompIndex);
     setIsActive(true);
     manager.setState("showOptionsBox" , (prev : any) => !prev);
-    manager.setObjectiveIndexState(questions.length);
+        // Verify the states being set
+    // manager.setObjectiveIndexState(questions.length);
         manager.setState("optionsData", {
       identifier: "",
       correctOption: "",
