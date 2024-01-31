@@ -14,7 +14,7 @@ import {
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
 import { QuestionInterface } from "components/interface";
-import { FeedbackState } from "components/Editorial/Base/StateInterface";
+import { FeedbackState, OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -42,12 +42,13 @@ const Subjective: FC<Props> = ({ manager, component }) => {
       component
     );
     setIsActive(true);
-    manager.setObjectiveIndexState(questions.length);
-    manager.setCorrectOptionState("");
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ objectiveIndex : questions.length, correctOption : ""}) as OptionsDataState
+    }));
   };
 
   const handleClick = () => {
-    console.log(manager.canvasManager.activeComponent.data, "changed data");
     if (questions.length > 0) {
       replaceContent(
         coreData?.questions ? coreData.questions : [],
@@ -55,9 +56,14 @@ const Subjective: FC<Props> = ({ manager, component }) => {
         component
       );
       setIsActive(true);
-      manager.setObjectiveIndexState(questions.length);
+
     }
-    manager.setCorrectOptionState("");
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        objectiveIndex : questions.length > 0 ? questions.length : prev.objectiveIndex, 
+        correctOption : ""}) as OptionsDataState
+    }));
   };
 
   const handleDelete = (id: string, index: number = 0) => {

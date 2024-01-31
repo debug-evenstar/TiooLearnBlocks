@@ -1,4 +1,5 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 import { resizeInputWidth } from "components/Editorial/ViewBox/handler";
 import { QuestionInterface } from "components/interface";
 import {
@@ -62,8 +63,13 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Flashcard"
     );
-    if (index > 0) manager.setCorrectOptionState(value);
-    else manager.setWrongOptionState(value);
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        wrongOption : index <= 0 ? value : prev.wrongOption,
+        correctOption : index > 0 ? value : prev.correctOption
+      }) as OptionsDataState
+    }));
   };
 
   const [widestInputWidth, setWidestInputWidth] = useState(0);

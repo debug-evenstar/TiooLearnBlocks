@@ -20,6 +20,7 @@ import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -66,11 +67,16 @@ const Objective: FC<Props> = ({ manager, component }) => {
       );
       setIsActive(true);
       manager.setState("showOptionsBox" , (prev : any) => !prev);
-      manager.setObjectiveIndexState(questions.length);
+      manager.setState("optionsData", (prev : OptionsDataState) => ({
+        ...prev,
+        ...({ objectiveIndex : questions.length}) as OptionsDataState
+      }));
       manager.setState("trigger" , (prev : any) => !prev);
     }
-    manager.setCorrectOptionState("");
-    manager.setWrongOptionState("");
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ correctOption : "", wrongOption : ""}) as OptionsDataState
+    }));
     console.log(manager.canvasManager.activeComponent.data, "changed data");
   };
 
