@@ -16,14 +16,10 @@ interface Props {
 }
 
 const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  const canvasState = manager.canvasManager.canvas;
+
+  const { objectiveIndex } = canvasState.states.optionsData;
+  const trigger = canvasState.states.trigger;
 
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const data: QuestionInterface =
@@ -66,8 +62,23 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Flashcard"
     );
-    if (index > 0) dispatch(handleSetCorrectOption(value));
-    else dispatch(handleSetWrongOption(value));
+    const optionsData = manager.canvasManager.canvas.states.optionsData;
+
+    if (index > 0) {
+      manager.canvasManager.canvas.setState({
+        optionsData: {
+          ...optionsData,
+          correctOption: value,
+        },
+      });
+    } else {
+      manager.canvasManager.canvas.setState({
+        optionsData: {
+          ...optionsData,
+          wrongOption: value,
+        },
+      });
+    }
   };
 
   const [widestInputWidth, setWidestInputWidth] = useState(0);

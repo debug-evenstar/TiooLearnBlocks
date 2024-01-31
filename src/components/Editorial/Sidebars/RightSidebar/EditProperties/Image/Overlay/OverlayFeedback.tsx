@@ -18,19 +18,12 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
 
-  const selector: any = useSelector(handleSetCorrectOption);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const canvasState = manager.canvasManager.canvas;
+  const { objectiveIndex } = canvasState.states.optionsData;
 
-  const { optionIndex } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-  };
+  const { optionIndex } = canvasState.states.feedback;
 
   const [feedbackValue, setFeedbackValue] = useState("");
-
-  const dispatch = useDispatch();
 
   const coreData = manager.canvasManager.activeComponent.data;
   const option: OptionInterface =
@@ -51,7 +44,7 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
       optionIndex,
       "Overlay"
     );
-    dispatch(handleSetFeedbackStatus(false));
+    canvasState.setFeedbackStatusState(false);
   };
 
   const handleChangeType = (type: string) => {
@@ -83,7 +76,7 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
         <p>Set Feedback</p>
         <RiCloseLine
           size={15}
-          onClick={() => dispatch(handleSetFeedbackStatus(false))}
+          onClick={canvasState.setFeedbackStatusState(false)}
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">

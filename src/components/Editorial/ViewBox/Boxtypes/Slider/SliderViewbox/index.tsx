@@ -32,9 +32,10 @@ const FlashcardViewBox: FC<Props> = ({
   isFlashcardDraggable,
   setIsFlashcardDraggable,
 }) => {
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+  const canvasState = manager.canvasManager.canvas;
+
+  const activeId = canvasState.states.activeViewBox;
+  const showOptionsBox = canvasState.states.showOptionsBox;
 
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,

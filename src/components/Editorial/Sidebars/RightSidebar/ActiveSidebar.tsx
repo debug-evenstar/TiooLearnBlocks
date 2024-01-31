@@ -13,17 +13,21 @@ interface Props {
 }
 
 const ActiveSidebar: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const id: string = selector.payload.activeViewbox.value;
+  const canvasState = manager.canvasManager.canvas;
+  const id = canvasState.states.activeViewBox;
+
   const popHistory = () => {
     const history = manager.canvasManager.canvas.history;
-    if(history.length){
+    if (history.length) {
       const previousState = history[history.length - 1];
       manager.slideManager.handleSlidesUpdate(previousState);
       manager.canvasManager.canvas.history.pop();
     }
-  }
+  };
+
+  const handleRefreshToggleSidebarState = manager.sidebarManager.setState({
+    rightSidebarState: false,
+  });
 
   return (
     <div className="w-full h-full overflow-y-visible pt-5 pb-20">
@@ -31,7 +35,7 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
         <div className="h-fit flex gap-2">
           <BsArrowLeft
             className="self-center cursor-pointer"
-            onClick={() => dispatch(refreshToggleSidebarState())}
+            onClick={handleRefreshToggleSidebarState}
           />
           <p className="flex item-center text-[14px] text-[#87909E] font-medium self-center">
             Components
@@ -51,7 +55,7 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
         <section className="w-full flex justify-between py-4">
           <div className="flex gap-4">
             <MdUndo className="cursor-pointer" onClick={() => popHistory()} />
-            <MdRedo className="cursor-pointer" onClick={()=>{}}/>
+            <MdRedo className="cursor-pointer" onClick={() => {}} />
           </div>
           <div className="flex gap-4 bg-[#E6E6FA] p-2 rounded-full">
             <BsPencil />

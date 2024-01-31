@@ -15,27 +15,20 @@ interface Props {
 }
 
 const Feedback: FC<Props> = ({ manager, type }) => {
+  const canvasState = manager.canvasManager.canvas;
+
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
 
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const id = canvasState.states.activeViewBox;
+  const { objectiveIndex } = canvasState.states.optionsData;
 
-  const { optionIndex, status } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-  };
+  const { optionIndex, status } = canvasState.states.feedback;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const [feedbackValue, setFeedbackValue] = useState("");
 
-  const dispatch = useDispatch();
-  const { identifier } = selector.payload.optionsData.value as {
-    identifier: string;
-  };
-  const activeCompIndex = selector.payload.slider.value.activeCompIndex;
+  const { identifier } = canvasState.states.optionsData;
+  const activeCompIndex = canvasState.states.slider.activeCompIndex;
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -80,7 +73,7 @@ const Feedback: FC<Props> = ({ manager, type }) => {
       "Slider",
       activeCompIndex
     );
-    dispatch(handleSetFeedbackStatus(false));
+    canvasState.setFeedbackStatusState(false);
   };
 
   const handleChangeType = (type: string) => {
@@ -125,7 +118,7 @@ const Feedback: FC<Props> = ({ manager, type }) => {
         <p>Set Feedback</p>
         <RiCloseLine
           size={15}
-          onClick={() => dispatch(handleSetFeedbackStatus(false))}
+          onClick={canvasState.setFeedbackStatusState(false)}
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">

@@ -17,9 +17,9 @@ interface SliderProps {
 }
 
 const Slider: FC<SliderProps> = ({ id, manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleToggleTrigger);
-  const trigger: boolean = selector.payload.trigger.value;
+  const canvasState = manager.canvasManager.canvas;
+
+  const trigger = canvasState.states.trigger;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEditable, setIsEditable] = useState(true);
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -54,10 +54,11 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
     componentData && setSlides(componentData.slides);
     console.log(componentData.slides, "here are the slides");
     slides.length > 0 &&
-      dispatch(
-        handleSetActiveCompName(slides[currentImageIndex][0]?.component)
+      canvasState.setActiveCompNameState(
+        slides[currentImageIndex][0]?.component
       );
-    dispatch(handleSetActiveCompIndex(currentImageIndex));
+
+    canvasState.setActiveCompIndexState(currentImageIndex);
     console.log(slides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
@@ -77,14 +78,13 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   }, [isEditable, sliderRef]);
 
   useEffect(() => {
-    dispatch(
-      handleSetActiveCompName(
-        manager.canvasManager.canvas.functions.getComponentData(id).slides[
-          currentImageIndex
-        ][0]?.component
-      )
+    canvasState.setActiveCompNameState(
+      manager.canvasManager.canvas.functions.getComponentData(id).slides[
+        currentImageIndex
+      ][0]?.component
     );
-    dispatch(handleSetActiveCompIndex(currentImageIndex));
+
+    canvasState.setActiveCompIndexState(currentImageIndex);
   }, [currentImageIndex]);
 
   return (

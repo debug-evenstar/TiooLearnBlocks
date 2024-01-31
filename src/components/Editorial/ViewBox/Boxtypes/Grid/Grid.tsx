@@ -12,8 +12,7 @@ interface GridProps {
 }
 
 const Grid: FC<GridProps> = ({ id, manager }) => {
-  const selector: any = useSelector(handleToggleSidebarState);
-  const activeId = selector.payload.activeViewbox.value;
+  const activeId = manager.canvasManager.canvas.states.activeViewBox;
 
   const [size, setSize] = useState<{ rows: number; cols: number } | null>(null);
   const [data, setData] = useState<any>(null);

@@ -36,7 +36,6 @@ function App() {
     ],
   };
 
-  const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
   const [date, setDate] = useState<any>();
   const fetchLess = async () => {
@@ -50,7 +49,6 @@ function App() {
   };
   useEffect(() => {
     fetchLess();
-    dispatch(refreshToggleSidebarState());
   }, []);
 
   const handleBack = () => {

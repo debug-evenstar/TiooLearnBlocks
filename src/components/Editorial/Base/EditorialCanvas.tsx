@@ -19,28 +19,24 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
   manager,
 }) => {
-  const dispatch = useDispatch();
   const [slideComponents, setSlideComponents] = useState<any[]>([]);
   const onDrop = (id: string) => {
     const existingClone = slideComponents.find((item) => item.id === id);
     const itemId = id + "-clone-" + Date.now();
 
     if (!existingClone) {
-      // dispatch(handleSetDragItems([...slideComponents, { id: itemId }]));
-
       updateSlideComponents([...slideComponents, { id: itemId }]);
       manager.canvasManager.updateActiveSlide([
         ...(manager.canvasManager.activeSlide ?? []),
         { id: itemId },
       ]);
       manager.canvasManager.setActiveComponent(itemId);
-      dispatch(handleSetActiveViewbox(itemId));
+      manager.canvasManager.canvas.setState({ activeViewbox: itemId });
     }
   };
 
   const handleDelete = (id: string) => {
     const filteredItems = slideComponents.filter((item) => item.id !== id);
-    dispatch(handleSetDragItems(filteredItems));
   };
 
   const handleDragOver = (e: any) => {
@@ -53,17 +49,26 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     if (!data) return;
     onDrop(data);
     manager.sidebarManager.setState({
-      rightSidebarState : !manager.sidebarManager.states.rightSidebarState
-    })
-    dispatch(handleToggleOverlayState());
+      rightSidebarState: !manager.sidebarManager.states.rightSidebarState,
+    });
+    manager.canvasManager.canvas.toggleOverlayActiveState();
   };
 
   const handleClickedViewbox = (id: string) => {
-    dispatch(handleSetActiveViewbox(id));
-    dispatch(handleSetSidebarState(true));
+    manager.canvasManager.canvas.setActiveViewboxState(id);
+
+    {
+      /*
+  setState("rightSidebarState", (prev)=>{
+      return !prev;
+    });
+    setState("rightSidebarState", true);
+  */
+    }
+
     manager.canvasManager.setActiveComponent(id);
     manager.canvasManager.canvas.functions.saveActiveComponentData();
-    console.log(manager.canvasManager.canvas.functions, "here in canvas");
+    console.log(manager.canvasManager.canvas.states, "here in canvas");
   };
 
   const updateSlideComponents = (components: any[]) => {

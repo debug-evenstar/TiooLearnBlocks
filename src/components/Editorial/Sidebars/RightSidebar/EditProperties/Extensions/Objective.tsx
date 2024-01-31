@@ -27,19 +27,15 @@ interface Props {
 }
 
 const Objective: FC<Props> = ({ manager, component }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
+  const canvasState = manager.canvasManager.canvas;
+
+  const id = canvasState.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
-  const dispatch = useDispatch();
-  const { identifier } = selector.payload.optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
+  const { identifier } = canvasState.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
   const coreData = manager.canvasManager.activeComponent.data;
@@ -53,9 +49,9 @@ const Objective: FC<Props> = ({ manager, component }) => {
       component
     );
     setIsActive(true);
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetObjectiveIndex(questions.length));
-    dispatch(refreshOptionsData());
+    canvasState.toggleShowOptionsBoxState();
+    canvasState.setObjectiveIndexState(questions.length);
+    canvasState.refreshOptionsDataState();
   };
 
   const handleClick = () => {
@@ -66,12 +62,12 @@ const Objective: FC<Props> = ({ manager, component }) => {
         component
       );
       setIsActive(true);
-      dispatch(handleToggleShowOptionBox());
-      dispatch(handleSetObjectiveIndex(questions.length));
-      dispatch(handleToggleTrigger());
+      canvasState.toggleShowOptionsBoxState();
+      canvasState.setObjectiveIndexState(questions.length);
+      canvasState.toggleTriggerState();
     }
-    dispatch(handleSetCorrectOption(""));
-    dispatch(handleSetWrongOption(""));
+    canvasState.setCorrectOptionState("");
+    canvasState.setWrongOptionState("");
     console.log(manager.canvasManager.activeComponent.data, "changed data");
   };
 
@@ -88,11 +84,11 @@ const Objective: FC<Props> = ({ manager, component }) => {
         ],
       };
       console.log(updatedQuestion.options, "updated options");
-      manager.canvasManager.canvas.functions.deleteObjectiveOptions(
+      canvasState.functions.deleteObjectiveOptions(
         updatedQuestion.options,
         index
       );
-      dispatch(handleToggleTrigger());
+      canvasState.toggleTriggerState();
 
       updatedQuestions[index] = updatedQuestion;
     }
@@ -162,13 +158,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetFeedbackStatus);
-  const { status: optionStatus, type } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  const canvasState = manager.canvasManager.canvas;
+
+  const { status: optionStatus, type } = canvasState.states.feedback;
   const [isActive, setIsActive] = useState(false);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
@@ -186,8 +178,8 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       index
     );
     setAddedOption(!addedOption);
-    dispatch(
-      handleSetOptionIndex(question.options ? question.options.length : 0)
+    canvasState.setFeedbackIndexState(
+      question.options ? question.options.length : 0
     );
     console.log(
       manager.canvasManager.activeComponent.data.questions,
@@ -202,13 +194,13 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    dispatch(handleSetFeedbackType("OBJECTIVE"));
-    dispatch(handleSetOptionIndex(index));
-    dispatch(handleSetFeedbackStatus(true));
+    canvasState.setFeedbackTypeState("OBJECTIVE");
+    canvasState.setFeedbackIndexState(index);
+    canvasState.setFeedbackStatusState(true);
   };
 
   const handleOpenObjective = () => {
-    dispatch(handleSetObjectiveIndex(index));
+    canvasState.setObjectiveIndexState(index);
     setIsActive(!isActive);
   };
 

@@ -26,19 +26,13 @@ interface Props {
 }
 
 const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-
   const addQuestion =
     manager.canvasManager.canvas.functions.updateImageQuestions;
 
-  const dispatch = useDispatch();
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  const canvasState = manager.canvasManager.canvas;
+  const { identifier, correctOption, wrongOption } =
+    canvasState.states.optionsData;
+  const trigger = canvasState.states.trigger;
 
   const [isActive, setIsActive] = useState(true);
   const questionData: QuestionInterface[] =
@@ -85,8 +79,8 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
       index
     );
     setIsActive(true);
-    dispatch(handleSetObjectiveIndex(index));
-    dispatch(refreshOptionsData());
+    canvasState.setObjectiveIndexState(index);
+    canvasState.refreshOptionsDataState();
     console.log(data, "updated");
   };
 
@@ -95,7 +89,7 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
       null,
       "Overlay"
     );
-    dispatch(handleToggleTrigger());
+    canvasState.toggleTriggerState();
     setQuestion(data.question);
   };
 
@@ -138,20 +132,14 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [showAI, setShowAI] = useState(false);
   const [value, setValue] = useState("");
 
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetCorrectOption);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const canvasState = manager.canvasManager.canvas;
+
+  const { objectiveIndex } = canvasState.states.optionsData;
   const {
     optionIndex,
     status: optionStatus,
     type,
-  } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  } = canvasState.states.feedback;
 
   const coreData =
     manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
@@ -172,16 +160,16 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       "Overlay"
     );
     setIsEditable(false);
-    dispatch(handleSetFeedbackStatus(false));
+    canvasState.setFeedbackStatusState(false);
     console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);
   };
 
   const handleShowFeedback = () => {
-    dispatch(handleSetFeedbackType("SUBJECTIVE"));
-    dispatch(handleSetOptionIndex(0));
-    dispatch(handleSetFeedbackStatus(true));
+    canvasState.setFeedbackTypeState("SUBJECTIVE");
+    canvasState.setFeedbackIndexState(0);
+    canvasState.setFeedbackStatusState(true);
   };
 
   return (

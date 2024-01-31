@@ -21,9 +21,9 @@ interface Props {
 }
 
 const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+  const canvasState = manager.canvasManager.canvas;
+  const activeId = canvasState.states.activeViewBox;
+  const showOptionsBox = canvasState.states.showOptionsBox;
 
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
@@ -71,7 +71,8 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
       );
       manager.slideManager.saveComponentData(
         manager.canvasManager.getComponentIndex(id),
-        { layout }, true
+        { layout },
+        true
       );
     }
   }, []);

@@ -33,19 +33,14 @@ interface Props {
 }
 
 const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetCorrectOption);
+  const canvasState = manager.canvasManager.canvas;
 
   const addQuestion =
     manager.canvasManager.canvas.functions.updateFlashcardQuestion;
 
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  const { identifier, correctOption, wrongOption } =
+    canvasState.states.optionsData;
+  const trigger = canvasState.states.trigger;
 
   const [isActive, setIsActive] = useState(false);
 
@@ -98,11 +93,10 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
     );
 
     setIsActive(true);
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetObjectiveIndex(index));
-    dispatch(refreshOptionsData());
-    dispatch(handleToggleTrigger());
-    console.log(data, "updated");
+    canvasState.toggleShowOptionsBoxState();
+    canvasState.setObjectiveIndexState(index);
+    canvasState.refreshOptionsDataState();
+    canvasState.toggleTriggerState();
   };
 
   const handleDelete = (id: string, optionIndex: number) => {
@@ -121,7 +115,7 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
       0,
       "Flashcard"
     );
-    dispatch(handleToggleTrigger());
+    canvasState.toggleTriggerState();
     console.log(id);
   };
 
@@ -165,13 +159,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetFeedbackStatus);
-  const { status: optionStatus, type } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  const canvasState = manager.canvasManager.canvas;
+
+  const { status: optionStatus, type } = canvasState.states.feedback;
   const [isActive, setIsActive] = useState(true);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
@@ -194,8 +184,8 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       "Flashcard"
     );
     setAddedOption(!addedOption);
-    dispatch(
-      handleSetOptionIndex(question.options ? question.options.length : 0)
+    canvasState.setFeedbackIndexState(
+      question.options ? question.options.length : 0
     );
     console.log(
       manager.canvasManager.activeComponent.data.components[cardsIndex].cards[
@@ -212,13 +202,13 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    dispatch(handleSetFeedbackType("OBJECTIVE"));
-    dispatch(handleSetOptionIndex(index));
-    dispatch(handleSetFeedbackStatus(true));
+    canvasState.setFeedbackTypeState("OBJECTIVE");
+    canvasState.setFeedbackIndexState(index);
+    canvasState.setFeedbackStatusState(true);
   };
 
   const handleOpenObjective = () => {
-    dispatch(handleSetObjectiveIndex(index));
+    canvasState.setObjectiveIndexState(index);
     setIsActive(!isActive);
   };
 

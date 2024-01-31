@@ -21,19 +21,15 @@ const Text: FC<CanvasText> = ({
   isEditable,
   setIsEditable,
 }) => {
-  const dispatch = useDispatch();
+  const canvasState = manager.canvasManager.canvas;
 
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
-  const trigger: boolean = selector.payload.trigger.value;
-  const { identifier, objectiveIndex } = selector.payload.optionsData.value as {
-    identifier: string;
-    objectiveIndex: number;
-  };
+  const activeId = canvasState.states.activeViewBox;
+  const showOptionsBox = canvasState.states.showOptionsBox;
+  const trigger = canvasState.states.trigger;
+  const { identifier, objectiveIndex } = canvasState.states.optionsData;
 
   const setIdentifier = (id: string) => {
-    dispatch(handleSetIdentifier(id));
+    canvasState.setIdentifierState(id);
     console.log(id, "the id");
   };
 
@@ -105,9 +101,9 @@ const Text: FC<CanvasText> = ({
     e.stopPropagation();
     handleSetObjectiveIndex(index);
     console.log(index, "clicked, option box");
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetCorrectOption(options[0]));
-    dispatch(handleSetWrongOption(options[1]));
+    canvasState.toggleShowOptionsBoxState();
+    canvasState.setCorrectOptionState(options[0]);
+    canvasState.setWrongOptionState(options[1]);
   };
 
   useEffect(() => {

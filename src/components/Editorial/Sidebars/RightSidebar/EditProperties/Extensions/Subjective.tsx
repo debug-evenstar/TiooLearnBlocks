@@ -21,21 +21,16 @@ interface Props {
 }
 
 const Subjective: FC<Props> = ({ manager, component }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
+  const canvasState = manager.canvasManager.canvas;
+
+  const id = canvasState.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
-  const dispatch = useDispatch();
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-    objectiveIndex: number;
-  };
+  const { identifier, correctOption, wrongOption } =
+    canvasState.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
   const coreData = manager.canvasManager.activeComponent.data;
@@ -49,8 +44,8 @@ const Subjective: FC<Props> = ({ manager, component }) => {
       component
     );
     setIsActive(true);
-    dispatch(handleSetObjectiveIndex(questions.length));
-    dispatch(handleSetCorrectOption(""));
+    canvasState.setObjectiveIndexState(questions.length);
+    canvasState.setCorrectOptionState("");
   };
 
   const handleClick = () => {
@@ -62,9 +57,9 @@ const Subjective: FC<Props> = ({ manager, component }) => {
         component
       );
       setIsActive(true);
-      dispatch(handleSetObjectiveIndex(questions.length));
+      canvasState.setObjectiveIndexState(questions.length);
     }
-    dispatch(handleSetCorrectOption(""));
+    canvasState.setCorrectOptionState("");
   };
 
   const handleDelete = (id: string, index: number = 0) => {
@@ -142,20 +137,14 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [value, setValue] = useState("");
 
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetCorrectOption);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const canvasState = manager.canvasManager.canvas;
+
+  const { objectiveIndex } = canvasState.states.optionsData;
   const {
     optionIndex,
     status: optionStatus,
     type,
-  } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  } = canvasState.states.feedback;
 
   const coreData = manager.canvasManager.activeComponent.data;
 
@@ -173,16 +162,17 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       0
     );
     setIsEditable(false);
-    dispatch(handleSetFeedbackStatus(false));
+    canvasState.setFeedbackStatusState(false);
+
     console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);
   };
 
   const handleShowFeedback = () => {
-    dispatch(handleSetFeedbackType("SUBJECTIVE"));
-    dispatch(handleSetOptionIndex(0));
-    dispatch(handleSetFeedbackStatus(true));
+    canvasState.setFeedbackTypeState("SUBJECTIVE");
+    canvasState.setFeedbackIndexState(0);
+    canvasState.setFeedbackStatusState(true);
   };
 
   return (

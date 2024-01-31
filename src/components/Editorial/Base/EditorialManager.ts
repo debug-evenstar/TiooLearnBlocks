@@ -82,22 +82,83 @@ const DataGroup: DataGroupInterface = {
   functions: {},
 };
 
+interface States {
+  activeViewBox: string;
+  feedback: {
+    optionIndex: number;
+    status: boolean;
+    type: "OBJECTIVE" | "SUBJECTIVE";
+  };
+  optionsData: {
+    identifier: string;
+    correctOption: string;
+    wrongOption: string;
+    objectiveIndex: number;
+  };
+  overlayActive: boolean;
+  showOptionsBox: boolean;
+  slider: {
+    activeCompName: string;
+    activeCompIndex: number;
+  };
+  trigger: boolean;
+  rightSidebarState: boolean;
+}
+
 export interface EditorialManagerInterface {
   sidebarManager: EditorialSidebarManagerInterface;
   canvasManager: CanvasManagerInterface;
   slideManager: EditorialSlideManagerInterface;
+  states: States;
 }
 
 class EditorialManager implements EditorialManagerInterface {
   sidebarManager: EditorialSidebarManagerInterface;
   canvasManager: CanvasManagerInterface;
   slideManager: EditorialSlideManagerInterface;
+  states: States;
 
   constructor(slides: any[]) {
     this.slideManager = new EditorialSlideManager(this, slides);
     this.canvasManager = new CanvasManager(this);
     this.sidebarManager = new EditorialSidebarManager(this);
     this.initCanvasManager();
+    this.states = {
+      activeViewBox: "",
+      feedback: {
+        optionIndex: 0,
+        status: false,
+        type: "OBJECTIVE",
+      },
+      optionsData: {
+        identifier: "",
+        correctOption: "",
+        wrongOption: "",
+        objectiveIndex: 0,
+      },
+      overlayActive: false,
+      showOptionsBox: false,
+      slider: {
+        activeCompName: "",
+        activeCompIndex: 0,
+      },
+      trigger: false,
+      rightSidebarState: false,
+    };
+  }
+
+  setState(key: string, setter: any | Function) {
+    const newState: any = {};
+    if (typeof setter == "function") {
+      const state = this.states as { [stateKey: string]: any };
+      newState[key] = setter(state[key]);
+    } else {
+      newState[key] = setter;
+    }
+    this.states = {
+      ...this.states,
+      ...newState,
+    };
   }
 
   initCanvasManager() {
