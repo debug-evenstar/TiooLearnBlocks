@@ -13,6 +13,7 @@ import {
 import { handleTextChange } from "./handlers/generalHandler";
 import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -101,8 +102,13 @@ const Text: FC<CanvasText> = ({
     handleSetObjectiveIndex(index);
     console.log(index, "clicked, option box");
     manager.setState("showOptionsBox", (prev: any) => !prev);
-    manager.setCorrectOptionState(options[0]);
-    manager.setWrongOptionState(options[1]);
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        wrongOption : options[0],
+        correctOption : options[1]
+      }) as OptionsDataState
+    }));
   };
 
   useEffect(() => {

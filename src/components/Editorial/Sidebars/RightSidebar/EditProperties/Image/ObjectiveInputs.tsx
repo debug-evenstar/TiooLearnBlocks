@@ -1,4 +1,5 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 import { QuestionInterface } from "components/interface";
 import {
   handleSetCorrectOption,
@@ -43,8 +44,13 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Overlay"
     );
-    if (index > 0) manager.setCorrectOptionState(value);
-    else manager.setWrongOptionState(value);
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        wrongOption : index <= 0 ? value : prev.wrongOption,
+        correctOption : index > 0 ? value : prev.correctOption
+      }) as OptionsDataState
+    }));
   };
 
   return (

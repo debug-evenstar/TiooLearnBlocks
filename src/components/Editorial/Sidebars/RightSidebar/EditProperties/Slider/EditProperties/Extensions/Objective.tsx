@@ -20,6 +20,7 @@ import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -65,11 +66,16 @@ const Objective: FC<Props> = ({ manager, component }) => {
       replaceContent(questions, "OBJECTIVE", component, true, activeCompIndex);
       setIsActive(true);
       manager.setState("showOptionsBox" , (prev : any) => !prev);
-      manager.setObjectiveIndexState(questions.length);
-      manager.setState("trigger" , (prev : any) => !prev);();
+      manager.setState("trigger" , (prev : any) => !prev);
     }
-    manager.setCorrectOptionState("");
-    manager.setWrongOptionState("");
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({
+        objectiveIndex : questions.length > 0 ? questions.length : prev.objectiveIndex,
+        wrongOption : "",
+        correctOption : ""
+      }) as OptionsDataState
+    }));
   };
 
   const handleDelete = (id: string, optionIndex: number, index: number = 0) => {

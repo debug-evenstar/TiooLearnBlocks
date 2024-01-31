@@ -14,6 +14,7 @@ import {
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
 import { QuestionInterface } from "components/interface";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -42,8 +43,13 @@ const Subjective: FC<Props> = ({ manager, component }) => {
     if (isActive) return;
     replaceContent(questions, "SUBJECTIVE", component, true, activeCompIndex);
     setIsActive(true);
-    manager.setObjectiveIndexState(questions.length);
-    manager.setCorrectOptionState("");
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        objectiveIndex : questions.length,
+        correctOption : ""
+      }) as OptionsDataState
+    }));
   };
 
   const handleClick = () => {
@@ -51,9 +57,14 @@ const Subjective: FC<Props> = ({ manager, component }) => {
     if (questions.length > 0) {
       replaceContent(questions, "SUBJECTIVE", component, true, activeCompIndex);
       setIsActive(true);
-      manager.setObjectiveIndexState(questions.length);
     }
-    manager.setCorrectOptionState("");
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        objectiveIndex : questions.length > 0 ? questions.length : prev.objectiveIndex,
+        correctOption : ""
+      }) as OptionsDataState
+    }));
   };
 
   const handleDelete = (id: string) => {
