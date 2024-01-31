@@ -12,6 +12,7 @@ import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import FlashcardObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/FlashCard/ObjectiveInputs";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
 import { getOriginalName } from "../../handler";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 const Flashcard: FC<any> = ({ id, manager, image, index }) => {
   const activeId = manager.states.activeViewBox;

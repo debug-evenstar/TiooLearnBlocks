@@ -97,7 +97,7 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
       null,
       "Overlay"
     );
-    manager.setState("trigger" , (prev : any) => !prev);();
+    manager.setState("trigger" , (prev : any) => !prev);
     setQuestion(data.question);
   };
 

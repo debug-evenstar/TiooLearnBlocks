@@ -19,6 +19,7 @@ import {
   handleToggleOverlayState,
 } from "provider/overlayActiveSlice";
 import "react-resizable/css/styles.css";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const activeId = manager.states.activeViewBox;
