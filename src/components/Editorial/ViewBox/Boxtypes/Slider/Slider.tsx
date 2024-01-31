@@ -1,15 +1,10 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { useDispatch, useSelector } from "react-redux";
-import { handleToggleTrigger } from "provider/triggerSlice";
 import FlashcardViewBox from "./SliderViewbox";
-import {
-  handleSetActiveCompIndex,
-  handleSetActiveCompName,
-} from "provider/sliderSlice";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
+import { SliderState } from "components/Editorial/Base/StateInterface";
 
 interface SliderProps {
   id: string;
@@ -17,8 +12,6 @@ interface SliderProps {
 }
 
 const Slider: FC<SliderProps> = ({ id, manager }) => {
-  
-
   const trigger = manager.states.trigger;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEditable, setIsEditable] = useState(true);
@@ -49,9 +42,17 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   };
 
   useEffect(() => {
-    const componentData =
-      manager.canvasManager.canvas.functions.getComponentData(id);
+    const componentData = manager.canvasManager.canvas.functions.getComponentData(id);
     componentData && setSlides(componentData.slides);
+     manager.setState("slider", (prev: SliderState) => {
+        return {
+          ...prev,
+          ...({
+            activeCompIndex: currentImageIndex ,
+            activeCompName: slides.length ? slides[currentImageIndex][0]?.component : prev.activeCompName,
+          } as SliderState),
+        };
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
@@ -69,6 +70,20 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditable, sliderRef]);
 
+  useEffect(() => {
+    manager.setState("slider", (prev: SliderState) => {
+      return {
+        ...prev,
+        ...({
+          activeCompName:
+            manager.canvasManager.canvas.functions.getComponentData(id).slides[
+              currentImageIndex
+            ][0]?.component,
+          activeCompIndex: currentImageIndex,
+        } as SliderState),
+      };
+    });
+  }, [currentImageIndex]);
 
   return (
     <div className="flex items-center gap-2">

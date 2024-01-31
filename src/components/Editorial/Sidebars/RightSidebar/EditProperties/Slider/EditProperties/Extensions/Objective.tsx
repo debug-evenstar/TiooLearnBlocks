@@ -186,9 +186,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       activeCompIndex
     );
     setAddedOption(!addedOption);
-    manager.setFeedbackIndexState(
-      question.options ? question.options.length : 0
-    );
+    manager.setState("feedback", ((prev: FeedbackState) => {
+      return {...prev, ...{optionIndex: question.options ? question.options.length : 0} as FeedbackState}
+    }))
   };
 
   const deleteOption = (i: number) => {
@@ -198,13 +198,22 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    manager.setFeedbackTypeState("OBJECTIVE");
-    manager.setFeedbackIndexState(index);
-    manager.setFeedbackStatusState(true);
+   manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "OBJECTIVE",
+          optionIndex: index,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   const handleOpenObjective = () => {
-    manager.setObjectiveIndexState(index);
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
+    })
     setIsActive(!isActive);
   };
 

@@ -14,6 +14,7 @@ import {
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
 import { QuestionInterface } from "components/interface";
+import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -21,16 +22,13 @@ interface Props {
 }
 
 const Subjective: FC<Props> = ({ manager, component }) => {
-  
-
   const id = manager.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
-  const { identifier, correctOption, wrongOption } =
-    manager.states.optionsData;
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
   const coreData = manager.canvasManager.activeComponent.data;
@@ -137,14 +135,8 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [value, setValue] = useState("");
 
-  
-
   const { objectiveIndex } = manager.states.optionsData;
-  const {
-    optionIndex,
-    status: optionStatus,
-    type,
-  } = manager.states.feedback;
+  const { optionIndex, status: optionStatus, type } = manager.states.feedback;
 
   const coreData = manager.canvasManager.activeComponent.data;
 
@@ -170,9 +162,16 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   };
 
   const handleShowFeedback = () => {
-    manager.setFeedbackTypeState("SUBJECTIVE");
-    manager.setFeedbackIndexState(0);
-    manager.setFeedbackStatusState(true);
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "SUBJECTIVE",
+          optionIndex: 0,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   return (

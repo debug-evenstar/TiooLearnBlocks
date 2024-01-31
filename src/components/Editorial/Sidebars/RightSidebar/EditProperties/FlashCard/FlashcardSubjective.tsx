@@ -16,6 +16,7 @@ import {
 import { QuestionInterface } from "components/interface";
 import { handleToggleTrigger } from "provider/triggerSlice";
 import FlashcardFeedback from "./FlashcardFeedback";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -81,13 +82,15 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
       index
     );
     setIsActive(true);
-    manager.setObjectiveIndexState(index);
-        manager.setState("optionsData", {
+    manager.setState("optionsData", {
       identifier: "",
       correctOption: "",
       wrongOption: "",
       objectiveIndex: 0,
     });
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
+    })
     console.log(data, "updated");
   };
 
@@ -177,9 +180,16 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   };
 
   const handleShowFeedback = () => {
-    manager.setFeedbackTypeState("SUBJECTIVE");
-    manager.setFeedbackIndexState(0);
-    manager.setFeedbackStatusState(true);
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "SUBJECTIVE",
+          optionIndex: 0,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   return (

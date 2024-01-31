@@ -26,6 +26,7 @@ import {
 } from "provider/feedbackSlice";
 import OverlayFeedback from "./OverlayFeedback";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -87,13 +88,15 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
 
     setIsActive(true);
     manager.setState("showOptionsBox" , (prev : any) => !prev);
-    manager.setObjectiveIndexState(index);
-        manager.setState("optionsData", {
+    manager.setState("optionsData", {
       identifier: "",
       correctOption: "",
       wrongOption: "",
       objectiveIndex: 0,
     });
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
+    })
     console.log(data, "updated");
   };
 
@@ -177,9 +180,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       "Overlay"
     );
     setAddedOption(!addedOption);
-    manager.setFeedbackIndexState(
-      question.options ? question.options.length : 0
-    );
+    manager.setState("feedback", ((prev: FeedbackState) => {
+      return {...prev, ...{optionIndex: question.options ? question.options.length : 0} as FeedbackState}
+    }))
     console.log(
       manager.canvasManager.activeComponent.data.questions,
       "clicked"
@@ -193,13 +196,22 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    manager.setFeedbackTypeState("OBJECTIVE");
-    manager.setFeedbackIndexState(index);
-    manager.setFeedbackStatusState(true);
+   manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "OBJECTIVE",
+          optionIndex: index,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   const handleOpenObjective = () => {
-    manager.setObjectiveIndexState(index);
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
+    })
     setIsActive(!isActive);
   };
 
