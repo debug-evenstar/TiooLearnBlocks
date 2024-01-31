@@ -49,7 +49,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
       component
     );
     setIsActive(true);
-    manager.toggleShowOptionsBoxState();
+    manager.setState("showOptionsBox" , (prev : any) => !prev);
     manager.setObjectiveIndexState(questions.length);
     manager.refreshOptionsDataState();
   };
@@ -62,9 +62,9 @@ const Objective: FC<Props> = ({ manager, component }) => {
         component
       );
       setIsActive(true);
-      manager.toggleShowOptionsBoxState();
+      manager.setState("showOptionsBox" , (prev : any) => !prev);
       manager.setObjectiveIndexState(questions.length);
-      manager.toggleTriggerState();
+      manager.setState("trigger" , (prev : any) => !prev);
     }
     manager.setCorrectOptionState("");
     manager.setWrongOptionState("");
@@ -88,7 +88,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
         updatedQuestion.options,
         index
       );
-      manager.toggleTriggerState();
+      manager.setState("trigger" , (prev : any) => !prev);();
 
       updatedQuestions[index] = updatedQuestion;
     }

@@ -37,7 +37,7 @@ const AddImages: FC<Props> = ({ id, manager }) => {
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
-      manager.toggleTriggerState();
+      manager.setState("trigger" , (prev : any) => !prev);();
       console.log(cards, "Updated Cards");
       console.log(coreData, "added");
     }

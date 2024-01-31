@@ -104,7 +104,7 @@ const Text: FC<CanvasText> = ({
     e.stopPropagation();
     console.log("just clicked on the objective");
     handleSetObjectiveIndex(index);
-    manager.toggleShowOptionsBoxState();
+    manager.setState("showOptionsBox" , (prev : any) => !prev);
     manager.setCorrectOptionState(options[0]);
     manager.setWrongOptionState(options[1]);
   };

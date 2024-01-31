@@ -88,7 +88,7 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
     );
 
     setIsActive(true);
-    manager.toggleShowOptionsBoxState();
+    manager.setState("showOptionsBox" , (prev : any) => !prev);
     manager.setObjectiveIndexState(index);
     manager.refreshOptionsDataState();
     console.log(data, "updated");
@@ -110,7 +110,7 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
       0,
       "Overlay"
     );
-    manager.toggleTriggerState();
+    manager.setState("trigger" , (prev : any) => !prev);();
     console.log(id);
   };
 

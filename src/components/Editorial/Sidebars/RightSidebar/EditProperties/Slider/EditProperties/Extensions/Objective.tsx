@@ -52,7 +52,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
     console.log(questions, "in objective");
     replaceContent(questions, "OBJECTIVE", component, true, activeCompIndex);
     setIsActive(true);
-    manager.toggleShowOptionsBoxState();
+    manager.setState("showOptionsBox" , (prev : any) => !prev);
     manager.setObjectiveIndexState(questions.length);
     manager.refreshOptionsDataState();
   };
@@ -61,9 +61,9 @@ const Objective: FC<Props> = ({ manager, component }) => {
     if (questions.length > 0) {
       replaceContent(questions, "OBJECTIVE", component, true, activeCompIndex);
       setIsActive(true);
-      manager.toggleShowOptionsBoxState();
+      manager.setState("showOptionsBox" , (prev : any) => !prev);
       manager.setObjectiveIndexState(questions.length);
-      manager.toggleTriggerState();
+      manager.setState("trigger" , (prev : any) => !prev);();
     }
     manager.setCorrectOptionState("");
     manager.setWrongOptionState("");
@@ -88,7 +88,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
         "Slider",
         activeCompIndex
       );
-      manager.toggleTriggerState();
+      manager.setState("trigger" , (prev : any) => !prev);();
 
       updatedQuestions[index] = updatedQuestion;
     }

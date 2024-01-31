@@ -33,7 +33,7 @@ const AddSlide: FC<Props> = ({ type, manager }) => {
 
   const handleClick = () => {
     addComponentToSlider(data(type));
-    manager.toggleTriggerState();
+    manager.setState("trigger" , (prev : any) => !prev);();
   };
 
   return (

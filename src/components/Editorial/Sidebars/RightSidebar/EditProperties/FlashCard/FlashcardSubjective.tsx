@@ -91,7 +91,7 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
       null,
       "Flashcard"
     );
-    manager.toggleTriggerState();
+    manager.setState("trigger" , (prev : any) => !prev);();
     setQuestion(data.question);
   };
 
