@@ -19,6 +19,7 @@ import {
   EditorialSidebarManager,
   EditorialSidebarManagerInterface,
 } from "./EditorialSidebarManager";
+import { ActiveViewBoxState, FeedbackState, OptionsDataState, OverlayActiveState, RightSidebarState, ShowOptionsBoxState, SliderState, TriggerState } from "./StateInterface";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
@@ -83,26 +84,14 @@ const DataGroup: DataGroupInterface = {
 };
 
 interface States {
-  activeViewBox: string;
-  feedback: {
-    optionIndex: number;
-    status: boolean;
-    type: "OBJECTIVE" | "SUBJECTIVE";
-  };
-  optionsData: {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-    objectiveIndex: number;
-  };
-  overlayActive: boolean;
-  showOptionsBox: boolean;
-  slider: {
-    activeCompName: string;
-    activeCompIndex: number;
-  };
-  trigger: boolean;
-  rightSidebarState: boolean;
+  activeViewBox: ActiveViewBoxState;
+  feedback: FeedbackState;
+  optionsData: OptionsDataState;
+  overlayActive: OverlayActiveState;
+  showOptionsBox: ShowOptionsBoxState;
+  slider: SliderState;
+  trigger: TriggerState;
+  rightSidebarState: RightSidebarState;
 }
 
 export interface EditorialManagerInterface {

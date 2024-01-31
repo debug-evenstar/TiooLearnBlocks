@@ -14,15 +14,6 @@ const DataGroup: DataGroupInterface = {
 /*                            MAIN CANVAS INTERFACE                           */
 /* -------------------------------------------------------------------------- */
 
-interface States {
-  activeViewBox: ActiveViewBoxState;
-  feedback: FeedbackState;
-  optionsData: OptionsDataState;
-  overlayActive: OverlayActiveState;
-  showOptionsBox: ShowOptionsBoxState;
-  slider: SliderState;
-  trigger: TriggerState;
-}
 
 interface CanvasInterface {
   manager: CanvasManagerInterface;
@@ -55,7 +46,6 @@ interface CanvasInterface {
 
 class Canvas implements CanvasInterface {
   manager: CanvasManagerInterface;
-  states: States;
   components: ComponentBaseDataInterface[] = [];
   history: ComponentBaseDataInterface[][] = [];
   data: { [key: string]: any } = {};
@@ -63,27 +53,6 @@ class Canvas implements CanvasInterface {
 
   constructor(manager: CanvasManagerInterface) {
     this.manager = manager;
-    this.states = {
-      activeViewBox: "",
-      feedback: {
-        optionIndex: 0,
-        status: false,
-        type: "OBJECTIVE",
-      },
-      optionsData: {
-        identifier: "",
-        correctOption: "",
-        wrongOption: "",
-        objectiveIndex: 0,
-      },
-      overlayActive: false,
-      showOptionsBox: false,
-      slider: {
-        activeCompName: "",
-        activeCompIndex: 0,
-      },
-      trigger: false,
-    };
     // Set functions
     this.setFunctions();
     this.setData();
