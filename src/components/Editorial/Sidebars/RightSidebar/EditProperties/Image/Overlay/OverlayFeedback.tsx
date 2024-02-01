@@ -6,6 +6,7 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import EmojiTextArea from "../../Extensions/EmojiTextarea/EmojiTextArea";
+import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -18,21 +19,13 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
 
-  const selector: any = useSelector(handleSetCorrectOption);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const { objectiveIndex } = manager.states.optionsData;
 
-  const { optionIndex } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-  };
+  const { optionIndex } = manager.states.feedback;
 
   const [feedbackValue, setFeedbackValue] = useState("");
 
-  const dispatch = useDispatch();
-
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
   const option: OptionInterface =
     coreData.extensions[index]?.question[0].options[
       type === "OBJECTIVE" ? optionIndex : 0
@@ -51,7 +44,9 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
       optionIndex,
       "Overlay"
     );
-    dispatch(handleSetFeedbackStatus(false));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return { ...prev, ...({ status: false } as FeedbackState) };
+    });
   };
 
   const handleChangeType = (type: string) => {
@@ -83,7 +78,11 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
         <p>Set Feedback</p>
         <RiCloseLine
           size={15}
-          onClick={() => dispatch(handleSetFeedbackStatus(false))}
+          onClick={() =>
+            manager.setState("feedback", (prev: FeedbackState) => {
+              return { ...prev, ...({ status: false } as FeedbackState) };
+            })
+          }
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">

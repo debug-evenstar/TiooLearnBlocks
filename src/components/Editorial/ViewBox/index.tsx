@@ -21,9 +21,8 @@ interface Props {
 }
 
 const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
 
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
@@ -71,7 +70,8 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
       );
       manager.slideManager.saveComponentData(
         manager.canvasManager.getComponentIndex(id),
-        { layout }, true
+        { layout },
+        true
       );
     }
   }, []);
@@ -103,7 +103,14 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
             height: viewBoxSize.height + "px",
           }}
         >
-          {ViewBoxContent(id, manager, viewBoxRef, isEditable, setIsEditable)}
+          {ViewBoxContent(
+            id,
+            manager,
+            viewBoxRef,
+            isEditable,
+            setIsEditable,
+            viewBoxSize
+          )}
         </div>
       </Resizable>
 

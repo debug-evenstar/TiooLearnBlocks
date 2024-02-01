@@ -2,45 +2,35 @@ import React, { FC, createRef, useEffect, useState } from "react";
 import { EditorialCanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
-import { useDispatch } from "react-redux";
-import {
-  handleSetSidebarState,
-  handleToggleSidebarState,
-} from "provider/rightSidebarSlice";
-import { handleSetDragItems } from "provider/dragItemsSlice";
-import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { setComponentLayout } from "./EditorialManager";
 import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
-import { handleToggleOverlayState } from "provider/overlayActiveSlice";
+import { OverlayActiveState, RightSidebarState } from "./StateInterface";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
   manager,
 }) => {
-  const dispatch = useDispatch();
   const [slideComponents, setSlideComponents] = useState<any[]>([]);
+  const activeId = manager.states.activeViewBox;
   const onDrop = (id: string) => {
     const existingClone = slideComponents.find((item) => item.id === id);
     const itemId = id + "-clone-" + Date.now();
 
     if (!existingClone) {
-      // dispatch(handleSetDragItems([...slideComponents, { id: itemId }]));
-
       updateSlideComponents([...slideComponents, { id: itemId }]);
       manager.canvasManager.updateActiveSlide([
         ...(manager.canvasManager.activeSlide ?? []),
         { id: itemId },
       ]);
       manager.canvasManager.setActiveComponent(itemId);
-      dispatch(handleSetActiveViewbox(itemId));
+      manager.setState("activeViewBox", itemId);
     }
   };
 
   const handleDelete = (id: string) => {
     const filteredItems = slideComponents.filter((item) => item.id !== id);
-    dispatch(handleSetDragItems(filteredItems));
   };
 
   const handleDragOver = (e: any) => {
@@ -52,16 +42,19 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     const data = e.dataTransfer.getData("text/plain");
     if (!data) return;
     onDrop(data);
-    manager.sidebarManager.setState({
-      rightSidebarState : !manager.sidebarManager.states.rightSidebarState
-    })
-    dispatch(handleToggleOverlayState());
+    manager.setState("rightSidebarState", (prev: RightSidebarState) => {
+      return !prev;
+    });
+    manager.setState("overlayActive", (prev: OverlayActiveState) => {
+      return !prev;
+    });
   };
 
   const handleClickedViewbox = (id: string) => {
-    dispatch(handleSetActiveViewbox(id));
-    dispatch(handleSetSidebarState(true));
+    manager.setState("activeViewBox", id);
     manager.canvasManager.setActiveComponent(id);
+    //manager.canvasManager.canvas.functions.saveActiveComponentData();
+    manager.setState("rightSidebarState", true);
   };
 
   const updateSlideComponents = (components: any[]) => {
@@ -88,6 +81,12 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideData]);
 
+  useEffect(() => {
+    manager.canvasManager.canvas.updateActiveComponentData(
+      manager.canvasManager.getComponentData(activeId)
+    );
+  }, [activeId]);
+
   return (
     <div
       id="editorial-canvas"
@@ -109,7 +108,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             }
           );
           // Only update if position has changed
-          if ( data.x !== 0 || data.y !== 0 ) {
+          if (data.x !== 0 || data.y !== 0) {
             manager.slideManager.saveComponentData(
               manager.canvasManager.getComponentIndex(item.id),
               { layout }

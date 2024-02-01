@@ -12,12 +12,11 @@ import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import FlashcardObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/FlashCard/ObjectiveInputs";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
 import { getOriginalName } from "../../handler";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 const Flashcard: FC<any> = ({ id, manager, image, index }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
 
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
@@ -88,7 +87,7 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const trigger: boolean = selector.payload.trigger.value;
+  const trigger = manager.states.trigger;
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const cardData =
     getOriginalName(id) === "Flash Card"
@@ -103,7 +102,9 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
 
   useEffect(() => {
     console.log(cardsIndex, cardData, "card data");
-    dispatch(handleSetObjectiveIndex(index));
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     const question: QuestionInterface | null = cardData?.question
       ? cardData.question
       : null;

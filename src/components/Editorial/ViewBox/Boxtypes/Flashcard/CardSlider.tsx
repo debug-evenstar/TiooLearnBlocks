@@ -11,8 +11,9 @@ interface ImageCarouselProps {
 }
 
 const CardSlider: FC<ImageCarouselProps> = ({ id, manager }) => {
-  const selector: any = useSelector(handleToggleTrigger);
-  const trigger: boolean = selector.payload.trigger.value;
+  
+
+  const trigger = manager.states.trigger;
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);

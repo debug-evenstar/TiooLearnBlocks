@@ -14,25 +14,20 @@ interface Props {
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  
+
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
   const data: QuestionInterface =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[
-      objectiveIndex
-    ]?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[objectiveIndex]
+      ?.question[0];
   const [question, setQuestion] = useState<QuestionInterface>(data);
 
   useEffect(() => {
     console.log(trigger, "changed");
     setQuestion(data);
     console.log(
-      manager.canvasManager.activeComponent.data.coreData?.extensions,
+      manager.canvasManager.activeComponent.data?.extensions,
       "data extensions"
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,8 +43,16 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Overlay"
     );
-    if (index > 0) dispatch(handleSetCorrectOption(value));
-    else dispatch(handleSetWrongOption(value));
+
+    if (index > 0) {
+      manager.setState("optionsData", (optionsData : any) => {
+        return { ...optionsData, ...{ correctOption : value}};
+      });
+    } else {
+      manager.setState("optionsData", (optionsData : any) => {
+        return { ...optionsData, ...{ wrongOption : value}};
+      });
+    }
   };
 
   return (

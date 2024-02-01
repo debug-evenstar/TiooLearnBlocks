@@ -1,30 +1,32 @@
 import { EditorialManagerInterface } from "./EditorialManager";
 
 interface States {
-    rightSidebarState : boolean;
+  rightSidebarState: boolean;
 }
 
 export interface EditorialSidebarManagerInterface {
-  manager : EditorialManagerInterface;
-  states : States;
-  setState : Function;
+  manager: EditorialManagerInterface;
+  states: States;
+  setState: Function;
 }
 
-export class EditorialSidebarManager implements EditorialSidebarManagerInterface {
-  manager : EditorialManagerInterface;
-  states : States;
+export class EditorialSidebarManager
+  implements EditorialSidebarManagerInterface
+{
+  manager: EditorialManagerInterface;
+  states: States;
 
-  constructor(manager : EditorialManagerInterface) {
+  constructor(manager: EditorialManagerInterface) {
     this.manager = manager;
     this.states = {
-        rightSidebarState : false
-    }
+      rightSidebarState: false,
+    };
   }
 
-  setState(data : {[key : string] : any}){
+  setState(data: { [key: string]: any }) {
     this.states = {
-        ...this.states,
-        ...data
+      ...this.states,
+      ...data,
     };
   }
 }

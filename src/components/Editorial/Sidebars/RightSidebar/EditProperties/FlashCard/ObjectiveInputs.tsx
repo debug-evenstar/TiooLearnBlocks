@@ -1,4 +1,5 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 import { resizeInputWidth } from "components/Editorial/ViewBox/handler";
 import { QuestionInterface } from "components/interface";
 import {
@@ -16,14 +17,10 @@ interface Props {
 }
 
 const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  
+
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const data: QuestionInterface =
@@ -66,8 +63,13 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Flashcard"
     );
-    if (index > 0) dispatch(handleSetCorrectOption(value));
-    else dispatch(handleSetWrongOption(value));
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        wrongOption : index <= 0 ? value : prev.wrongOption,
+        correctOption : index > 0 ? value : prev.correctOption
+      }) as OptionsDataState
+    }));
   };
 
   const [widestInputWidth, setWidestInputWidth] = useState(0);

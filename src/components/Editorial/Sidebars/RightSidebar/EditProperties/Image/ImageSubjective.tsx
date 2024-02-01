@@ -18,6 +18,10 @@ import Feedback from "../Extensions/Feedback";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import OverlayFeedback from "./OverlayFeedback";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -26,24 +30,15 @@ interface Props {
 }
 
 const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-
   const addQuestion =
     manager.canvasManager.canvas.functions.updateImageQuestions;
 
-  const dispatch = useDispatch();
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(true);
   const questionData: QuestionInterface[] =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question;
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question;
   const [question, setQuestion] = useState<QuestionInterface[]>();
 
   useEffect(() => {
@@ -86,8 +81,15 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
       index
     );
     setIsActive(true);
-    dispatch(handleSetObjectiveIndex(index));
-    dispatch(refreshOptionsData());
+    manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: 0,
+    });
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     console.log(data, "updated");
   };
 
@@ -96,7 +98,7 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
       null,
       "Overlay"
     );
-    dispatch(handleToggleTrigger());
+    manager.setState("trigger", (prev: any) => !prev);
     setQuestion(data.question);
   };
 
@@ -139,24 +141,11 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [showAI, setShowAI] = useState(false);
   const [value, setValue] = useState("");
 
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetCorrectOption);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
-  const {
-    optionIndex,
-    status: optionStatus,
-    type,
-  } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  const { objectiveIndex } = manager.states.optionsData;
+  const { optionIndex, status: optionStatus, type } = manager.states.feedback;
 
   const coreData =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
 
   const handleSetSubjective = () => {
     if (!value) return;
@@ -174,16 +163,25 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       "Overlay"
     );
     setIsEditable(false);
-    dispatch(handleSetFeedbackStatus(false));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return { ...prev, ...({ status: false } as FeedbackState) };
+    });
     console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);
   };
 
   const handleShowFeedback = () => {
-    dispatch(handleSetFeedbackType("SUBJECTIVE"));
-    dispatch(handleSetOptionIndex(0));
-    dispatch(handleSetFeedbackStatus(true));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "SUBJECTIVE",
+          optionIndex: 0,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   return (

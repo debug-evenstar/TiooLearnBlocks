@@ -20,6 +20,10 @@ import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -27,21 +31,15 @@ interface Props {
 }
 
 const Objective: FC<Props> = ({ manager, component }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
-  const activeCompName = selector.payload.slider.value.activeCompName;
-  const activeCompIndex = selector.payload.slider.value.activeCompIndex;
+  const id = manager.states.activeViewBox;
+  const activeCompName = manager.states.slider.activeCompName;
+  const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
-  const dispatch = useDispatch();
-  const { identifier } = selector.payload.optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
+  const { identifier } = manager.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
 
@@ -56,21 +54,33 @@ const Objective: FC<Props> = ({ manager, component }) => {
     console.log(questions, "in objective");
     replaceContent(questions, "OBJECTIVE", component, true, activeCompIndex);
     setIsActive(true);
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetObjectiveIndex(questions.length));
-    dispatch(refreshOptionsData());
+    manager.setState("showOptionsBox", (prev: any) => !prev);
+    // Verify the states being set
+    // manager.setObjectiveIndexState(questions.length);
+    manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: 0,
+    });
   };
 
   const handleClick = () => {
     if (questions.length > 0) {
       replaceContent(questions, "OBJECTIVE", component, true, activeCompIndex);
       setIsActive(true);
-      dispatch(handleToggleShowOptionBox());
-      dispatch(handleSetObjectiveIndex(questions.length));
-      dispatch(handleToggleTrigger());
+      manager.setState("showOptionsBox", (prev: any) => !prev);
+      manager.setState("trigger", (prev: any) => !prev);
     }
-    dispatch(handleSetCorrectOption(""));
-    dispatch(handleSetWrongOption(""));
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
+      ...prev,
+      ...({
+        objectiveIndex:
+          questions.length > 0 ? questions.length : prev.objectiveIndex,
+        wrongOption: "",
+        correctOption: "",
+      } as OptionsDataState),
+    }));
   };
 
   const handleDelete = (id: string, optionIndex: number, index: number = 0) => {
@@ -86,13 +96,13 @@ const Objective: FC<Props> = ({ manager, component }) => {
         ],
       };
       console.log(updatedQuestion.options, "updated options");
-      manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+      manager.canvasManager.canvas.functions.deleteObjectiveOptions(
         updatedQuestion.options,
         index,
         "Slider",
         activeCompIndex
       );
-      dispatch(handleToggleTrigger());
+      manager.setState("trigger", (prev: any) => !prev);
 
       updatedQuestions[index] = updatedQuestion;
     }
@@ -160,18 +170,12 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetFeedbackStatus);
-  const { status: optionStatus, type } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(false);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
 
-  const activeCompIndex = selector.payload.slider.value.activeCompIndex;
+  const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -193,9 +197,14 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       activeCompIndex
     );
     setAddedOption(!addedOption);
-    dispatch(
-      handleSetOptionIndex(question?.options ? question.options.length : 0)
-    );
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          optionIndex: question.options ? question.options.length : 0,
+        } as FeedbackState),
+      };
+    });
   };
 
   const deleteOption = (i: number) => {
@@ -205,13 +214,22 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    dispatch(handleSetFeedbackType("OBJECTIVE"));
-    dispatch(handleSetOptionIndex(index));
-    dispatch(handleSetFeedbackStatus(true));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "OBJECTIVE",
+          optionIndex: index,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   const handleOpenObjective = () => {
-    dispatch(handleSetObjectiveIndex(index));
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     setIsActive(!isActive);
   };
 

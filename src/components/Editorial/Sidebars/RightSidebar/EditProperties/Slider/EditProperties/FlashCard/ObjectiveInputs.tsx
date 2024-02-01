@@ -1,12 +1,6 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 import { resizeInputWidth } from "components/Editorial/ViewBox/handler";
 import { QuestionInterface } from "components/interface";
-import {
-  handleSetCorrectOption,
-  handleSetWrongOption,
-} from "provider/optionsDataSlice";
-import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import { FC, createRef, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,14 +10,10 @@ interface Props {
 }
 
 const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  
+
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const data: QuestionInterface =
@@ -66,8 +56,16 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Flashcard"
     );
-    if (index > 0) dispatch(handleSetCorrectOption(value));
-    else dispatch(handleSetWrongOption(value));
+    
+    if (index > 0) {
+      manager.setState("optionsData", (optionsData : any) => {
+        return { ...optionsData, ...{ correctOption : value}};
+      });
+    } else {
+      manager.setState("optionsData", (optionsData : any) => {
+        return { ...optionsData, ...{ wrongOption : value}};
+      });
+    }
   };
 
   const [widestInputWidth, setWidestInputWidth] = useState(0);

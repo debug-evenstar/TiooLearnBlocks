@@ -15,29 +15,21 @@ interface Props {
 }
 
 const Feedback: FC<Props> = ({ manager, type }) => {
+  
   const correctRadio = useRef<HTMLInputElement | null>(null);
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
 
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const id = manager.states.activeViewBox;
+  const { objectiveIndex } = manager.states.optionsData;
 
-  const { optionIndex, status } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-  };
+  const { optionIndex, status } = manager.states.feedback;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const [feedbackValue, setFeedbackValue] = useState("");
 
-  const dispatch = useDispatch();
-  const { identifier } = selector.payload.optionsData.value as {
-    identifier: string;
-  };
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const { identifier } = manager.states.optionsData;
+  const coreData = manager.canvasManager.activeComponent.data;
   let option: OptionInterface =
     coreData.questions[objectiveIndex]?.options[
       type === "OBJECTIVE" ? optionIndex : 0
@@ -59,9 +51,8 @@ const Feedback: FC<Props> = ({ manager, type }) => {
   const handleChangeFeedbackContent = (value: string) => {
     setFeedbackValue(value);
     const newOption: OptionInterface =
-      manager.canvasManager.activeComponent.data.coreData.questions[
-        objectiveIndex
-      ]?.options[type === "OBJECTIVE" ? optionIndex : 0];
+      manager.canvasManager.activeComponent.data.questions[objectiveIndex]
+        ?.options[type === "OBJECTIVE" ? optionIndex : 0];
     option = newOption;
   };
 
@@ -71,7 +62,13 @@ const Feedback: FC<Props> = ({ manager, type }) => {
       objectiveIndex,
       optionIndex
     );
-    dispatch(handleSetFeedbackStatus(false));
+    setFeedbackStatus();
+  };
+
+  const setFeedbackStatus = () => {
+    manager.setState("feedback", (feedback : any) => {
+      return { ...feedback, ...{ status : true}};
+    });
   };
 
   const handleChangeType = (type: string) => {
@@ -81,9 +78,8 @@ const Feedback: FC<Props> = ({ manager, type }) => {
       optionIndex
     );
     const newOption: OptionInterface =
-      manager.canvasManager.activeComponent.data.coreData.questions[
-        objectiveIndex
-      ]?.options[type === "OBJECTIVE" ? optionIndex : 0];
+      manager.canvasManager.activeComponent.data.questions[objectiveIndex]
+        ?.options[type === "OBJECTIVE" ? optionIndex : 0];
     option = newOption;
   };
 
@@ -96,9 +92,8 @@ const Feedback: FC<Props> = ({ manager, type }) => {
     );
 
     const newOption: OptionInterface =
-      manager.canvasManager.activeComponent.data.coreData.questions[
-        objectiveIndex
-      ]?.options[type === "OBJECTIVE" ? optionIndex : 0];
+      manager.canvasManager.activeComponent.data.questions[objectiveIndex]
+        ?.options[type === "OBJECTIVE" ? optionIndex : 0];
     option = newOption;
   };
 
@@ -106,10 +101,7 @@ const Feedback: FC<Props> = ({ manager, type }) => {
     <div className="w-fit h-fit min-w-[20rem] min-h-[22rem] bg-white border border-black absolute -left-[300px] bottom-[200px] pb-4">
       <header className="flex justify-between items-center border-b border-black text-[12px] p-2">
         <p>Set Feedback</p>
-        <RiCloseLine
-          size={15}
-          onClick={() => dispatch(handleSetFeedbackStatus(false))}
-        />
+        <RiCloseLine size={15} onClick={setFeedbackStatus} />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">
         {type === "OBJECTIVE" ? (

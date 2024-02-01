@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import ActiveSidebar from "./ActiveSidebar";
 import InactiveSidebar from "./InactiveSidebar";
 import { useSelector } from "react-redux";
@@ -22,16 +22,13 @@ const RightSidebar: FC<Props> = ({
   lessonlist,
   manager,
 }) => {
-  const isActive = manager.sidebarManager.states.rightSidebarState;
-  console.log(lessonlist, "RIGHT SIDE");
-  // const { status: optionStatus } = selector.payload.feedback.value as {
-  //   status: number;
-  // };
+  const isActive = manager.states.rightSidebarState;
+  const { status: optionStatus } = manager.states.feedback;
 
   return (
     <div
       className={`z-[500] border-l bg-white border-[#030036] border-opacity-10 shadow h-screen w-full max-w-[20%] relative no-scrollbar mb-10 ${
-        false ? "" : "overflow-y-auto"
+        optionStatus ? "" : "overflow-y-auto"
       }`}
     >
       {isActive ? (

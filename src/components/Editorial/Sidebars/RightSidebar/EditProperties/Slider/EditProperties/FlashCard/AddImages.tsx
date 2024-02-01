@@ -16,11 +16,9 @@ interface Props {
 }
 
 const AddImages: FC<Props> = ({ id, manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleToggleTrigger);
-  const trigger: boolean = selector.payload.trigger.value;
+  const trigger = manager.states.trigger;
   const [images, setImages] = useState<any[]>([{ url: "" }]);
-  const coreData = manager.sidebarManager.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -37,7 +35,7 @@ const AddImages: FC<Props> = ({ id, manager }) => {
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
-      dispatch(handleToggleTrigger());
+      manager.setState("trigger", (prev: any) => !prev);
       console.log(cards, "Updated Cards");
       console.log(coreData, "added");
     }

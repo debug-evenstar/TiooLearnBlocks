@@ -26,6 +26,10 @@ import {
 } from "provider/feedbackSlice";
 import OverlayFeedback from "./OverlayFeedback";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -34,24 +38,15 @@ interface Props {
 }
 
 const ImageObjective: FC<Props> = ({ manager, index, data }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-
   const addQuestion =
     manager.canvasManager.canvas.functions.updateImageQuestions;
 
-  const dispatch = useDispatch();
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(false);
   const questionData: QuestionInterface =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
   const [question, setQuestion] = useState<QuestionInterface>();
 
   useEffect(() => {
@@ -95,9 +90,16 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
     );
 
     setIsActive(true);
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetObjectiveIndex(index));
-    dispatch(refreshOptionsData());
+    manager.setState("showOptionsBox", (prev: any) => !prev);
+    manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: 0,
+    });
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     console.log(data, "updated");
   };
 
@@ -112,12 +114,12 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
         ...question.options.slice(optionIndex + 1),
       ],
     };
-    manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
+    manager.canvasManager.canvas.functions.deleteObjectiveOptions(
       updatedQuestion.options,
       0,
       "Overlay"
     );
-    dispatch(handleToggleTrigger());
+    manager.setState("trigger", (prev: any) => !prev);
     console.log(id);
   };
 
@@ -161,20 +163,13 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetFeedbackStatus);
-  const { status: optionStatus, type } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(true);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
 
   const coreData =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
 
   useEffect(() => {
     setQuestion(coreData);
@@ -188,11 +183,16 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       "Overlay"
     );
     setAddedOption(!addedOption);
-    dispatch(
-      handleSetOptionIndex(question.options ? question.options.length : 0)
-    );
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          optionIndex: question.options ? question.options.length : 0,
+        } as FeedbackState),
+      };
+    });
     console.log(
-      manager.canvasManager.activeComponent.data.coreData.questions,
+      manager.canvasManager.activeComponent.data.questions,
       "clicked"
     );
   };
@@ -204,13 +204,22 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-    dispatch(handleSetFeedbackType("OBJECTIVE"));
-    dispatch(handleSetOptionIndex(index));
-    dispatch(handleSetFeedbackStatus(true));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "OBJECTIVE",
+          optionIndex: index,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   const handleOpenObjective = () => {
-    dispatch(handleSetObjectiveIndex(index));
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     setIsActive(!isActive);
   };
 

@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RenderComponent from "pages/renderComp";
 import { Editorial } from "components";
 import { LessonPage } from "pages";
-import axios from "axios";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { useDispatch } from "react-redux";
 import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
@@ -36,21 +35,31 @@ function App() {
     ],
   };
 
-  const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
   const [date, setDate] = useState<any>();
   const fetchLess = async () => {
-    await axios
-      .get("https://beta.api.hellotioo.com/open/lesson/473/template")
-      .then((res: any) => {
-        if (!res.error) {
-          setDate(res.data.data);
-        } else console.log(res);
-      });
+    try {
+      const response = await fetch(
+        "https://beta.api.hellotioo.com/open/lesson/473/template"
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (!data.error) {
+        setDate(data.data);
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
   useEffect(() => {
     fetchLess();
-    dispatch(refreshToggleSidebarState());
   }, []);
 
   const handleBack = () => {

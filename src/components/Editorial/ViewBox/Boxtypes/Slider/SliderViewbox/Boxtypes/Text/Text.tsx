@@ -13,6 +13,7 @@ import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import { registerFunctions } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/registerFuncsHandlers";
 import { resizeBox } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/wrapperHandler";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -22,20 +23,15 @@ const Text: FC<CanvasText> = ({
   setIsEditable,
   data,
 }) => {
-  const dispatch = useDispatch();
-
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
-  const trigger: boolean = selector.payload.trigger.value;
-  const { identifier, objectiveIndex } = selector.payload.optionsData.value as {
-    identifier: string;
-    objectiveIndex: number;
-  };
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
+  const trigger = manager.states.trigger;
+  const { identifier, objectiveIndex } = manager.states.optionsData;
 
   const setIdentifier = (id: string) => {
-    dispatch(handleSetIdentifier(id));
-    console.log(id, "the id");
+    manager.setState("optionsData", (prev: any) => {
+      return { ...prev, ...{ identifier: id } };
+    });
   };
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -92,7 +88,7 @@ const Text: FC<CanvasText> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const activeCompIndex = selector.payload.slider.value.activeCompIndex;
+  const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -108,13 +104,17 @@ const Text: FC<CanvasText> = ({
     e.stopPropagation();
     console.log("just clicked on the objective");
     handleSetObjectiveIndex(index);
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetCorrectOption(options[0]));
-    dispatch(handleSetWrongOption(options[1]));
+    manager.setState("showOptionsBox", (prev: any) => !prev);
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        wrongOption : options[0],
+        correctOption : options[1]
+      }) as OptionsDataState
+    }));
   };
 
   useEffect(() => {
-    console.log(coreData, "this is coredata");
     if (!coreData || !coreData.questions || !activeId.includes("Slider"))
       return;
 
@@ -127,14 +127,12 @@ const Text: FC<CanvasText> = ({
           "this is the identifier in slider text"
         );
         const inputElement = document.getElementById(question.identifier);
-        console.log(inputElement, "FOUND ELEMENT", i);
 
         if (inputElement) {
           if (question.type === "OBJECTIVE") {
             inputElement.addEventListener("click", (e) =>
               handleClickedObjective(e, question.options, i)
             );
-            console.log("added click event to", inputElement);
 
             return () => {
               if (inputElement) {

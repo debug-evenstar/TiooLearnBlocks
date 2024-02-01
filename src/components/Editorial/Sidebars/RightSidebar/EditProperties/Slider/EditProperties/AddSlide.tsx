@@ -27,13 +27,12 @@ const data = (component: string) => {
 };
 
 const AddSlide: FC<Props> = ({ type, manager }) => {
-  const dispatch = useDispatch();
   const addComponentToSlider =
     manager.canvasManager.canvas.functions.addComponentToSlider;
 
   const handleClick = () => {
     addComponentToSlider(data(type));
-    dispatch(handleToggleTrigger());
+    manager.setState("trigger", (prev: any) => !prev);
   };
 
   return (

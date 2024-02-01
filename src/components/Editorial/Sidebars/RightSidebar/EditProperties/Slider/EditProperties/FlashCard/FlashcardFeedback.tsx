@@ -7,6 +7,7 @@ import { RiCloseLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { RadioButton } from "../Image/Overlay/OverlayFeedback";
 import EmojiTextArea from "../Extensions/EmojiTextarea/EmojiTextArea";
+import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -19,19 +20,11 @@ const FlashcardFeedback: FC<Props> = ({ manager, type, index }) => {
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
 
-  const selector: any = useSelector(handleSetCorrectOption);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const { objectiveIndex } = manager.states.optionsData;
 
-  const { optionIndex } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-  };
+  const { optionIndex } = manager.states.feedback;
 
   const [feedbackValue, setFeedbackValue] = useState("");
-
-  const dispatch = useDispatch();
 
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -54,7 +47,9 @@ const FlashcardFeedback: FC<Props> = ({ manager, type, index }) => {
       optionIndex,
       "Flashcard"
     );
-    dispatch(handleSetFeedbackStatus(false));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return { ...prev, ...({ status: false } as FeedbackState) };
+    });
   };
 
   const handleChangeType = (type: string) => {
@@ -86,7 +81,11 @@ const FlashcardFeedback: FC<Props> = ({ manager, type, index }) => {
         <p>Set Feedback</p>
         <RiCloseLine
           size={15}
-          onClick={() => dispatch(handleSetFeedbackStatus(false))}
+          onClick={() =>
+            manager.setState("feedback", (prev: FeedbackState) => {
+              return { ...prev, ...({ status: false } as FeedbackState) };
+            })
+          }
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">

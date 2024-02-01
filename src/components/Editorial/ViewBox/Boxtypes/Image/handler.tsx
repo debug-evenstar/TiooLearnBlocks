@@ -1,4 +1,3 @@
-// import axios from "axios";
 import {
   ComponentBaseDataInterface,
   QuestionInterface,
@@ -31,24 +30,32 @@ export const setImageComponentData = (imageData: {
 };
 
 export const uploadFile = async (lessonId: number, file: File) => {
-
   // Use File instead of FileList
   try {
     const formData = new FormData();
     formData.append("image", file);
 
-    // const response = await axios.put(
-    //   `https://beta.api.hellotioo.com/open/lesson/templateimage/${lessonId}`,
-    //   formData
-    // );
+    const response = await fetch(
+      `https://beta.api.hellotioo.com/open/lesson/templateimage/${lessonId}`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
 
-    // if (response.data && !response.data.error) {
-    //   const url = response.data.data[0];
-    //   console.log(response.data, "data");
-    //   return url;
-    // } else {
-    //   console.error("Upload failed:", response.data.error);
-    // }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.error) {
+      const url = data.data[0];
+      console.log(data, "data");
+      return url;
+    } else {
+      console.error("Upload failed:", data.error);
+    }
   } catch (error) {
     console.error("Upload error:", error);
   }

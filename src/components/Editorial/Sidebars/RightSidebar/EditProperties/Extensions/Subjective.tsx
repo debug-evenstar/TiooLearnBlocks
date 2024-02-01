@@ -14,6 +14,10 @@ import {
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
 import { QuestionInterface } from "components/interface";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -21,24 +25,16 @@ interface Props {
 }
 
 const Subjective: FC<Props> = ({ manager, component }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
+  const id = manager.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const replaceContent =
     manager.canvasManager.activeComponent.functions?.replaceContent;
 
-  const dispatch = useDispatch();
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-    objectiveIndex: number;
-  };
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleSetObjective = () => {
     if (isActive) return;
@@ -49,15 +45,16 @@ const Subjective: FC<Props> = ({ manager, component }) => {
       component
     );
     setIsActive(true);
-    dispatch(handleSetObjectiveIndex(questions.length));
-    dispatch(handleSetCorrectOption(""));
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
+      ...prev,
+      ...({
+        objectiveIndex: questions.length,
+        correctOption: "",
+      } as OptionsDataState),
+    }));
   };
 
   const handleClick = () => {
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData,
-      "changed data"
-    );
     if (questions.length > 0) {
       replaceContent(
         coreData?.questions ? coreData.questions : [],
@@ -65,9 +62,15 @@ const Subjective: FC<Props> = ({ manager, component }) => {
         component
       );
       setIsActive(true);
-      dispatch(handleSetObjectiveIndex(questions.length));
     }
-    dispatch(handleSetCorrectOption(""));
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
+      ...prev,
+      ...({
+        objectiveIndex:
+          questions.length > 0 ? questions.length : prev.objectiveIndex,
+        correctOption: "",
+      } as OptionsDataState),
+    }));
   };
 
   const handleDelete = (id: string, index: number = 0) => {
@@ -145,22 +148,10 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [value, setValue] = useState("");
 
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetCorrectOption);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
-  const {
-    optionIndex,
-    status: optionStatus,
-    type,
-  } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  const { objectiveIndex } = manager.states.optionsData;
+  const { optionIndex, status: optionStatus, type } = manager.states.feedback;
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleSetSubjective = () => {
     if (!value) return;
@@ -176,16 +167,26 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       0
     );
     setIsEditable(false);
-    dispatch(handleSetFeedbackStatus(false));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return { ...prev, ...({ status: false } as FeedbackState) };
+    });
+
     console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);
   };
 
   const handleShowFeedback = () => {
-    dispatch(handleSetFeedbackType("SUBJECTIVE"));
-    dispatch(handleSetOptionIndex(0));
-    dispatch(handleSetFeedbackStatus(true));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "SUBJECTIVE",
+          optionIndex: 0,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   return (

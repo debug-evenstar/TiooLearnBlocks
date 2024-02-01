@@ -14,20 +14,14 @@ interface Props {
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
   const [question, setQuestion] = useState<any>();
   const [maxWidth, setMaxWidth] = useState(0);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   useEffect(() => {
     setQuestion(coreData.questions[objectiveIndex]);
@@ -54,8 +48,16 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
       objectiveIndex,
       index
     );
-    if (index > 0) dispatch(handleSetCorrectOption(value));
-    else dispatch(handleSetWrongOption(value));
+
+    if (index > 0) {
+      manager.setState("optionsData", (optionsData: any) => {
+        return { ...optionsData, ...{ correctOption: value } };
+      });
+    } else {
+      manager.setState("optionsData", (optionsData: any) => {
+        return { ...optionsData, ...{ wrongOption: value } };
+      });
+    }
   };
 
   return (

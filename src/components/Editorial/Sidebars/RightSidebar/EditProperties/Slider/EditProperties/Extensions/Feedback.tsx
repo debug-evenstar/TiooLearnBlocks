@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ObjectiveItemProp } from "./interfaces";
 import { RadioButton } from "../Image/Overlay/OverlayFeedback";
 import EmojiTextArea from "./EmojiTextarea/EmojiTextArea";
+import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -17,25 +18,16 @@ interface Props {
 const Feedback: FC<Props> = ({ manager, type }) => {
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
 
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const id = manager.states.activeViewBox;
+  const { objectiveIndex } = manager.states.optionsData;
 
-  const { optionIndex, status } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-  };
+  const { optionIndex, status } = manager.states.feedback;
 
   const [questions, setQuestions] = useState<any[]>([]);
   const [feedbackValue, setFeedbackValue] = useState("");
 
-  const dispatch = useDispatch();
-  const { identifier } = selector.payload.optionsData.value as {
-    identifier: string;
-  };
-  const activeCompIndex = selector.payload.slider.value.activeCompIndex;
+  const { identifier } = manager.states.optionsData;
+  const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -80,7 +72,9 @@ const Feedback: FC<Props> = ({ manager, type }) => {
       "Slider",
       activeCompIndex
     );
-    dispatch(handleSetFeedbackStatus(false));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return { ...prev, ...({ status: false } as FeedbackState) };
+    });
   };
 
   const handleChangeType = (type: string) => {
@@ -125,7 +119,11 @@ const Feedback: FC<Props> = ({ manager, type }) => {
         <p>Set Feedback</p>
         <RiCloseLine
           size={15}
-          onClick={() => dispatch(handleSetFeedbackStatus(false))}
+          onClick={() =>
+            manager.setState("feedback", (prev: FeedbackState) => {
+              return { ...prev, ...({ status: false } as FeedbackState) };
+            })
+          }
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">

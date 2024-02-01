@@ -19,6 +19,7 @@ import {
   handleToggleOverlayState,
 } from "provider/overlayActiveSlice";
 import "react-resizable/css/styles.css";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 const Image: FC<CanvasMedia> = ({
   id,
@@ -27,11 +28,9 @@ const Image: FC<CanvasMedia> = ({
   data,
   currIndex,
 }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
-  const overlayActive: boolean = selector.payload.overlayActive.value;
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
+  const overlayActive = manager.states.overlayActive;
 
   const [previewImage, setPreviewImage] = useState("");
   const [inputList, setInputList] = useState<any[]>([]);
@@ -39,7 +38,7 @@ const Image: FC<CanvasMedia> = ({
   const imageRef = useRef<HTMLImageElement>(null);
 
   const extensions: any[] =
-    manager.canvasManager.activeComponent.data.coreData?.extensions;
+    manager.canvasManager.activeComponent.data?.extensions;
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -88,8 +87,7 @@ const Image: FC<CanvasMedia> = ({
     };
 
     manager.canvasManager.activeComponent.functions["toggleOverlay"] = () => {
-      dispatch(handleToggleOverlayState());
-      //dispatch(handleSetOverlayState(false));
+      manager.setState("overlayActive", (prev: any) => !prev);
     };
   }, [manager, viewBoxRef]);
 
@@ -119,9 +117,9 @@ const Image: FC<CanvasMedia> = ({
           extensions: newList,
         })
       );
-      dispatch(handleToggleTrigger());
+      manager.setState("trigger", (prev: any) => !prev);
       console.log(
-        manager.canvasManager.activeComponent.data.coreData.extensions,
+        manager.canvasManager.activeComponent.data.extensions,
         "updated data"
       );
       setInputBoxDimensions((prevList) => [
@@ -148,9 +146,11 @@ const Image: FC<CanvasMedia> = ({
 
   const handleClickedInput = (input: any, index: number) => {
     if (input?.question[0] && input.question[0]?.type === "OBJECTIVE") {
-      dispatch(handleToggleShowOptionBox());
+      manager.setState("showOptionsBox", (prev: any) => !prev);
     }
-    dispatch(handleSetObjectiveIndex(index));
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
   };
 
   return (

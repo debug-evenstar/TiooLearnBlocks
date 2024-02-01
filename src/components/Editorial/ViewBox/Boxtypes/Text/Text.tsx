@@ -13,6 +13,7 @@ import {
 import { handleTextChange } from "./handlers/generalHandler";
 import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -21,20 +22,15 @@ const Text: FC<CanvasText> = ({
   isEditable,
   setIsEditable,
 }) => {
-  const dispatch = useDispatch();
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
+  const trigger = manager.states.trigger;
+  const { identifier, objectiveIndex } = manager.states.optionsData;
 
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
-  const trigger: boolean = selector.payload.trigger.value;
-  const { identifier, objectiveIndex } = selector.payload.optionsData.value as {
-    identifier: string;
-    objectiveIndex: number;
-  };
-
-  const setIdentifier = (id: string) => {
-    dispatch(handleSetIdentifier(id));
-    console.log(id, "the id");
+  const setIdentifier = (identifier: string) => {
+    manager.setState("optionsData", (prev: any) => {
+      return { ...prev, ...{ identifier } };
+    });
   };
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -95,7 +91,7 @@ const Text: FC<CanvasText> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleClickedObjective = (
     e: MouseEvent,
@@ -104,10 +100,14 @@ const Text: FC<CanvasText> = ({
   ) => {
     e.stopPropagation();
     handleSetObjectiveIndex(index);
-    console.log(index, "clicked, option box");
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetCorrectOption(options[0]));
-    dispatch(handleSetWrongOption(options[1]));
+    manager.setState("showOptionsBox", (prev: any) => !prev);
+    manager.setState("optionsData", (prev : OptionsDataState) => ({
+      ...prev,
+      ...({ 
+        wrongOption : options[0],
+        correctOption : options[1]
+      }) as OptionsDataState
+    }));
   };
 
   useEffect(() => {
@@ -117,14 +117,12 @@ const Text: FC<CanvasText> = ({
       ?.filter((question: any) => question?.identifier?.includes(id))
       .forEach((question: any, i: number) => {
         const inputElement = document.getElementById(question.identifier);
-        console.log(inputElement, "FOUND ELEMENT", i);
 
         if (inputElement) {
           if (question.type === "OBJECTIVE") {
             inputElement.addEventListener("click", (e) =>
               handleClickedObjective(e, question.options, i)
             );
-            console.log("added click event to", inputElement);
 
             return () => {
               if (inputElement) {
