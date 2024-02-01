@@ -7,7 +7,11 @@ import { setComponentLayout } from "./EditorialManager";
 import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
 import { handleToggleOverlayState } from "provider/overlayActiveSlice";
-import { ActiveViewBoxState } from "./StateInterface";
+import {
+  ActiveViewBoxState,
+  OverlayActiveState,
+  RightSidebarState,
+} from "./StateInterface";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
@@ -42,10 +46,12 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     const data = e.dataTransfer.getData("text/plain");
     if (!data) return;
     onDrop(data);
-    manager.setState("rightSidebarState", (prev: any) => {
+    manager.setState("rightSidebarState", (prev: RightSidebarState) => {
       return !prev;
     });
-    manager.canvasManager.canvas.toggleOverlayActiveState();
+    manager.setState("rightSidebarState", (prev: OverlayActiveState) => {
+      return !prev;
+    });
   };
 
   const handleClickedViewbox = (id: string) => {

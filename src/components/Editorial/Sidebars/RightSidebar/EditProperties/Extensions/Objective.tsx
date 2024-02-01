@@ -97,7 +97,10 @@ const Objective: FC<Props> = ({ manager, component }) => {
         ],
       };
       console.log(updatedQuestion.options, "updated options");
-      manager.functions.deleteObjectiveOptions(updatedQuestion.options, index);
+      manager.canvasManager.canvas.functions.deleteObjectiveOptions(
+        updatedQuestion.options,
+        index
+      );
       manager.setState("trigger", (prev: any) => !prev);
 
       updatedQuestions[index] = updatedQuestion;

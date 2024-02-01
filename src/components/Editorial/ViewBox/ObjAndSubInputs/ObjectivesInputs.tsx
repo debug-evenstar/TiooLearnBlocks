@@ -50,14 +50,13 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     );
 
     if (index > 0) {
-      manager.setState("optionsData", (optionsData : any) => {
-        return { ...optionsData, ...{ correctOption : value}};
+      manager.setState("optionsData", (optionsData: any) => {
+        return { ...optionsData, ...{ correctOption: value } };
       });
     } else {
-      manager.setState("optionsData", (optionsData : any) => {
-        return { ...optionsData, ...{ wrongOption : value}};
+      manager.setState("optionsData", (optionsData: any) => {
+        return { ...optionsData, ...{ wrongOption: value } };
       });
-    }
     }
   };
 
