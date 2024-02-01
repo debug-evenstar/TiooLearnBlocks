@@ -18,7 +18,10 @@ import Feedback from "../Extensions/Feedback";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import OverlayFeedback from "./OverlayFeedback";
 import { handleToggleTrigger } from "provider/triggerSlice";
-import { FeedbackState } from "components/Editorial/Base/StateInterface";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
