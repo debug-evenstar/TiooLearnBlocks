@@ -9,8 +9,6 @@ interface Props {
 }
 
 const SliderHeader: FC<Props> = ({ manager }) => {
-  
-
   const activeCompName = manager.states.slider.activeCompName;
   const scrollableRef = useRef<HTMLElement | null>(null);
   const [isScrolledToEnd, setIsScrolledToEnd] = useState(false);
@@ -46,13 +44,8 @@ const SliderHeader: FC<Props> = ({ manager }) => {
   };
 
   const checkCompName = (name: string) => {
-    console.log(activeCompName, name, "compname compare");
     return activeCompName === name;
   };
-
-  useEffect(() => {
-    console.log(manager.canvasManager.activeComponent.data);
-  }, []);
 
   return (
     <header className="w-full relative flex items-center p-2 border-b border-b-gray-400">

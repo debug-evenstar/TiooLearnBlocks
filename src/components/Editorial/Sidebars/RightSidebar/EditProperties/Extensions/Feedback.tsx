@@ -15,7 +15,6 @@ interface Props {
 }
 
 const Feedback: FC<Props> = ({ manager, type }) => {
-  
   const correctRadio = useRef<HTMLInputElement | null>(null);
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
@@ -38,12 +37,9 @@ const Feedback: FC<Props> = ({ manager, type }) => {
   const [disabled, setDisabled] = useState(option.answer);
 
   useEffect(() => {
-    console.log(coreData, option);
-
     coreData?.questions?.forEach((question: any) => {
       if (question?.identifier === identifier) {
         setQuestions([...questions, question]);
-        console.log(question);
       }
     });
   }, [coreData, identifier]);
@@ -66,8 +62,8 @@ const Feedback: FC<Props> = ({ manager, type }) => {
   };
 
   const setFeedbackStatus = () => {
-    manager.setState("feedback", (feedback : any) => {
-      return { ...feedback, ...{ status : true}};
+    manager.setState("feedback", (feedback: any) => {
+      return { ...feedback, ...{ status: true } };
     });
   };
 

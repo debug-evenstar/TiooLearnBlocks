@@ -43,12 +43,9 @@ const Feedback: FC<Props> = ({ manager, type }) => {
   const [disabled, setDisabled] = useState(option?.answer);
 
   useEffect(() => {
-    console.log(coreData, option);
-
     coreData?.questions?.forEach((question: any) => {
       if (question?.identifier === identifier) {
         setQuestions([...questions, question]);
-        console.log(question);
       }
     });
   }, [coreData, identifier]);

@@ -102,15 +102,14 @@ const Text: FC<CanvasText> = ({
     index: number
   ) => {
     e.stopPropagation();
-    console.log("just clicked on the objective");
     handleSetObjectiveIndex(index);
     manager.setState("showOptionsBox", (prev: any) => !prev);
-    manager.setState("optionsData", (prev : OptionsDataState) => ({
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
-      ...({ 
-        wrongOption : options[0],
-        correctOption : options[1]
-      }) as OptionsDataState
+      ...({
+        wrongOption: options[0],
+        correctOption: options[1],
+      } as OptionsDataState),
     }));
   };
 
@@ -118,14 +117,9 @@ const Text: FC<CanvasText> = ({
     if (!coreData || !coreData.questions || !activeId.includes("Slider"))
       return;
 
-    console.log(id, coreData.questions[0]?.identifier, "inside of coredata");
     coreData?.questions
       //?.filter((question: any) => question?.identifier?.includes(id))
       .forEach((question: any, i: number) => {
-        console.log(
-          question.identifier,
-          "this is the identifier in slider text"
-        );
         const inputElement = document.getElementById(question.identifier);
 
         if (inputElement) {

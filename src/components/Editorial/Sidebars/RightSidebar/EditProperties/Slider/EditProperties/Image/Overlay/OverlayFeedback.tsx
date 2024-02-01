@@ -68,10 +68,6 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
     );
   };
 
-  useEffect(() => {
-    console.log("opened!");
-  }, []);
-
   return (
     <div className="w-fit h-fit min-w-[20rem] min-h-[22rem] bg-white border border-black absolute right-[200px] bottom-[50px] pb-4">
       <header className="flex justify-between items-center border-b border-black text-[12px] p-2">

@@ -44,7 +44,6 @@ const Objective: FC<Props> = ({ manager, component }) => {
 
   const handleSetObjective = () => {
     if (isActive) return;
-    console.log(questions, "in objective");
     replaceContent(
       coreData?.questions ? coreData.questions : [],
       "OBJECTIVE",
@@ -81,7 +80,6 @@ const Objective: FC<Props> = ({ manager, component }) => {
       ...prev,
       ...({ correctOption: "", wrongOption: "" } as OptionsDataState),
     }));
-    console.log(manager.canvasManager.activeComponent.data, "changed data");
   };
 
   const handleDelete = (id: string, optionIndex: number, index: number = 0) => {
@@ -96,7 +94,6 @@ const Objective: FC<Props> = ({ manager, component }) => {
           ...updatedQuestions[index].options.slice(optionIndex + 1),
         ],
       };
-      console.log(updatedQuestion.options, "updated options");
       manager.canvasManager.canvas.functions.deleteObjectiveOptions(
         updatedQuestion.options,
         index
@@ -114,7 +111,6 @@ const Objective: FC<Props> = ({ manager, component }) => {
           question?.type === "OBJECTIVE" && question?.identifier?.includes(id)
       );
       setQuestions(filteredQuestions);
-      console.log(questions);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coreData?.questions, identifier]);
@@ -197,14 +193,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
         } as FeedbackState),
       };
     });
-    console.log(
-      manager.canvasManager.activeComponent.data.questions,
-      "clicked"
-    );
   };
 
   const deleteOption = (i: number) => {
-    console.log(i, " is the option's index.");
     handleDelete(objective.identifier, i, index);
     setAddedOption(!addedOption);
   };

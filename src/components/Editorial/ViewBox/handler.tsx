@@ -50,7 +50,6 @@ export const ViewBoxContent = (
   }
 ) => {
   const componentName = getOriginalName(id);
-  console.log(id, componentName);
 
   const viewboxTypes: {
     [key: string]: JSX.Element;
