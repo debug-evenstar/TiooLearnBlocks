@@ -1,7 +1,10 @@
 /// <reference types="react" />
 import { EditorialManagerInterface } from "../Base/EditorialManager";
 export declare function getOriginalName(str: string): string;
-export declare const ViewBoxContent: (id: string, manager: EditorialManagerInterface, viewBoxRef: React.MutableRefObject<HTMLDivElement | null>, isEditable: boolean, setIsEditable: React.Dispatch<React.SetStateAction<boolean>>) => JSX.Element;
+export declare const ViewBoxContent: (id: string, manager: EditorialManagerInterface, viewBoxRef: React.MutableRefObject<HTMLDivElement | null>, isEditable: boolean, setIsEditable: React.Dispatch<React.SetStateAction<boolean>>, viewBoxSize: {
+    width: number;
+    height: number;
+}) => JSX.Element;
 export declare const EditProperties: (id: string, manager: EditorialManagerInterface) => JSX.Element;
 interface ViewBoxHandlerInterface {
     manager: EditorialManagerInterface;

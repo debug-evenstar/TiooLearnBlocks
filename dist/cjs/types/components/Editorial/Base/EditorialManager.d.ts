@@ -2,6 +2,7 @@ import { ComponentLayoutInterface, QuestionInterface } from "components/interfac
 import { EditorialSlideManagerInterface } from "./EditorialSlideManager";
 import { CanvasManagerInterface } from "./EditorialCanvasManager";
 import { EditorialSidebarManagerInterface } from "./EditorialSidebarManager";
+import { ActiveViewBoxState, FeedbackState, GridState, OptionsDataState, OverlayActiveState, RightSidebarState, ShowOptionsBoxState, SliderState, TriggerState } from "./StateInterface";
 export declare const setComponentLayout: (canvasProps: {
     width: number;
     height: number;
@@ -31,16 +32,33 @@ export interface DataGroupInterface {
         [key: string]: Function;
     };
 }
+interface States {
+    activeViewBox: ActiveViewBoxState;
+    feedback: FeedbackState;
+    optionsData: OptionsDataState;
+    overlayActive: OverlayActiveState;
+    showOptionsBox: ShowOptionsBoxState;
+    slider: SliderState;
+    trigger: TriggerState;
+    rightSidebarState: RightSidebarState;
+    grid: GridState;
+}
 export interface EditorialManagerInterface {
     sidebarManager: EditorialSidebarManagerInterface;
     canvasManager: CanvasManagerInterface;
     slideManager: EditorialSlideManagerInterface;
+    states: States;
+    setState: Function;
+    triggerRender: Function;
 }
 declare class EditorialManager implements EditorialManagerInterface {
     sidebarManager: EditorialSidebarManagerInterface;
     canvasManager: CanvasManagerInterface;
     slideManager: EditorialSlideManagerInterface;
+    states: States;
+    triggerRender: Function;
     constructor(slides: any[]);
+    setState(key: string, setter: any | Function): void;
     initCanvasManager(): void;
     updateActiveComponentData(data: any, type?: string, index?: number): void;
     updateSliderTextContent(content: string, index: number): void;
@@ -60,6 +78,10 @@ declare class EditorialManager implements EditorialManagerInterface {
     updateFlashcardQuestions(data: QuestionInterface, index: number): void;
     updateFlashcardQuestion(data: QuestionInterface, index: number): void;
     addComponentToSlider(data: any): void;
+    addOrRemoveRowOrColumns(parsedDimensions: {
+        rows: number;
+        cols: number;
+    }, type: string, direction: "rows" | "cols"): void;
     getCanvasSize(): {
         width: number | undefined;
         height: number | undefined;
