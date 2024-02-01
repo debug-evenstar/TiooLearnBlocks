@@ -40,7 +40,6 @@ export const ViewBoxContent = (
   isFlashcardDraggable: boolean
 ) => {
   const componentName = getOriginalName(id);
-  console.log(id, componentName);
 
   const viewboxTypes: {
     [key: string]: JSX.Element;
@@ -86,7 +85,6 @@ export const EditProperties = (
   manager: EditorialManagerInterface
 ) => {
   const componentName = getOriginalName(id);
-  console.log(componentName);
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {

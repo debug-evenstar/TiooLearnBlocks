@@ -115,7 +115,6 @@ const Text: FC<CanvasText> = ({
   };
 
   useEffect(() => {
-    console.log(coreData, "this is coredata");
     if (!coreData || !coreData.questions || !activeId.includes("Slider"))
       return;
 
@@ -128,14 +127,12 @@ const Text: FC<CanvasText> = ({
           "this is the identifier in slider text"
         );
         const inputElement = document.getElementById(question.identifier);
-        console.log(inputElement, "FOUND ELEMENT", i);
 
         if (inputElement) {
           if (question.type === "OBJECTIVE") {
             inputElement.addEventListener("click", (e) =>
               handleClickedObjective(e, question.options, i)
             );
-            console.log("added click event to", inputElement);
 
             return () => {
               if (inputElement) {

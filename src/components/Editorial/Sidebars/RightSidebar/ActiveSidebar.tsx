@@ -25,7 +25,7 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
     }
   };
 
-  const handleRefreshToggleSidebarState = manager.setState("rightSidebarState", false);
+  const handleRefreshToggleSidebarState = () => manager.setState("rightSidebarState", false);
 
   return (
     <div className="w-full h-full overflow-y-visible pt-5 pb-20">

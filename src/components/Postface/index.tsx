@@ -7,7 +7,6 @@ import ThumbsDown from "../../img/thumbs-down.svg"
 import { ContinueBtn } from "components/Lesson/UI/CompButton";
 const PostfaceComponent: FC<PostfaceComponentProps> = ({ data, slide }) => {
     const [feedback, setFeedback] = useState<any>(null);
-    console.log(slide);
     return (
         <>
             <div className="w-[50%] mx-auto mt-[30px]">

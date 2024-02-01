@@ -49,7 +49,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     manager.setState("rightSidebarState", (prev: RightSidebarState) => {
       return !prev;
     });
-    manager.setState("rightSidebarState", (prev: OverlayActiveState) => {
+    manager.setState("overlayActive", (prev: OverlayActiveState) => {
       return !prev;
     });
   };
@@ -58,6 +58,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     manager.setState("activeViewBox", id);
     manager.canvasManager.setActiveComponent(id);
     manager.canvasManager.canvas.functions.saveActiveComponentData();
+    manager.setState("rightSidebarState", true);
   };
 
   const updateSlideComponents = (components: any[]) => {

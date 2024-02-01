@@ -84,7 +84,6 @@ export function associatedData(
     ) as HTMLDivElement;
 
     if (targetInput) {
-      console.log(targetInput, "found input");
       associatedData.push(dataItem); // Push the entire data item
     } else {
       console.warn(

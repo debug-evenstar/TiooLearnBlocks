@@ -72,14 +72,11 @@ export const registerFunctions = (
     isSlider?: boolean,
     slideIndex?: number
   ) => {
-    console.log(slideIndex, "ftzpe of comp");
     const range = getRange();
     if (range && range.toString() && component === "Text") {
-      console.log(questions.length, "data core");
       const id = componentId + "-" + range?.toString() + "-" + Date.now();
       setIdentifier(id);
       if (questions.length > 0) {
-        console.log("called add");
         manager.canvasManager.canvas.functions.updateActiveComponentObjective(
           addObjandSubComponentData(
             type,
@@ -108,7 +105,6 @@ export const registerFunctions = (
           isSlider ? slideIndex : null
         );
       } else {
-        console.log("called set");
         manager.canvasManager.canvas.functions.updateActiveComponentData(
           setObjandSubComponentData(type, id, checkAndReturnOptions(type), [
             "",
@@ -122,7 +118,6 @@ export const registerFunctions = (
       const id = componentId;
       setIdentifier(id);
       if (questions.length > 0) {
-        console.log("called add");
         manager.canvasManager.canvas.functions.updateActiveComponentObjective(
           addObjandSubComponentData(
             type,
@@ -149,7 +144,6 @@ export const registerFunctions = (
           )
         );
       } else {
-        console.log("called set");
         manager.canvasManager.canvas.functions.updateActiveComponentData(
           setObjandSubComponentData(
             type,

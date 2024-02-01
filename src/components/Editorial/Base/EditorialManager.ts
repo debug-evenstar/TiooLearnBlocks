@@ -100,6 +100,7 @@ export interface EditorialManagerInterface {
   slideManager: EditorialSlideManagerInterface;
   states: States;
   setState : Function;
+  triggerRender : Function;
 }
 
 class EditorialManager implements EditorialManagerInterface {
@@ -107,6 +108,7 @@ class EditorialManager implements EditorialManagerInterface {
   canvasManager: CanvasManagerInterface;
   slideManager: EditorialSlideManagerInterface;
   states: States;
+  triggerRender: Function = () => {};
 
   constructor(slides: any[]) {
     this.slideManager = new EditorialSlideManager(this, slides);
@@ -145,11 +147,12 @@ class EditorialManager implements EditorialManagerInterface {
     } else {
       newState[key] = setter;
     }
+
     this.states = {
       ...this.states,
       ...newState,
     };
-    console.log(this.states);
+    this.triggerRender();
   }
 
   initCanvasManager() {
@@ -380,7 +383,6 @@ class EditorialManager implements EditorialManagerInterface {
       return;
     }
 
-    console.log(data);
     if (this.canvasManager.activeComponent.data) {
       this.canvasManager.activeComponent.data.questions = data;
     }
@@ -918,12 +920,6 @@ class EditorialManager implements EditorialManagerInterface {
       ].question = data;
     }
     this.saveActiveComponentData();
-    console.log(
-      this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-        index
-      ].question,
-      "IN EM"
-    );
   }
 
   addComponentToSlider(data: any) {
@@ -945,10 +941,6 @@ class EditorialManager implements EditorialManagerInterface {
   addOrRemoveRowOrColumns(type: string) {
     const gridIndex = this.canvasManager.activeComponent.data.index;
 
-    console.log(
-      this.canvasManager.activeComponent.data,
-      "it has been called outside"
-    );
     if (type === "add") {
       if (gridIndex === null || gridIndex === undefined) return;
       if (this.canvasManager.activeComponent.data) {

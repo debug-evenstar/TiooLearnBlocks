@@ -100,7 +100,6 @@ const Text: FC<CanvasText> = ({
   ) => {
     e.stopPropagation();
     handleSetObjectiveIndex(index);
-    console.log(index, "clicked, option box");
     manager.setState("showOptionsBox", (prev: any) => !prev);
     manager.setState("optionsData", (prev : OptionsDataState) => ({
       ...prev,
@@ -118,14 +117,12 @@ const Text: FC<CanvasText> = ({
       ?.filter((question: any) => question?.identifier?.includes(id))
       .forEach((question: any, i: number) => {
         const inputElement = document.getElementById(question.identifier);
-        console.log(inputElement, "FOUND ELEMENT", i);
 
         if (inputElement) {
           if (question.type === "OBJECTIVE") {
             inputElement.addEventListener("click", (e) =>
               handleClickedObjective(e, question.options, i)
             );
-            console.log("added click event to", inputElement);
 
             return () => {
               if (inputElement) {

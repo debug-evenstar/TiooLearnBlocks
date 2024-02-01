@@ -22,12 +22,8 @@ const RightSidebar: FC<Props> = ({
   lessonlist,
   manager,
 }) => {
-  const isActive = manager.sidebarManager.states.rightSidebarState;
+  const isActive = manager.states.rightSidebarState;
   const { status: optionStatus } = manager.states.feedback;
-
-  useEffect(() => {
-    console.log(isActive, "activee state");
-  }, [isActive]);
 
   return (
     <div

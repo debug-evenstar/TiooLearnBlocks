@@ -96,7 +96,6 @@ class Canvas implements CanvasInterface {
   }
 
   updateActiveComponentData(data: any) {
-    console.log(data, "in canvas manager");
     if (this.manager.activeComponent.data) {
       this.manager.activeComponent.data = {
         ...this.manager.activeComponent.data,
