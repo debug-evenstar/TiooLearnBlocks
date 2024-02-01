@@ -19,7 +19,16 @@ import {
   EditorialSidebarManager,
   EditorialSidebarManagerInterface,
 } from "./EditorialSidebarManager";
-import { ActiveViewBoxState, FeedbackState, OptionsDataState, OverlayActiveState, RightSidebarState, ShowOptionsBoxState, SliderState, TriggerState } from "./StateInterface";
+import {
+  ActiveViewBoxState,
+  FeedbackState,
+  OptionsDataState,
+  OverlayActiveState,
+  RightSidebarState,
+  ShowOptionsBoxState,
+  SliderState,
+  TriggerState,
+} from "./StateInterface";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
@@ -99,8 +108,8 @@ export interface EditorialManagerInterface {
   canvasManager: CanvasManagerInterface;
   slideManager: EditorialSlideManagerInterface;
   states: States;
-  setState : Function;
-  triggerRender : Function;
+  setState: Function;
+  triggerRender: Function;
 }
 
 class EditorialManager implements EditorialManagerInterface {
@@ -944,10 +953,7 @@ class EditorialManager implements EditorialManagerInterface {
     if (type === "add") {
       if (gridIndex === null || gridIndex === undefined) return;
       if (this.canvasManager.activeComponent.data) {
-        console.log(
-          this.canvasManager.activeComponent.data,
-          "it has been called"
-        );
+        console.log(this.canvasManager.activeComponent, "it has been called");
       }
     }
   }

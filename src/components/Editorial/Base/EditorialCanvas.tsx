@@ -6,18 +6,14 @@ import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { setComponentLayout } from "./EditorialManager";
 import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
-import { handleToggleOverlayState } from "provider/overlayActiveSlice";
-import {
-  ActiveViewBoxState,
-  OverlayActiveState,
-  RightSidebarState,
-} from "./StateInterface";
+import { OverlayActiveState, RightSidebarState } from "./StateInterface";
 
 const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
   manager,
 }) => {
   const [slideComponents, setSlideComponents] = useState<any[]>([]);
+  const activeId = manager.states.activeViewBox;
   const onDrop = (id: string) => {
     const existingClone = slideComponents.find((item) => item.id === id);
     const itemId = id + "-clone-" + Date.now();
@@ -57,7 +53,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   const handleClickedViewbox = (id: string) => {
     manager.setState("activeViewBox", id);
     manager.canvasManager.setActiveComponent(id);
-    manager.canvasManager.canvas.functions.saveActiveComponentData();
+    //manager.canvasManager.canvas.functions.saveActiveComponentData();
     manager.setState("rightSidebarState", true);
   };
 
@@ -84,6 +80,13 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     manager.canvasManager.updateActiveSlide(parsedSlides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideData]);
+
+  useEffect(() => {
+    manager.canvasManager.canvas.updateActiveComponentData(
+      manager.canvasManager.getComponentData(activeId)
+    );
+    console.log("updated ", manager.canvasManager.activeComponent.data.index);
+  }, [activeId]);
 
   return (
     <div
