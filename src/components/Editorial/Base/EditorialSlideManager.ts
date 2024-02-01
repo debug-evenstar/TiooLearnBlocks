@@ -1,4 +1,3 @@
-import axios from "axios";
 import { SlideData } from "components/SlideManager/handler";
 import { baseApiHost } from "utilities/url";
 import { EditorialManagerInterface } from "./EditorialManager";
@@ -7,7 +6,7 @@ import { deepClone } from "utilities/array";
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
 
 export interface EditorialSlideManagerInterface {
-  manager : EditorialManagerInterface;
+  manager: EditorialManagerInterface;
   slides: any[];
   activeSlide: number;
   saveSlide: Function;
@@ -17,12 +16,12 @@ export interface EditorialSlideManagerInterface {
 }
 
 export class EditorialSlideManager implements EditorialSlideManagerInterface {
-  manager : EditorialManagerInterface;
+  manager: EditorialManagerInterface;
   slides: any[];
   activeSlide: number = 0;
   handleSlidesUpdate: Function = () => {};
 
-  constructor(manager : EditorialManagerInterface, slides: any[]) {
+  constructor(manager: EditorialManagerInterface, slides: any[]) {
     this.manager = manager;
     this.slides = slides;
   }
@@ -35,8 +34,8 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
     return this.slides[this.activeSlide];
   }
 
-  saveComponentData(index: number, data: any, initialization : boolean = false) {
-    if(!initialization) {
+  saveComponentData(index: number, data: any, initialization: boolean = false) {
+    if (!initialization) {
       const currentSlides = deepClone(this.slides);
       this.manager.canvasManager.canvas.history.push(currentSlides);
     }
@@ -50,11 +49,24 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
 
   saveSlide(slideId: number, payload: SlideData, callback: Function) {
     const url: string = `${baseApiHost()}/${UPDATE_SLIDE_URL(slideId)}`;
-    axios.put(url, { slide_data: payload }).then((res: any) => {
-      if (!res.error) {
-        console.log(res);
-        callback();
-      }
-    });
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ slide_data: payload }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Update failed:", error);
+      });
   }
 }
