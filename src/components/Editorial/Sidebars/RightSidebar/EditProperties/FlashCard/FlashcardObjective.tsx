@@ -25,7 +25,10 @@ import {
 } from "provider/feedbackSlice";
 import { handleToggleTrigger } from "provider/triggerSlice";
 import FlashcardFeedback from "./FlashcardFeedback";
-import { OptionsDataState } from "components/Editorial/Base/StateInterface";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -91,7 +94,7 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
     );
 
     setIsActive(true);
-    manager.setState("showOptionsBox" , (prev : any) => !prev);
+    manager.setState("showOptionsBox", (prev: any) => !prev);
     manager.setState("optionsData", {
       identifier: "",
       correctOption: "",
@@ -99,9 +102,9 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
       objectiveIndex: 0,
     });
     manager.setState("optionsData", (prev: OptionsDataState) => {
-      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
-    })
-    manager.setState("trigger" , (prev : any) => !prev);
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
+    manager.setState("trigger", (prev: any) => !prev);
   };
 
   const handleDelete = (id: string, optionIndex: number) => {
@@ -120,7 +123,7 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
       0,
       "Flashcard"
     );
-    manager.setState("trigger" , (prev : any) => !prev);();
+    manager.setState("trigger", (prev: any) => !prev);
     console.log(id);
   };
 
@@ -187,9 +190,14 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       "Flashcard"
     );
     setAddedOption(!addedOption);
-    manager.setState("feedback", ((prev: FeedbackState) => {
-      return {...prev, ...{optionIndex: question.options ? question.options.length : 0} as FeedbackState}
-    }))
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          optionIndex: question.options ? question.options.length : 0,
+        } as FeedbackState),
+      };
+    });
     console.log(
       manager.canvasManager.activeComponent.data.components[cardsIndex].cards[
         index
@@ -205,7 +213,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-   manager.setState("feedback", (prev: FeedbackState) => {
+    manager.setState("feedback", (prev: FeedbackState) => {
       return {
         ...prev,
         ...({
@@ -219,8 +227,8 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 
   const handleOpenObjective = () => {
     manager.setState("optionsData", (prev: OptionsDataState) => {
-      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
-    })
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     setIsActive(!isActive);
   };
 

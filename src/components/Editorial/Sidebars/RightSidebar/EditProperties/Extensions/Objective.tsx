@@ -20,7 +20,10 @@ import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
 import { handleToggleTrigger } from "provider/triggerSlice";
-import { FeedbackState, OptionsDataState } from "components/Editorial/Base/StateInterface";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -48,7 +51,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
       component
     );
     setIsActive(true);
-    manager.setState("showOptionsBox" , (prev : any) => !prev);
+    manager.setState("showOptionsBox", (prev: any) => !prev);
     // Verify the states being set
     // manager.setObjectiveIndexState(questions.length);
     manager.setState("optionsData", {
@@ -67,16 +70,16 @@ const Objective: FC<Props> = ({ manager, component }) => {
         component
       );
       setIsActive(true);
-      manager.setState("showOptionsBox" , (prev : any) => !prev);
-      manager.setState("optionsData", (prev : OptionsDataState) => ({
+      manager.setState("showOptionsBox", (prev: any) => !prev);
+      manager.setState("optionsData", (prev: OptionsDataState) => ({
         ...prev,
-        ...({ objectiveIndex : questions.length}) as OptionsDataState
+        ...({ objectiveIndex: questions.length } as OptionsDataState),
       }));
-      manager.setState("trigger" , (prev : any) => !prev);
+      manager.setState("trigger", (prev: any) => !prev);
     }
-    manager.setState("optionsData", (prev : OptionsDataState) => ({
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
-      ...({ correctOption : "", wrongOption : ""}) as OptionsDataState
+      ...({ correctOption: "", wrongOption: "" } as OptionsDataState),
     }));
     console.log(manager.canvasManager.activeComponent.data, "changed data");
   };
@@ -94,11 +97,8 @@ const Objective: FC<Props> = ({ manager, component }) => {
         ],
       };
       console.log(updatedQuestion.options, "updated options");
-      manager.functions.deleteObjectiveOptions(
-        updatedQuestion.options,
-        index
-      );
-      manager.setState("trigger" , (prev : any) => !prev);();
+      manager.functions.deleteObjectiveOptions(updatedQuestion.options, index);
+      manager.setState("trigger", (prev: any) => !prev);
 
       updatedQuestions[index] = updatedQuestion;
     }
@@ -186,9 +186,14 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       index
     );
     setAddedOption(!addedOption);
-    manager.setState("feedback", ((prev: FeedbackState) => {
-      return {...prev, ...{optionIndex: question.options ? question.options.length : 0} as FeedbackState}
-    }))
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          optionIndex: question.options ? question.options.length : 0,
+        } as FeedbackState),
+      };
+    });
     console.log(
       manager.canvasManager.activeComponent.data.questions,
       "clicked"
@@ -202,7 +207,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   };
 
   const handleShowFeedback = (index: number) => {
-   manager.setState("feedback", (prev: FeedbackState) => {
+    manager.setState("feedback", (prev: FeedbackState) => {
       return {
         ...prev,
         ...({
@@ -216,8 +221,8 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 
   const handleOpenObjective = () => {
     manager.setState("optionsData", (prev: OptionsDataState) => {
-      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
-    })
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     setIsActive(!isActive);
   };
 

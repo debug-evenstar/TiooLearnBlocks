@@ -16,7 +16,10 @@ import {
 import { QuestionInterface } from "components/interface";
 import { handleToggleTrigger } from "provider/triggerSlice";
 import FlashcardFeedback from "./FlashcardFeedback";
-import { OptionsDataState } from "components/Editorial/Base/StateInterface";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -28,9 +31,7 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
   const addQuestion =
     manager.canvasManager.canvas.functions.updateFlashcardQuestion;
 
-  
-  const { identifier, correctOption, wrongOption } =
-    manager.states.optionsData;
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
   const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(true);
@@ -89,7 +90,7 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
       objectiveIndex: 0,
     });
     manager.setState("optionsData", (prev: OptionsDataState) => {
-      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
     });
     console.log(data, "updated");
   };
@@ -99,7 +100,7 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
       null,
       "Flashcard"
     );
-    manager.setState("trigger" , (prev : any) => !prev);();
+    manager.setState("trigger", (prev: any) => !prev);
     setQuestion(data.question);
   };
 
@@ -142,14 +143,8 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
   const [showAI, setShowAI] = useState(false);
   const [value, setValue] = useState("");
 
-  
-
   const { objectiveIndex } = manager.states.optionsData;
-  const {
-    optionIndex,
-    status: optionStatus,
-    type,
-  } = manager.states.feedback;
+  const { optionIndex, status: optionStatus, type } = manager.states.feedback;
 
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
@@ -173,9 +168,9 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
       "Flashcard"
     );
     setIsEditable(false);
-    manager.setState("feedback", ((prev: FeedbackState) => {
-      return {...prev, ...{status: false} as FeedbackState}
-    }))
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return { ...prev, ...({ status: false } as FeedbackState) };
+    });
     console.log(sub, "subjective");
 
     console.log("typing..", value, objectiveIndex, coreData);

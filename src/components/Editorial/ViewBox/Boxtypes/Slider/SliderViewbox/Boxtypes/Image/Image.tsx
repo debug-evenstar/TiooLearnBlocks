@@ -86,7 +86,7 @@ const Image: FC<CanvasMedia> = ({
     };
 
     manager.canvasManager.activeComponent.functions["toggleOverlay"] = () => {
-      manager.setState("overlayActive" , (prev : any) => !prev);
+      manager.setState("overlayActive", (prev: any) => !prev);
     };
   }, [manager, viewBoxRef]);
 
@@ -116,7 +116,7 @@ const Image: FC<CanvasMedia> = ({
           extensions: newList,
         })
       );
-      manager.setState("trigger" , (prev : any) => !prev);();
+      manager.setState("trigger", (prev: any) => !prev);
       console.log(
         manager.canvasManager.activeComponent.data.extensions,
         "updated data"
@@ -145,11 +145,11 @@ const Image: FC<CanvasMedia> = ({
 
   const handleClickedInput = (input: any, index: number) => {
     if (input?.question[0] && input.question[0]?.type === "OBJECTIVE") {
-      manager.setState("showOptionsBox" , (prev : any) => !prev);
+      manager.setState("showOptionsBox", (prev: any) => !prev);
     }
     manager.setState("optionsData", (prev: OptionsDataState) => {
-      return {...prev, ...{objectiveIndex: index} as OptionsDataState}
-    })
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
   };
 
   return (

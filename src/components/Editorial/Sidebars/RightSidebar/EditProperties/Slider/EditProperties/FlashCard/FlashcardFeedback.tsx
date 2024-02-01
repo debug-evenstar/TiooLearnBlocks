@@ -7,6 +7,7 @@ import { RiCloseLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { RadioButton } from "../Image/Overlay/OverlayFeedback";
 import EmojiTextArea from "../Extensions/EmojiTextarea/EmojiTextArea";
+import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;

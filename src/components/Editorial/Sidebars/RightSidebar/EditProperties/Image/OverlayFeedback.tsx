@@ -6,6 +6,7 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import EmojiTextArea from "components/Editorial/ViewBox/Boxtypes/Text/EmojiTextArea";
+import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;

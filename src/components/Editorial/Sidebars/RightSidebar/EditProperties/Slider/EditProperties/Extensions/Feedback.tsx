@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ObjectiveItemProp } from "./interfaces";
 import { RadioButton } from "../Image/Overlay/OverlayFeedback";
 import EmojiTextArea from "./EmojiTextarea/EmojiTextArea";
+import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;

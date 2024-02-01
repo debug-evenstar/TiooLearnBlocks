@@ -14,7 +14,10 @@ import {
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
 import { QuestionInterface } from "components/interface";
-import { OptionsDataState } from "components/Editorial/Base/StateInterface";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: EditorialManagerInterface;
@@ -43,12 +46,12 @@ const Subjective: FC<Props> = ({ manager, component }) => {
     if (isActive) return;
     replaceContent(questions, "SUBJECTIVE", component, true, activeCompIndex);
     setIsActive(true);
-    manager.setState("optionsData", (prev : OptionsDataState) => ({
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
-      ...({ 
-        objectiveIndex : questions.length,
-        correctOption : ""
-      }) as OptionsDataState
+      ...({
+        objectiveIndex: questions.length,
+        correctOption: "",
+      } as OptionsDataState),
     }));
   };
 
@@ -58,12 +61,13 @@ const Subjective: FC<Props> = ({ manager, component }) => {
       replaceContent(questions, "SUBJECTIVE", component, true, activeCompIndex);
       setIsActive(true);
     }
-    manager.setState("optionsData", (prev : OptionsDataState) => ({
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
-      ...({ 
-        objectiveIndex : questions.length > 0 ? questions.length : prev.objectiveIndex,
-        correctOption : ""
-      }) as OptionsDataState
+      ...({
+        objectiveIndex:
+          questions.length > 0 ? questions.length : prev.objectiveIndex,
+        correctOption: "",
+      } as OptionsDataState),
     }));
   };
 

@@ -90,7 +90,7 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
     );
 
     setIsActive(true);
-    manager.setState("showOptionsBox" , (prev : any) => !prev);
+    manager.setState("showOptionsBox", (prev: any) => !prev);
     manager.setState("optionsData", {
       identifier: "",
       correctOption: "",

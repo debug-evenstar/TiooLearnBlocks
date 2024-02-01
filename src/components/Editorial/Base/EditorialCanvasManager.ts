@@ -3,7 +3,15 @@ import {
   DataGroupInterface,
   EditorialManagerInterface,
 } from "./EditorialManager";
-import { ActiveViewBoxState, FeedbackState, OptionsDataState, OverlayActiveState, ShowOptionsBoxState, SliderState, TriggerState } from "./StateInterface";
+import {
+  ActiveViewBoxState,
+  FeedbackState,
+  OptionsDataState,
+  OverlayActiveState,
+  ShowOptionsBoxState,
+  SliderState,
+  TriggerState,
+} from "./StateInterface";
 
 const DataGroup: DataGroupInterface = {
   data: {},
@@ -14,25 +22,8 @@ const DataGroup: DataGroupInterface = {
 /*                            MAIN CANVAS INTERFACE                           */
 /* -------------------------------------------------------------------------- */
 
-
 interface CanvasInterface {
   manager: CanvasManagerInterface;
-  setActiveViewboxState: Function;
-  toggleOverlayActiveState: Function;
-  toggleShowOptionsBoxState: Function;
-  toggleTriggerState: Function;
-  refreshFeedbackState: Function;
-  refreshOptionsDataState: Function;
-  setIdentifierState: Function;
-  refreshSliderState: Function;
-  setFeedbackIndexState: Function;
-  setFeedbackStatusState: Function;
-  setFeedbackTypeState: Function;
-  setCorrectOptionState: Function;
-  setWrongOptionState: Function;
-  setObjectiveIndexState: Function;
-  setActiveCompNameState: Function;
-  setActiveCompIndexState: Function;
   components: ComponentBaseDataInterface[];
   getCanvasSize: Function;
   getComponentData: Function;
@@ -56,77 +47,6 @@ class Canvas implements CanvasInterface {
     // Set functions
     this.setFunctions();
     this.setData();
-  }
-
-
-  setActiveViewboxState(id: string) {
-    this.states.activeViewBox = id;
-  }
-
-  toggleOverlayActiveState() {
-    this.states.overlayActive = !this.states.overlayActive;
-  }
-
-  toggleShowOptionsBoxState() {
-    this.states.showOptionsBox = !this.states.showOptionsBox;
-  }
-
-  toggleTriggerState() {
-    this.states.trigger = !this.states.trigger;
-  }
-
-  refreshFeedbackState() {
-    this.states.feedback = {
-      optionIndex: 0,
-      status: false,
-      type: "OBJECTIVE",
-    };
-  }
-
-  setFeedbackIndexState(index: number) {
-    this.states.feedback.optionIndex = index;
-  }
-
-  setFeedbackStatusState(status: boolean) {
-    this.states.feedback.status = status;
-  }
-
-  setFeedbackTypeState(type: "OBJECTIVE" | "SUBJECTIVE") {
-    this.states.feedback.type = type;
-  }
-
-  refreshOptionsDataState() {
-    this.states.optionsData = {
-      identifier: "",
-      correctOption: "",
-      wrongOption: "",
-      objectiveIndex: 0,
-    };
-  }
-  setIdentifierState(identifier: string) {
-    this.states.optionsData.identifier = identifier;
-  }
-  setCorrectOptionState(option: string) {
-    this.states.optionsData.correctOption = option;
-  }
-  setWrongOptionState(option: string) {
-    this.states.optionsData.wrongOption = option;
-  }
-  setObjectiveIndexState(index: number) {
-    this.states.optionsData.objectiveIndex = index;
-  }
-
-  refreshSliderState() {
-    this.states.slider = {
-      activeCompName: "",
-      activeCompIndex: 0,
-    };
-  }
-  setActiveCompNameState(name: string) {
-    this.states.slider.activeCompName = name;
-  }
-  setActiveCompIndexState(index: number) {
-    this.states.slider.activeCompIndex = index;
   }
 
   setData() {
