@@ -55,7 +55,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   };
 
   const handleClickedViewbox = (id: string) => {
-    manager.setState("activeViewbox", id);
+    manager.setState("activeViewBox", id);
     manager.canvasManager.setActiveComponent(id);
     manager.canvasManager.canvas.functions.saveActiveComponentData();
   };

@@ -22,7 +22,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
   const handleChangeSlide = (index: number) => {
     changeTo(index);
     manager.setState("rightSidebarState", false);
-    manager.setState("activeViewbox", "");
+    manager.setState("activeViewBox", "");
   };
 
   return (

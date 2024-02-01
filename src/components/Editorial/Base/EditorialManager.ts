@@ -149,6 +149,7 @@ class EditorialManager implements EditorialManagerInterface {
       ...this.states,
       ...newState,
     };
+    console.log(this.states);
   }
 
   initCanvasManager() {
