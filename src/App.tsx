@@ -40,7 +40,7 @@ function App() {
   const fetchLess = async () => {
     try {
       const response = await fetch(
-        "https://beta.api.hellotioo.com/open/lesson/473/template"
+        "https://beta.api.hellotioo.com/open/lesson/475/template"
       );
 
       if (!response.ok) {
