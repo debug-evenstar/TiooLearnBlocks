@@ -43,7 +43,11 @@ export const ViewBoxContent = (
   manager: EditorialManagerInterface,
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>,
   isEditable: boolean,
-  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>
+  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>,
+  viewBoxSize: {
+    width: number;
+    height: number;
+  }
 ) => {
   const componentName = getOriginalName(id);
   console.log(id, componentName);
@@ -63,7 +67,7 @@ export const ViewBoxContent = (
     Image: <Image id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     FlashCard: <Flashcard id={id} manager={manager} viewBoxRef={viewBoxRef} />,
     Video: <Video id={id} manager={manager} viewBoxRef={viewBoxRef} />,
-    Grid: <Grid id={id} manager={manager} />,
+    Grid: <Grid id={id} manager={manager} viewBoxSize={viewBoxSize} />,
   };
 
   return viewboxTypes[componentName];
@@ -76,7 +80,6 @@ export const EditProperties = (
 ) => {
   const componentName = getOriginalName(id);
 
-  
   const activeCompName = manager.states.slider.activeCompName;
 
   const viewboxTypes: {
@@ -112,7 +115,7 @@ export const EditProperties = (
     Grid: (
       <>
         <AddGrid />
-        <EditGrid />
+        <EditGrid manager={manager} />
         <GridType />
         <GridTheme />
       </>

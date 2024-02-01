@@ -16,6 +16,10 @@ export interface SliderState {
   activeCompIndex: number;
 }
 
+export interface GridState {
+  gridIsEditable: boolean;
+}
+
 export type ActiveViewBoxState = string;
 export type OverlayActiveState = boolean;
 export type ShowOptionsBoxState = boolean;

@@ -21,7 +21,6 @@ interface Props {
 }
 
 const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
-  
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
 
@@ -104,7 +103,14 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
             height: viewBoxSize.height + "px",
           }}
         >
-          {ViewBoxContent(id, manager, viewBoxRef, isEditable, setIsEditable)}
+          {ViewBoxContent(
+            id,
+            manager,
+            viewBoxRef,
+            isEditable,
+            setIsEditable,
+            viewBoxSize
+          )}
         </div>
       </Resizable>
 

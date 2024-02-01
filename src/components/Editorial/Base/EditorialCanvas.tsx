@@ -85,7 +85,6 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     manager.canvasManager.canvas.updateActiveComponentData(
       manager.canvasManager.getComponentData(activeId)
     );
-    console.log("updated ", manager.canvasManager.activeComponent.data.index);
   }, [activeId]);
 
   return (

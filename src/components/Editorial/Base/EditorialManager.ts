@@ -22,6 +22,7 @@ import {
 import {
   ActiveViewBoxState,
   FeedbackState,
+  GridState,
   OptionsDataState,
   OverlayActiveState,
   RightSidebarState,
@@ -29,6 +30,7 @@ import {
   SliderState,
   TriggerState,
 } from "./StateInterface";
+import { parseGridDimensions } from "../ViewBox/Boxtypes/Grid/handlers/generalHandler";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
@@ -101,6 +103,7 @@ interface States {
   slider: SliderState;
   trigger: TriggerState;
   rightSidebarState: RightSidebarState;
+  grid: GridState;
 }
 
 export interface EditorialManagerInterface {
@@ -145,6 +148,9 @@ class EditorialManager implements EditorialManagerInterface {
       },
       trigger: false,
       rightSidebarState: false,
+      grid: {
+        gridIsEditable: false,
+      },
     };
   }
 
@@ -276,8 +282,10 @@ class EditorialManager implements EditorialManagerInterface {
     this.canvasManager.canvas.functions["addComponentToSlider"] = (data: any) =>
       this.addComponentToSlider(data);
     this.canvasManager.canvas.functions["addOrRemoveRowOrColumns"] = (
-      type: string
-    ) => this.addOrRemoveRowOrColumns(type);
+      parseDimensions: { rows: number; cols: number },
+      type: string,
+      direction: "rows" | "cols"
+    ) => this.addOrRemoveRowOrColumns(parseDimensions, type, direction);
 
     setInterval(() => {
       //console.log(this.canvasManager.activeComponent.data);
@@ -947,13 +955,39 @@ class EditorialManager implements EditorialManagerInterface {
     this.saveActiveComponentData();
   }
 
-  addOrRemoveRowOrColumns(type: string) {
-    const gridIndex = this.canvasManager.activeComponent.data.index;
+  addOrRemoveRowOrColumns(
+    parsedDimensions: {
+      rows: number;
+      cols: number;
+    },
+    type: string,
+    direction: "rows" | "cols"
+  ) {
+    const gridData = this.canvasManager.activeComponent.data;
+    console.log(parsedDimensions, "called");
+    const newDimension = parsedDimensions?.[direction];
 
     if (type === "add") {
-      if (gridIndex === null || gridIndex === undefined) return;
-      if (this.canvasManager.activeComponent.data) {
-        console.log(this.canvasManager.activeComponent, "it has been called");
+      if (gridData) {
+        const dimensions =
+          direction === "rows"
+            ? `${newDimension + 1}x${parsedDimensions.cols}`
+            : `${parsedDimensions.rows}x${newDimension + 1}`;
+        gridData.size = dimensions;
+        this.setState("trigger", (prev: TriggerState) => !prev);
+        console.log(dimensions, "the dimensions to set");
+        console.log(gridData.size, "the dimensions that has been set");
+      }
+    } else {
+      if (gridData) {
+        const dimensions =
+          direction === "rows"
+            ? `${newDimension - 1}x${parsedDimensions.cols}`
+            : `${parsedDimensions.rows}x${newDimension - 1}`;
+        gridData.size = dimensions;
+        this.setState("trigger", (prev: TriggerState) => !prev);
+        console.log(dimensions, "the dimensions to set");
+        console.log(gridData.size, "the dimensions that has been set");
       }
     }
   }
