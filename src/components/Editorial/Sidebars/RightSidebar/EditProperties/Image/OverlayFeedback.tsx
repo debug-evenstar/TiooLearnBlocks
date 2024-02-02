@@ -51,11 +51,6 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
     e: React.ChangeEvent<HTMLInputElement>,
     type: string
   ) => {
-    console.log(e.target.value, "checked");
-    if (e.target.value === "on") {
-      e.target.value = "off";
-      return;
-    }
     manager.canvasManager.canvas.functions.updateFeedbackType(
       type,
       index,
@@ -72,10 +67,6 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
       "Overlay"
     );
   };
-
-  useEffect(() => {
-    console.log("opened!");
-  }, []);
 
   return (
     <div className="w-fit h-fit min-w-[20rem] min-h-[22rem] bg-white border border-black absolute right-[200px] bottom-[50px] pb-4">

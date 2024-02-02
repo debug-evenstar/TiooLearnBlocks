@@ -24,20 +24,16 @@ const AddImages: FC<Props> = ({ id, manager }) => {
     e.preventDefault();
     const cards =
       manager.canvasManager.canvas.functions.getComponentData(id).cards;
-    console.log(cards, "Cards");
 
     if (!e.target.files) return;
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       const url = await uploadFile(473, selectedFile);
-      console.log(url, "url");
 
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
       manager.setState("trigger", (prev: any) => !prev);
-      console.log(cards, "Updated Cards");
-      console.log(coreData, "added");
     }
   };
 

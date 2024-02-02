@@ -56,7 +56,6 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   };
 
   const handleClick = () => {
-    console.log(manager.canvasManager.activeComponent.data, "changed data");
     if (questions.length > 0) {
       replaceContent(questions, "SUBJECTIVE", component, true, activeCompIndex);
       setIsActive(true);
@@ -84,18 +83,12 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   };
 
   useEffect(() => {
-    console.log(identifier, correctOption, wrongOption, " - Optionsd");
-  }, [identifier]);
-
-  useEffect(() => {
     if (coreData?.questions) {
       const filteredQuestions = coreData.questions?.filter(
         (question: QuestionInterface) => question?.type === "SUBJECTIVE"
       );
       setQuestions(filteredQuestions);
-      console.log(questions, "check id");
     }
-    console.log(coreData.questions, "in slider subjective");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coreData?.questions, identifier]);
@@ -177,9 +170,6 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
     manager.setState("feedback", (prev: FeedbackState) => {
       return { ...prev, ...({ status: false } as FeedbackState) };
     });
-    console.log(sub, "subjective");
-
-    console.log("typing..", value, objectiveIndex);
   };
 
   const handleShowFeedback = () => {

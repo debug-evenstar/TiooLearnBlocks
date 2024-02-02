@@ -7,6 +7,8 @@ import {
 import { FaTimes } from "react-icons/fa";
 import EditorialCanvas from "./Base/EditorialCanvas";
 import { EditorialManagerInterface } from "./Base/EditorialManager";
+import LayoutComponent from "components/LayoutBox";
+import { ComponentBaseDataInterface } from "components/interface";
 
 interface Props {
   active: number;
@@ -29,41 +31,23 @@ const ActiveEditSlide: FC<Props> = ({
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const RenderPreview = () => {
-    // const textComp =
-    //   activeSlid &&
-    //   activeSlid.filter((where: any) => where.component === "Text");
-    // const fileComp =
-    //   activeSlid &&
-    //   activeSlid.filter(
-    //     (where: any) =>
-    //       where.component === "Image" || where.component === "Video"
-    //   );
-    // return (
-    //   <>
-    //     {textComp.map((component: any, index: number) => {
-    //       const Component = loadComponent(component);
-    //       return <Component key={index} data={component} slide={SlideScope} />;
-    //     })}
-    //     {!showPreview &&
-    //       fileComp.map((component: any, index: number) => {
-    //         const Component = loadComponent(component);
-    //         return (
-    //           <Component key={index} data={component} slide={SlideScope} />
-    //         );
-    //       })}
-    //     {showPreview &&
-    //       (checkFile("Image") ? (
-    //         <div className="w-8/12 max-h-[300px] object-fit mx-auto my-6 rounded-[18px] overflow-hidden">
-    //           <img src={previewImage} alt="placeholder" className="w-full" />
-    //         </div>
-    //       ) : (
-    //         <video className="w-full" controls autoPlay={true}>
-    //           <source src={previewImage} type="video/mp4"></source>
-    //         </video>
-    //       ))}
-    //   </>
-    // );
+    return (
+      <>
+        {activeSlide.map((component: ComponentBaseDataInterface, index: number) => {
+          const Component = loadComponent(component);
+          return component.layout 
+            ? (
+                <LayoutComponent layout={component.layout}>
+                    <Component key={index} data={component} slide={SlideScope} />
+                </LayoutComponent>
+              ) 
+            : <Component key={index} data={component} slide={SlideScope} />;
+        })}
+      </>
+    );
   };
+
+  RenderPreview();
 
   const saveSlide = () => {
     const slideId : number = data.LessonSlides[active].id;
@@ -108,13 +92,13 @@ const ActiveEditSlide: FC<Props> = ({
       </div>
       {previewSlide && (
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0 bg-preview">
-          <div className="mt-4 w-6/12 bgcomps text-white bg-cover rounded-lg min-h-[70vh] px-5 flex justify-center items-center fw-600">
-            <div>
-              {/* <RenderPreview /> */}
+          <div className="w-full h-full bgcomps text-white bg-cover px-5 flex justify-center items-center fw-600">
+            <div className="w-full h-full">
+              <RenderPreview />
             </div>
           </div>
           <FaTimes
-            className="absolute text-[40px] top-10 right-10 text-blue-800 cursor-pointer hover:scale-110 duration-100"
+            className="absolute text-[40px] top-10 right-10 text-white cursor-pointer hover:scale-110 duration-100"
             onClick={() => setPreviewSlide(false)}
           />
         </div>

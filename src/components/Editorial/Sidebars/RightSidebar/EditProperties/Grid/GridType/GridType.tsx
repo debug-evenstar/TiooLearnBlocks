@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
+import StartAndEnd from "./StartAndEnd";
+import SecondType from "./SecondType";
 
 const GridType = () => {
   const [isActive, setIsActive] = useState(false);
@@ -18,7 +20,8 @@ const GridType = () => {
 
       {isActive && (
         <main className="w-full mt-4">
-          <a href="javascript:void(0)"></a>
+          <StartAndEnd />
+          <SecondType />
         </main>
       )}
     </div>

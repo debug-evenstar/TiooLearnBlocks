@@ -38,7 +38,6 @@ const Subjective: FC<Props> = ({ manager, component }) => {
 
   const handleSetObjective = () => {
     if (isActive) return;
-    console.log(questions, "in objective");
     replaceContent(
       coreData?.questions ? coreData.questions : [],
       "SUBJECTIVE",
@@ -78,17 +77,11 @@ const Subjective: FC<Props> = ({ manager, component }) => {
       (question) => question.identifier !== id
     );
 
-    console.log(filteredQuestions, id, "from subjective");
-
     setQuestions(filteredQuestions);
     manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
       filteredQuestions
     );
   };
-
-  useEffect(() => {
-    console.log(identifier, correctOption, wrongOption, " - Optionsd");
-  }, [identifier]);
 
   useEffect(() => {
     if (coreData?.questions) {
@@ -97,7 +90,6 @@ const Subjective: FC<Props> = ({ manager, component }) => {
           question?.type === "SUBJECTIVE" && question?.identifier?.includes(id)
       );
       setQuestions(filteredQuestions);
-      console.log(questions);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coreData?.questions, identifier]);
@@ -170,10 +162,6 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
     manager.setState("feedback", (prev: FeedbackState) => {
       return { ...prev, ...({ status: false } as FeedbackState) };
     });
-
-    console.log(sub, "subjective");
-
-    console.log("typing..", value, objectiveIndex, coreData);
   };
 
   const handleShowFeedback = () => {

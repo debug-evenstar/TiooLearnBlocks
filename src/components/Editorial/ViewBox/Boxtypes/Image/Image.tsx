@@ -44,7 +44,6 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       //setPreviewImage(imageUrl);
       const url = await uploadFile(473, selectedFile);
       setPreviewImage(url);
-      console.log(url, "url");
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setImageComponentData(url)
       );
@@ -114,10 +113,6 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         })
       );
       manager.setState("trigger", (prev: any) => !prev);
-      console.log(
-        manager.canvasManager.activeComponent.data.extensions,
-        "updated data"
-      );
       setInputBoxDimensions((prevList) => [
         ...prevList,
         { width: 200, height: 40 },
@@ -137,7 +132,6 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
           : dimensions
       )
     );
-    console.log(inputBoxDimensions[boxIndex], "die");
   };
 
   const handleClickedInput = (input: any, index: number) => {

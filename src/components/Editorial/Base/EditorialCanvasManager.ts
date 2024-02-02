@@ -114,10 +114,9 @@ class Canvas implements CanvasInterface {
     const activeComponent = this.manager.activeComponent;
     if (activeComponent) {
       activeSlide[activeComponent.data.index] = {
+        canvas : true, // Indicate data is from canvas version
         ...activeSlide[activeComponent.data.index],
-        ...activeComponent.data,
-        ...{ layout: activeComponent.data.layoutData },
-        ...{ styles: activeComponent.data.styleData },
+        ...activeComponent.data
       };
       slides[this.manager.manager.slideManager.activeSlide] = activeSlide;
       this.manager.manager.slideManager.slides = slides;

@@ -15,8 +15,6 @@ interface Props {
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
-  
-
   const { objectiveIndex } = manager.states.optionsData;
   const trigger = manager.states.trigger;
   const data: QuestionInterface =
@@ -25,12 +23,8 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
   const [question, setQuestion] = useState<QuestionInterface>(data);
 
   useEffect(() => {
-    console.log(trigger, "changed");
     setQuestion(data);
-    console.log(
-      manager.canvasManager.activeComponent.data?.extensions,
-      "data extensions"
-    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
@@ -44,12 +38,12 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Overlay"
     );
-    manager.setState("optionsData", (prev : OptionsDataState) => ({
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
-      ...({ 
-        wrongOption : index <= 0 ? value : prev.wrongOption,
-        correctOption : index > 0 ? value : prev.correctOption
-      }) as OptionsDataState
+      ...({
+        wrongOption: index <= 0 ? value : prev.wrongOption,
+        correctOption: index > 0 ? value : prev.correctOption,
+      } as OptionsDataState),
     }));
   };
 

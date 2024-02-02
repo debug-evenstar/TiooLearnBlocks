@@ -16,8 +16,6 @@ interface Props {
 }
 
 const ImageObjectivesInputs: FC<Props> = ({ manager }) => {
-  
-
   const { objectiveIndex } = manager.states.optionsData;
   const trigger = manager.states.trigger;
   const data: QuestionInterface =
@@ -29,12 +27,8 @@ const ImageObjectivesInputs: FC<Props> = ({ manager }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    console.log(trigger, "changed");
     setQuestion(data);
-    console.log(
-      manager.canvasManager.activeComponent.data?.extensions,
-      "data extensions"
-    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
@@ -61,12 +55,12 @@ const ImageObjectivesInputs: FC<Props> = ({ manager }) => {
     );
 
     if (index > 0) {
-      manager.setState("optionsData", (optionsData : any) => {
-        return { ...optionsData, ...{ correctOption : value}};
+      manager.setState("optionsData", (optionsData: any) => {
+        return { ...optionsData, ...{ correctOption: value } };
       });
     } else {
-      manager.setState("optionsData", (optionsData : any) => {
-        return { ...optionsData, ...{ wrongOption : value}};
+      manager.setState("optionsData", (optionsData: any) => {
+        return { ...optionsData, ...{ wrongOption: value } };
       });
     }
   };

@@ -101,7 +101,6 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
   const [question, setQuestion] = useState<QuestionInterface | null>(null);
 
   useEffect(() => {
-    console.log(cardsIndex, cardData, "card data");
     manager.setState("optionsData", (prev: OptionsDataState) => {
       return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
     });
@@ -110,16 +109,8 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
       : null;
     setQuestion(question);
 
-    console.log(question, "question in card data");
     if (question && question.type === "OBJECTIVE") {
       setCard(cardData);
-      console.log(
-        manager.canvasManager.activeComponent.data?.components[cardsIndex]
-          ?.cards,
-
-        index,
-        "changed"
-      );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
