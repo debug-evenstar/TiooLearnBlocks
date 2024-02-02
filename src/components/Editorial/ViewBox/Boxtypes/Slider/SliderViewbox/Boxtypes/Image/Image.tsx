@@ -118,10 +118,6 @@ const Image: FC<CanvasMedia> = ({
         })
       );
       manager.setState("trigger", (prev: any) => !prev);
-      console.log(
-        manager.canvasManager.activeComponent.data.extensions,
-        "updated data"
-      );
       setInputBoxDimensions((prevList) => [
         ...prevList,
         { width: 200, height: 40 },

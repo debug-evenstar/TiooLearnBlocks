@@ -27,12 +27,7 @@ const ImageObjectivesInputs: FC<Props> = ({ manager }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    console.log(trigger, "changed");
     setQuestion(data);
-    console.log(
-      manager.canvasManager.activeComponent.data?.extensions,
-      "data extensions"
-    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 

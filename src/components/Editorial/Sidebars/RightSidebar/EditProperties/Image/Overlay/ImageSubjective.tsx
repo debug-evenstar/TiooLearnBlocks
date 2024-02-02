@@ -42,17 +42,16 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
   const [question, setQuestion] = useState<QuestionInterface[]>();
 
   useEffect(() => {
-    console.log(trigger, "changed");
     if (questionData && questionData[0]?.type === "SUBJECTIVE") {
       setQuestion(questionData);
     }
-    console.log(question, "data extensions");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionData, trigger]);
 
   const handleSetObjective = () => {
     if (question && question[0]?.identifier) return;
-    console.log(question, "in subjective");
+
     //replaceContent(questions, "OBJECTIVE", component);
     addQuestion(
       {
@@ -90,7 +89,6 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
     manager.setState("optionsData", (prev: OptionsDataState) => {
       return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
     });
-    console.log(data, "updated");
   };
 
   const handleDelete = (id: string, index: number) => {
@@ -101,10 +99,6 @@ const ImageSubjective: FC<Props> = ({ manager, index, data }) => {
     manager.setState("trigger", (prev: any) => !prev);
     setQuestion(data.question);
   };
-
-  useEffect(() => {
-    console.log(identifier, correctOption, wrongOption, " - Optionsd");
-  }, [identifier]);
 
   return (
     <div className="my-1 shadow-md">
@@ -166,9 +160,6 @@ const SubjectiveItem: FC<any> = ({ sub, index, manager, handleDelete }) => {
     manager.setState("feedback", (prev: FeedbackState) => {
       return { ...prev, ...({ status: false } as FeedbackState) };
     });
-    console.log(sub, "subjective");
-
-    console.log("typing..", value, objectiveIndex, coreData);
   };
 
   const handleShowFeedback = () => {

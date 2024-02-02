@@ -18,8 +18,6 @@ interface Props {
 const label = { inputProps: { "aria-label": "Switch Overlay" } };
 
 const ImageProperties: FC<Props> = ({ manager }) => {
-  
-
   const trigger = manager.states.trigger;
 
   const toggleOverlay =
@@ -36,7 +34,6 @@ const ImageProperties: FC<Props> = ({ manager }) => {
   };
 
   useEffect(() => {
-    console.log(trigger, "changed");
     setExtensions(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);

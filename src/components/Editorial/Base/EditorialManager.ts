@@ -960,7 +960,6 @@ class EditorialManager implements EditorialManagerInterface {
     direction: "rows" | "cols"
   ) {
     const gridData = this.canvasManager.activeComponent.data;
-    console.log(parsedDimensions, "called");
     const newDimension = parsedDimensions?.[direction];
 
     if (type === "add") {
@@ -971,8 +970,6 @@ class EditorialManager implements EditorialManagerInterface {
             : `${parsedDimensions.rows}x${newDimension + 1}`;
         gridData.size = dimensions;
         this.setState("trigger", (prev: TriggerState) => !prev);
-        console.log(dimensions, "the dimensions to set");
-        console.log(gridData.size, "the dimensions that has been set");
       }
     } else {
       if (gridData) {
@@ -982,8 +979,6 @@ class EditorialManager implements EditorialManagerInterface {
             : `${parsedDimensions.rows}x${newDimension - 1}`;
         gridData.size = dimensions;
         this.setState("trigger", (prev: TriggerState) => !prev);
-        console.log(dimensions, "the dimensions to set");
-        console.log(gridData.size, "the dimensions that has been set");
       }
     }
   }

@@ -30,7 +30,6 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
-      console.log(cards, "Updated Cards");
     }
   };
 
@@ -51,7 +50,6 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
-      console.log(cards, "Updated Cards");
     }
   };
 
@@ -69,7 +67,6 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       status: boolean
     ) => {
       setOverlayActive(status);
-      console.log(status, "overlay status");
     };
   }, [manager, viewBoxRef]);
 
@@ -78,7 +75,6 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       manager.canvasManager.canvas.functions.getComponentData(id);
     imageComponentData && setData(imageComponentData.content);
     setPreviewImage(imageComponentData.url);
-    console.log(imageComponentData, "Image");
   }, [id]);
 
   const [inputList, setInputList] = useState<any[]>([]);

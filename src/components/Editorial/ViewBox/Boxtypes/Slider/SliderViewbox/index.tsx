@@ -32,8 +32,6 @@ const FlashcardViewBox: FC<Props> = ({
   isFlashcardDraggable,
   setIsFlashcardDraggable,
 }) => {
-  
-
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
 
@@ -89,7 +87,6 @@ const FlashcardViewBox: FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    console.log(activeId, showOptionsBox, "for checking slider");
     const component = manager.canvasManager.getComponentData(id);
     loadSize(component);
     // eslint-disable-next-line react-hooks/exhaustive-deps
