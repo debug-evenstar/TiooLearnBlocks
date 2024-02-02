@@ -82,9 +82,10 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   }, [slideData]);
 
   useEffect(() => {
-    manager.canvasManager.canvas.updateActiveComponentData(
-      manager.canvasManager.getComponentData(activeId)
-    );
+    console.log(manager.canvasManager.getComponentData(activeId));
+    // manager.canvasManager.canvas.updateActiveComponentData(
+    //   manager.canvasManager.getComponentData(activeId)
+    // );
   }, [activeId]);
 
   return (

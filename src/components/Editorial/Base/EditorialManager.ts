@@ -171,11 +171,7 @@ class EditorialManager implements EditorialManagerInterface {
   }
 
   initCanvasManager() {
-    const componentData = this.canvasManager.activeComponent.data ?? {
-      styleData: {}, // Store component styles
-      layoutData: {}, // Store layout configuration for the active component
-      coreData: {}, // Core data of the active component
-    };
+    const componentData = this.canvasManager.activeComponent.data ?? {};
     this.canvasManager.activeComponent.data = componentData;
     this.canvasManager.canvas.functions["updateActiveComponentObjective"] = (
       data: any,
@@ -1012,8 +1008,6 @@ class EditorialManager implements EditorialManagerInterface {
       activeSlide[activeComponent.data.index] = {
         ...activeSlide[activeComponent.data.index],
         ...activeComponent.data,
-        ...{ layout: activeComponent.data.layoutData },
-        ...{ styles: activeComponent.data.styleData },
       };
       slides[this.slideManager.activeSlide] = activeSlide;
       this.slideManager.slides = slides;
