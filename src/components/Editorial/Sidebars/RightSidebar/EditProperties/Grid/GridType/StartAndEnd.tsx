@@ -23,7 +23,10 @@ const StartAndEnd = () => {
           <p className="text-[13px]">Specify number of steps</p>
           <div className="w-full my-2">
             <p className="text-[12px]">Steps</p>
-            <input className="border border-black" type="text" />
+            <input
+              className="mt-1 p-1 px-2 border border-gray-400 w-full rounded text-[12px]"
+              type="number"
+            />
           </div>
         </main>
       )}

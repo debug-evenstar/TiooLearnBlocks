@@ -125,6 +125,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             handle=".handle"
             defaultClassName="w-fit"
             positionOffset={loadPosition(item)}
+            bounds="parent"
           >
             <div
               key={item.id}

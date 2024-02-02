@@ -38,7 +38,9 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
           data={data}
           manager={manager}
         />
-        <div className="w-full overflow-y-auto no-scrollbar">{children}</div>
+        <div className="relative w-full overflow-y-auto overflow-x-hidden no-scrollbar">
+          {children}
+        </div>
         <RightSidebar
           lessonlist={lessonlist}
           slides={slides}
