@@ -2,20 +2,6 @@ import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
 import { ObjectiveItemProp } from "./interfaces";
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { useDispatch, useSelector } from "react-redux";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
-import {
-  handleSetCorrectOption,
-  handleSetObjectiveIndex,
-  handleSetWrongOption,
-  refreshOptionsData,
-} from "provider/optionsDataSlice";
-import Feedback from "./Feedback";
-import {
-  handleSetFeedbackStatus,
-  handleSetFeedbackType,
-  handleSetOptionIndex,
-} from "provider/feedbackSlice";
 import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
@@ -24,6 +10,7 @@ import {
   FeedbackState,
   OptionsDataState,
 } from "components/Editorial/Base/StateInterface";
+import Feedback from "./Feedback";
 
 interface Props {
   manager: EditorialManagerInterface;

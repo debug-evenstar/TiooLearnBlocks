@@ -17,8 +17,9 @@ import { SliderProperties } from "./Boxtypes/Slider/handler";
 import Grid from "./Boxtypes/Grid/Grid";
 import AddGrid from "../Sidebars/RightSidebar/EditProperties/Grid/AddGrid";
 import GridType from "../Sidebars/RightSidebar/EditProperties/Grid/GridType/GridType";
-import GridTheme from "../Sidebars/RightSidebar/EditProperties/Grid/GridTheme";
+import GridTheme from "../Sidebars/RightSidebar/EditProperties/Grid/GridTheme/GridTheme";
 import EditGrid from "../Sidebars/RightSidebar/EditProperties/Grid/EditGrid";
+import GridExtensions from "../Sidebars/RightSidebar/EditProperties/Grid/GridExtensions";
 
 // for extracting the name of the component
 export function getOriginalName(str: string): string {
@@ -115,8 +116,9 @@ export const EditProperties = (
       <>
         <AddGrid />
         <EditGrid manager={manager} />
-        <GridType />
+        <GridType manager={manager} />
         <GridTheme />
+        <GridExtensions manager={manager} />
       </>
     ),
     Slider: SliderProperties(manager, activeCompName),
