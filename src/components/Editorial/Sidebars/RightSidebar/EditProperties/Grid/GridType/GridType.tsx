@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import StartAndEnd from "./StartAndEnd";
 import SecondType from "./SecondType";
+import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
 
-const GridType = () => {
+interface Props {
+  manager: EditorialManagerInterface;
+}
+
+const GridType: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
 
   return (
@@ -20,8 +25,7 @@ const GridType = () => {
 
       {isActive && (
         <main className="w-full mt-4">
-          <StartAndEnd />
-          <SecondType />
+          <StartAndEnd manager={manager} />
         </main>
       )}
     </div>

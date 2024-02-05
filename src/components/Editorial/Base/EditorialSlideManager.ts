@@ -62,9 +62,7 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
         }
         return response.json();
       })
-      .then((data) => {
-        console.log(data);
-      })
+      .then((data) => {})
       .catch((error) => {
         console.error("Update failed:", error);
       });

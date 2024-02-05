@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import ObjectivesInputs from "./ObjAndSubInputs/ObjectivesInputs";
 import ImageObjectivesInputs from "../Sidebars/RightSidebar/EditProperties/Image/Overlay/ObjectiveInputs";
+import GridObjectivesInputs from "../Sidebars/RightSidebar/EditProperties/Grid/GridExtensions/ObjectiveInputs";
 
 interface Props {
   id: string;
@@ -123,6 +124,12 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
       {showOptionsBox && activeId === id && id.includes("Image") && (
         <div className="z-[500]">
           <ImageObjectivesInputs manager={manager} />
+        </div>
+      )}
+
+      {activeId === id && id.includes("Grid") && (
+        <div className="z-[500]">
+          <GridObjectivesInputs manager={manager} />
         </div>
       )}
     </>

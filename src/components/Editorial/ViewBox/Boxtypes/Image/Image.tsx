@@ -9,15 +9,6 @@ import {
 } from "./handler";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
-import { useDispatch, useSelector } from "react-redux";
-import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { handleToggleTrigger } from "provider/triggerSlice";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
-import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
-import {
-  handleSetOverlayState,
-  handleToggleOverlayState,
-} from "provider/overlayActiveSlice";
 import "react-resizable/css/styles.css";
 import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 
@@ -229,7 +220,7 @@ export interface UploadIconProps {
   manager: EditorialManagerInterface;
 }
 
-const UploadIcon: FC<UploadIconProps> = ({
+export const UploadIcon: FC<UploadIconProps> = ({
   handleChange,
   handleDrop,
   manager,
