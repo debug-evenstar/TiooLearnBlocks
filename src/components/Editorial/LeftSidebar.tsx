@@ -60,7 +60,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
         ))}
         <div
           className="relative h-[208px] grid place-content-center border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100"
-          //onClick={() => manager.sidebarManager.functions?.addSlide()}
+          onClick={() => manager.slideManager.addNewSlide()}
         >
           <div className="text-center">
             <span className="fw-600 text-xl">
