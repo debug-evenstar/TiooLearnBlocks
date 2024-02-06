@@ -9,18 +9,17 @@ interface Props {
 }
 
 const GridObjectivesInputs: FC<Props> = ({ manager }) => {
-  const { objectiveIndex } = manager.states.optionsData;
   const trigger = manager.states.trigger;
-  const data = manager.canvasManager.activeComponent.data.question;
-  const [question, setQuestion] = useState<any>(data);
+  const data = manager.canvasManager.activeComponent.data.buttons;
+  const [buttons, setButtons] = useState<any>(data);
   const [maxWidth, setMaxWidth] = useState(0);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const nodeRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    setQuestion(data);
-    console.log(data, "the data for questions");
+    setButtons(data);
+    console.log(data, "the data for buttons");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
@@ -58,15 +57,12 @@ const GridObjectivesInputs: FC<Props> = ({ manager }) => {
     <div className="w-full flex justify-around gap-2 my-5 z-[5000]s">
       <Draggable nodeRef={nodeRef} axis="both" handle=".objInputHandleImage">
         <div ref={nodeRef} className="flex">
-          {question?.options?.map((option: any, i: number) => {
+          {buttons?.options?.map((option: any, i: number) => {
             return (
               <div
                 key={i}
                 className="flex justify-center w-full border border-black p-2 rounded mx-1 objInputHandleImage"
               >
-                {option.url && (
-                  <img src={option.url} alt="" className="h-full w-[20%]" />
-                )}
                 <input
                   ref={(el) => (inputRefs.current[i] = el)}
                   className="outline-none text-center z-[5000] relative"
@@ -76,6 +72,10 @@ const GridObjectivesInputs: FC<Props> = ({ manager }) => {
                   style={{ width: maxWidth === 0 ? 100 : maxWidth }}
                   onLoad={(e: any) => resizeInputWidth(e.target)}
                 />
+
+                {option.url && (
+                  <img src={option.url} alt="" className="h-full w-[20%]" />
+                )}
               </div>
             );
           })}

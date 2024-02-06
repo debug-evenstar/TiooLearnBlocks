@@ -5,6 +5,7 @@ import FlashcardViewBox from "./SliderViewbox";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import { SliderState } from "components/Editorial/Base/StateInterface";
+import { calculateMaxResizableArea } from "../../handler";
 
 interface SliderProps {
   id: string;
@@ -15,6 +16,7 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   const trigger = manager.states.trigger;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEditable, setIsEditable] = useState(true);
+  const boxRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const draggableRef = useRef<HTMLDivElement>(null);
   const [slides, setSlides] = useState<any[]>([]);
@@ -38,21 +40,36 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   };
 
   const onResize = (event: any, { node, size, handle }: any) => {
-    setViewBoxSize({ width: size.width, height: size.height });
+    const canvas = document.getElementById("editorial-canvas");
+    const box = boxRef.current;
+
+    if (!canvas || !box) return;
+    const canvasSize = canvas.getBoundingClientRect();
+    const boxPosition = box.getBoundingClientRect();
+
+    const maxArea = calculateMaxResizableArea(boxPosition, canvasSize, true);
+
+    const newWidth = Math.min(size.width, maxArea.maxWidth);
+    const newHeight = Math.min(size.height, maxArea.maxHeight);
+
+    setViewBoxSize({ width: newWidth, height: newHeight });
   };
 
   useEffect(() => {
-    const componentData = manager.canvasManager.canvas.functions.getComponentData(id);
+    const componentData =
+      manager.canvasManager.canvas.functions.getComponentData(id);
     componentData && setSlides(componentData.slides);
-     manager.setState("slider", (prev: SliderState) => {
-        return {
-          ...prev,
-          ...({
-            activeCompIndex: currentImageIndex ,
-            activeCompName: slides.length ? slides[currentImageIndex][0]?.component : prev.activeCompName,
-          } as SliderState),
-        };
-      });
+    manager.setState("slider", (prev: SliderState) => {
+      return {
+        ...prev,
+        ...({
+          activeCompIndex: currentImageIndex,
+          activeCompName: slides.length
+            ? slides[currentImageIndex][0]?.component
+            : prev.activeCompName,
+        } as SliderState),
+      };
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
@@ -86,7 +103,7 @@ const Slider: FC<SliderProps> = ({ id, manager }) => {
   }, [currentImageIndex]);
 
   return (
-    <div className="flex items-center gap-2">
+    <div ref={boxRef} className="flex items-center gap-2">
       <button onClick={handlePrevClick}>
         <FaAngleLeft className="text-[20px]" strokeWidth="1px" />
       </button>

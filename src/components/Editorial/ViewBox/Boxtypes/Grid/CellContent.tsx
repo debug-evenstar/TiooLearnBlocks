@@ -80,6 +80,7 @@ const CellContent: FC<Props> = ({
                 rowIndex,
                 colIndex,
               },
+              cellColor: "transparent",
             },
           ])
         : (data.objects = [
@@ -90,6 +91,7 @@ const CellContent: FC<Props> = ({
                 rowIndex,
                 colIndex,
               },
+              cellColor: "transparent",
             },
           ]);
     } else {
@@ -103,6 +105,7 @@ const CellContent: FC<Props> = ({
                 rowIndex,
                 colIndex,
               },
+              cellColor: "transparent",
             },
           ])
         : (data.objects = [
@@ -113,6 +116,7 @@ const CellContent: FC<Props> = ({
                 rowIndex,
                 colIndex,
               },
+              cellColor: "transparent",
             },
           ]);
     }

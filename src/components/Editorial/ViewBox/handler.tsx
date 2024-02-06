@@ -21,6 +21,20 @@ import GridTheme from "../Sidebars/RightSidebar/EditProperties/Grid/GridTheme/Gr
 import EditGrid from "../Sidebars/RightSidebar/EditProperties/Grid/EditGrid";
 import GridExtensions from "../Sidebars/RightSidebar/EditProperties/Grid/GridExtensions";
 
+// Calculate the max area for resizing
+export const calculateMaxResizableArea = (
+  viewBoxPosition: DOMRect,
+  canvasSize: DOMRect,
+  hasHandles: boolean = false
+) => {
+  const maxRight = canvasSize.right - viewBoxPosition.left;
+  const maxBottom = canvasSize.height - viewBoxPosition.top;
+  return {
+    maxWidth: hasHandles ? maxRight - 50 : maxRight,
+    maxHeight: maxBottom,
+  };
+};
+
 // for extracting the name of the component
 export function getOriginalName(str: string): string {
   const indexOfClone = str.indexOf("-clone-");

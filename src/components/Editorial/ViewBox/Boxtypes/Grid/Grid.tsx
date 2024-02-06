@@ -89,7 +89,7 @@ const GridSteps: FC<GridStepsProps> = ({ data, size, manager, id, height }) => {
                   <div
                     key={colIndex}
                     ref={cellRef}
-                    className="grow border border-black p-1 relative cursor-pointer"
+                    className={`grow border border-black p-1 relative cursor-pointer`}
                     onClick={() =>
                       setActiveCell({
                         rowIndex: rowIndex + 1,

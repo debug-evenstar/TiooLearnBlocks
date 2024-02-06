@@ -25,35 +25,32 @@ const Objective: FC<Props> = ({ manager, index, data }) => {
   const [isActive, setIsActive] = useState(false);
 
   const objectiveData: any = manager.canvasManager.activeComponent.data;
-  const questionData: QuestionInterface = objectiveData.question;
+  const buttonsData: QuestionInterface = objectiveData.buttons;
 
-  const [question, setQuestion] = useState<QuestionInterface>();
+  const [buttons, setButtons] = useState<QuestionInterface>();
 
   useEffect(() => {
-    if (questionData && questionData.type === "OBJECTIVE") {
-      setQuestion(questionData);
-      setIsActive(true);
-    }
+    setButtons(buttonsData);
+    setIsActive(true);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questionData, trigger]);
+  }, [buttonsData, trigger]);
 
   const handleSetObjective = () => {
-    if (question?.identifier) return;
+    if (buttons?.identifier) return;
 
     //replaceContent(questions, "OBJECTIVE", component);
-    objectiveData.question = {
-      type: "OBJECTIVE",
+    objectiveData.buttons = {
       identifier: `Input ${index + 1}`,
       options: [
         {
           answer: false,
-          content: "Option 1",
+          content: "",
           url: "",
         },
         {
           answer: false,
-          content: "Option 2",
+          content: "",
           url: "",
         },
       ],
@@ -77,16 +74,16 @@ const Objective: FC<Props> = ({ manager, index, data }) => {
   const handleDelete = (id: string, optionIndex: number) => {
     // Find the question to update
 
-    if (!question?.options) return;
+    if (!buttons?.options) return;
     const updatedQuestion = {
-      ...question,
+      ...buttons,
       options: [
-        ...question.options.slice(0, optionIndex),
-        ...question.options.slice(optionIndex + 1),
+        ...buttons.options.slice(0, optionIndex),
+        ...buttons.options.slice(optionIndex + 1),
       ],
     };
 
-    objectiveData.question.options = updatedQuestion.options;
+    objectiveData.buttons.options = updatedQuestion.options;
     manager.setState("trigger", (prev: any) => !prev);
   };
 
@@ -101,10 +98,10 @@ const Objective: FC<Props> = ({ manager, index, data }) => {
 
       {isActive && (
         <main className="w-full p-2">
-          {question?.identifier && (
+          {buttons?.identifier && (
             <ObjectiveItem
-              key={question.identifier}
-              objective={question}
+              key={buttons.identifier}
+              objective={buttons}
               index={index}
               data={data}
               handleDelete={handleDelete}
@@ -128,26 +125,26 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 }) => {
   const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(true);
-  const [question, setQuestion] = useState<any>();
+  const [buttons, setButtons] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
 
-  const objectiveData: any = manager.canvasManager.activeComponent.data;
-  const coreData = manager.canvasManager.activeComponent.data.question;
+  const buttonsData: any = manager.canvasManager.activeComponent.data;
+  const coreData = manager.canvasManager.activeComponent.data.buttons;
 
   useEffect(() => {
-    setQuestion(coreData);
+    setButtons(coreData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
-    objectiveData.question.options = [...objectiveData.question.options, data];
+    buttonsData.buttons.options = [...buttonsData.buttons.options, data];
 
     setAddedOption(!addedOption);
     manager.setState("feedback", (prev: FeedbackState) => {
       return {
         ...prev,
         ...({
-          optionIndex: question.options ? question.options.length : 0,
+          optionIndex: buttons.options ? buttons.options.length : 0,
         } as FeedbackState),
       };
     });
@@ -175,10 +172,10 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
     if (selectedFile) {
       //const imageUrl = URL.createObjectURL(selectedFile);
       const url = await uploadFile(473, selectedFile);
-      objectiveData.question.options[index].url = url;
+      buttonsData.buttons.options[index].url = url;
       manager.setState("trigger", (prev: any) => !prev);
 
-      console.log(objectiveData.question.options, "url");
+      console.log(buttonsData.buttons.options, "url");
     }
   };
 
@@ -195,8 +192,8 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
 
       {isActive && (
         <main className="w-full p-2">
-          {question &&
-            question.options?.map((option: OptionInterface, i: any) => (
+          {buttons &&
+            buttons.options?.map((option: OptionInterface, i: any) => (
               <div key={i}>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
@@ -205,9 +202,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
                   </div>
                   <div className="flex items-center gap-1 cursor-pointer">
                     <div>
-                      {objectiveData.question.options[i].url?.length > 1 ? (
+                      {buttonsData.buttons.options[i].url?.length > 1 ? (
                         <img
-                          src={objectiveData.question.options[i].url}
+                          src={buttonsData.buttons.options[i].url}
                           alt="placeholder"
                           className="w-4 h-4"
                           draggable={false}

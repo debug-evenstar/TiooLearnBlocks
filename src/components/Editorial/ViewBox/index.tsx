@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 //import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
-import { ViewBoxContent } from "./handler";
+import { ViewBoxContent, calculateMaxResizableArea } from "./handler";
 import {
   EditorialManagerInterface,
   setComponentLayout,
@@ -45,8 +45,22 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
   };
 
   const onResize = (event: any, { node, size, handle }: any) => {
-    setViewBoxSize({ width: size.width, height: size.height });
-    updateComponentLayout(size.width, size.height);
+    const canvas = document.getElementById("editorial-canvas");
+    const viewBox = viewBoxRef.current;
+
+    if (!canvas || !viewBox) return;
+    const canvasSize = canvas.getBoundingClientRect();
+    const viewBoxPosition = viewBox.getBoundingClientRect();
+
+    const maxArea = calculateMaxResizableArea(viewBoxPosition, canvasSize);
+
+    const newWidth = Math.min(size.width, maxArea.maxWidth);
+    const newHeight = Math.min(size.height, maxArea.maxHeight);
+
+    if (newWidth !== viewBoxSize.width || newHeight !== viewBoxSize.height) {
+      setViewBoxSize({ width: newWidth, height: newHeight });
+      updateComponentLayout(newWidth, newHeight);
+    }
   };
 
   const loadSize = (component: ComponentBaseDataInterface) => {
