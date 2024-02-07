@@ -13,6 +13,7 @@ export interface EditorialSlideManagerInterface {
   setActiveSlide: Function;
   saveComponentData: Function;
   handleSlidesUpdate: Function;
+  addNewSlide : Function;
 }
 
 export class EditorialSlideManager implements EditorialSlideManagerInterface {
@@ -32,6 +33,13 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
 
   activeSlideData() {
     return this.slides[this.activeSlide];
+  }
+
+  addNewSlide() {
+    this.handleSlidesUpdate([
+      ...this.slides,
+      []
+    ]);
   }
 
   saveComponentData(index: number, data: any, initialization: boolean = false) {
@@ -62,9 +70,7 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
         }
         return response.json();
       })
-      .then((data) => {
-        console.log(data);
-      })
+      .then((data) => {})
       .catch((error) => {
         console.error("Update failed:", error);
       });

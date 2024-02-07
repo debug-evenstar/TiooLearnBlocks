@@ -17,8 +17,23 @@ import { SliderProperties } from "./Boxtypes/Slider/handler";
 import Grid from "./Boxtypes/Grid/Grid";
 import AddGrid from "../Sidebars/RightSidebar/EditProperties/Grid/AddGrid";
 import GridType from "../Sidebars/RightSidebar/EditProperties/Grid/GridType/GridType";
-import GridTheme from "../Sidebars/RightSidebar/EditProperties/Grid/GridTheme";
+import GridTheme from "../Sidebars/RightSidebar/EditProperties/Grid/GridTheme/GridTheme";
 import EditGrid from "../Sidebars/RightSidebar/EditProperties/Grid/EditGrid";
+import GridExtensions from "../Sidebars/RightSidebar/EditProperties/Grid/GridExtensions";
+
+// Calculate the max area for resizing
+export const calculateMaxResizableArea = (
+  viewBoxPosition: DOMRect,
+  canvasSize: DOMRect,
+  hasHandles: boolean = false
+) => {
+  const maxRight = canvasSize.right - viewBoxPosition.left;
+  const maxBottom = canvasSize.height - viewBoxPosition.top;
+  return {
+    maxWidth: hasHandles ? maxRight - 50 : maxRight,
+    maxHeight: maxBottom,
+  };
+};
 
 // for extracting the name of the component
 export function getOriginalName(str: string): string {
@@ -50,7 +65,6 @@ export const ViewBoxContent = (
   }
 ) => {
   const componentName = getOriginalName(id);
-  console.log(id, componentName);
 
   const viewboxTypes: {
     [key: string]: JSX.Element;
@@ -116,8 +130,9 @@ export const EditProperties = (
       <>
         <AddGrid />
         <EditGrid manager={manager} />
-        <GridType />
+        <GridType manager={manager} />
         <GridTheme />
+        <GridExtensions manager={manager} />
       </>
     ),
     Slider: SliderProperties(manager, activeCompName),

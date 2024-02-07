@@ -27,7 +27,7 @@ const RightSidebar: FC<Props> = ({
 
   return (
     <div
-      className={`z-[500] border-l bg-white border-[#030036] border-opacity-10 shadow h-screen w-full max-w-[20%] relative no-scrollbar mb-10 ${
+      className={`border-l bg-white border-[#030036] border-opacity-10 shadow h-screen w-full max-w-[20%] relative no-scrollbar mb-10 ${
         optionStatus ? "" : "overflow-y-auto"
       }`}
     >

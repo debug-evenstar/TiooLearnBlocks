@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 //import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
-import { ViewBoxContent } from "./handler";
+import { ViewBoxContent, calculateMaxResizableArea } from "./handler";
 import {
   EditorialManagerInterface,
   setComponentLayout,
@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import ObjectivesInputs from "./ObjAndSubInputs/ObjectivesInputs";
 import ImageObjectivesInputs from "../Sidebars/RightSidebar/EditProperties/Image/Overlay/ObjectiveInputs";
+import GridObjectivesInputs from "../Sidebars/RightSidebar/EditProperties/Grid/GridExtensions/ObjectiveInputs";
 
 interface Props {
   id: string;
@@ -33,7 +34,7 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
 
   const updateComponentLayout = (width: number, height: number) => {
-    manager.canvasManager.activeComponent.data.layoutData = setComponentLayout(
+    manager.canvasManager.activeComponent.data.layout = setComponentLayout(
       manager.canvasManager.canvas.functions?.getCanvasSize(),
       {
         ...manager.canvasManager.getComponentData(id).layout,
@@ -44,8 +45,22 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
   };
 
   const onResize = (event: any, { node, size, handle }: any) => {
-    setViewBoxSize({ width: size.width, height: size.height });
-    updateComponentLayout(size.width, size.height);
+    const canvas = document.getElementById("editorial-canvas");
+    const viewBox = viewBoxRef.current;
+
+    if (!canvas || !viewBox) return;
+    const canvasSize = canvas.getBoundingClientRect();
+    const viewBoxPosition = viewBox.getBoundingClientRect();
+
+    const maxArea = calculateMaxResizableArea(viewBoxPosition, canvasSize);
+
+    const newWidth = Math.min(size.width, maxArea.maxWidth);
+    const newHeight = Math.min(size.height, maxArea.maxHeight);
+
+    if (newWidth !== viewBoxSize.width || newHeight !== viewBoxSize.height) {
+      setViewBoxSize({ width: newWidth, height: newHeight });
+      updateComponentLayout(newWidth, newHeight);
+    }
   };
 
   const loadSize = (component: ComponentBaseDataInterface) => {
@@ -96,7 +111,7 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
         <div
           ref={viewBoxRef}
           className={`border-2 border-slate-500 rounded ${
-            id.includes("Text") && !isEditable ? "border-none" : "border-dotted"
+            isEditable && activeId === id ? "border-dotted" : "border-none"
           }`}
           style={{
             width: viewBoxSize.width + "px",
@@ -123,6 +138,12 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
       {showOptionsBox && activeId === id && id.includes("Image") && (
         <div className="z-[500]">
           <ImageObjectivesInputs manager={manager} />
+        </div>
+      )}
+
+      {activeId === id && id.includes("Grid") && (
+        <div className="z-[500]">
+          <GridObjectivesInputs manager={manager} />
         </div>
       )}
     </>

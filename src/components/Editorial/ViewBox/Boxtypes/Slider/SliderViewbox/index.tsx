@@ -32,8 +32,6 @@ const FlashcardViewBox: FC<Props> = ({
   isFlashcardDraggable,
   setIsFlashcardDraggable,
 }) => {
-  
-
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
 
@@ -46,7 +44,7 @@ const FlashcardViewBox: FC<Props> = ({
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
 
   const updateComponentLayout = (width: number, height: number) => {
-    manager.canvasManager.activeComponent.data.layoutData = setComponentLayout(
+    manager.canvasManager.activeComponent.data.layout = setComponentLayout(
       manager.canvasManager.canvas.functions?.getCanvasSize(),
       {
         ...manager.canvasManager.getComponentData(id).layout,
@@ -89,7 +87,6 @@ const FlashcardViewBox: FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    console.log(activeId, showOptionsBox, "for checking slider");
     const component = manager.canvasManager.getComponentData(id);
     loadSize(component);
     // eslint-disable-next-line react-hooks/exhaustive-deps

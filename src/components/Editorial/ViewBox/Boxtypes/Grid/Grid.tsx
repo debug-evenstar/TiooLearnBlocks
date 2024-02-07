@@ -1,8 +1,13 @@
 import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, createRef, useEffect, useState } from "react";
 import { parseGridDimensions } from "./handlers/generalHandler";
-import { RiAddLine, RiDeleteBinLine } from "react-icons/ri";
+import {
+  RiAddLine,
+  RiArrowDropDownFill,
+  RiDeleteBinLine,
+} from "react-icons/ri";
 import { Tooltip, TooltipProps, styled, tooltipClasses } from "@mui/material";
+import CellContent from "./CellContent";
 
 interface GridProps {
   id: string;
@@ -55,6 +60,8 @@ interface GridStepsProps {
 const GridSteps: FC<GridStepsProps> = ({ data, size, manager, id, height }) => {
   const isEditable = manager.states.grid.gridIsEditable;
   const [padding, setPadding] = useState(20);
+  const [activeCell, setActiveCell] = useState({ rowIndex: 0, colIndex: 0 });
+  const [cellColor, setCellColor] = useState("black");
 
   const buildGridBox = ({ rows, cols }: { rows: number; cols: number }) => {
     return Array.from({ length: rows }, (_, row) =>
@@ -75,9 +82,31 @@ const GridSteps: FC<GridStepsProps> = ({ data, size, manager, id, height }) => {
           size &&
           buildGridBox(size).map((row: any, rowIndex: number) => (
             <div key={rowIndex} className={`flex grow w-full`}>
-              {row.map((cell: any, colIndex: number) => (
-                <div key={colIndex} className={`grow border border-black`} />
-              ))}
+              {row.map((cell: any, colIndex: number) => {
+                const cellRef = createRef<HTMLDivElement>();
+
+                return (
+                  <div
+                    key={colIndex}
+                    ref={cellRef}
+                    className={`grow border border-black p-1 relative cursor-pointer`}
+                    onClick={() =>
+                      setActiveCell({
+                        rowIndex: rowIndex + 1,
+                        colIndex: colIndex + 1,
+                      })
+                    }
+                  >
+                    <CellContent
+                      rowIndex={rowIndex + 1}
+                      colIndex={colIndex + 1}
+                      activeCell={activeCell}
+                      manager={manager}
+                      cellRef={cellRef}
+                    />
+                  </div>
+                );
+              })}
             </div>
           ))}
       </div>

@@ -17,8 +17,6 @@ interface Props {
 }
 
 const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
-  
-
   const { objectiveIndex } = manager.states.optionsData;
   const trigger = manager.states.trigger;
 
@@ -33,12 +31,8 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    console.log(trigger, "changed");
     setQuestion(data);
-    console.log(
-      manager.canvasManager.activeComponent.data.components[cardsIndex].cards,
-      "data cards"
-    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger, objectiveIndex]);
 
@@ -63,12 +57,12 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Flashcard"
     );
-    manager.setState("optionsData", (prev : OptionsDataState) => ({
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
-      ...({ 
-        wrongOption : index <= 0 ? value : prev.wrongOption,
-        correctOption : index > 0 ? value : prev.correctOption
-      }) as OptionsDataState
+      ...({
+        wrongOption: index <= 0 ? value : prev.wrongOption,
+        correctOption: index > 0 ? value : prev.correctOption,
+      } as OptionsDataState),
     }));
   };
 

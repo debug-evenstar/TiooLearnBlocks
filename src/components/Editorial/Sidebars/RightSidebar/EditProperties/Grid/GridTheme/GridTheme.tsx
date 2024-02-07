@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
+import Theme from "./Theme";
 
 const GridTheme = () => {
   const [isActive, setIsActive] = useState(false);
@@ -18,7 +19,7 @@ const GridTheme = () => {
 
       {isActive && (
         <main className="w-full mt-4">
-          <a href="javascript:void(0)"></a>
+          <Theme />
         </main>
       )}
     </div>

@@ -16,7 +16,6 @@ const InputResize: FC<Props> = ({ manager, componentType }) => {
   const handleChangeSize = (e: any, styleType: string) => {
     if (componentType === "image") toggleImageSize(e.target.value, styleType);
     else toggleVideoSize(e.target.value, styleType);
-    // console.log(e.target.value);
   };
 
   return (

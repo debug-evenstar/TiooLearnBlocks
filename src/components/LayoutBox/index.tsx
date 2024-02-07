@@ -27,12 +27,9 @@ const LayoutComponent: FC<LayoutComponentProps> = ({ layout , children}) => {
         }
     }, [layout]);
 
-    return (
-        <>
-            <div style={layoutStyles()} className="relative">
+    return (<div style={layoutStyles()} className="relative">
                 {children}
             </div>
-        </>
     );
 };
 

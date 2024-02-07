@@ -9,6 +9,8 @@ import { EditorialManagerInterface } from "./Base/EditorialManager";
 import { useDispatch } from "react-redux";
 import { refreshActiveViewbox } from "provider/activeViewboxSlice";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
+import { ComponentBaseDataInterface } from "components/interface";
+import LayoutComponent from "components/LayoutBox";
 
 interface Props {
   slides: any;
@@ -42,9 +44,14 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             </p>
             <div className="absolute w-full h-full opacity-0 bg-gray-400 z-10"></div>
             <div className="text-preview relative z-0 shadow mb-5 p-2 py-3 h-[206px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
-              {item.map((component: any, index: number) => {
+              {item.map((component: ComponentBaseDataInterface, index: number) => {
                 const Component = loadComponent(component);
-                return (
+                return component.layout ? (
+                  <LayoutComponent layout={component.layout}>
+                    <Component key={index} data={component} slide={SlideScope} />
+                  </LayoutComponent>
+                )
+                :(
                   <Component key={index} data={component} slide={SlideScope} />
                 );
               })}
@@ -53,7 +60,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
         ))}
         <div
           className="relative h-[208px] grid place-content-center border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100"
-          //onClick={() => manager.sidebarManager.functions?.addSlide()}
+          onClick={() => manager.slideManager.addNewSlide()}
         >
           <div className="text-center">
             <span className="fw-600 text-xl">

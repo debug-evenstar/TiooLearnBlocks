@@ -34,18 +34,17 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
   const [question, setQuestion] = useState<QuestionInterface>();
 
   useEffect(() => {
-    console.log(questionData, trigger, "changed");
     if (questionData && questionData.type === "OBJECTIVE") {
       setQuestion(questionData);
       setIsActive(true);
     }
-    console.log(data, "data extensions");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionData, trigger]);
 
   const handleSetObjective = () => {
     if (question?.identifier) return;
-    console.log(question, "in objective");
+
     //replaceContent(questions, "OBJECTIVE", component);
     addQuestion(
       {
@@ -86,7 +85,6 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
       return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
     });
     manager.setState("trigger", (prev: any) => !prev);
-    console.log(data, "updated");
   };
 
   const handleDelete = (id: string, optionIndex: number) => {
@@ -106,12 +104,7 @@ const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
       "Flashcard"
     );
     manager.setState("trigger", (prev: any) => !prev);
-    console.log(id);
   };
-
-  useEffect(() => {
-    console.log(identifier, correctOption, wrongOption, " - Options");
-  }, [identifier]);
 
   return (
     <div className="my-1 shadow-md">
@@ -180,16 +173,9 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
         } as FeedbackState),
       };
     });
-    console.log(
-      manager.canvasManager.activeComponent.data.components[cardsIndex].cards[
-        index
-      ].question,
-      "clicked"
-    );
   };
 
   const deleteOption = (i: number) => {
-    console.log(i, " is the option's index.");
     handleDelete(objective.identifier, i);
     setAddedOption(!addedOption);
   };
