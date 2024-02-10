@@ -1,7 +1,7 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { ManagerInterface } from "components/Editorial/Base/Manager";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   RiAlignCenter,
   RiAlignJustify,
