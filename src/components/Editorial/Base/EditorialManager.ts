@@ -21,6 +21,7 @@ import {
 } from "./EditorialSidebarManager";
 import {
   ActiveViewBoxState,
+  CurrentStylesState,
   FeedbackState,
   GridState,
   OptionsDataState,
@@ -95,6 +96,7 @@ const DataGroup: DataGroupInterface = {
 };
 
 interface States {
+  slideComponents: any[];
   activeViewBox: ActiveViewBoxState;
   feedback: FeedbackState;
   optionsData: OptionsDataState;
@@ -104,6 +106,7 @@ interface States {
   trigger: TriggerState;
   rightSidebarState: RightSidebarState;
   grid: GridState;
+  currentStyles: CurrentStylesState;
 }
 
 export interface EditorialManagerInterface {
@@ -128,6 +131,7 @@ class EditorialManager implements EditorialManagerInterface {
     this.sidebarManager = new EditorialSidebarManager(this);
     this.initCanvasManager();
     this.states = {
+      slideComponents: [],
       activeViewBox: "",
       feedback: {
         optionIndex: 0,
@@ -150,6 +154,12 @@ class EditorialManager implements EditorialManagerInterface {
       rightSidebarState: false,
       grid: {
         gridIsEditable: false,
+      },
+      currentStyles: {
+        textColor: "#000000",
+        textSize: "16",
+        textSpacing: `${16 * 1.2}`,
+        font: "Arial",
       },
     };
   }

@@ -13,8 +13,7 @@ const Tips: FC<Props> = ({ manager }) => {
   const [isActive, setIsActive] = useState(false);
   const [input, setInput] = useState("");
 
-  const addTooltip =
-    manager.canvasManager.activeComponent.functions?.addTooltip;
+  const addTooltip = manager.canvasManager.canvas.functions?.addTooltip;
 
   const handleAddToolTip = (input: string) => {
     addTooltip(input);

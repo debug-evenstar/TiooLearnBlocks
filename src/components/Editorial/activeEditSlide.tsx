@@ -33,16 +33,18 @@ const ActiveEditSlide: FC<Props> = ({
   const RenderPreview = () => {
     return (
       <>
-        {activeSlide.map((component: ComponentBaseDataInterface, index: number) => {
-          const Component = loadComponent(component);
-          return component.layout 
-            ? (
-                <LayoutComponent layout={component.layout}>
-                    <Component key={index} data={component} slide={SlideScope} />
-                </LayoutComponent>
-              ) 
-            : <Component key={index} data={component} slide={SlideScope} />;
-        })}
+        {activeSlide.map(
+          (component: ComponentBaseDataInterface, index: number) => {
+            const Component = loadComponent(component);
+            return component.layout ? (
+              <LayoutComponent layout={component.layout}>
+                <Component key={index} data={component} slide={SlideScope} />
+              </LayoutComponent>
+            ) : (
+              <Component key={index} data={component} slide={SlideScope} />
+            );
+          }
+        )}
       </>
     );
   };
@@ -50,9 +52,9 @@ const ActiveEditSlide: FC<Props> = ({
   RenderPreview();
 
   const saveSlide = () => {
-    const slideId : number = data.LessonSlides[active].id;
-    setIsSaving(true)
-    manager.slideManager.saveSlide(slideId, activeSlide, ()=>{
+    const slideId: number = data.LessonSlides[active].id;
+    setIsSaving(true);
+    manager.slideManager.saveSlide(slideId, activeSlide, () => {
       setIsSaving(false);
     });
   };
@@ -79,7 +81,7 @@ const ActiveEditSlide: FC<Props> = ({
             className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold"
             onClick={saveSlide}
           >
-            {(isBusy || isSaving) ? "Saving..." : "Save"}
+            {isBusy || isSaving ? "Saving..." : "Save"}
           </div>
           <div
             className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold"

@@ -20,8 +20,7 @@ const label = { inputProps: { "aria-label": "Switch Overlay" } };
 const ImageProperties: FC<Props> = ({ manager }) => {
   const trigger = manager.states.trigger;
 
-  const toggleOverlay =
-    manager.canvasManager.activeComponent.functions?.toggleOverlay;
+  const toggleOverlay = manager.canvasManager.canvas.functions?.toggleOverlay;
   const data: any[] = manager.canvasManager.activeComponent.data?.extensions;
 
   const [isActive, setIsActive] = useState(false);

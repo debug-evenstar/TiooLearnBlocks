@@ -12,7 +12,8 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   slideData,
   manager,
 }) => {
-  const [slideComponents, setSlideComponents] = useState<any[]>([]);
+  //const [slideComponents, setSlideComponents] = useState<any[]>([]);
+  const slideComponents = manager.states.slideComponents;
   const activeId = manager.states.activeViewBox;
   const onDrop = (id: string) => {
     const existingClone = slideComponents.find((item) => item.id === id);
@@ -58,7 +59,8 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   };
 
   const updateSlideComponents = (components: any[]) => {
-    setSlideComponents(() => components);
+    //setSlideComponents(() => components);
+    manager.setState("slideComponents", components);
     // Also update slide manager
     manager.slideManager.slides[manager.slideManager.activeSlide] = components;
   };
@@ -76,7 +78,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   useEffect(() => {
     const parsedSlides =
       manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
-    manager.canvasManager && setSlideComponents(parsedSlides);
+    manager.canvasManager && manager.setState("slideComponents", parsedSlides);
     manager.canvasManager.updateActiveSlide(parsedSlides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideData]);
@@ -116,6 +118,8 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             );
           }
         };
+
+        if (!item.id) return <></>;
 
         return (
           <Draggable

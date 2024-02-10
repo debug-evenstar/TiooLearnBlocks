@@ -28,8 +28,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   const id = manager.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
-  const replaceContent =
-    manager.canvasManager.activeComponent.functions?.replaceContent;
+  const replaceContent = manager.canvasManager.canvas.functions?.replaceContent;
 
   const { identifier, correctOption, wrongOption } = manager.states.optionsData;
 
@@ -78,7 +77,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
     );
 
     setQuestions(filteredQuestions);
-    manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
+    manager.canvasManager.canvas.functions.updateActiveComponentObjective(
       filteredQuestions
     );
   };

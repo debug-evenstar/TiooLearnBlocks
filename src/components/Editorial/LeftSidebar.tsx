@@ -6,9 +6,6 @@ import {
 } from "../SlideManager/handler";
 import { FaPlus } from "react-icons/fa";
 import { EditorialManagerInterface } from "./Base/EditorialManager";
-import { useDispatch } from "react-redux";
-import { refreshActiveViewbox } from "provider/activeViewboxSlice";
-import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { ComponentBaseDataInterface } from "components/interface";
 import LayoutComponent from "components/LayoutBox";
 
@@ -44,17 +41,19 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             </p>
             <div className="absolute w-full h-full opacity-0 bg-gray-400 z-10"></div>
             <div className="text-preview relative z-0 shadow mb-5 p-2 py-3 h-[206px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
-              {item.map((component: ComponentBaseDataInterface, index: number) => {
-                const Component = loadComponent(component);
-                return component.layout ? (
-                  <LayoutComponent layout={component.layout}>
-                    <Component key={index} data={component} slide={SlideScope} />
-                  </LayoutComponent>
-                )
-                :(
-                  <Component key={index} data={component} slide={SlideScope} />
-                );
-              })}
+              {item.map(
+                (component: ComponentBaseDataInterface, index: number) => {
+                  if (component === undefined) return;
+                  const Component = () => <div>{component.component}</div>;
+                  return component.layout ? (
+                    <LayoutComponent layout={component.layout}>
+                      <Component key={index} />
+                    </LayoutComponent>
+                  ) : (
+                    <Component key={index} />
+                  );
+                }
+              )}
             </div>
           </div>
         ))}

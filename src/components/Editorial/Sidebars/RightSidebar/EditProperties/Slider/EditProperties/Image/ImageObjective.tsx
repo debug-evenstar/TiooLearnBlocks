@@ -171,7 +171,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
+    manager.canvasManager.canvas.functions.updateObjectiveOptions(
       data,
       index,
       "Overlay"

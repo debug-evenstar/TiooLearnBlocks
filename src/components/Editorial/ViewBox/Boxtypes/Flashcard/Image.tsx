@@ -54,7 +54,7 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
   };
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleImageSize"] = (
+    manager.canvasManager.canvas.functions["toggleImageSize"] = (
       style: string = "",
       styleType: string
     ) => {
@@ -63,7 +63,7 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       toggleWrapperSize(element, style, styleType);
     };
 
-    manager.canvasManager.activeComponent.functions["toggleOverlay"] = (
+    manager.canvasManager.canvas.functions["toggleOverlay"] = (
       status: boolean
     ) => {
       setOverlayActive(status);

@@ -80,8 +80,6 @@ const EditorialComp: FC<Props> = ({
     };
   }, [manager, manager.slideManager]);
 
-
-
   if (!data || parseSlides.length === 0) {
     return <p>Loading...</p>;
   }

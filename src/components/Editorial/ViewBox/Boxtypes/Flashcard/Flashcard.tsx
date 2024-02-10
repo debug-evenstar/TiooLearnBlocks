@@ -73,7 +73,7 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
   const height = id.includes("Text") ? 60 : 65;
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleViewboxStyle"] = (
+    manager.canvasManager.canvas.functions["toggleViewboxStyle"] = (
       style: string = "",
       styleType: string
     ) => {
@@ -160,7 +160,7 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
         </div>
       </Resizable>
 
-      {activeId === id && question && (
+      {showOptionsBox && activeId === id && question && (
         <div className="z-[500]">
           <FlashcardObjectivesInputs manager={manager} />
         </div>

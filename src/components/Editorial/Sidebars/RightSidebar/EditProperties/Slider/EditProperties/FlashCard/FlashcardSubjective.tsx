@@ -94,7 +94,7 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
   };
 
   const handleDelete = (id: string, index: number) => {
-    manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
+    manager.canvasManager.canvas.functions.updateActiveComponentObjective(
       null,
       "Flashcard"
     );
