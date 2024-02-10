@@ -1,12 +1,12 @@
 import { SlideData } from "components/SlideManager/handler";
 import { baseApiHost } from "utilities/url";
-import { EditorialManagerInterface } from "./EditorialManager";
+import { ManagerInterface } from "./Manager";
 import { deepClone } from "utilities/array";
 
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
 
-export interface EditorialSlideManagerInterface {
-  manager: EditorialManagerInterface;
+export interface SlideManagerInterface {
+  manager: ManagerInterface;
   slides: any[];
   activeSlide: number;
   saveSlide: Function;
@@ -16,13 +16,13 @@ export interface EditorialSlideManagerInterface {
   addNewSlide: Function;
 }
 
-export class EditorialSlideManager implements EditorialSlideManagerInterface {
-  manager: EditorialManagerInterface;
+export class SlideManager implements SlideManagerInterface {
+  manager: ManagerInterface;
   slides: any[];
   activeSlide: number = 0;
   handleSlidesUpdate: Function = () => {};
 
-  constructor(manager: EditorialManagerInterface, slides: any[]) {
+  constructor(manager: ManagerInterface, slides: any[]) {
     this.manager = manager;
     this.slides = slides;
   }
@@ -36,7 +36,9 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
   }
 
   addNewSlide() {
-    this.handleSlidesUpdate([...this.slides, []]);
+    const modifiedSlides = [...this.slides, []];
+    this.slides = modifiedSlides;
+    this.handleSlidesUpdate(modifiedSlides);
   }
 
   saveComponentData(index: number, data: any, initialization: boolean = false) {
@@ -63,15 +65,12 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
     })
       .then((response) => {
         if (!response.ok) {
-          callback();
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        callback();
         return response.json();
       })
       .then((data) => {})
       .catch((error) => {
-        callback();
         console.error("Update failed:", error);
       });
   }

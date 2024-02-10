@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import AddSlide from "components/Editorial/Sidebars/RightSidebar/EditProperties/Slider/EditProperties/AddSlide";
 import Background from "components/Editorial/Sidebars/RightSidebar/EditProperties/Slider/EditProperties/Background";
 import Extensions from "components/Editorial/Sidebars/RightSidebar/EditProperties/Slider/EditProperties/Extensions";
@@ -8,7 +8,7 @@ import VideoProperties from "components/Editorial/Sidebars/RightSidebar/EditProp
 
 // for the slider edit properties
 export const SliderProperties = (
-  manager: EditorialManagerInterface,
+  manager: ManagerInterface,
   sliderCompName: string = "Text"
 ) => {
   const viewboxTypes: {

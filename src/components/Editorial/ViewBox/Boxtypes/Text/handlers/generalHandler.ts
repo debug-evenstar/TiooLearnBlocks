@@ -1,9 +1,9 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { setTextComponentData } from "./dataHandler";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
+import { textComponentData } from "./dataHandler";
 
 export const handleTextChange = (
   e: any,
-  manager: EditorialManagerInterface,
+  manager: ManagerInterface,
   textValue: string,
   setTextValue: React.Dispatch<React.SetStateAction<string>>,
   viewBoxRef: React.MutableRefObject<any>,
@@ -21,7 +21,7 @@ export const handleTextChange = (
 
   // Using innerHTML to avoid conflict with Text value on content update...
   manager.canvasManager.canvas.functions.updateActiveComponentData(
-    setTextComponentData(e.target.innerHTML)
+    textComponentData(e.target.innerHTML)
   );
 
   const editableDiv = e.target as HTMLElement;

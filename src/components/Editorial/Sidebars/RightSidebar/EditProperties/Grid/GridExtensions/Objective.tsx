@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { ObjectiveItemProp } from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/interfaces";
 import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
@@ -13,7 +13,7 @@ import ImageIcon, { GridOptionImageIcon } from "FigmaIcons/ImageIcon";
 import { uploadFile } from "components/Editorial/ViewBox/Boxtypes/Image/handler";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   index: number;
   data: any;
 }

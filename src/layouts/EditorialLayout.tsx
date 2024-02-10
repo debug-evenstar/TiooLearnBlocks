@@ -1,8 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import LeftSidebar from "components/Editorial/LeftSidebar";
-import RightSidebar from "components/Editorial/Sidebars/RightSidebar/RightSidebar";
+import RightSidebar from "../components/Editorial/Sidebars/RightSidebar/RightSidebar";
+import LeftSidebar from "../components/Editorial/LeftSidebar";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 
 interface MainLayoutProps {
   children: React.ReactElement;
@@ -14,7 +14,7 @@ interface MainLayoutProps {
   lessonlist: any;
   name: string;
   data: any;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 const EditorialLayout: React.FC<MainLayoutProps> = ({
   children,

@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
 import { ObjectiveItemProp } from "./interfaces";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
@@ -13,7 +13,7 @@ import {
 import Feedback from "./Feedback";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   component: string;
 }
 

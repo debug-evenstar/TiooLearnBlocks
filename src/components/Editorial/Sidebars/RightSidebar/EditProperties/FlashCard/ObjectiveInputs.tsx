@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 import { resizeInputWidth } from "components/Editorial/ViewBox/handler";
 import { QuestionInterface } from "components/interface";
@@ -6,7 +6,7 @@ import { FC, createRef, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {

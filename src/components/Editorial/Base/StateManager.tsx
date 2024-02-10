@@ -1,12 +1,12 @@
 import React, { FC, ReactElement, useEffect, useState } from "react";
-import { EditorialManagerInterface } from "./EditorialManager";
+import { ManagerInterface } from "./Manager";
 
 interface Props {
   children: Function;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
-const EditorialStateManager: FC<Props> = ({ children, manager }) => {
+const StateManager: FC<Props> = ({ children, manager }) => {
   const [editorialState, setEditorialState] = useState(manager.states);
 
   useEffect(()=>{
@@ -20,4 +20,4 @@ const EditorialStateManager: FC<Props> = ({ children, manager }) => {
   return <div>{children()}</div>;
 };
 
-export default EditorialStateManager;
+export default StateManager;

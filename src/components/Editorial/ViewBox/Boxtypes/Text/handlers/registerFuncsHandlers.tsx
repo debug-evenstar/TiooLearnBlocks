@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { toggleWrapperStyle } from "./stylesHandler";
 import {
   addTooltip,
@@ -15,7 +15,7 @@ import { checkAndReturnOptions } from "./generalHandler";
 import { setTextComponentData } from "./dataHandler";
 
 export const registerFunctions = (
-  manager: EditorialManagerInterface,
+  manager: ManagerInterface,
   getRange: () => Range | undefined,
   editableRef: React.RefObject<HTMLDivElement>,
   viewBoxRef: React.MutableRefObject<any>,

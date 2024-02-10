@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import React, { FC, createRef, useEffect, useState } from "react";
 import { parseGridDimensions } from "./handlers/generalHandler";
 import {
@@ -11,7 +11,7 @@ import CellContent from "./CellContent";
 
 interface GridProps {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   viewBoxSize: {
     height: number;
     width: number;
@@ -53,7 +53,7 @@ interface GridStepsProps {
     rows: number;
     cols: number;
   } | null;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   height: number;
 }
 
@@ -122,7 +122,7 @@ const GridSteps: FC<GridStepsProps> = ({ data, size, manager, id, height }) => {
 interface AddOrRemoveColumnProps {
   id: string;
   direction: "rows" | "cols";
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const AddOrRemoveColumn: FC<AddOrRemoveColumnProps> = ({

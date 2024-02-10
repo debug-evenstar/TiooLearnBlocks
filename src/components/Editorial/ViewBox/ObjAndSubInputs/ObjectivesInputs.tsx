@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import {
   handleSetCorrectOption,
   handleSetWrongOption,
@@ -10,7 +10,7 @@ import { resizeInputWidth } from "../handler";
 import Draggable from "react-draggable";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {

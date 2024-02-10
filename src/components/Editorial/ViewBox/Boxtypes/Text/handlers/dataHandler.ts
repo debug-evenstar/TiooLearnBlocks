@@ -6,7 +6,7 @@ interface TextComponentDataInterface extends ComponentBaseDataInterface {
   tips?: string[];
 }
 
-export const setTextComponentData = (
+export const textComponentData = (
   content: string = "",
   tips: string[] = []
 ) => {

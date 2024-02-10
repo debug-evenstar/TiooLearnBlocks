@@ -5,8 +5,8 @@ import {
   loadComponent,
 } from "components/SlideManager/handler";
 import { FaTimes } from "react-icons/fa";
-import EditorialCanvas from "./Base/EditorialCanvas";
-import { EditorialManagerInterface } from "./Base/EditorialManager";
+import Canvas from "./Base/Canvas";
+import { ManagerInterface } from "./Base/Manager";
 import LayoutComponent from "components/LayoutBox";
 import { ComponentBaseDataInterface } from "components/interface";
 
@@ -15,7 +15,7 @@ interface Props {
   slides: any;
   data: any;
   isBusy: boolean;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 const ActiveEditSlide: FC<Props> = ({
   active,
@@ -72,7 +72,7 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="w-full">
           {/* {!!checkText.length && ( */}
 
-          <EditorialCanvas slideData={activeSlide} manager={manager} />
+          <Canvas slideData={activeSlide} manager={manager} />
         </div>
       </div>
       <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">

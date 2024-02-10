@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { setFlashCardComponentData } from "components/Editorial/ViewBox/Boxtypes/Flashcard/handlers/dataHandler";
 import { uploadFile } from "components/Editorial/ViewBox/Boxtypes/Image/handler";
 import React, { FC, useEffect, useRef, useState } from "react";
@@ -12,7 +12,7 @@ import { QuestionInterface } from "components/interface";
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const AddImages: FC<Props> = ({ id, manager }) => {
@@ -60,7 +60,7 @@ export default AddImages;
 
 interface FlashcardImageProps {
   index: number;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const FlashcardImage: FC<FlashcardImageProps> = ({ index, manager }) => {

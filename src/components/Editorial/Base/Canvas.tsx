@@ -1,29 +1,32 @@
 import React, { FC, createRef, useEffect, useState } from "react";
-import { EditorialCanvasInterface } from "../interfaces";
+import { CanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
-import { setComponentLayout } from "./EditorialManager";
+import { setComponentLayout } from "./Manager";
 import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
 import { OverlayActiveState, RightSidebarState } from "./StateInterface";
 
-const EditorialCanvas: FC<EditorialCanvasInterface> = ({
-  slideData,
-  manager,
-}) => {
-  //const [slideComponents, setSlideComponents] = useState<any[]>([]);
-  const slideComponents = manager.states.slideComponents;
+const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
+  const [slideComponents, setSlideComponents] = useState<any[]>([]);
   const activeId = manager.states.activeViewBox;
-  const onDrop = (id: string) => {
-    const existingClone = slideComponents.find((item) => item.id === id);
-    const itemId = id + "-clone-" + Date.now();
 
-    if (!existingClone) {
-      updateSlideComponents([...slideComponents, { id: itemId }]);
+  // Come back here later
+  const onDrop = (componentName: string) => {
+    const itemId = `${componentName}-${Date.now()}`;
+    const existing = slideComponents.find((item) => item.id === itemId);
+
+    if (!existing) {
+      const initializeComponent = manager.canvasManager.createComponent(
+        componentName,
+        itemId
+      );
+      updateSlideComponents([...slideComponents, initializeComponent]);
+      // Question the importance of this
       manager.canvasManager.updateActiveSlide([
         ...(manager.canvasManager.activeSlide ?? []),
-        { id: itemId },
+        initializeComponent,
       ]);
       manager.canvasManager.setActiveComponent(itemId);
       manager.setState("activeViewBox", itemId);
@@ -59,8 +62,7 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   };
 
   const updateSlideComponents = (components: any[]) => {
-    //setSlideComponents(() => components);
-    manager.setState("slideComponents", components);
+    setSlideComponents(() => components);
     // Also update slide manager
     manager.slideManager.slides[manager.slideManager.activeSlide] = components;
   };
@@ -78,7 +80,8 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   useEffect(() => {
     const parsedSlides =
       manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
-    manager.canvasManager && manager.setState("slideComponents", parsedSlides);
+    console.log(parsedSlides);
+    manager.canvasManager && setSlideComponents(parsedSlides);
     manager.canvasManager.updateActiveSlide(parsedSlides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideData]);
@@ -119,8 +122,6 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
           }
         };
 
-        if (!item.id) return <></>;
-
         return (
           <Draggable
             key={item.id}
@@ -156,4 +157,4 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   );
 };
 
-export default EditorialCanvas;
+export default Canvas;

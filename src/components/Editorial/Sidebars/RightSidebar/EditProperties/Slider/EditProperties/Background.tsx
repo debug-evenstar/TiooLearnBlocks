@@ -3,11 +3,11 @@
 import React, { FC, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import { ColorResult, SketchPicker } from "react-color";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { ViewBoxHandler } from "components/Editorial/ViewBox/handler";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const Background: FC<Props> = ({ manager }) => {

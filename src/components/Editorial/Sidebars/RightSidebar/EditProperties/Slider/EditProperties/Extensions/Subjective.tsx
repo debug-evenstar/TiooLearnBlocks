@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleSetCorrectOption,
@@ -20,7 +20,7 @@ import {
 } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   component: string;
 }
 

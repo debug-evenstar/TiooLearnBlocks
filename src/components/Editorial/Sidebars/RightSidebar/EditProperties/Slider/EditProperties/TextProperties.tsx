@@ -1,6 +1,6 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { FC, useEffect, useState } from "react";
 import {
   RiAlignCenter,
@@ -24,7 +24,7 @@ import {
 import { ColorResult, SketchPicker } from "react-color";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const TextProperties: FC<Props> = ({ manager }) => {

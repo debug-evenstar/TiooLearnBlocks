@@ -1,11 +1,11 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { GridState } from "components/Editorial/Base/StateInterface";
 import React, { FC } from "react";
 import { BsPencil } from "react-icons/bs";
 import { RiEditBoxLine } from "react-icons/ri";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const EditGrid: FC<Props> = ({ manager }) => {

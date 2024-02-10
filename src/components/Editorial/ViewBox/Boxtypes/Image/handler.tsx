@@ -16,7 +16,7 @@ interface ImageExtensions {
   question?: QuestionInterface;
 }
 
-export const setImageComponentData = (imageData: {
+export const imageComponentData = (imageData: {
   url?: string;
   extensions?: ImageExtensions[];
 }) => {

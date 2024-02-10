@@ -8,14 +8,14 @@ import { useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import ObjectivesInputs from "./ObjAndSubInputs/ObjectivesInputs";
 import {
-  EditorialManagerInterface,
+  ManagerInterface,
   setComponentLayout,
-} from "components/Editorial/Base/EditorialManager";
+} from "components/Editorial/Base/Manager";
 import ImageObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ObjectiveInputs";
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   handleDelete: Function;
   data: any;
   currIndex: number;

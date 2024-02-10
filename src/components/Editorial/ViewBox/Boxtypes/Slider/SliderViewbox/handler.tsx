@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import Image from "./Boxtypes/Image/Image";
 import Text from "./Boxtypes/Text/Text";
 import Background from "components/Editorial/Sidebars/RightSidebar/EditProperties/Background";
@@ -31,7 +31,7 @@ export function getOriginalName(str: string): string {
 // for viewbox component
 export const ViewBoxContent = (
   id: string,
-  manager: EditorialManagerInterface,
+  manager: ManagerInterface,
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>,
   isEditable: boolean,
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>>,
@@ -82,7 +82,7 @@ export const ViewBoxContent = (
 // for editing in rightsidebar
 export const EditProperties = (
   id: string,
-  manager: EditorialManagerInterface
+  manager: ManagerInterface
 ) => {
   const componentName = getOriginalName(id);
   const viewboxTypes: {
@@ -126,12 +126,12 @@ export const EditProperties = (
 
 interface ViewBoxHandlerInterface {
   // Some other properties and methods
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   setViewBoxStyle: Function;
 }
 export class ViewBoxHandler implements ViewBoxHandlerInterface {
-  manager: EditorialManagerInterface;
-  constructor(manager: EditorialManagerInterface) {
+  manager: ManagerInterface;
+  constructor(manager: ManagerInterface) {
     this.manager = manager;
   }
 

@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
 import { ObjectiveItemProp } from "./interfaces";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { useDispatch, useSelector } from "react-redux";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import {
@@ -26,7 +26,7 @@ import {
 } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   component: string;
 }
 
