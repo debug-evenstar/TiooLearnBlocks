@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { handleToggleTrigger } from "provider/triggerSlice";
 import React, { FC } from "react";
 import { RiAddCircleLine } from "react-icons/ri";
@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 
 interface Props {
   type: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const data = (component: string) => {

@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { ComponentBaseDataInterface } from "components/interface";
 import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import { handleSetDragItems } from "provider/dragItemsSlice";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const Delete: FC<Props> = ({ id, manager }) => {

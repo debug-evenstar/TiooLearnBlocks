@@ -7,10 +7,10 @@ import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import Objective from "./Objective";
 import Subjective from "./Subjective";
 import Tips from "./Tips";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const Extensions: FC<Props> = ({ manager }) => {

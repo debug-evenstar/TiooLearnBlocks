@@ -4,9 +4,9 @@ import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent, calculateMaxResizableArea } from "./handler";
 import {
-  EditorialManagerInterface,
+  ManagerInterface,
   setComponentLayout,
-} from "../Base/EditorialManager";
+} from "../Base/Manager";
 import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 import { ComponentBaseDataInterface } from "components/interface";
 import { useSelector } from "react-redux";
@@ -17,7 +17,7 @@ import GridObjectivesInputs from "../Sidebars/RightSidebar/EditProperties/Grid/G
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   handleDelete: Function;
 }
 

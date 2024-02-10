@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 import { QuestionInterface } from "components/interface";
 import {
@@ -11,7 +11,7 @@ import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {

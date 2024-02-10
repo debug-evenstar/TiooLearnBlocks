@@ -1,6 +1,6 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import FlashcardViewBox from "./SliderViewbox";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
@@ -9,7 +9,7 @@ import { calculateMaxResizableArea } from "../../handler";
 
 interface SliderProps {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const Slider: FC<SliderProps> = ({ id, manager }) => {

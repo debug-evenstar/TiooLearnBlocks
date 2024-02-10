@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionInterface } from "components/interface";
 import { handleSetFeedbackStatus } from "provider/feedbackSlice";
 import { handleSetCorrectOption } from "provider/optionsDataSlice";
@@ -9,7 +9,7 @@ import EmojiTextArea from "components/Editorial/ViewBox/Boxtypes/Text/EmojiTextA
 import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   type: "OBJECTIVE" | "SUBJECTIVE";
   index: number;
 }

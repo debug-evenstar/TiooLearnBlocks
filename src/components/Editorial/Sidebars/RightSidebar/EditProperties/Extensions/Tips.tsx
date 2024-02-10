@@ -1,12 +1,12 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import EmojiTextArea from "components/Editorial/ViewBox/Boxtypes/Text/EmojiTextArea";
 import React, { FC, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const Tips: FC<Props> = ({ manager }) => {

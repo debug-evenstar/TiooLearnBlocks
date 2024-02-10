@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import Image from "./Image";
 import { Resizable } from "react-resizable";
 import { toggleWrapperStyle } from "../Text/handlers/stylesHandler";
-import { setComponentLayout } from "components/Editorial/Base/EditorialManager";
+import { setComponentLayout } from "components/Editorial/Base/Manager";
 import {
   ComponentBaseDataInterface,
   QuestionInterface,

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { Dropdown as Icon } from "FigmaIcons/Dropdown";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { ColorResult, SketchPicker } from "react-color";
 import { TriggerState } from "components/Editorial/Base/StateInterface";
 import { UploadIconProps } from "../Image/Image";
@@ -20,7 +20,7 @@ interface GridObject {
 }
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   rowIndex: number;
   colIndex: number;
   activeCell: {

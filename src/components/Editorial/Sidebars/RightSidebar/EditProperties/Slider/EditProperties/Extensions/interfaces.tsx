@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 
 export type OptionType = {
   name: string;
@@ -15,5 +15,5 @@ export interface ObjectiveItemProp {
   data: any;
   index: number;
   handleDelete: (id: string, optionIndex: number, index: number) => void;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
