@@ -80,7 +80,7 @@ class Canvas implements CanvasInterface {
       const itemId = item.component + "-" + Date.now() + index;
       return {
         ...item,
-        id: itemId,
+        id: item.id ?? itemId,
       };
     });
     this.components = parsed;

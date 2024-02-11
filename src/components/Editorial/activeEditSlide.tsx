@@ -26,14 +26,14 @@ const ActiveEditSlide: FC<Props> = ({
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   const [activeSlide, setActiveSlide] = useState<any[]>([]);
-  const [showPreview, setShowPreview] = useState(false);
+  const [previewSlideData, setPreviewSlideData] = useState<any[]>([]);
   const [previewSlide, setPreviewSlide] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  const RenderPreview = () => {
+  const RenderPreview : FC<{slide : any}> = ({slide}) => {
     return (
       <>
-        {activeSlide.map((component: ComponentBaseDataInterface, index: number) => {
+        {slide.map((component: ComponentBaseDataInterface, index: number) => {
           const Component = loadComponent(component);
           return component.layout 
             ? (
@@ -47,14 +47,20 @@ const ActiveEditSlide: FC<Props> = ({
     );
   };
 
-  RenderPreview();
-
   const saveSlide = () => {
-    const slideId : number = data.LessonSlides[active].id;
-    setIsSaving(true)
-    manager.slideManager.saveSlide(slideId, activeSlide, ()=>{
-      setIsSaving(false);
-    });
+    const slideId : number = data.LessonSlides[active]?.id ?? null;
+    setIsSaving(true);
+    if(slideId) {
+      manager.slideManager.saveSlide(slideId, activeSlide, ()=>{
+        setIsSaving(false);
+      });
+    } else {
+      const slideIndex : number = data.LessonSlides.length;
+      manager.slideManager.createSlide(slideIndex, data.id, activeSlide, ()=>{
+        setIsSaving(false);
+      });
+    }
+
   };
 
   useEffect(() => {
@@ -63,6 +69,11 @@ const ActiveEditSlide: FC<Props> = ({
       manager.slideManager.setActiveSlide(active);
     }
   }, [active, slides]);
+
+  useEffect(() => {
+    setPreviewSlideData(() => slides[active]);
+    setActiveSlide(slides[active]);
+  }, [slides[active]]);
 
   return (
     <div>
@@ -94,7 +105,7 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0 bg-preview">
           <div className="w-full h-full bgcomps text-white bg-cover px-5 flex justify-center items-center fw-600">
             <div className="w-full h-full">
-              <RenderPreview />
+              <RenderPreview slide={previewSlideData}/>
             </div>
           </div>
           <FaTimes
