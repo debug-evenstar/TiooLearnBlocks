@@ -2,7 +2,7 @@ import { ComponentLayoutInterface, QuestionInterface } from "components/interfac
 import { SlideManagerInterface } from "./SlideManager";
 import { CanvasManagerInterface } from "./CanvasManager";
 import { SidebarManagerInterface } from "./SidebarManager";
-import { ActiveViewBoxState, CurrentStylesState, FeedbackState, GridState, OptionsDataState, OverlayActiveState, RightSidebarState, ShowOptionsBoxState, SliderState, TriggerState } from "./StateInterface";
+import { ActiveViewBoxState, CurrentStylesState, FeedbackState, GridState, NoTextInTextBoxState, OptionsDataState, OverlayActiveState, RightSidebarState, ShowOptionsBoxState, SliderState, TriggerState } from "./StateInterface";
 export declare const setComponentLayout: (canvasProps: {
     width: number;
     height: number;
@@ -44,6 +44,7 @@ interface States {
     rightSidebarState: RightSidebarState;
     grid: GridState;
     currentStyles: CurrentStylesState;
+    noTextInViewbox: NoTextInTextBoxState;
 }
 export interface ManagerInterface {
     sidebarManager: SidebarManagerInterface;

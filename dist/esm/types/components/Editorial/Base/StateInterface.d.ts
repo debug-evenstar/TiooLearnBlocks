@@ -27,3 +27,4 @@ export type OverlayActiveState = boolean;
 export type ShowOptionsBoxState = boolean;
 export type TriggerState = boolean;
 export type RightSidebarState = boolean;
+export type NoTextInTextBoxState = boolean;
