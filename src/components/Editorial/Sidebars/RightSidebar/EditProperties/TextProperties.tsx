@@ -86,10 +86,10 @@ const TextProperties: FC<Props> = ({ manager }) => {
 
   useEffect(() => {
     setTextColor(currentTextColor);
-    currentTextSize === textSize && setTextSize(currentTextSize);
-    currentTextSpacing === textSpacing && setTextSpacing(currentTextSpacing);
+    //setTextSize(currentTextSize);
+    //setTextSpacing(currentTextSpacing);
     setSelectedFont(currentFont);
-  }, [currentStyles, textSize]);
+  }, [currentStyles]);
 
   return (
     <div className="w-full my-5 py-2">

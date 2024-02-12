@@ -169,7 +169,6 @@ const Text: FC<CanvasText> = ({
               } as CurrentStylesState),
             };
           });
-          console.log(removePx(styles.fontSize), "syle");
         }
         //setSelectedText(selectedText);
       } else {
