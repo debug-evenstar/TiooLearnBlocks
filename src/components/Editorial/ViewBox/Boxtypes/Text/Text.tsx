@@ -42,7 +42,16 @@ const Text: FC<CanvasText> = ({
     }
   };
 
-  const onChange = (event : any ) => handleTextChange(event, manager, textValue, setTextValue, viewBoxRef, textareaRowCount, setTextareaRowCount); 
+  const onChange = (event: any) =>
+    handleTextChange(
+      event,
+      manager,
+      textValue,
+      setTextValue,
+      viewBoxRef,
+      textareaRowCount,
+      setTextareaRowCount
+    );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -103,6 +112,7 @@ const Text: FC<CanvasText> = ({
   ) => {
     e.stopPropagation();
     handleSetObjectiveIndex(index);
+    console.log("clicked");
     manager.setState("showOptionsBox", (prev: any) => !prev);
     manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
@@ -160,7 +170,6 @@ const Text: FC<CanvasText> = ({
               } as CurrentStylesState),
             };
           });
-          console.log(removePx(styles.fontSize), "syle");
         }
         //setSelectedText(selectedText);
       } else {
@@ -174,6 +183,17 @@ const Text: FC<CanvasText> = ({
       document.removeEventListener("selectionchange", handleSelectionChange);
     };
   }, []);
+
+  useEffect(() => {
+    if (textValue) {
+      if (textValue && textValue.length < 1) {
+        manager.setState("noTextInViewbox", true);
+      } else {
+        manager.setState("noTextInViewbox", false);
+      }
+    }
+    console.log(manager.states.noTextInViewbox, "text or not");
+  }, [textValue]);
 
   return (
     <div

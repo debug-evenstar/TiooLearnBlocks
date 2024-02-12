@@ -4,14 +4,14 @@ import { ManagerInterface } from "./Manager";
 import { deepClone } from "utilities/array";
 
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
-const SAVE_SLIDE_URL = (id : number) => `open/lesson/${id}/slide`;
+const SAVE_SLIDE_URL = (id: number) => `open/lesson/${id}/slide`;
 
 export interface SlideManagerInterface {
   manager: ManagerInterface;
   slides: any[];
   activeSlide: number;
   saveSlide: Function;
-  createSlide : Function;
+  createSlide: Function;
   setActiveSlide: Function;
   saveComponentData: Function;
   handleSlidesUpdate: Function;
@@ -67,6 +67,7 @@ export class SlideManager implements SlideManagerInterface {
     })
       .then((response) => {
         if (!response.ok) {
+          callback();
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         callback && callback();
@@ -78,16 +79,21 @@ export class SlideManager implements SlideManagerInterface {
       });
   }
 
-  createSlide(index: number, lessonId: number, payload: SlideData, callback: Function) {
+  createSlide(
+    index: number,
+    lessonId: number,
+    payload: SlideData,
+    callback: Function
+  ) {
     const url: string = `${baseApiHost()}/${SAVE_SLIDE_URL(lessonId)}`;
     fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         slide_data: payload,
-        slide_index: index
+        slide_index: index,
       }),
     })
       .then((response) => {
@@ -100,6 +106,7 @@ export class SlideManager implements SlideManagerInterface {
       })
       .then((data) => {})
       .catch((error) => {
+        callback();
         console.error("Update failed:", error);
       });
   }

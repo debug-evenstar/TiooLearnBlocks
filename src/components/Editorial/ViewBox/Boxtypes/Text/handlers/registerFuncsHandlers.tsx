@@ -62,7 +62,7 @@ export const registerFunctions = (
       return;
     }
 
-    const element = viewBoxRef.current;
+    const element = editableRef.current;
     if (!element) return;
     toggleWrapperStyle(element, style, styleType);
   };

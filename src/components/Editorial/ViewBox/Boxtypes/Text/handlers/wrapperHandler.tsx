@@ -50,9 +50,17 @@ export const toggleWrapper = (
 ) => {
   const element = document.createElement(elementType);
 
-  checkersForToggleWrapper(elementType, element, style, styleType, link);
+  if (styleType.length > 2) {
+    const parent = range.commonAncestorContainer.parentElement;
+    if (!parent) return;
+    checkersForToggleWrapper(elementType, parent, style, styleType, link);
+    console.log(parent);
+    return;
+  }
 
-  if (elementType !== "b" && elementType !== "i") {
+  //checkersForToggleWrapper(elementType, element, style, styleType, link);
+
+  if (elementType !== "b" && elementType !== "i" && elementType) {
     element.innerText = range.toString();
     range.deleteContents();
     range.insertNode(element);

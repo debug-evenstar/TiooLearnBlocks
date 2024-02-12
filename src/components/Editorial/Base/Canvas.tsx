@@ -130,8 +130,9 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
             onStop={handleStop}
             handle=".handle"
             defaultClassName="w-fit"
-            positionOffset={loadPosition(item)}
+            //positionOffset={loadPosition(item)}
             bounds="parent"
+            defaultPosition={loadPosition(item)}
           >
             <div
               key={item.id}
