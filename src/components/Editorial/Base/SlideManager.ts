@@ -4,12 +4,14 @@ import { ManagerInterface } from "./Manager";
 import { deepClone } from "utilities/array";
 
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
+const SAVE_SLIDE_URL = (id: number) => `open/lesson/${id}/slide`;
 
 export interface SlideManagerInterface {
   manager: ManagerInterface;
   slides: any[];
   activeSlide: number;
   saveSlide: Function;
+  createSlide: Function;
   setActiveSlide: Function;
   saveComponentData: Function;
   handleSlidesUpdate: Function;
@@ -68,7 +70,38 @@ export class SlideManager implements SlideManagerInterface {
           callback();
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        callback();
+        callback && callback();
+        return response.json();
+      })
+      .then((data) => {})
+      .catch((error) => {
+        console.error("Update failed:", error);
+      });
+  }
+
+  createSlide(
+    index: number,
+    lessonId: number,
+    payload: SlideData,
+    callback: Function
+  ) {
+    const url: string = `${baseApiHost()}/${SAVE_SLIDE_URL(lessonId)}`;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        slide_data: payload,
+        slide_index: index,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        callback && callback();
+        //Add a function to update the lessonSlides object with the created slide id
         return response.json();
       })
       .then((data) => {})
