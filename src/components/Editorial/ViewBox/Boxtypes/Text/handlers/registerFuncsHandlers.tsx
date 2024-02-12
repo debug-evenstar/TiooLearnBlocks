@@ -12,7 +12,7 @@ import {
   setObjandSubComponentData,
 } from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
 import { checkAndReturnOptions } from "./generalHandler";
-import { setTextComponentData } from "./dataHandler";
+import { textComponentData } from "./dataHandler";
 
 export const registerFunctions = (
   manager: ManagerInterface,
@@ -193,6 +193,6 @@ export const registerFunctions = (
 
   if (!editableRef.current) return;
   manager.canvasManager.canvas.functions.updateActiveComponentData(
-    setTextComponentData(editableRef.current.innerHTML)
+    textComponentData(editableRef.current.innerHTML)
   );
 };
