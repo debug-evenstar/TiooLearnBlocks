@@ -13,7 +13,11 @@ import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import { registerFunctions } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/registerFuncsHandlers";
 import { resizeBox } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/wrapperHandler";
-import { OptionsDataState } from "components/Editorial/Base/StateInterface";
+import {
+  CurrentStylesState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
+import { removePx } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/generalHandler";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -147,6 +151,51 @@ const Text: FC<CanvasText> = ({
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coreData, identifier]);
+
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const range = getRange();
+      if (range) {
+        const element = range.commonAncestorContainer.parentElement;
+
+        if (element) {
+          const styles = getComputedStyle(element);
+
+          manager.setState("currentStyles", (prev: CurrentStylesState) => {
+            return {
+              ...prev,
+              ...({
+                textColor: styles.color,
+                textSize: removePx(styles.fontSize),
+                textSpacing: removePx(styles.lineHeight),
+                font: styles.fontFamily,
+              } as CurrentStylesState),
+            };
+          });
+        }
+        //setSelectedText(selectedText);
+      } else {
+        return;
+      }
+    };
+
+    document.addEventListener("selectionchange", handleSelectionChange);
+
+    return () => {
+      document.removeEventListener("selectionchange", handleSelectionChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (textValue) {
+      if (textValue && textValue.length < 1) {
+        manager.setState("noTextInViewbox", true);
+      } else {
+        manager.setState("noTextInViewbox", false);
+      }
+    }
+    console.log(manager.states.noTextInViewbox, "text or not");
+  }, [textValue]);
 
   return (
     <div
