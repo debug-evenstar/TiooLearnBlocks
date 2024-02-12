@@ -46,8 +46,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             <div className="text-preview relative z-0 shadow mb-5 p-2 py-3 h-[206px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
               {item.map(
                 (component: ComponentBaseDataInterface, index: number) => {
-                  if (component === undefined) return;
-                  const Component = () => <div>{component.component}</div>;
+                  const Component = () => loadComponent(component.component);
                   return component.layout ? (
                     <LayoutComponent layout={component.layout}>
                       <Component key={index} />

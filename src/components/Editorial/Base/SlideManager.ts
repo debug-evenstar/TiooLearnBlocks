@@ -65,12 +65,15 @@ export class SlideManager implements SlideManagerInterface {
     })
       .then((response) => {
         if (!response.ok) {
+          callback();
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+        callback();
         return response.json();
       })
       .then((data) => {})
       .catch((error) => {
+        callback();
         console.error("Update failed:", error);
       });
   }

@@ -6,23 +6,15 @@ import {
   ComponentLayoutInterface,
   QuestionInterface,
 } from "components/interface";
-import {
-  SlideManager,
-  SlideManagerInterface,
-} from "./SlideManager";
-import {
-  CanvasManager,
-  CanvasManagerInterface,
-} from "./CanvasManager";
-import {
-  SidebarManager,
-  SidebarManagerInterface,
-} from "./SidebarManager";
+import { SlideManager, SlideManagerInterface } from "./SlideManager";
+import { CanvasManager, CanvasManagerInterface } from "./CanvasManager";
+import { SidebarManager, SidebarManagerInterface } from "./SidebarManager";
 import {
   ActiveViewBoxState,
   CurrentStylesState,
   FeedbackState,
   GridState,
+  NoTextInTextBoxState,
   OptionsDataState,
   OverlayActiveState,
   RightSidebarState,
@@ -105,6 +97,7 @@ interface States {
   rightSidebarState: RightSidebarState;
   grid: GridState;
   currentStyles: CurrentStylesState;
+  noTextInViewbox: NoTextInTextBoxState;
 }
 
 export interface ManagerInterface {
@@ -159,6 +152,7 @@ class Manager implements ManagerInterface {
         textSpacing: `${16 * 1.2}`,
         font: "Arial",
       },
+      noTextInViewbox: false,
     };
   }
 
@@ -295,11 +289,9 @@ class Manager implements ManagerInterface {
       direction: "rows" | "cols"
     ) => this.addOrRemoveRowOrColumns(parseDimensions, type, direction);
 
-
     /* ------------------------------------------------------------------------------------------------------------------ */
     /*                                                    TO BE REMOVED                                                   */
     /* ------------------------------------------------------------------------------------------------------------------ */
-
   }
 
   /* ------------------------------------------------------------------------------------------------------------------ */
@@ -1001,12 +993,9 @@ class Manager implements ManagerInterface {
     }
   }
 
-
   /* ------------------------------------------------------------------------------------------------------------------ */
   /*                                                    TO BE REMOVED                                                   */
   /* ------------------------------------------------------------------------------------------------------------------ */
-
 }
 
-export const CreateManager = (slides: any[]) =>
-  new Manager(slides);
+export const CreateManager = (slides: any[]) => new Manager(slides);

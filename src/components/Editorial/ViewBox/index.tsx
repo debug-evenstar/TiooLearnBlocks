@@ -3,10 +3,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent, calculateMaxResizableArea } from "./handler";
-import {
-  ManagerInterface,
-  setComponentLayout,
-} from "../Base/Manager";
+import { ManagerInterface, setComponentLayout } from "../Base/Manager";
 import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 import { ComponentBaseDataInterface } from "components/interface";
 import { useSelector } from "react-redux";
@@ -24,6 +21,7 @@ interface Props {
 const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
+  const noTextInViewbox = manager.states.noTextInViewbox;
 
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
@@ -97,6 +95,15 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const showBorder = () => {
+    if (noTextInViewbox) return "border-dotted";
+    if (id.includes("Text")) {
+      if (isEditable && activeId === id) return "border-dotted";
+      return "border-none";
+    }
+    return "border-dotted";
+  };
+
   return (
     <>
       <Resizable
@@ -105,18 +112,16 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
         minConstraints={[280, height]}
         onResize={onResize}
         resizeHandles={
-          id.includes("Text") && !isEditable ? [] : ["s", "e", "se"]
+          isEditable && activeId === id
+            ? ["s", "e", "se"]
+            : id.includes("Text")
+            ? []
+            : ["s", "e", "se"]
         }
       >
         <div
           ref={viewBoxRef}
-          className={`border-2 border-slate-500 rounded ${
-            isEditable && activeId === id
-              ? "border-dotted"
-              : id.includes("Text")
-              ? "border-none"
-              : "border-dotted"
-          }`}
+          className={`border-2 border-slate-500 rounded ${showBorder()}`}
           style={{
             width: viewBoxSize.width + "px",
             height: viewBoxSize.height + "px",

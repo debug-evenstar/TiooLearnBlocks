@@ -173,6 +173,17 @@ const Text: FC<CanvasText> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (textValue) {
+      if (textValue && textValue.length < 1) {
+        manager.setState("noTextInViewbox", true);
+      } else {
+        manager.setState("noTextInViewbox", false);
+      }
+    }
+    console.log(manager.states.noTextInViewbox, "text or not");
+  }, [textValue]);
+
   return (
     <div
       id={id}
