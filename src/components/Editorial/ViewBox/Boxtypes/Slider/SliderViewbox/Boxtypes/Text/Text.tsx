@@ -65,7 +65,14 @@ const Text: FC<CanvasText> = ({
   }, [isEditable, viewBoxRef, textareaRef]);
 
   useEffect(() => {
-    registerFunctions(manager, getRange, viewBoxRef, setIdentifier, id);
+    registerFunctions(
+      manager,
+      getRange,
+      editableRef,
+      viewBoxRef,
+      setIdentifier,
+      id
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manager, viewBoxRef, activeId]);
 

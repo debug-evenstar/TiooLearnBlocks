@@ -111,7 +111,11 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
         <div
           ref={viewBoxRef}
           className={`border-2 border-slate-500 rounded ${
-            isEditable && activeId === id ? "border-dotted" : "border-none"
+            isEditable && activeId === id
+              ? "border-dotted"
+              : id.includes("Text")
+              ? "border-none"
+              : "border-dotted"
           }`}
           style={{
             width: viewBoxSize.width + "px",
@@ -141,7 +145,7 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
         </div>
       )}
 
-      {activeId === id && id.includes("Grid") && (
+      {showOptionsBox && activeId === id && id.includes("Grid") && (
         <div className="z-[500]">
           <GridObjectivesInputs manager={manager} />
         </div>

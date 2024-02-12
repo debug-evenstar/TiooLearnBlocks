@@ -15,7 +15,7 @@ export interface SlideManagerInterface {
   setActiveSlide: Function;
   saveComponentData: Function;
   handleSlidesUpdate: Function;
-  addNewSlide : Function;
+  addNewSlide: Function;
 }
 
 export class SlideManager implements SlideManagerInterface {
@@ -38,7 +38,7 @@ export class SlideManager implements SlideManagerInterface {
   }
 
   addNewSlide() {
-    const modifiedSlides = [ ...this.slides, []];
+    const modifiedSlides = [...this.slides, []];
     this.slides = modifiedSlides;
     this.handleSlidesUpdate(modifiedSlides);
   }

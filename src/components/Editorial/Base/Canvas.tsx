@@ -8,10 +8,7 @@ import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
 import { OverlayActiveState, RightSidebarState } from "./StateInterface";
 
-const Canvas: FC<CanvasInterface> = ({
-  slideData,
-  manager,
-}) => {
+const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
   const [slideComponents, setSlideComponents] = useState<any[]>([]);
   const activeId = manager.states.activeViewBox;
 
@@ -21,7 +18,10 @@ const Canvas: FC<CanvasInterface> = ({
     const existing = slideComponents.find((item) => item.id === itemId);
 
     if (!existing) {
-      const initializeComponent = manager.canvasManager.createComponent(componentName, itemId);
+      const initializeComponent = manager.canvasManager.createComponent(
+        componentName,
+        itemId
+      );
       updateSlideComponents([...slideComponents, initializeComponent]);
       // Question the importance of this
       manager.canvasManager.updateActiveSlide([

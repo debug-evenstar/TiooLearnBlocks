@@ -90,7 +90,7 @@ const ActiveEditSlide: FC<Props> = ({
             className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold"
             onClick={saveSlide}
           >
-            {(isBusy || isSaving) ? "Saving..." : "Save"}
+            {isBusy || isSaving ? "Saving..." : "Save"}
           </div>
           <div
             className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold"

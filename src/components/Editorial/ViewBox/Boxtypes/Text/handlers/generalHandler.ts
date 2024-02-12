@@ -78,3 +78,7 @@ export const checkAndReturnOptions = (type: "OBJECTIVE" | "SUBJECTIVE") => {
     ];
   }
 };
+
+export function removePx(value: string): string {
+  return Number.parseFloat(value.slice(0, -2)).toString();
+}

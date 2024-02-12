@@ -54,7 +54,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
           key={i}
           className="border border-black w-[8rem] p-2 rounded text-center z-[5000] relative"
           type="text"
-          value={option.content}
+          defaultValue={option.content}
           onChange={(e) => handleSetOptionData(e, i)}
         />
       ))}

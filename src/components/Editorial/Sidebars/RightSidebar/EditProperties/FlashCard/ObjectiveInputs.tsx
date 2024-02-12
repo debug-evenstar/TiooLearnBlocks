@@ -2,15 +2,8 @@ import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 import { resizeInputWidth } from "components/Editorial/ViewBox/handler";
 import { QuestionInterface } from "components/interface";
-import {
-  handleSetCorrectOption,
-  handleSetWrongOption,
-} from "provider/optionsDataSlice";
-import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import { FC, createRef, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
   manager: ManagerInterface;
@@ -20,11 +13,8 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
   const { objectiveIndex } = manager.states.optionsData;
   const trigger = manager.states.trigger;
 
-  const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const data: QuestionInterface =
-    manager.canvasManager.activeComponent.data.components[cardsIndex].cards[
-      objectiveIndex
-    ].question;
+    manager.canvasManager.activeComponent.data.cards[objectiveIndex].question;
   const [question, setQuestion] = useState<QuestionInterface>(data);
   const [maxWidth, setMaxWidth] = useState(0);
 
@@ -32,7 +22,6 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
 
   useEffect(() => {
     setQuestion(data);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger, objectiveIndex]);
 
@@ -85,7 +74,7 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
                 ref={(el) => (inputRefs.current[i] = el)}
                 className="border border-black p-2 rounded text-center z-[5000] relative objInputHandleImage"
                 type="text"
-                value={option.content}
+                defaultValue={option.content}
                 onChange={(e) => handleSetOptionData(e, i)}
                 style={{ width: maxWidth === 0 ? 100 : maxWidth }}
                 onLoad={(e: any) => resizeInputWidth(e.target)}

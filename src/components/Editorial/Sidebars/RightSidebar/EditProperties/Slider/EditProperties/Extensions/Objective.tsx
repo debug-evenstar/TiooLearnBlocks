@@ -36,8 +36,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
   const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const [questions, setQuestions] = useState<any[]>([]);
-  const replaceContent =
-    manager.canvasManager.activeComponent.functions?.replaceContent;
+  const replaceContent = manager.canvasManager.canvas.functions?.replaceContent;
 
   const { identifier } = manager.states.optionsData;
 
@@ -187,7 +186,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
+    manager.canvasManager.canvas.functions.updateObjectiveOptions(
       data,
       index,
       "Slider",

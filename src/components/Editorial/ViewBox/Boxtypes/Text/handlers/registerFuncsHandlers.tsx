@@ -12,15 +12,17 @@ import {
   setObjandSubComponentData,
 } from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
 import { checkAndReturnOptions } from "./generalHandler";
+import { setTextComponentData } from "./dataHandler";
 
 export const registerFunctions = (
   manager: ManagerInterface,
   getRange: () => Range | undefined,
+  editableRef: React.RefObject<HTMLDivElement>,
   viewBoxRef: React.MutableRefObject<any>,
   setIdentifier: (id: string) => void,
   componentId: string
 ) => {
-  manager.canvasManager.activeComponent.functions["toggleWrapper"] = (
+  manager.canvasManager.canvas.functions["toggleWrapper"] = (
     elementType: string,
     style: string = "",
     styleType: string = "",
@@ -38,7 +40,7 @@ export const registerFunctions = (
     toggleWrapperStyle(element, style, styleType);
   };
 
-  manager.canvasManager.activeComponent.functions["toggleWrapperStyle"] = (
+  manager.canvasManager.canvas.functions["toggleWrapperStyle"] = (
     style: string = "",
     styleType: string
   ) => {
@@ -49,7 +51,7 @@ export const registerFunctions = (
     toggleWrapperStyle(element, style, styleType);
   };
 
-  manager.canvasManager.activeComponent.functions["toggleTextStyle"] = (
+  manager.canvasManager.canvas.functions["toggleTextStyle"] = (
     style: string = "",
     styleType: string
   ) => {
@@ -65,7 +67,7 @@ export const registerFunctions = (
     toggleWrapperStyle(element, style, styleType);
   };
 
-  manager.canvasManager.activeComponent.functions["replaceContent"] = (
+  manager.canvasManager.canvas.functions["replaceContent"] = (
     questions: any,
     type: "OBJECTIVE" | "SUBJECTIVE",
     component: string,
@@ -173,21 +175,24 @@ export const registerFunctions = (
     }
   };
 
-  manager.canvasManager.activeComponent.functions["addTooltip"] = (
-    tip: string
-  ) => {
+  manager.canvasManager.canvas.functions["addTooltip"] = (tip: string) => {
     const range = getRange();
     range && range.toString() && addTooltip(range, tip);
   };
 
-  manager.canvasManager.activeComponent.functions["toggleList"] = (
+  manager.canvasManager.canvas.functions["toggleList"] = (
     elementType: string
   ) => {
     const range = getRange();
     range && range.toString() && toggleList(range, elementType);
   };
-  manager.canvasManager.activeComponent.functions["unLink"] = () => {
+  manager.canvasManager.canvas.functions["unLink"] = () => {
     const range = getRange();
     range && range.toString() && unLink(range);
   };
+
+  if (!editableRef.current) return;
+  manager.canvasManager.canvas.functions.updateActiveComponentData(
+    setTextComponentData(editableRef.current.innerHTML)
+  );
 };

@@ -16,7 +16,7 @@ const Video: FC<CanvasMedia> = ({ id, manager, viewBoxRef, data }) => {
   };
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleVideoSize"] = (
+    manager.canvasManager.canvas.functions["toggleVideoSize"] = (
       style: string = "",
       styleType: string
     ) => {

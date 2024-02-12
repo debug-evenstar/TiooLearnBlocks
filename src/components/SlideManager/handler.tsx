@@ -1,12 +1,3 @@
-import GridSteps from "components/GridSteps";
-import ButtonGroupComponent from "../ButtonGroup";
-import FlashCardsComponent from "../FlashCards";
-import ImageComponent from "../Image";
-import OptionsComponent from "../Options";
-import SliderComponent from "../Slider";
-import TextComponent from "../Text";
-import VideoComponent from "../Video";
-import WordMatchComponent from "../WordMatch";
 import { GlobalEventStorage, SlideEvents } from "./events";
 import { simulateWidth } from "components/extensions/TextFields";
 import PrefaceComponent from "components/Preface";
@@ -21,6 +12,15 @@ import { SliderData } from "components/Slider/handler";
 import { TextData } from "components/Text/handler";
 import { VideoData } from "components/Video/handler";
 import { WordMatchData } from "components/WordMatch/handler";
+import TextComponent from "components/Text";
+import ButtonGroupComponent from "components/ButtonGroup";
+import ImageComponent from "components/Image";
+import SliderComponent from "components/Slider";
+import FlashCardsComponent from "components/FlashCards";
+import VideoComponent from "components/Video";
+import WordMatchComponent from "components/WordMatch";
+import OptionsComponent from "components/Options";
+import GridSteps from "components/GridSteps";
 
 declare global {
   interface Window {

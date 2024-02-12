@@ -67,7 +67,7 @@ const GridObjectivesInputs: FC<Props> = ({ manager }) => {
                   ref={(el) => (inputRefs.current[i] = el)}
                   className="outline-none text-center z-[5000] relative"
                   type="text"
-                  value={option.content}
+                  defaultValue={option.content}
                   onChange={(e) => handleSetOptionData(e, i)}
                   style={{ width: maxWidth === 0 ? 100 : maxWidth }}
                   onLoad={(e: any) => resizeInputWidth(e.target)}
