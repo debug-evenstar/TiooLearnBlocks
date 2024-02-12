@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 interface Props {
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
     rowIndex: number;
     colIndex: number;
     activeCell: {

@@ -1,9 +1,9 @@
 import { FC } from "react";
 import "react-resizable/css/styles.css";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 interface Props {
     id: string;
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
     handleDelete: Function;
     data: any;
     currIndex: number;

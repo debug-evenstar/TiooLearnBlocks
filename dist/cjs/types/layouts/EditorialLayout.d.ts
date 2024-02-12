@@ -1,5 +1,5 @@
 import React from "react";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 interface MainLayoutProps {
     children: React.ReactElement;
     slides: any;
@@ -10,7 +10,7 @@ interface MainLayoutProps {
     lessonlist: any;
     name: string;
     data: any;
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
 }
 declare const EditorialLayout: React.FC<MainLayoutProps>;
 export default EditorialLayout;

@@ -3,5 +3,5 @@ interface TextComponentDataInterface extends ComponentBaseDataInterface {
     content: string;
     tips?: string[];
 }
-export declare const setTextComponentData: (content?: string, tips?: string[]) => TextComponentDataInterface;
+export declare const textComponentData: (content?: string, tips?: string[]) => TextComponentDataInterface;
 export {};

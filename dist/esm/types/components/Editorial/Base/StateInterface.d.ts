@@ -16,6 +16,12 @@ export interface SliderState {
 export interface GridState {
     gridIsEditable: boolean;
 }
+export interface CurrentStylesState {
+    textColor: string;
+    textSize: string;
+    textSpacing: string;
+    font: string;
+}
 export type ActiveViewBoxState = string;
 export type OverlayActiveState = boolean;
 export type ShowOptionsBoxState = boolean;
