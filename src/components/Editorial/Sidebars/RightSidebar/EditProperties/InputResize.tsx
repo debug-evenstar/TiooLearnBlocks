@@ -1,17 +1,17 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { FC } from "react";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   componentType: string;
 }
 
 const InputResize: FC<Props> = ({ manager, componentType }) => {
   const toggleImageSize =
-    manager.canvasManager.activeComponent.functions?.toggleImageSize;
+    manager.canvasManager.canvas.functions?.toggleImageSize;
 
   const toggleVideoSize =
-    manager.canvasManager.activeComponent.functions?.toggleVideoSize;
+    manager.canvasManager.canvas.functions?.toggleVideoSize;
 
   const handleChangeSize = (e: any, styleType: string) => {
     if (componentType === "image") toggleImageSize(e.target.value, styleType);

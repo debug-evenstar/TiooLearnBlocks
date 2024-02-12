@@ -5,7 +5,7 @@ import {
   loadComponent,
 } from "../SlideManager/handler";
 import { FaPlus } from "react-icons/fa";
-import { EditorialManagerInterface } from "./Base/EditorialManager";
+import { ManagerInterface } from "./Base/Manager";
 import { useDispatch } from "react-redux";
 import { refreshActiveViewbox } from "provider/activeViewboxSlice";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
@@ -16,7 +16,7 @@ interface Props {
   slides: any;
   changeTo: (index: number) => void;
   data: any;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleSetCorrectOption,
@@ -20,7 +20,7 @@ import {
 } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   component: string;
 }
 
@@ -30,8 +30,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
   const activeCompIndex = manager.states.slider.activeCompIndex;
 
   const [questions, setQuestions] = useState<any[]>([]);
-  const replaceContent =
-    manager.canvasManager.activeComponent.functions?.replaceContent;
+  const replaceContent = manager.canvasManager.canvas.functions?.replaceContent;
 
   const { identifier, correctOption, wrongOption } = manager.states.optionsData;
 
@@ -75,7 +74,7 @@ const Subjective: FC<Props> = ({ manager, component }) => {
       (question) => question.identifier !== id
     );
     setQuestions(filteredQuestions);
-    manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
+    manager.canvasManager.canvas.functions.updateActiveComponentObjective(
       filteredQuestions,
       "Slider",
       activeCompIndex

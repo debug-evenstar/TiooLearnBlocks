@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { toggleWrapperSize, uploadFile } from "../Image/handler";
@@ -6,7 +6,7 @@ import { setFlashCardComponentData } from "./handlers/dataHandler";
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   viewBoxRef: any;
   image: any;
 }
@@ -54,7 +54,7 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
   };
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleImageSize"] = (
+    manager.canvasManager.canvas.functions["toggleImageSize"] = (
       style: string = "",
       styleType: string
     ) => {
@@ -63,7 +63,7 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       toggleWrapperSize(element, style, styleType);
     };
 
-    manager.canvasManager.activeComponent.functions["toggleOverlay"] = (
+    manager.canvasManager.canvas.functions["toggleOverlay"] = (
       status: boolean
     ) => {
       setOverlayActive(status);
@@ -136,7 +136,7 @@ export default Image;
 export interface UploadIconProps {
   handleChange: (e: any) => void;
   handleDrop: (e: any) => void;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const UploadIcon: FC<UploadIconProps> = ({

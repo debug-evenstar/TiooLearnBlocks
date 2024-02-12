@@ -1,11 +1,11 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { handleSetActiveCompName } from "provider/sliderSlice";
 import React, { useRef, useEffect, useState, FC } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const SliderHeader: FC<Props> = ({ manager }) => {

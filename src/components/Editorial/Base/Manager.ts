@@ -3,24 +3,24 @@
 /* -------------------------------------------------------------------------- */
 
 import {
-  ComponentBaseDataInterface,
   ComponentLayoutInterface,
   QuestionInterface,
 } from "components/interface";
 import {
-  EditorialSlideManager,
-  EditorialSlideManagerInterface,
-} from "./EditorialSlideManager";
+  SlideManager,
+  SlideManagerInterface,
+} from "./SlideManager";
 import {
   CanvasManager,
   CanvasManagerInterface,
-} from "./EditorialCanvasManager";
+} from "./CanvasManager";
 import {
-  EditorialSidebarManager,
-  EditorialSidebarManagerInterface,
-} from "./EditorialSidebarManager";
+  SidebarManager,
+  SidebarManagerInterface,
+} from "./SidebarManager";
 import {
   ActiveViewBoxState,
+  CurrentStylesState,
   FeedbackState,
   GridState,
   OptionsDataState,
@@ -30,7 +30,6 @@ import {
   SliderState,
   TriggerState,
 } from "./StateInterface";
-import { parseGridDimensions } from "../ViewBox/Boxtypes/Grid/handlers/generalHandler";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
@@ -95,6 +94,7 @@ const DataGroup: DataGroupInterface = {
 };
 
 interface States {
+  slideComponents: any[];
   activeViewBox: ActiveViewBoxState;
   feedback: FeedbackState;
   optionsData: OptionsDataState;
@@ -104,30 +104,32 @@ interface States {
   trigger: TriggerState;
   rightSidebarState: RightSidebarState;
   grid: GridState;
+  currentStyles: CurrentStylesState;
 }
 
-export interface EditorialManagerInterface {
-  sidebarManager: EditorialSidebarManagerInterface;
+export interface ManagerInterface {
+  sidebarManager: SidebarManagerInterface;
   canvasManager: CanvasManagerInterface;
-  slideManager: EditorialSlideManagerInterface;
+  slideManager: SlideManagerInterface;
   states: States;
   setState: Function;
   triggerRender: Function;
 }
 
-class EditorialManager implements EditorialManagerInterface {
-  sidebarManager: EditorialSidebarManagerInterface;
+class Manager implements ManagerInterface {
+  sidebarManager: SidebarManagerInterface;
   canvasManager: CanvasManagerInterface;
-  slideManager: EditorialSlideManagerInterface;
+  slideManager: SlideManagerInterface;
   states: States;
   triggerRender: Function = () => {};
 
   constructor(slides: any[]) {
-    this.slideManager = new EditorialSlideManager(this, slides);
+    this.slideManager = new SlideManager(this, slides);
     this.canvasManager = new CanvasManager(this);
-    this.sidebarManager = new EditorialSidebarManager(this);
+    this.sidebarManager = new SidebarManager(this);
     this.initCanvasManager();
     this.states = {
+      slideComponents: [],
       activeViewBox: "",
       feedback: {
         optionIndex: 0,
@@ -151,6 +153,12 @@ class EditorialManager implements EditorialManagerInterface {
       grid: {
         gridIsEditable: false,
       },
+      currentStyles: {
+        textColor: "#000000",
+        textSize: "16",
+        textSpacing: `${16 * 1.2}`,
+        font: "Arial",
+      },
     };
   }
 
@@ -173,6 +181,10 @@ class EditorialManager implements EditorialManagerInterface {
   initCanvasManager() {
     const componentData = this.canvasManager.activeComponent.data ?? {};
     this.canvasManager.activeComponent.data = componentData;
+
+    /* ------------------------------------------------------------------------------------------------------------------ */
+    /*                                                    TO BE REMOVED                                                   */
+    /* ------------------------------------------------------------------------------------------------------------------ */
     this.canvasManager.canvas.functions["updateActiveComponentObjective"] = (
       data: any,
       type?: string,
@@ -283,10 +295,16 @@ class EditorialManager implements EditorialManagerInterface {
       direction: "rows" | "cols"
     ) => this.addOrRemoveRowOrColumns(parseDimensions, type, direction);
 
-    setInterval(() => {
-      //console.log(this.canvasManager.activeComponent.data);
-    }, 5000);
+
+    /* ------------------------------------------------------------------------------------------------------------------ */
+    /*                                                    TO BE REMOVED                                                   */
+    /* ------------------------------------------------------------------------------------------------------------------ */
+
   }
+
+  /* ------------------------------------------------------------------------------------------------------------------ */
+  /*                                                    TO BE REMOVED                                                   */
+  /* ------------------------------------------------------------------------------------------------------------------ */
 
   updateActiveComponentData(data: any, type?: string, index?: number) {
     const sliderIndex = this.canvasManager.activeComponent.data.index;
@@ -307,7 +325,7 @@ class EditorialManager implements EditorialManagerInterface {
           ...data,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -317,7 +335,7 @@ class EditorialManager implements EditorialManagerInterface {
         ...data,
       };
     }
-    this.saveActiveComponentData();
+    this.canvasManager.canvas.saveActiveComponentData();
   }
 
   updateSliderTextContent(content: string, index: number) {
@@ -332,7 +350,7 @@ class EditorialManager implements EditorialManagerInterface {
         index
       ][0].content = content;
     }
-    this.saveActiveComponentData();
+    this.canvasManager.canvas.saveActiveComponentData();
   }
 
   updateSliderImageURL(url: string, index: number) {
@@ -347,7 +365,7 @@ class EditorialManager implements EditorialManagerInterface {
         index
       ][0].url = url;
     }
-    this.saveActiveComponentData();
+    this.canvasManager.canvas.saveActiveComponentData();
   }
 
   updateActiveComponentObjective(data: any, type?: string, index?: number) {
@@ -370,7 +388,7 @@ class EditorialManager implements EditorialManagerInterface {
           data,
         ];
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -384,7 +402,7 @@ class EditorialManager implements EditorialManagerInterface {
           index
         ].question = {};
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -392,7 +410,7 @@ class EditorialManager implements EditorialManagerInterface {
       if (this.canvasManager.activeComponent.data) {
         this.canvasManager.activeComponent.data.extensions[0].question = [];
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -425,7 +443,7 @@ class EditorialManager implements EditorialManagerInterface {
           ...data,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -441,7 +459,7 @@ class EditorialManager implements EditorialManagerInterface {
           ...data,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -480,7 +498,7 @@ class EditorialManager implements EditorialManagerInterface {
           slideIndex
         ][0].question = data;
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -513,7 +531,7 @@ class EditorialManager implements EditorialManagerInterface {
           data,
         ];
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -529,7 +547,7 @@ class EditorialManager implements EditorialManagerInterface {
           data,
         ];
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -580,7 +598,7 @@ class EditorialManager implements EditorialManagerInterface {
           slideIndex
         ][0].questions[index].options = data;
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -592,7 +610,7 @@ class EditorialManager implements EditorialManagerInterface {
           index
         ].question.options = data;
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -602,7 +620,7 @@ class EditorialManager implements EditorialManagerInterface {
           index
         ].question[0].options = data;
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -633,7 +651,7 @@ class EditorialManager implements EditorialManagerInterface {
           slideIndex
         ][0].questions[index].options[optionIndex].content = data;
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -645,7 +663,7 @@ class EditorialManager implements EditorialManagerInterface {
           index
         ].question.options[optionIndex].content = data;
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -692,7 +710,7 @@ class EditorialManager implements EditorialManagerInterface {
           type,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -708,7 +726,7 @@ class EditorialManager implements EditorialManagerInterface {
           type,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -766,7 +784,7 @@ class EditorialManager implements EditorialManagerInterface {
           content,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -782,7 +800,7 @@ class EditorialManager implements EditorialManagerInterface {
           content,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -838,7 +856,7 @@ class EditorialManager implements EditorialManagerInterface {
           answer,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -854,7 +872,7 @@ class EditorialManager implements EditorialManagerInterface {
           answer,
         };
       }
-      this.saveActiveComponentData();
+      this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
@@ -921,7 +939,7 @@ class EditorialManager implements EditorialManagerInterface {
         data,
       ];
     }
-    this.saveActiveComponentData();
+    this.canvasManager.canvas.saveActiveComponentData();
   }
 
   updateFlashcardQuestion(data: QuestionInterface, index: number) {
@@ -932,7 +950,7 @@ class EditorialManager implements EditorialManagerInterface {
         index
       ].question = data;
     }
-    this.saveActiveComponentData();
+    this.canvasManager.canvas.saveActiveComponentData();
   }
 
   addComponentToSlider(data: any) {
@@ -948,7 +966,7 @@ class EditorialManager implements EditorialManagerInterface {
         index
       ] = data;
     }
-    this.saveActiveComponentData();
+    this.canvasManager.canvas.saveActiveComponentData();
   }
 
   addOrRemoveRowOrColumns(
@@ -983,33 +1001,12 @@ class EditorialManager implements EditorialManagerInterface {
     }
   }
 
-  getCanvasSize() {
-    const canvas = document.getElementById("editorial-canvas");
-    return { width: canvas?.offsetWidth, height: canvas?.offsetHeight };
-  }
 
-  getComponentData(id: string) {
-    const slideComponent = this.canvasManager.canvas.data.components?.filter(
-      (component: any) => component.id === id
-    );
-    return slideComponent.length ? slideComponent[0] : {};
-  }
-  // Remember to set canvas data compontents here
-  saveActiveComponentData() {
-    const slides: any[] = this.slideManager.slides;
-    const activeSlide = slides[this.slideManager.activeSlide];
-    const activeComponent = this.canvasManager.activeComponent;
-    if (activeComponent) {
-      activeSlide[activeComponent.data.index] = {
-        ...activeSlide[activeComponent.data.index],
-        ...activeComponent.data,
-      };
-      slides[this.slideManager.activeSlide] = activeSlide;
-      this.slideManager.slides = slides;
-      this.slideManager.handleSlidesUpdate(slides);
-    }
-  }
+  /* ------------------------------------------------------------------------------------------------------------------ */
+  /*                                                    TO BE REMOVED                                                   */
+  /* ------------------------------------------------------------------------------------------------------------------ */
+
 }
 
-export const CreateEditorialManager = (slides: any[]) =>
-  new EditorialManager(slides);
+export const CreateManager = (slides: any[]) =>
+  new Manager(slides);

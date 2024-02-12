@@ -3,8 +3,8 @@ import MainLayout from "../../layouts/EditorialLayout";
 import EditorialSlideView from "components/Editorial/slideView";
 import ActiveEditSlide from "components/Editorial/activeEditSlide";
 import { SidebarFunctions } from "components/Editorial/interfaces";
-import { CreateEditorialManager } from "components/Editorial/Base/EditorialManager";
-import EditorialStateManager from "components/Editorial/Base/EditorialStateManager";
+import { CreateManager } from "components/Editorial/Base/Manager";
+import StateManager from "components/Editorial/Base/StateManager";
 
 interface Props {
   data?: any;
@@ -29,7 +29,7 @@ const EditorialComp: FC<Props> = ({
   const [showEdit, setShowEdit] = useState(false);
   const [overlay, setOverlay] = useState(false);
   const [manager, setManager] = useState(
-    CreateEditorialManager(
+    CreateManager(
       data && data.LessonSlides.map((slide: any) => slide.slide_data)
     )
   );
@@ -69,7 +69,7 @@ const EditorialComp: FC<Props> = ({
         data.LessonSlides.map((slide: any) => slide.slide_data)
       );
       setManager(
-        CreateEditorialManager(
+        CreateManager(
           data && data.LessonSlides.map((slide: any) => slide.slide_data)
         )
       );
@@ -82,14 +82,12 @@ const EditorialComp: FC<Props> = ({
     };
   }, [manager, manager.slideManager]);
 
-
-
   if (!data || parseSlides.length === 0) {
     return <p>Loading...</p>;
   }
 
   return (
-    <EditorialStateManager manager={manager}>
+    <StateManager manager={manager}>
       {() => (
         <MainLayout
           data={data}
@@ -148,7 +146,7 @@ const EditorialComp: FC<Props> = ({
           </div>
         </MainLayout>
       )}
-    </EditorialStateManager>
+    </StateManager>
   );
 };
 

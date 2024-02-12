@@ -1,9 +1,9 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { CanvasMedia } from "components/Editorial/interfaces";
 import React, { FC, createRef, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import {
-  setImageComponentData,
+  imageComponentData,
   toggleWrapperSize,
   uploadFile,
 } from "./handler";
@@ -36,7 +36,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       const url = await uploadFile(473, selectedFile);
       setPreviewImage(url);
       manager.canvasManager.canvas.functions.updateActiveComponentData(
-        setImageComponentData(url)
+        imageComponentData(url)
       );
     }
   };
@@ -54,13 +54,13 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       const url = await uploadFile(473, file);
       setPreviewImage(url);
       manager.canvasManager.canvas.functions.updateActiveComponentData(
-        setImageComponentData(url)
+        imageComponentData(url)
       );
     }
   };
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleImageSize"] = (
+    manager.canvasManager.canvas.functions["toggleImageSize"] = (
       style: string = "",
       styleType: string
     ) => {
@@ -69,7 +69,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       toggleWrapperSize(element, style, styleType);
     };
 
-    manager.canvasManager.activeComponent.functions["toggleOverlay"] = () => {
+    manager.canvasManager.canvas.functions["toggleOverlay"] = () => {
       manager.setState("overlayActive", (prev: any) => !prev);
     };
   }, [manager, viewBoxRef]);
@@ -99,7 +99,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       const newList = [...inputList, newInput];
       setInputList(newList);
       manager.canvasManager.canvas.functions.updateActiveComponentData(
-        setImageComponentData({
+        imageComponentData({
           extensions: newList,
         })
       );
@@ -217,7 +217,7 @@ export default Image;
 export interface UploadIconProps {
   handleChange: (e: any) => void;
   handleDrop: (e: any) => void;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 export const UploadIcon: FC<UploadIconProps> = ({

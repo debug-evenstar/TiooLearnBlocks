@@ -3,7 +3,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import InputResize from "../InputResize";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { Switch } from "@mui/material";
 import { FaEllipsisH } from "react-icons/fa";
 import ImageObjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ImageObjective";
@@ -12,7 +12,7 @@ import { handleSetOptionIndex } from "provider/feedbackSlice";
 import { useSelector } from "react-redux";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const label = { inputProps: { "aria-label": "Switch Overlay" } };
@@ -20,8 +20,7 @@ const label = { inputProps: { "aria-label": "Switch Overlay" } };
 const ImageProperties: FC<Props> = ({ manager }) => {
   const trigger = manager.states.trigger;
 
-  const toggleOverlay =
-    manager.canvasManager.activeComponent.functions?.toggleOverlay;
+  const toggleOverlay = manager.canvasManager.canvas.functions?.toggleOverlay;
   const data: any[] = manager.canvasManager.activeComponent.data?.extensions;
 
   const [isActive, setIsActive] = useState(false);
@@ -83,7 +82,7 @@ const ImageProperties: FC<Props> = ({ manager }) => {
 export default ImageProperties;
 
 interface ImageInputsProps {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   index: number;
   input: any;
 }

@@ -1,13 +1,13 @@
 import React, { FC, useState, useRef, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import Flashcard from "./Flashcard";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { useSelector } from "react-redux";
 import { handleToggleTrigger } from "provider/triggerSlice";
 
 interface ImageCarouselProps {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const CardSlider: FC<ImageCarouselProps> = ({ id, manager }) => {

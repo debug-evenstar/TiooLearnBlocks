@@ -5,11 +5,11 @@ import { RiArrowDropDownFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { EditProperties, getOriginalName } from "../../ViewBox/handler";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import SliderHeader from "./EditProperties/Slider/SliderHeader";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const ActiveSidebar: FC<Props> = ({ manager }) => {

@@ -1,17 +1,10 @@
 import { ComponentBaseDataInterface } from "components/interface";
 import {
   DataGroupInterface,
-  EditorialManagerInterface,
-} from "./EditorialManager";
-import {
-  ActiveViewBoxState,
-  FeedbackState,
-  OptionsDataState,
-  OverlayActiveState,
-  ShowOptionsBoxState,
-  SliderState,
-  TriggerState,
-} from "./StateInterface";
+  ManagerInterface,
+} from "./Manager";
+import { textComponentData } from "../ViewBox/Boxtypes/Text/handlers/dataHandler";
+
 
 const DataGroup: DataGroupInterface = {
   data: {},
@@ -84,10 +77,10 @@ class Canvas implements CanvasInterface {
 
   parseSlideToCanvas(slide: any[]) {
     const parsed = slide.map((item, index) => {
-      const itemId = item.component + "-clone-" + Date.now() + index;
+      const itemId = item.component + "-" + Date.now() + index;
       return {
         ...item,
-        id: itemId,
+        id: item.id ?? itemId,
       };
     });
     this.components = parsed;
@@ -130,7 +123,7 @@ class Canvas implements CanvasInterface {
 /* -------------------------------------------------------------------------- */
 
 export interface CanvasManagerInterface {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   canvas: CanvasInterface;
   activeComponent: DataGroupInterface;
   activeSlide?: ComponentBaseDataInterface[];
@@ -139,18 +132,22 @@ export interface CanvasManagerInterface {
   getComponentIndex: Function;
   getComponentData: Function;
   activeComponentElement: Function;
+  componentDataHandlers : {[key : string] : Function};
+  createComponent : Function;
 }
 
 // More improvements coming
 export class CanvasManager implements CanvasManagerInterface {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   canvas: CanvasInterface;
   activeComponent: DataGroupInterface = DataGroup;
   activeSlide?: ComponentBaseDataInterface[];
+  componentDataHandlers : {[key : string] : Function} = {};
 
-  constructor(manager: EditorialManagerInterface) {
+  constructor(manager: ManagerInterface) {
     this.manager = manager;
     this.canvas = new Canvas(this);
+    this.registerComponentDataHandlers();
   }
 
   setActiveComponent(id: string) {
@@ -185,5 +182,18 @@ export class CanvasManager implements CanvasManagerInterface {
         return document.getElementById(activeComponent.id) as HTMLDivElement;
       }
     }
+  }
+
+  registerComponentDataHandlers () {
+    this.componentDataHandlers = {
+      "Text" : textComponentData
+    };
+  }
+
+  createComponent (componentName : string, id : string) {
+    return {
+      ...this.componentDataHandlers[componentName](),
+      ...{ id }
+    };
   }
 }

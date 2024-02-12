@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "../Base/EditorialManager";
+import { ManagerInterface } from "../Base/Manager";
 import Image from "./Boxtypes/Image/Image";
 import Text from "./Boxtypes/Text/Text";
 import Background from "../Sidebars/RightSidebar/EditProperties/Background";
@@ -37,16 +37,16 @@ export const calculateMaxResizableArea = (
 
 // for extracting the name of the component
 export function getOriginalName(str: string): string {
-  const indexOfClone = str.indexOf("-clone-");
+  const nameSplit = str.split("-");
 
-  if (indexOfClone !== -1) {
-    if (str.substring(0, indexOfClone) === "Flash Card") {
+  if (nameSplit.length > 1) {
+    if (nameSplit[0] === "Flash Card") {
       return "FlashCard";
     }
-    if (str.substring(0, indexOfClone) === "GridSteps") {
+    if (nameSplit[0] === "GridSteps") {
       return "Grid";
     }
-    return str.substring(0, indexOfClone);
+    return nameSplit[0];
   } else {
     return str;
   }
@@ -55,7 +55,7 @@ export function getOriginalName(str: string): string {
 // for viewbox component
 export const ViewBoxContent = (
   id: string,
-  manager: EditorialManagerInterface,
+  manager: ManagerInterface,
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>,
   isEditable: boolean,
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>>,
@@ -90,7 +90,7 @@ export const ViewBoxContent = (
 // for editing in rightsidebar
 export const EditProperties = (
   id: string,
-  manager: EditorialManagerInterface
+  manager: ManagerInterface
 ) => {
   const componentName = getOriginalName(id);
 
@@ -146,12 +146,12 @@ export const EditProperties = (
 
 interface ViewBoxHandlerInterface {
   // Some other properties and methods
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   setViewBoxStyle: Function;
 }
 export class ViewBoxHandler implements ViewBoxHandlerInterface {
-  manager: EditorialManagerInterface;
-  constructor(manager: EditorialManagerInterface) {
+  manager: ManagerInterface;
+  constructor(manager: ManagerInterface) {
     this.manager = manager;
   }
 

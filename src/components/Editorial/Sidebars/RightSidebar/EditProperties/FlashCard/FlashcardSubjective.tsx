@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleSetCorrectOption,
@@ -22,7 +22,7 @@ import {
 } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   index: number;
   data: any;
 }
@@ -92,7 +92,7 @@ const FlashcardSubjective: FC<Props> = ({ manager, index, data }) => {
   };
 
   const handleDelete = (id: string, index: number) => {
-    manager.canvasManager.activeComponent.functions.updateActiveComponentObjective(
+    manager.canvasManager.canvas.functions.updateActiveComponentObjective(
       null,
       "Flashcard"
     );

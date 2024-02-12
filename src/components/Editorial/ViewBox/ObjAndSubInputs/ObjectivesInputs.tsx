@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import {
   handleSetCorrectOption,
   handleSetWrongOption,
@@ -10,7 +10,7 @@ import { resizeInputWidth } from "../handler";
 import Draggable from "react-draggable";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
@@ -77,7 +77,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
                 ref={(el) => (inputRefs.current[i] = el)}
                 className="border border-black p-2 rounded text-center z-[5000] relative objInputHandleImage"
                 type="text"
-                value={option.content}
+                defaultValue={option.content}
                 onChange={(e) => handleSetOptionData(e, i)}
                 style={{ width: maxWidth === 0 ? 100 : maxWidth }}
                 onLoad={(e: any) => resizeInputWidth(e.target)}

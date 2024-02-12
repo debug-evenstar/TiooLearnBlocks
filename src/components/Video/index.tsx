@@ -37,7 +37,7 @@ const VideoComponent: FC<VideoComponentProps> = ({ data, slide }) => {
     }
 
     const onPlayerReady = (event : any) => {
-        console.log(event);
+        // console.log(event);
     }
 
     const onPlayerStateChange = (event : any) => {

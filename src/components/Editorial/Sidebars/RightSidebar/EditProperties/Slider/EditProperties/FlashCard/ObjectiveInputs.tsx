@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { resizeInputWidth } from "components/Editorial/ViewBox/handler";
 import { QuestionInterface } from "components/interface";
 import { FC, createRef, useEffect, useRef, useState } from "react";
@@ -6,7 +6,7 @@ import Draggable from "react-draggable";
 import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
@@ -81,7 +81,7 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
                 ref={(el) => (inputRefs.current[i] = el)}
                 className="border border-black p-2 rounded text-center z-[5000] relative objInputHandleImage"
                 type="text"
-                value={option.content}
+                defaultValue={option.content}
                 onChange={(e) => handleSetOptionData(e, i)}
                 style={{ width: maxWidth === 0 ? 100 : maxWidth }}
                 onLoad={(e: any) => resizeInputWidth(e.target)}

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { ObjectiveItemProp } from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/interfaces";
 import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
@@ -12,7 +12,7 @@ import {
 } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   index: number;
   data: any;
 }
@@ -159,7 +159,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
+    manager.canvasManager.canvas.functions.updateObjectiveOptions(
       data,
       index,
       "Flashcard"

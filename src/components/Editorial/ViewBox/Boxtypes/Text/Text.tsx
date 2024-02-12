@@ -2,18 +2,12 @@ import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { resizeBox } from "./handlers/wrapperHandler";
 import { registerFunctions } from "./handlers/registerFuncsHandlers";
-import { useDispatch, useSelector } from "react-redux";
-import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
+import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
+import { handleTextChange, removePx } from "./handlers/generalHandler";
 import {
-  handleSetCorrectOption,
-  handleSetIdentifier,
-  handleSetObjectiveIndex,
-  handleSetWrongOption,
-} from "provider/optionsDataSlice";
-import { handleTextChange } from "./handlers/generalHandler";
-import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
-import { OptionsDataState } from "components/Editorial/Base/StateInterface";
+  CurrentStylesState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 const Text: FC<CanvasText> = ({
   id,
@@ -48,6 +42,8 @@ const Text: FC<CanvasText> = ({
     }
   };
 
+  const onChange = (event : any ) => handleTextChange(event, manager, textValue, setTextValue, viewBoxRef, textareaRowCount, setTextareaRowCount); 
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const viewBox = viewBoxRef.current;
@@ -65,7 +61,14 @@ const Text: FC<CanvasText> = ({
 
   useEffect(() => {
     if (id === activeId) {
-      registerFunctions(manager, getRange, viewBoxRef, setIdentifier, id);
+      registerFunctions(
+        manager,
+        getRange,
+        editableRef,
+        viewBoxRef,
+        setIdentifier,
+        id
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manager, viewBoxRef, activeId]);
@@ -101,12 +104,12 @@ const Text: FC<CanvasText> = ({
     e.stopPropagation();
     handleSetObjectiveIndex(index);
     manager.setState("showOptionsBox", (prev: any) => !prev);
-    manager.setState("optionsData", (prev : OptionsDataState) => ({
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
-      ...({ 
-        wrongOption : options[0],
-        correctOption : options[1]
-      }) as OptionsDataState
+      ...({
+        wrongOption: options[0],
+        correctOption: options[1],
+      } as OptionsDataState),
     }));
   };
 
@@ -137,6 +140,41 @@ const Text: FC<CanvasText> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coreData, identifier, trigger]);
 
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const range = getRange();
+      if (range) {
+        const element = range.commonAncestorContainer.parentElement;
+
+        if (element) {
+          const styles = getComputedStyle(element);
+
+          manager.setState("currentStyles", (prev: CurrentStylesState) => {
+            return {
+              ...prev,
+              ...({
+                textColor: styles.color,
+                textSize: removePx(styles.fontSize),
+                textSpacing: removePx(styles.lineHeight),
+                font: styles.fontFamily,
+              } as CurrentStylesState),
+            };
+          });
+          console.log(removePx(styles.fontSize), "syle");
+        }
+        //setSelectedText(selectedText);
+      } else {
+        return;
+      }
+    };
+
+    document.addEventListener("selectionchange", handleSelectionChange);
+
+    return () => {
+      document.removeEventListener("selectionchange", handleSelectionChange);
+    };
+  }, []);
+
   return (
     <div
       id={id}
@@ -151,17 +189,8 @@ const Text: FC<CanvasText> = ({
           !isEditable && "cursor-move"
         }`}
         contentEditable={isEditable}
-        onInput={(e) =>
-          handleTextChange(
-            e,
-            manager,
-            textValue,
-            setTextValue,
-            viewBoxRef,
-            textareaRowCount,
-            setTextareaRowCount
-          )
-        }
+        onInput={(e) => onChange(e)}
+        onChange={(e) => onChange(e)}
         dangerouslySetInnerHTML={{ __html: textValue }}
       />
     </div>

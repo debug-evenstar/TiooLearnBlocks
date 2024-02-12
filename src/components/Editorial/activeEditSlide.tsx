@@ -5,8 +5,8 @@ import {
   loadComponent,
 } from "components/SlideManager/handler";
 import { FaTimes } from "react-icons/fa";
-import EditorialCanvas from "./Base/EditorialCanvas";
-import { EditorialManagerInterface } from "./Base/EditorialManager";
+import Canvas from "./Base/Canvas";
+import { ManagerInterface } from "./Base/Manager";
 import LayoutComponent from "components/LayoutBox";
 import { ComponentBaseDataInterface } from "components/interface";
 
@@ -15,7 +15,7 @@ interface Props {
   slides: any;
   data: any;
   isBusy: boolean;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 const ActiveEditSlide: FC<Props> = ({
   active,
@@ -26,14 +26,14 @@ const ActiveEditSlide: FC<Props> = ({
 }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
   const [activeSlide, setActiveSlide] = useState<any[]>([]);
-  const [showPreview, setShowPreview] = useState(false);
+  const [previewSlideData, setPreviewSlideData] = useState<any[]>([]);
   const [previewSlide, setPreviewSlide] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  const RenderPreview = () => {
+  const RenderPreview : FC<{slide : any}> = ({slide}) => {
     return (
       <>
-        {activeSlide.map((component: ComponentBaseDataInterface, index: number) => {
+        {slide.map((component: ComponentBaseDataInterface, index: number) => {
           const Component = loadComponent(component);
           return component.layout 
             ? (
@@ -47,14 +47,20 @@ const ActiveEditSlide: FC<Props> = ({
     );
   };
 
-  RenderPreview();
-
   const saveSlide = () => {
-    const slideId : number = data.LessonSlides[active].id;
-    setIsSaving(true)
-    manager.slideManager.saveSlide(slideId, activeSlide, ()=>{
-      setIsSaving(false);
-    });
+    const slideId : number = data.LessonSlides[active]?.id ?? null;
+    setIsSaving(true);
+    if(slideId) {
+      manager.slideManager.saveSlide(slideId, activeSlide, ()=>{
+        setIsSaving(false);
+      });
+    } else {
+      const slideIndex : number = data.LessonSlides.length;
+      manager.slideManager.createSlide(slideIndex, data.id, activeSlide, ()=>{
+        setIsSaving(false);
+      });
+    }
+
   };
 
   useEffect(() => {
@@ -64,13 +70,18 @@ const ActiveEditSlide: FC<Props> = ({
     }
   }, [active, slides]);
 
+  useEffect(() => {
+    setPreviewSlideData(() => slides[active]);
+    setActiveSlide(slides[active]);
+  }, [slides[active]]);
+
   return (
     <div>
       <div className="flex gap-x-4">
         <div className="w-full">
           {/* {!!checkText.length && ( */}
 
-          <EditorialCanvas slideData={activeSlide} manager={manager} />
+          <Canvas slideData={activeSlide} manager={manager} />
         </div>
       </div>
       <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">
@@ -79,7 +90,7 @@ const ActiveEditSlide: FC<Props> = ({
             className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold"
             onClick={saveSlide}
           >
-            {(isBusy || isSaving) ? "Saving..." : "Save"}
+            {isBusy || isSaving ? "Saving..." : "Save"}
           </div>
           <div
             className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold"
@@ -94,7 +105,7 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0 bg-preview">
           <div className="w-full h-full bgcomps text-white bg-cover px-5 flex justify-center items-center fw-600">
             <div className="w-full h-full">
-              <RenderPreview />
+              <RenderPreview slide={previewSlideData}/>
             </div>
           </div>
           <FaTimes

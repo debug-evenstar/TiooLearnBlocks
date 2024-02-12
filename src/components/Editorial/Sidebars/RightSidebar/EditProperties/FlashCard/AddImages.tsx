@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { setFlashCardComponentData } from "components/Editorial/ViewBox/Boxtypes/Flashcard/handlers/dataHandler";
 import { uploadFile } from "components/Editorial/ViewBox/Boxtypes/Image/handler";
 import React, { FC, useEffect, useRef, useState } from "react";
@@ -12,11 +12,12 @@ import { QuestionInterface } from "components/interface";
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const AddImages: FC<Props> = ({ id, manager }) => {
   const trigger = manager.states.trigger;
+  const activeId = manager.states.activeViewBox;
   const [images, setImages] = useState<any[]>([{ url: "" }]);
   const coreData = manager.canvasManager.activeComponent.data;
 
@@ -47,9 +48,10 @@ const AddImages: FC<Props> = ({ id, manager }) => {
   return (
     <div className="w-full my-5 py-2">
       <UploadText handleUpload={handleAddImage} />
-      {images.map((image: any, index) => (
-        <FlashcardImage key={index} index={index} manager={manager} />
-      ))}
+      {activeId === id &&
+        images.map((image: any, index) => (
+          <FlashcardImage key={index} index={index} manager={manager} />
+        ))}
     </div>
   );
 };
@@ -58,17 +60,16 @@ export default AddImages;
 
 interface FlashcardImageProps {
   index: number;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const FlashcardImage: FC<FlashcardImageProps> = ({ index, manager }) => {
   const [isActive, setIsActive] = useState(false);
 
-  const cardsIndex = manager.canvasManager.activeComponent.data.index;
-  const question: QuestionInterface =
-    manager.canvasManager.activeComponent.data.components[cardsIndex].cards[
-      index
-    ].question;
+  const question: QuestionInterface = manager.canvasManager.activeComponent.data
+    .cards
+    ? manager.canvasManager.activeComponent.data?.cards[index].question
+    : null;
 
   return (
     <div>

@@ -4,7 +4,7 @@ import {
   RiDeleteBinLine,
   RiFeedbackLine,
 } from "react-icons/ri";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { useDispatch, useSelector } from "react-redux";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import {
@@ -31,7 +31,7 @@ import {
 } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   index: number;
   data: any;
 }
@@ -176,7 +176,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
+    manager.canvasManager.canvas.functions.updateObjectiveOptions(
       data,
       index,
       "Flashcard"

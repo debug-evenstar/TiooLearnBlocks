@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { ComponentBaseDataInterface } from "components/interface";
 import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import { handleSetDragItems } from "provider/dragItemsSlice";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const Delete: FC<Props> = ({ id, manager }) => {
@@ -25,6 +25,11 @@ const Delete: FC<Props> = ({ id, manager }) => {
     updatedSlides[manager.slideManager.activeSlide] = updatedSlide;
     manager.slideManager.slides = updatedSlides;
     manager.slideManager.handleSlidesUpdate(updatedSlides);
+    const updatedComponents = manager.states.slideComponents.filter(
+      (component: any, index: number) => index !== itemIndex
+    );
+    manager.setState("slideComponents", updatedComponents);
+    console.log(manager.states.slideComponents, updatedSlide, "delete clicked");
     // const filteredItems = dragItems.filter((item) => item.id !== id);
   };
 

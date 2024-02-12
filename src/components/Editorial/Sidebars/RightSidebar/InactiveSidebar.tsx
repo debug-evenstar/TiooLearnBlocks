@@ -25,6 +25,7 @@ const InactiveSidebar: FC<Props> = ({
     "Dual Choice",
     "Slider",
     "FlashCards",
+    "Sequence",
   ];
   const activeSlid = slides && slides[activeSlide];
   const [comps, setComps] = useState<any[]>();

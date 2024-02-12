@@ -1,7 +1,7 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { FC, useState } from "react";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
+import { FC, useEffect, useState } from "react";
 import {
   RiAlignCenter,
   RiAlignJustify,
@@ -24,18 +24,27 @@ import {
 import { ColorResult, SketchPicker } from "react-color";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const TextProperties: FC<Props> = ({ manager }) => {
-  const toggleWrapper =
-    manager.canvasManager.activeComponent.functions?.toggleWrapper;
+  const states = manager.states;
+  const {
+    textColor: currentTextColor,
+    textSize: currentTextSize,
+    textSpacing: currentTextSpacing,
+    font: currentFont,
+  } = states.currentStyles;
+
+  const currentStyles = states.currentStyles;
+
+  const toggleWrapper = manager.canvasManager.canvas.functions?.toggleWrapper;
 
   const toggleTextStyle =
-    manager.canvasManager.activeComponent.functions?.toggleTextStyle;
+    manager.canvasManager.canvas.functions?.toggleTextStyle;
 
   const toggleWrapperStyle =
-    manager.canvasManager.activeComponent.functions?.toggleWrapperStyle;
+    manager.canvasManager.canvas.functions?.toggleWrapperStyle;
 
   const [isActive, setIsActive] = useState(false);
   const [colorIsActive, setColorIsActive] = useState(false);
@@ -71,6 +80,13 @@ const TextProperties: FC<Props> = ({ manager }) => {
     setSelectedFont(newFont);
     toggleTextStyle(selectedFont, "font");
   };
+
+  useEffect(() => {
+    setTextColor(currentTextColor);
+    setTextSize(currentTextSize);
+    setTextSpacing(currentTextSpacing);
+    setSelectedFont(currentFont);
+  }, [currentStyles]);
 
   return (
     <div className="w-full my-5 py-2">
@@ -239,13 +255,11 @@ const TextProperties: FC<Props> = ({ manager }) => {
 };
 
 const TextEditProperties: FC<Props> = ({ manager }) => {
-  const toggleWrapper =
-    manager.canvasManager.activeComponent.functions?.toggleWrapper;
+  const toggleWrapper = manager.canvasManager.canvas.functions?.toggleWrapper;
 
-  const toggleList =
-    manager.canvasManager.activeComponent.functions?.toggleList;
+  const toggleList = manager.canvasManager.canvas.functions?.toggleList;
 
-  const unLink = manager.canvasManager.activeComponent.functions?.unLink;
+  const unLink = manager.canvasManager.canvas.functions?.unLink;
 
   const [linkBoxActive, setLinkBoxActive] = useState(false);
   const [linkBoxValue, setLinkBoxValue] = useState("");

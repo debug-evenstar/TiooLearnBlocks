@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { QuestionInterface } from "components/interface";
 import {
   handleSetCorrectOption,
@@ -10,7 +10,7 @@ import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
@@ -56,7 +56,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
           key={i}
           className="border border-black w-[8rem] p-2 rounded text-center z-[5000] relative"
           type="text"
-          value={option.content}
+          defaultValue={option.content}
           onChange={(e) => handleSetOptionData(e, i)}
         />
       ))}

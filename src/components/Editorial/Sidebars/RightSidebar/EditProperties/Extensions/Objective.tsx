@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
 import { ObjectiveItemProp } from "./interfaces";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
@@ -13,7 +13,7 @@ import {
 import Feedback from "./Feedback";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   component: string;
 }
 
@@ -21,8 +21,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
   const id = manager.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
-  const replaceContent =
-    manager.canvasManager.activeComponent.functions?.replaceContent;
+  const replaceContent = manager.canvasManager.canvas.functions?.replaceContent;
 
   const { identifier } = manager.states.optionsData;
 
@@ -167,10 +166,8 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
-      data,
-      index
-    );
+    manager.canvasManager.canvas.functions.updateObjectiveOptions(data, index);
+
     setAddedOption(!addedOption);
     manager.setState("feedback", (prev: FeedbackState) => {
       return {

@@ -1,28 +1,30 @@
 import { SlideData } from "components/SlideManager/handler";
 import { baseApiHost } from "utilities/url";
-import { EditorialManagerInterface } from "./EditorialManager";
+import { ManagerInterface } from "./Manager";
 import { deepClone } from "utilities/array";
 
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
+const SAVE_SLIDE_URL = (id : number) => `open/lesson/${id}/slide`;
 
-export interface EditorialSlideManagerInterface {
-  manager: EditorialManagerInterface;
+export interface SlideManagerInterface {
+  manager: ManagerInterface;
   slides: any[];
   activeSlide: number;
   saveSlide: Function;
+  createSlide : Function;
   setActiveSlide: Function;
   saveComponentData: Function;
   handleSlidesUpdate: Function;
-  addNewSlide : Function;
+  addNewSlide: Function;
 }
 
-export class EditorialSlideManager implements EditorialSlideManagerInterface {
-  manager: EditorialManagerInterface;
+export class SlideManager implements SlideManagerInterface {
+  manager: ManagerInterface;
   slides: any[];
   activeSlide: number = 0;
   handleSlidesUpdate: Function = () => {};
 
-  constructor(manager: EditorialManagerInterface, slides: any[]) {
+  constructor(manager: ManagerInterface, slides: any[]) {
     this.manager = manager;
     this.slides = slides;
   }
@@ -36,10 +38,9 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
   }
 
   addNewSlide() {
-    this.handleSlidesUpdate([
-      ...this.slides,
-      []
-    ]);
+    const modifiedSlides = [...this.slides, []];
+    this.slides = modifiedSlides;
+    this.handleSlidesUpdate(modifiedSlides);
   }
 
   saveComponentData(index: number, data: any, initialization: boolean = false) {
@@ -68,6 +69,33 @@ export class EditorialSlideManager implements EditorialSlideManagerInterface {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+        callback && callback();
+        return response.json();
+      })
+      .then((data) => {})
+      .catch((error) => {
+        console.error("Update failed:", error);
+      });
+  }
+
+  createSlide(index: number, lessonId: number, payload: SlideData, callback: Function) {
+    const url: string = `${baseApiHost()}/${SAVE_SLIDE_URL(lessonId)}`;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+        slide_data: payload,
+        slide_index: index
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        callback && callback();
+        //Add a function to update the lessonSlides object with the created slide id
         return response.json();
       })
       .then((data) => {})
