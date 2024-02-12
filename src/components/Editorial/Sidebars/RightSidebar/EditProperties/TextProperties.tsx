@@ -25,12 +25,17 @@ import {
 import { ColorResult, SketchPicker } from "react-color";
 import { toggleWrapperStyle } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/stylesHandler";
 import { CurrentStylesState } from "components/Editorial/Base/StateInterface";
+import { textComponentData } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/dataHandler";
 
 interface Props {
   manager: ManagerInterface;
 }
 
 const TextProperties: FC<Props> = ({ manager }) => {
+  const id = manager.states.activeViewBox;
+  const parent = document.getElementById(id) as HTMLDivElement;
+  const activeElement: any = parent?.firstChild;
+
   const states = manager.states;
   const {
     textColor: currentTextColor,
@@ -90,6 +95,13 @@ const TextProperties: FC<Props> = ({ manager }) => {
     //setTextSpacing(currentTextSpacing);
     setSelectedFont(currentFont);
   }, [currentStyles]);
+
+  useEffect(() => {
+    if (!activeElement) return;
+    manager.canvasManager.canvas.functions.updateActiveComponentData(
+      textComponentData(activeElement.innerHTML)
+    );
+  }, [activeElement?.innerHTML]);
 
   return (
     <div className="w-full my-5 py-2">

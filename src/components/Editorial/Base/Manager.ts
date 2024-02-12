@@ -22,6 +22,7 @@ import {
   SliderState,
   TriggerState,
 } from "./StateInterface";
+import { textComponentData } from "../ViewBox/Boxtypes/Text/handlers/dataHandler";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
@@ -299,21 +300,12 @@ class Manager implements ManagerInterface {
   /* ------------------------------------------------------------------------------------------------------------------ */
 
   updateActiveComponentData(data: any, type?: string, index?: number) {
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (type && type === "Slider") {
       if (index === null || index === undefined) return;
 
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          index
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          index
-        ][0] = {
-          ...this.canvasManager.activeComponent.data.components[sliderIndex]
-            .slides[index][0],
+      if (this.canvasManager.activeComponent.data.slides[index]) {
+        this.canvasManager.activeComponent.data.slides[index][0] = {
+          ...this.canvasManager.activeComponent.data.slides[index][0],
           ...data,
         };
       }
@@ -331,52 +323,27 @@ class Manager implements ManagerInterface {
   }
 
   updateSliderTextContent(content: string, index: number) {
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
-    if (
-      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-        index
-      ]
-    ) {
-      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-        index
-      ][0].content = content;
+    if (this.canvasManager.activeComponent.data.slides[index]) {
+      this.canvasManager.activeComponent.data.slides[index][0].content =
+        content;
     }
     this.canvasManager.canvas.saveActiveComponentData();
   }
 
   updateSliderImageURL(url: string, index: number) {
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
-    if (
-      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-        index
-      ]
-    ) {
-      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-        index
-      ][0].url = url;
+    if (this.canvasManager.activeComponent.data.slides[index]) {
+      this.canvasManager.activeComponent.data.slides[index][0].url = url;
     }
     this.canvasManager.canvas.saveActiveComponentData();
   }
 
   updateActiveComponentObjective(data: any, type?: string, index?: number) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (type && type === "Slider") {
       if (index === undefined || index === null) return;
 
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          index
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          index
-        ][0].questions = [
-          ...this.canvasManager.activeComponent.data.components[sliderIndex]
-            .slides[index][0].questions,
+      if (this.canvasManager.activeComponent.data.slides[index]) {
+        this.canvasManager.activeComponent.data.slides[index][0].questions = [
+          ...this.canvasManager.activeComponent.data.slides[index][0].questions,
           data,
         ];
       }
@@ -387,12 +354,8 @@ class Manager implements ManagerInterface {
     if (type && type === "Flashcard" && index) {
       if (index === undefined || index === null) return;
 
-      if (
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards
-      ) {
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-          index
-        ].question = {};
+      if (this.canvasManager.activeComponent.data.cards) {
+        this.canvasManager.activeComponent.data.cards[index].question = {};
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
@@ -418,20 +381,13 @@ class Manager implements ManagerInterface {
     type?: string,
     slideIndex?: number
   ) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (type && type === "Slider" && slideIndex) {
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ][0].questions[index] = {
-          ...this.canvasManager.activeComponent.data.components[sliderIndex]
-            .slides[slideIndex][0].questions[index],
+      if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
+        this.canvasManager.activeComponent.data.slides[slideIndex][0].questions[
+          index
+        ] = {
+          ...this.canvasManager.activeComponent.data.slides[slideIndex][0]
+            .questions[index],
           ...data,
         };
       }
@@ -440,14 +396,9 @@ class Manager implements ManagerInterface {
     }
 
     if (type && type === "Flashcard") {
-      if (
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards
-      ) {
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-          index
-        ].question = {
-          ...this.canvasManager.activeComponent.data.components[cardsIndex]
-            .cards[index].question,
+      if (this.canvasManager.activeComponent.data.cards) {
+        this.canvasManager.activeComponent.data.cards[index].question = {
+          ...this.canvasManager.activeComponent.data.cards[index].question,
           ...data,
         };
       }
@@ -478,17 +429,10 @@ class Manager implements ManagerInterface {
   }
 
   updateImageQuestion(data: any, type?: string, slideIndex?: string) {
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (type && type === "Slider" && slideIndex) {
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ][0].question = data;
+      if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
+        this.canvasManager.activeComponent.data.slides[slideIndex][0].question =
+          data;
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
@@ -505,21 +449,14 @@ class Manager implements ManagerInterface {
     type?: string,
     slideIndex?: number
   ) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (type && type === "Slider") {
       if (slideIndex === null || slideIndex === undefined) return;
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ][0].questions[index].options = [
-          ...this.canvasManager.activeComponent.data.components[sliderIndex]
-            .slides[slideIndex][0].questions[index].options,
+      if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
+        this.canvasManager.activeComponent.data.slides[slideIndex][0].questions[
+          index
+        ].options = [
+          ...this.canvasManager.activeComponent.data.slides[slideIndex][0]
+            .questions[index].options,
           data,
         ];
       }
@@ -528,16 +465,13 @@ class Manager implements ManagerInterface {
     }
 
     if (type && type === "Flashcard") {
-      if (
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards
-      ) {
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-          index
-        ].question.options = [
-          ...this.canvasManager.activeComponent.data.components[cardsIndex]
-            .cards[index].question.options,
-          data,
-        ];
+      if (this.canvasManager.activeComponent.data.cards) {
+        this.canvasManager.activeComponent.data.cards[index].question.options =
+          [
+            ...this.canvasManager.activeComponent.data.cards[index].question
+              .options,
+            data,
+          ];
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
@@ -572,35 +506,25 @@ class Manager implements ManagerInterface {
     type?: string,
     slideIndex?: number
   ) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (this.canvasManager.activeComponent.data) {
       this.canvasManager.activeComponent.data.questions[index].options = data;
     }
 
     if (type && type === "Slider") {
       if (slideIndex === null || slideIndex === undefined) return;
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ][0].questions[index].options = data;
+      if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
+        this.canvasManager.activeComponent.data.slides[slideIndex][0].questions[
+          index
+        ].options = data;
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
     if (type && type === "Flashcard") {
-      if (
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards
-      ) {
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-          index
-        ].question.options = data;
+      if (this.canvasManager.activeComponent.data.cards) {
+        this.canvasManager.activeComponent.data.cards[index].question.options =
+          data;
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
@@ -629,31 +553,22 @@ class Manager implements ManagerInterface {
     type?: string,
     slideIndex?: number
   ) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (type && type === "Slider") {
       if (slideIndex === null || slideIndex === undefined) return;
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ][0].questions[index].options[optionIndex].content = data;
+      if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
+        this.canvasManager.activeComponent.data.slides[slideIndex][0].questions[
+          index
+        ].options[optionIndex].content = data;
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
 
     if (type && type === "Flashcard") {
-      if (
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards
-      ) {
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-          index
-        ].question.options[optionIndex].content = data;
+      if (this.canvasManager.activeComponent.data.cards) {
+        this.canvasManager.activeComponent.data.cards[index].question.options[
+          optionIndex
+        ].content = data;
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
@@ -683,22 +598,14 @@ class Manager implements ManagerInterface {
     componentType?: string,
     slideIndex?: number
   ) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (type && type === "Slider") {
       if (slideIndex === null || slideIndex === undefined) return;
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ][0].questions[index].options[optionIndex].feedback = {
-          ...this.canvasManager.activeComponent.data.components[sliderIndex]
-            .slides[slideIndex][0].questions[index].options[optionIndex]
-            .feedback,
+      if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
+        this.canvasManager.activeComponent.data.slides[slideIndex][0].questions[
+          index
+        ].options[optionIndex].feedback = {
+          ...this.canvasManager.activeComponent.data.slides[slideIndex][0]
+            .questions[index].options[optionIndex].feedback,
           type,
         };
       }
@@ -707,14 +614,12 @@ class Manager implements ManagerInterface {
     }
 
     if (componentType && componentType === "Flashcard") {
-      if (
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards
-      ) {
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-          index
-        ].question.options[optionIndex].feedback = {
-          ...this.canvasManager.activeComponent.data.components[cardsIndex]
-            .cards[index].question.options[optionIndex].feedback,
+      if (this.canvasManager.activeComponent.data.cards) {
+        this.canvasManager.activeComponent.data.cards[index].question.options[
+          optionIndex
+        ].feedback = {
+          ...this.canvasManager.activeComponent.data.cards[index].question
+            .options[optionIndex].feedback,
           type,
         };
       }
@@ -756,23 +661,15 @@ class Manager implements ManagerInterface {
     componentType?: string,
     slideIndex?: number
   ) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (componentType && componentType === "Slider") {
       if (slideIndex === null || slideIndex === undefined) return;
 
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ][0].questions[index].options[optionIndex].feedback = {
-          ...this.canvasManager.activeComponent.data.components[sliderIndex]
-            .slides[slideIndex][0].questions[index].options[optionIndex]
-            .feedback,
+      if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
+        this.canvasManager.activeComponent.data.slides[slideIndex][0].questions[
+          index
+        ].options[optionIndex].feedback = {
+          ...this.canvasManager.activeComponent.data.slides[slideIndex][0]
+            .questions[index].options[optionIndex].feedback,
           content,
         };
       }
@@ -781,14 +678,12 @@ class Manager implements ManagerInterface {
     }
 
     if (componentType && componentType === "Flashcard") {
-      if (
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards
-      ) {
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-          index
-        ].question.options[optionIndex].feedback = {
-          ...this.canvasManager.activeComponent.data.components[cardsIndex]
-            .cards[index].question.options[optionIndex].feedback,
+      if (this.canvasManager.activeComponent.data.cards) {
+        this.canvasManager.activeComponent.data.cards[index].question.options[
+          optionIndex
+        ].feedback = {
+          ...this.canvasManager.activeComponent.data.cards[index].question
+            .options[optionIndex].feedback,
           content,
         };
       }
@@ -830,21 +725,14 @@ class Manager implements ManagerInterface {
     componentType?: string,
     slideIndex?: number
   ) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-
     if (componentType && componentType === "Slider") {
       if (slideIndex === null || slideIndex === undefined) return;
-      if (
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ]
-      ) {
-        this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-          slideIndex
-        ][0].questions[index].options[optionIndex] = {
-          ...this.canvasManager.activeComponent.data.components[sliderIndex]
-            .slides[slideIndex][0].questions[index].options[optionIndex],
+      if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
+        this.canvasManager.activeComponent.data.slides[slideIndex][0].questions[
+          index
+        ].options[optionIndex] = {
+          ...this.canvasManager.activeComponent.data.slides[slideIndex][0]
+            .questions[index].options[optionIndex],
           answer,
         };
       }
@@ -853,14 +741,12 @@ class Manager implements ManagerInterface {
     }
 
     if (componentType && componentType === "Flashcard") {
-      if (
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards
-      ) {
-        this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-          index
-        ].question.options[optionIndex] = {
-          ...this.canvasManager.activeComponent.data.components[cardsIndex]
-            .cards[index].question.options[optionIndex],
+      if (this.canvasManager.activeComponent.data.cards) {
+        this.canvasManager.activeComponent.data.cards[index].question.options[
+          optionIndex
+        ] = {
+          ...this.canvasManager.activeComponent.data.cards[index].question
+            .options[optionIndex],
           answer,
         };
       }
@@ -935,28 +821,17 @@ class Manager implements ManagerInterface {
   }
 
   updateFlashcardQuestion(data: QuestionInterface, index: number) {
-    const cardsIndex = this.canvasManager.activeComponent.data.index;
-
-    if (this.canvasManager.activeComponent.data?.components[cardsIndex]) {
-      this.canvasManager.activeComponent.data.components[cardsIndex].cards[
-        index
-      ].question = data;
+    if (this.canvasManager.activeComponent.data) {
+      this.canvasManager.activeComponent.data.cards[index].question = data;
     }
     this.canvasManager.canvas.saveActiveComponentData();
   }
 
   addComponentToSlider(data: any) {
-    const sliderIndex = this.canvasManager.activeComponent.data.index;
-    const index: number =
-      this.canvasManager.activeComponent.data.components[sliderIndex].slides
-        .length;
+    const index: number = this.canvasManager.activeComponent.data.slides.length;
 
-    if (
-      this.canvasManager.activeComponent.data.components[sliderIndex].slides
-    ) {
-      this.canvasManager.activeComponent.data.components[sliderIndex].slides[
-        index
-      ] = data;
+    if (this.canvasManager.activeComponent.data.slides) {
+      this.canvasManager.activeComponent.data.slides[index] = data;
     }
     this.canvasManager.canvas.saveActiveComponentData();
   }

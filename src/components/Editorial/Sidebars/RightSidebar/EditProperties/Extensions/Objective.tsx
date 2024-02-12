@@ -5,7 +5,6 @@ import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
-import { handleToggleTrigger } from "provider/triggerSlice";
 import {
   FeedbackState,
   OptionsDataState,
@@ -37,13 +36,11 @@ const Objective: FC<Props> = ({ manager, component }) => {
     );
     setIsActive(true);
     manager.setState("showOptionsBox", (prev: any) => !prev);
-    // Verify the states being set
-    // manager.setObjectiveIndexState(questions.length);
     manager.setState("optionsData", {
       identifier: "",
       correctOption: "",
       wrongOption: "",
-      objectiveIndex: 0,
+      objectiveIndex: questions.length,
     });
   };
 

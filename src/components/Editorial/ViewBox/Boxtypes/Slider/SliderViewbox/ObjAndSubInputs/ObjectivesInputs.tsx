@@ -25,9 +25,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
 
   const sliderIndex = manager.canvasManager.activeComponent.data.index;
   const coreData =
-    manager.canvasManager.activeComponent.data.components[sliderIndex].slides[
-      activeCompIndex
-    ][0];
+    manager.canvasManager.activeComponent.data.slides[activeCompIndex][0];
 
   useEffect(() => {
     setQuestion(coreData.questions[objectiveIndex]);

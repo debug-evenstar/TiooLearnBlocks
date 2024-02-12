@@ -112,6 +112,7 @@ const Text: FC<CanvasText> = ({
   ) => {
     e.stopPropagation();
     handleSetObjectiveIndex(index);
+    console.log("clicked");
     manager.setState("showOptionsBox", (prev: any) => !prev);
     manager.setState("optionsData", (prev: OptionsDataState) => ({
       ...prev,
