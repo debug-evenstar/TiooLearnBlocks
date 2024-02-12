@@ -42,7 +42,16 @@ const Text: FC<CanvasText> = ({
     }
   };
 
-  const onChange = (event : any ) => handleTextChange(event, manager, textValue, setTextValue, viewBoxRef, textareaRowCount, setTextareaRowCount); 
+  const onChange = (event: any) =>
+    handleTextChange(
+      event,
+      manager,
+      textValue,
+      setTextValue,
+      viewBoxRef,
+      textareaRowCount,
+      setTextareaRowCount
+    );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
