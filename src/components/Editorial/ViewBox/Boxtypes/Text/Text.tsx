@@ -48,6 +48,8 @@ const Text: FC<CanvasText> = ({
     }
   };
 
+  const onChange = (event : any ) => handleTextChange(event, manager, textValue, setTextValue, viewBoxRef, textareaRowCount, setTextareaRowCount); 
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const viewBox = viewBoxRef.current;
@@ -151,17 +153,8 @@ const Text: FC<CanvasText> = ({
           !isEditable && "cursor-move"
         }`}
         contentEditable={isEditable}
-        onInput={(e) =>
-          handleTextChange(
-            e,
-            manager,
-            textValue,
-            setTextValue,
-            viewBoxRef,
-            textareaRowCount,
-            setTextareaRowCount
-          )
-        }
+        onInput={(e) => onChange(e)}
+        onChange={(e) => onChange(e)}
         dangerouslySetInnerHTML={{ __html: textValue }}
       />
     </div>
