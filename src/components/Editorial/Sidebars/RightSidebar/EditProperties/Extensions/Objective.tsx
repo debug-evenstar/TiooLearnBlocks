@@ -81,7 +81,7 @@ const Objective: FC<Props> = ({ manager, component }) => {
         updatedQuestion.options,
         index
       );
-      manager.setState("trigger", (prev: any) => !prev);
+      manager.setState("trigger", (prev: boolean) => !prev);
 
       updatedQuestions[index] = updatedQuestion;
     }
@@ -179,6 +179,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   const deleteOption = (i: number) => {
     handleDelete(objective.identifier, i, index);
     setAddedOption(!addedOption);
+    manager.setState("trigger", (prev: boolean) => !prev);
   };
 
   const handleShowFeedback = (index: number) => {

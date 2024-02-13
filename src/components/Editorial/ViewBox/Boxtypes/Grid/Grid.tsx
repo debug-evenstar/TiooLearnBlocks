@@ -19,17 +19,15 @@ interface GridProps {
 }
 
 const Grid: FC<GridProps> = ({ id, manager, viewBoxSize }) => {
-  const trigger = manager.states.trigger;
-
   const [data, setData] = useState<any>(
     manager.canvasManager.getComponentData(id)
   );
 
   useEffect(() => {
-    const rawData = manager.canvasManager.activeComponent.data;
-    console.log(rawData, "updated it!");
+    const rawData = manager.canvasManager.getComponentData(id);
     rawData.size !== undefined && setData(rawData);
-  }, [trigger]);
+    console.log(data);
+  }, [manager.canvasManager.activeComponent.data]);
 
   return (
     <div className="relative h-full p-2">
@@ -73,7 +71,12 @@ const GridSteps: FC<GridStepsProps> = ({ data, size, manager, id, height }) => {
     <div className="h-full flex flex-col">
       {isEditable && (
         <div className="w-full flex justify-end">
-          <AddOrRemoveColumn id={id} direction="rows" manager={manager} />
+          <AddOrRemoveColumn
+            id={id}
+            direction="rows"
+            manager={manager}
+            data={data}
+          />
         </div>
       )}
 
@@ -112,7 +115,12 @@ const GridSteps: FC<GridStepsProps> = ({ data, size, manager, id, height }) => {
       </div>
       {isEditable && (
         <div className="w-fit">
-          <AddOrRemoveColumn id={id} direction="cols" manager={manager} />
+          <AddOrRemoveColumn
+            id={id}
+            direction="cols"
+            manager={manager}
+            data={data}
+          />
         </div>
       )}
     </div>
@@ -123,21 +131,17 @@ interface AddOrRemoveColumnProps {
   id: string;
   direction: "rows" | "cols";
   manager: ManagerInterface;
+  data: any;
 }
 
 const AddOrRemoveColumn: FC<AddOrRemoveColumnProps> = ({
   id,
   manager,
   direction,
+  data,
 }) => {
-  const data = manager.canvasManager.activeComponent.data;
   const addOrRemoveRowOrColumns =
     manager.canvasManager.canvas.functions?.addOrRemoveRowOrColumns;
-
-  const getDimensions = () => {
-    if (data === null) return manager.canvasManager.getComponentData(id).size;
-    return manager.canvasManager.activeComponent.data.size;
-  };
 
   return (
     <div className="w-fit flex flex-col items-center">
@@ -154,7 +158,7 @@ const AddOrRemoveColumn: FC<AddOrRemoveColumnProps> = ({
               className="cursor-pointer"
               onClick={() =>
                 addOrRemoveRowOrColumns(
-                  parseGridDimensions(getDimensions()),
+                  parseGridDimensions(data.size),
                   "remove",
                   direction
                 )
@@ -175,11 +179,12 @@ const AddOrRemoveColumn: FC<AddOrRemoveColumnProps> = ({
               className="cursor-pointer"
               onClick={() =>
                 addOrRemoveRowOrColumns(
-                  parseGridDimensions(getDimensions()),
+                  parseGridDimensions(data.size),
                   "add",
                   direction
                 )
               }
+              //onClick={() => console.log(data, "the data")}
             />
           </div>
         </GridTooltip>

@@ -28,9 +28,11 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
-  const handleSetOptionData = (e: any, index: number) => {
-    const value = e.target.value;
-    if (!value) return;
+  const handleSetOptionData = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const value = e.target.value ?? "";
 
     let max = 0;
     inputRefs.current.forEach((input) => {
@@ -44,7 +46,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
     setMaxWidth(max);
 
     manager.canvasManager.canvas.functions.updateObjectiveOption(
-      value,
+      e.target.value,
       objectiveIndex,
       index
     );
@@ -77,7 +79,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
                 ref={(el) => (inputRefs.current[i] = el)}
                 className="border border-black p-2 rounded text-center z-[5000] relative objInputHandleImage"
                 type="text"
-                defaultValue={option.content}
+                value={option.content}
                 onChange={(e) => handleSetOptionData(e, i)}
                 style={{ width: maxWidth === 0 ? 100 : maxWidth }}
                 onLoad={(e: any) => resizeInputWidth(e.target)}

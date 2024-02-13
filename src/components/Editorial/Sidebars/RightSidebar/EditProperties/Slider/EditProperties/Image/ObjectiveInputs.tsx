@@ -28,8 +28,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
   }, [trigger]);
 
   const handleSetOptionData = (e: any, index: number) => {
-    const value = e.target.value;
-    if (!value) return;
+    const value = e.target.value ?? "";
 
     manager.canvasManager.canvas.functions.updateObjectiveOption(
       value,

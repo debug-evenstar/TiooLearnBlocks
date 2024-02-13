@@ -20,13 +20,15 @@ const InactiveSidebar: FC<Props> = ({
     "Text",
     "Image",
     "Video",
-    "Multi Choice",
     "Flash Card",
-    "Dual Choice",
+    "Grid",
     "Slider",
     "FlashCards",
     "Sequence",
+    "Multi Choice",
+    "Dual Choice",
   ];
+
   const activeSlid = slides && slides[activeSlide];
   const [comps, setComps] = useState<any[]>();
   const scrRef = useRef<any>(null);
@@ -128,9 +130,14 @@ const InactiveSidebar: FC<Props> = ({
                         : "compinactive"
                     } cursor-pointer mx-1 hover:scale-y-105 duration-100`}
                     draggable
-                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragStart={(e) =>
+                      handleDragStart(
+                        e,
+                        item === "Flashcard" ? "Flash Card" : item
+                      )
+                    }
                   >
-                    {item}
+                    {item === "Flashcard" ? "Flash Card" : item}
                   </div>
                 );
               })}

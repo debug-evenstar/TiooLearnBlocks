@@ -24,8 +24,7 @@ const GridObjectivesInputs: FC<Props> = ({ manager }) => {
   }, [trigger]);
 
   const handleSetOptionData = (e: any, index: number) => {
-    const value = e.target.value;
-    if (!value) return;
+    const value = e.target.value ?? "";
 
     let max = 0;
     inputRefs.current.forEach((input) => {

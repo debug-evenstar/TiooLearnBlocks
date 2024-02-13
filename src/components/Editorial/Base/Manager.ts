@@ -506,10 +506,6 @@ class Manager implements ManagerInterface {
     type?: string,
     slideIndex?: number
   ) {
-    if (this.canvasManager.activeComponent.data) {
-      this.canvasManager.activeComponent.data.questions[index].options = data;
-    }
-
     if (type && type === "Slider") {
       if (slideIndex === null || slideIndex === undefined) return;
       if (this.canvasManager.activeComponent.data.slides[slideIndex]) {
@@ -532,10 +528,15 @@ class Manager implements ManagerInterface {
 
     if (type && type === "Overlay") {
       if (this.canvasManager.activeComponent.data?.extensions) {
+        console.log(
+          this.canvasManager.activeComponent.data?.extensions,
+          "from overlay"
+        );
         this.canvasManager.activeComponent.data.extensions[
           index
         ].question[0].options = data;
       }
+
       this.canvasManager.canvas.saveActiveComponentData();
       return;
     }
@@ -854,7 +855,7 @@ class Manager implements ManagerInterface {
             ? `${newDimension + 1}x${parsedDimensions.cols}`
             : `${parsedDimensions.rows}x${newDimension + 1}`;
         gridData.size = dimensions;
-        this.setState("trigger", (prev: TriggerState) => !prev);
+        //this.setState("trigger", (prev: TriggerState) => !prev);
       }
     } else {
       if (gridData) {
@@ -863,9 +864,10 @@ class Manager implements ManagerInterface {
             ? `${newDimension - 1}x${parsedDimensions.cols}`
             : `${parsedDimensions.rows}x${newDimension - 1}`;
         gridData.size = dimensions;
-        this.setState("trigger", (prev: TriggerState) => !prev);
+        //this.setState("trigger", (prev: TriggerState) => !prev);
       }
     }
+    this.canvasManager.canvas.updateActiveComponentData(gridData);
   }
 
   /* ------------------------------------------------------------------------------------------------------------------ */

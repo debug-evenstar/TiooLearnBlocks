@@ -30,8 +30,7 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
   }, [trigger, objectiveIndex]);
 
   const handleSetOptionData = (e: any, index: number) => {
-    const value = e.target.value;
-    if (!value) return;
+    const value = e.target.value ?? "";
 
     let max = 0;
     inputRefs.current.forEach((input) => {
@@ -81,7 +80,7 @@ const FlashcardObjectivesInputs: FC<Props> = ({ manager }) => {
                 ref={(el) => (inputRefs.current[i] = el)}
                 className="border border-black p-2 rounded text-center z-[5000] relative objInputHandleImage"
                 type="text"
-                defaultValue={option.content}
+                value={option.content}
                 onChange={(e) => handleSetOptionData(e, i)}
                 style={{ width: maxWidth === 0 ? 100 : maxWidth }}
                 onLoad={(e: any) => resizeInputWidth(e.target)}

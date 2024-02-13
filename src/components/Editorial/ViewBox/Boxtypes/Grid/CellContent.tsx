@@ -130,7 +130,7 @@ const CellContent: FC<Props> = ({
     if (selectedFile) {
       //const imageUrl = URL.createObjectURL(selectedFile);
       //setPreviewImage(imageUrl);
-      const url = await uploadFile(473, selectedFile);
+      const url = await uploadFile(475, selectedFile);
       data.objects &&
         data.objects.map((object: any) => {
           if (matchCellCoords(object.coords)) {

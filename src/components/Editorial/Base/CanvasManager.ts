@@ -1,10 +1,13 @@
 import { ComponentBaseDataInterface } from "components/interface";
-import {
-  DataGroupInterface,
-  ManagerInterface,
-} from "./Manager";
+import { DataGroupInterface, ManagerInterface } from "./Manager";
 import { textComponentData } from "../ViewBox/Boxtypes/Text/handlers/dataHandler";
-
+import {
+  flashcardComponentData,
+  gridComponentData,
+  newImageComponentData,
+  sliderComponentData,
+  videoComponentData,
+} from "../ViewBox/dataHandler";
 
 const DataGroup: DataGroupInterface = {
   data: {},
@@ -107,9 +110,9 @@ class Canvas implements CanvasInterface {
     const activeComponent = this.manager.activeComponent;
     if (activeComponent) {
       activeSlide[activeComponent.data.index] = {
-        canvas : true, // Indicate data is from canvas version
+        canvas: true, // Indicate data is from canvas version
         ...activeSlide[activeComponent.data.index],
-        ...activeComponent.data
+        ...activeComponent.data,
       };
       slides[this.manager.manager.slideManager.activeSlide] = activeSlide;
       this.manager.manager.slideManager.slides = slides;
@@ -132,8 +135,8 @@ export interface CanvasManagerInterface {
   getComponentIndex: Function;
   getComponentData: Function;
   activeComponentElement: Function;
-  componentDataHandlers : {[key : string] : Function};
-  createComponent : Function;
+  componentDataHandlers: { [key: string]: Function };
+  createComponent: Function;
 }
 
 // More improvements coming
@@ -142,7 +145,7 @@ export class CanvasManager implements CanvasManagerInterface {
   canvas: CanvasInterface;
   activeComponent: DataGroupInterface = DataGroup;
   activeSlide?: ComponentBaseDataInterface[];
-  componentDataHandlers : {[key : string] : Function} = {};
+  componentDataHandlers: { [key: string]: Function } = {};
 
   constructor(manager: ManagerInterface) {
     this.manager = manager;
@@ -184,16 +187,24 @@ export class CanvasManager implements CanvasManagerInterface {
     }
   }
 
-  registerComponentDataHandlers () {
+  registerComponentDataHandlers() {
     this.componentDataHandlers = {
-      "Text" : textComponentData
+      Text: textComponentData,
+      Image: newImageComponentData,
+      Video: videoComponentData,
+      Grid: gridComponentData,
+      // "Multi Choice",
+      Flashcards: flashcardComponentData,
+      // "Dual Choice",
+      Slider: sliderComponentData,
+      // "Sequence",
     };
   }
 
-  createComponent (componentName : string, id : string) {
+  createComponent(componentName: string, id: string) {
     return {
       ...this.componentDataHandlers[componentName](),
-      ...{ id }
+      ...{ id },
     };
   }
 }
