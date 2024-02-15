@@ -24,9 +24,9 @@ const Grid: FC<GridProps> = ({ id, manager, viewBoxSize }) => {
   );
 
   useEffect(() => {
-    const rawData = manager.canvasManager.getComponentData(id);
+    // optimize this
+    const rawData = manager.canvasManager.activeComponent.data;
     rawData.size !== undefined && setData(rawData);
-    console.log(data);
   }, [manager.canvasManager.activeComponent.data]);
 
   return (

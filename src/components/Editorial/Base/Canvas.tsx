@@ -59,7 +59,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
     manager.canvasManager.setActiveComponent(id);
     //manager.canvasManager.canvas.functions.saveActiveComponentData();
     manager.setState("rightSidebarState", true);
-    manager.setState("overlayActive", false);
+    id !== activeId && manager.setState("overlayActive", false);
   };
 
   const updateSlideComponents = (components: any[]) => {
