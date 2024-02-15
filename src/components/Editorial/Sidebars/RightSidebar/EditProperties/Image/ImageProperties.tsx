@@ -10,6 +10,7 @@ import ImageObjective from "components/Editorial/Sidebars/RightSidebar/EditPrope
 import ImageSubjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ImageSubjective";
 import { handleSetOptionIndex } from "provider/feedbackSlice";
 import { useSelector } from "react-redux";
+import { OverlayActiveState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
   manager: ManagerInterface;
@@ -29,7 +30,7 @@ const ImageProperties: FC<Props> = ({ manager }) => {
   const overlayActive = manager.states.overlayActive;
 
   const handleSwitchOverlay = () => {
-    toggleOverlay();
+    manager.setState("overlayActive", (prev: OverlayActiveState) => !prev);
   };
 
   useEffect(() => {
@@ -54,7 +55,11 @@ const ImageProperties: FC<Props> = ({ manager }) => {
           <div className="flex justify-between items-center my-4">
             <p className="text-[14px]">Overlay</p>
             <a href="javascript:void(0)">
-              <Switch {...label} onChange={handleSwitchOverlay} />
+              <Switch
+                {...label}
+                onChange={handleSwitchOverlay}
+                checked={overlayActive}
+              />
             </a>
           </div>
 
