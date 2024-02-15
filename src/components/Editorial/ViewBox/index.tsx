@@ -109,7 +109,6 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
       <Resizable
         width={viewBoxSize.width}
         height={viewBoxSize.height}
-        minConstraints={[280, height]}
         onResize={onResize}
         resizeHandles={
           isEditable && activeId === id
