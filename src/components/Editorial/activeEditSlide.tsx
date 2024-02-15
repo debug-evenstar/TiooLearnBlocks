@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import {
   LessonSlideInterface,
   LessonSlideScope,
@@ -30,18 +30,21 @@ const ActiveEditSlide: FC<Props> = ({
   const [previewSlide, setPreviewSlide] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
+  const previewRef = useRef(null);
+
   const RenderPreview : FC<{slide : any}> = ({slide}) => {
     return (
       <>
         {slide.map((component: ComponentBaseDataInterface, index: number) => {
           const Component = loadComponent(component);
+          const viewArea = { width : document.body.clientWidth, height : document.body.clientHeight };
           return component.layout 
             ? (
                 <LayoutComponent layout={component.layout}>
-                    <Component key={index} data={component} slide={SlideScope} />
+                    <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>
                 </LayoutComponent>
               ) 
-            : <Component key={index} data={component} slide={SlideScope} />;
+            : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
         })}
       </>
     );

@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import {
   LessonSlideInterface,
   LessonSlideScope,
@@ -27,6 +27,14 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
     manager.setState("activeViewBox", "");
   };
 
+  const refsById = useMemo(() => {
+		const refs : any = {}
+		slides.forEach((slide : any, index : number) => {
+			refs[index.toString()] = React.createRef()
+		})
+		return refs
+	}, [slides])
+
   return (
     <div className="bg-white shadow relative w-full max-w-[20%] overflow-auto mb-20  pl-[33px] pr-[20px] overflow-y-auto  scrollbar">
       <h2 className="text-center pt-[35px] text-base text-[#87909E] font-normal">
@@ -38,6 +46,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             className="relative h-[208px] border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100"
             onClick={() => handleChangeSlide(index)}
             key={index}
+            ref={refsById[index.toString()]}
           >
             <p className="absolute text-[#030036BD] text-sm -top-1 -left-[14px]">
               {index + 1}
@@ -47,12 +56,15 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
               {item.map(
                 (component: ComponentBaseDataInterface, index: number) => {
                   const Component = loadComponent(component);
+                  const containerElement = refsById[index.toString()]?.current;
+                  const viewArea = containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null;
                   return component.layout ? (
                     <LayoutComponent layout={component.layout}>
                       <Component
                         key={index}
                         data={component}
                         slide={SlideScope}
+                        viewArea={viewArea}
                       />
                     </LayoutComponent>
                   ) : (

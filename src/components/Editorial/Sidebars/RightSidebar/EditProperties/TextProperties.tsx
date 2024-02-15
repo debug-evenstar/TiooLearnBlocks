@@ -77,6 +77,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
   const handleChangeTextSize = (size: string) => {
     setTextSize(size);
     toggleTextStyle(size, "font-size");
+    
   };
 
   const handleChangeTextSpacing = (spacing: string) => {

@@ -19,6 +19,9 @@ const checkersForToggleWrapper = (
 
     if (styleType === "font-size") {
       element.style.fontSize = style + "px";
+      const canvasView = document.getElementById("editorial-canvas")?.clientWidth as number;
+      element.setAttribute("data-type", 'text');
+      element.setAttribute("data-container-pixel" , canvasView.toString());
     }
     if (styleType === "spacing") {
       element.style.lineHeight = style + "px";

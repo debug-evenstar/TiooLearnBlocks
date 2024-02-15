@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { TextComponentProps, formatTextContent } from "./handler";
+import { TextComponentProps, buildTextData, formatTextContent } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
 import { TextFields } from "../extensions/TextFields";
 
@@ -8,6 +8,7 @@ const TextComponent: FC<TextComponentProps> = ({
   data,
   slide,
   altHeaderStyle,
+  viewArea
 }) => {
   const [processed, setProcessed] = useState<any[]>([]);
 
@@ -51,6 +52,16 @@ const TextComponent: FC<TextComponentProps> = ({
     return true;
   };
 
+  const parseStyles = () => {
+    // Expandable
+    const textStyle = `
+        ${isHeading || slide.parent ? "text-center" : "text-left"}
+        text-font
+        ${styles?.fontSize ? "text-[" + styles.fontSize + "]" : ""}
+      `;
+    return textStyle;
+  };
+
   useEffect(() => {
     if (data.content.includes("<*-") && data.content.includes("-*>")) {
       setIsHeading(() => true);
@@ -90,15 +101,7 @@ const TextComponent: FC<TextComponentProps> = ({
     // console.log(slide);
   }, [formatted, data.content, slide]);
 
-  const parseStyles = () => {
-    // Expandable
-    const textStyle = `
-        ${isHeading || slide.parent ? "text-center" : "text-left"}
-        text-font
-        ${styles?.fontSize ? "text-[" + styles.fontSize + "]" : ""}
-      `;
-    return textStyle;
-  };
+
 
   return (
     <>
@@ -106,8 +109,7 @@ const TextComponent: FC<TextComponentProps> = ({
         {
         data.canvas 
         ? (<span
-            className="text-font"
-            dangerouslySetInnerHTML={{ __html: ` ${data.content} ` }}
+            dangerouslySetInnerHTML={{ __html: ` ${buildTextData(data.content, viewArea)} ` }}
           />)
         
         : processed.map((item, index) =>

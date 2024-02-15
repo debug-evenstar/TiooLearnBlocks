@@ -103,13 +103,14 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
       {slideComponents.map((item) => {
         const nodeRef: any = createRef();
         const handleStop = (event: any, data: any) => {
+          // Offset behaviour changed at some point
           const layout = setComponentLayout(
             manager.canvasManager.canvas.functions?.getCanvasSize(),
             {
               ...manager.canvasManager.getComponentData(item.id).layout,
               position: {
-                xAxis: { offset: data.x + loadPosition(item).x },
-                yAxis: { offset: data.y + loadPosition(item).y },
+                xAxis: { offset: data.x },
+                yAxis: { offset: data.y },
               },
             }
           );
