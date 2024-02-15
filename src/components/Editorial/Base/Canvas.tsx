@@ -49,9 +49,6 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
     manager.setState("rightSidebarState", (prev: RightSidebarState) => {
       return !prev;
     });
-    manager.setState("overlayActive", (prev: OverlayActiveState) => {
-      return !prev;
-    });
   };
 
   const handleClickedViewbox = (id: string) => {
