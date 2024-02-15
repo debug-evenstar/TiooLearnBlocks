@@ -2,11 +2,7 @@ import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { CanvasMedia } from "components/Editorial/interfaces";
 import React, { FC, createRef, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
-import {
-  imageComponentData,
-  toggleWrapperSize,
-  uploadFile,
-} from "./handler";
+import { imageComponentData, toggleWrapperSize, uploadFile } from "./handler";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
@@ -137,7 +133,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   return (
     <div
       className={`relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center ${
-        overlayActive ? "" : "handle"
+        overlayActive ? "cursor-pointer" : "handle"
       }`}
     >
       <UploadIcon
@@ -182,7 +178,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
                     padding: "0.05rem",
                   }}
                 >
-                  <input
+                  <textarea
                     className="w-full h-full p-1.5 inputHandle"
                     placeholder={`Input ${index + 1}`}
                   />
