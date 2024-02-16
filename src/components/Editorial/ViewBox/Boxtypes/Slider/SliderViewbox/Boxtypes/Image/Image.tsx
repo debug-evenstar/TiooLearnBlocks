@@ -45,11 +45,10 @@ const Image: FC<CanvasMedia> = ({
     if (!e.target.files) return;
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      //const imageUrl = URL.createObjectURL(selectedFile);
-      //setPreviewImage(imageUrl);
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setPreviewImage(imageUrl);
       const url = await uploadFile(473, selectedFile);
       setPreviewImage(url);
-      console.log(url, "url");
       manager.canvasManager.canvas.functions.updateSliderImageURL(
         url,
         currIndex
@@ -137,7 +136,7 @@ const Image: FC<CanvasMedia> = ({
           : dimensions
       )
     );
-    console.log(inputBoxDimensions[boxIndex], "die");
+ 
   };
 
   const handleClickedInput = (input: any, index: number) => {

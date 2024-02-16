@@ -60,7 +60,6 @@ const CellContent: FC<Props> = ({
 
   const handleSetAsStartOrEnd = (type: "start" | "end") => {
     data[type] = `${rowIndex}x${colIndex}`;
-    console.log(data);
   };
 
   const handleChangeCellColor = (color: ColorResult) => {
@@ -138,7 +137,6 @@ const CellContent: FC<Props> = ({
             manager.setState("trigger", (prev: TriggerState) => !prev);
           }
         });
-      console.log(url, "url");
     }
   };
 
@@ -165,7 +163,6 @@ const CellContent: FC<Props> = ({
 
   useEffect(() => {
     const rawData = manager.canvasManager.activeComponent.data;
-    console.log(rawData, "updated it in cell content");
     rawData.size !== undefined && setData(rawData);
     rawData.objects &&
       rawData.objects.map((object: any) => {

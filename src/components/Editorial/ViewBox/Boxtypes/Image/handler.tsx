@@ -51,7 +51,6 @@ export const uploadFile = async (lessonId: number, file: File) => {
 
     if (!data.error) {
       const url = data.data[0];
-      console.log(data, "data");
       return url;
     } else {
       console.error("Upload failed:", data.error);

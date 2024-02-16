@@ -114,7 +114,9 @@ class Canvas implements CanvasInterface {
         ...activeSlide[activeComponent.data.index],
         ...activeComponent.data,
       };
+      // Updating active slide on the slide level as well as the canvas level
       slides[this.manager.manager.slideManager.activeSlide] = activeSlide;
+      this.manager.activeSlide = activeSlide;
       this.manager.manager.slideManager.slides = slides;
       this.manager.manager.slideManager.handleSlidesUpdate(slides);
     }
@@ -159,6 +161,7 @@ export class CanvasManager implements CanvasManagerInterface {
       const componentIndexInSlide: number = this.activeSlide.findIndex(
         (data: any) => data.id === id
       );
+      this.activeComponent.data = {};
       this.activeComponent.data.index = componentIndexInSlide;
     }
   }

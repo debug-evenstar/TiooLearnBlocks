@@ -19,7 +19,6 @@ const GridObjectivesInputs: FC<Props> = ({ manager }) => {
 
   useEffect(() => {
     setButtons(data);
-    console.log(data, "the data for buttons");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 

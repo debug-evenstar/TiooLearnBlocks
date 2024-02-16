@@ -30,8 +30,6 @@ const ActiveEditSlide: FC<Props> = ({
   const [previewSlide, setPreviewSlide] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  const previewRef = useRef(null);
-
   const RenderPreview : FC<{slide : any}> = ({slide}) => {
     return (
       <>

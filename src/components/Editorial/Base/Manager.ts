@@ -528,10 +528,6 @@ class Manager implements ManagerInterface {
 
     if (type && type === "Overlay") {
       if (this.canvasManager.activeComponent.data?.extensions) {
-        console.log(
-          this.canvasManager.activeComponent.data?.extensions,
-          "from overlay"
-        );
         this.canvasManager.activeComponent.data.extensions[
           index
         ].question[0].options = data;

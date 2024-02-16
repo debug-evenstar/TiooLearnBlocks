@@ -27,12 +27,12 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     if (!e.target.files) return;
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      //const imageUrl = URL.createObjectURL(selectedFile);
-      //setPreviewImage(imageUrl);
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setPreviewImage(imageUrl);
       const url = await uploadFile(473, selectedFile);
       setPreviewImage(url);
-      manager.canvasManager.canvas.functions.updateActiveComponentData(
-        imageComponentData(url)
+      manager.canvasManager.canvas.updateActiveComponentData(
+        imageComponentData({url})
       );
     }
   };
@@ -47,6 +47,8 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const handleUpload = async (files: FileList) => {
     const file = files[0];
     if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
       const url = await uploadFile(473, file);
       setPreviewImage(url);
       manager.canvasManager.canvas.functions.updateActiveComponentData(

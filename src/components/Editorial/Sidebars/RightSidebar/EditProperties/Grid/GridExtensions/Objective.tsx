@@ -174,8 +174,6 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
       const url = await uploadFile(473, selectedFile);
       buttonsData.buttons.options[index].url = url;
       manager.setState("trigger", (prev: any) => !prev);
-
-      console.log(buttonsData.buttons.options, "url");
     }
   };
 

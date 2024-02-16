@@ -32,14 +32,14 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
   const viewBoxRef = useRef<HTMLDivElement | null>(null);
 
   const updateComponentLayout = (width: number, height: number) => {
-    manager.canvasManager.activeComponent.data.layout = setComponentLayout(
-      manager.canvasManager.canvas.functions?.getCanvasSize(),
+    const layout = setComponentLayout(
+      manager.canvasManager.canvas.getCanvasSize(),
       {
         ...manager.canvasManager.getComponentData(id).layout,
         size: { width, height },
       }
     );
-    manager.canvasManager.canvas.functions.saveActiveComponentData();
+    manager.canvasManager.canvas.updateActiveComponentData({layout});
   };
 
   const onResize = (event: any, { node, size, handle }: any) => {

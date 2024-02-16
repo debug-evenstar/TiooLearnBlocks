@@ -24,10 +24,10 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
       );
       updateSlideComponents([...slideComponents, initializeComponent]);
       // Question the importance of this
-      manager.canvasManager.updateActiveSlide([
-        ...(manager.canvasManager.activeSlide ?? []),
-        initializeComponent,
-      ]);
+      // manager.canvasManager.updateActiveSlide([
+      //   ...(manager.canvasManager.activeSlide ?? []),
+      //   initializeComponent,
+      // ]);
       manager.canvasManager.setActiveComponent(itemId);
       manager.setState("activeViewBox", itemId);
     }
@@ -52,9 +52,9 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
   };
 
   const handleClickedViewbox = (id: string) => {
-    manager.setState("activeViewBox", id);
     manager.canvasManager.setActiveComponent(id);
-    //manager.canvasManager.canvas.functions.saveActiveComponentData();
+    manager.setState("activeViewBox", id);
+    // manager.canvasManager.canvas.functions.saveActiveComponentData();
     manager.setState("rightSidebarState", true);
     id !== activeId && manager.setState("overlayActive", false);
   };
@@ -78,14 +78,13 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
   useEffect(() => {
     const parsedSlides =
       manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
-    console.log(parsedSlides);
     manager.canvasManager && setSlideComponents(parsedSlides);
     manager.canvasManager.updateActiveSlide(parsedSlides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideData]);
 
   useEffect(() => {
-    console.log(manager.canvasManager.getComponentData(activeId));
+    // console.log(manager.canvasManager.getComponentData(activeId));
     // manager.canvasManager.canvas.updateActiveComponentData(
     //   manager.canvasManager.getComponentData(activeId)
     // );
@@ -101,6 +100,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
       {slideComponents.map((item) => {
         const nodeRef: any = createRef();
         const handleStop = (event: any, data: any) => {
+          manager.canvasManager.setActiveComponent(item.id);
           // Offset behaviour changed at some point
           const layout = setComponentLayout(
             manager.canvasManager.canvas.functions?.getCanvasSize(),
@@ -114,10 +114,11 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
           );
           // Only update if position has changed
           if (data.x !== 0 || data.y !== 0) {
-            manager.slideManager.saveComponentData(
-              manager.canvasManager.getComponentIndex(item.id),
-              { layout }
-            );
+            // manager.slideManager.saveComponentData(
+            //   manager.canvasManager.getComponentIndex(item.id),
+            //   { layout }
+            // );
+            manager.canvasManager.canvas.updateActiveComponentData({layout});
           }
         };
 

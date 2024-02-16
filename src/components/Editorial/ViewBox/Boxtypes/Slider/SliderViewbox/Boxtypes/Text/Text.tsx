@@ -194,7 +194,7 @@ const Text: FC<CanvasText> = ({
         manager.setState("noTextInViewbox", false);
       }
     }
-    console.log(manager.states.noTextInViewbox, "text or not");
+
   }, [textValue]);
 
   return (

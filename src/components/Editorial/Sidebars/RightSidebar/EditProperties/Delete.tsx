@@ -29,7 +29,6 @@ const Delete: FC<Props> = ({ id, manager }) => {
       (component: any, index: number) => index !== itemIndex
     );
     manager.setState("slideComponents", updatedComponents);
-    console.log(manager.states.slideComponents, updatedSlide, "delete clicked");
     // const filteredItems = dragItems.filter((item) => item.id !== id);
   };
 
