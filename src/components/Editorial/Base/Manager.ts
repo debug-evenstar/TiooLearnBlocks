@@ -23,12 +23,13 @@ import {
   TriggerState,
 } from "./StateInterface";
 import { textComponentData } from "../ViewBox/Boxtypes/Text/handlers/dataHandler";
+import { percentValue } from "utilities/maths";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
   layoutData?: ComponentLayoutInterface
 ) => {
-  const percentValue = (value: number, base: number) => (value / base) * 100;
+
   return {
     ...(layoutData?.position
       ? {

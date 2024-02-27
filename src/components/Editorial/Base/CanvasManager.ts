@@ -161,7 +161,8 @@ export class CanvasManager implements CanvasManagerInterface {
       const componentIndexInSlide: number = this.activeSlide.findIndex(
         (data: any) => data.id === id
       );
-      this.activeComponent.data = {};
+      this.activeComponent.data = componentIndexInSlide !== this.activeComponent.data.index 
+        ? {} : this.activeComponent.data;
       this.activeComponent.data.index = componentIndexInSlide;
     }
   }

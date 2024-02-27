@@ -9,6 +9,7 @@ import Canvas from "./Base/Canvas";
 import { ManagerInterface } from "./Base/Manager";
 import LayoutComponent from "components/LayoutBox";
 import { ComponentBaseDataInterface } from "components/interface";
+import PreviewLayout from "./Preview/PreviewLayout";
 
 interface Props {
   active: number;
@@ -29,22 +30,27 @@ const ActiveEditSlide: FC<Props> = ({
   const [previewSlideData, setPreviewSlideData] = useState<any[]>([]);
   const [previewSlide, setPreviewSlide] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-
-  const RenderPreview : FC<{slide : any}> = ({slide}) => {
+  const RenderPreview : FC<{
+    slide : any,
+    subject : string,
+    title : string
+  }> = ({slide, subject, title}) => {
     return (
-      <>
-        {slide.map((component: ComponentBaseDataInterface, index: number) => {
-          const Component = loadComponent(component);
-          const viewArea = { width : document.body.clientWidth, height : document.body.clientHeight };
-          return component.layout 
-            ? (
-                <LayoutComponent layout={component.layout}>
-                    <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>
-                </LayoutComponent>
-              ) 
-            : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
-        })}
-      </>
+      <PreviewLayout subject={subject} title={title}>
+        <>
+          {slide.map((component: ComponentBaseDataInterface, index: number) => {
+            const Component = loadComponent(component);
+            const viewArea = { width : document.body.clientWidth, height : document.body.clientHeight };
+            return component.layout
+                ? (
+                    <LayoutComponent layout={component.layout}>
+                      <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>
+                    </LayoutComponent>
+                )
+                : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
+          })}
+        </>
+      </PreviewLayout>
     );
   };
 
@@ -85,7 +91,7 @@ const ActiveEditSlide: FC<Props> = ({
           <Canvas slideData={activeSlide} manager={manager} />
         </div>
       </div>
-      <div className="w-full mb-[40px] mt-[44px] bottom-0 z-50 relative px-[30px]">
+      <div className="w-full mb-[40px] mt-[44px] bottom-0 z-45 relative px-[30px]">
         <div className="w-full h-[50px] flex items-center justify-between">
           <div
             className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold"
@@ -106,7 +112,11 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0 bg-preview">
           <div className="w-full h-full bgcomps text-white bg-cover px-5 flex justify-center items-center fw-600">
             <div className="w-full h-full">
-              <RenderPreview slide={previewSlideData}/>
+              <RenderPreview
+                  slide={previewSlideData}
+                  subject={data.Subject?.naming}
+                  title={data.topic}
+              />
             </div>
           </div>
           <FaTimes

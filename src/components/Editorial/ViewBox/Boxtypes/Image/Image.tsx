@@ -7,6 +7,9 @@ import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { OptionsDataState } from "components/Editorial/Base/StateInterface";
+import {createInputOverlay} from "./InputOverlay/handler";
+import {percentValue} from "../../../../../utilities/maths";
+import OverlayInput from "./InputOverlay";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const activeId = manager.states.activeViewBox;
@@ -21,6 +24,8 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
 
   const extensions: any[] =
     manager.canvasManager.activeComponent.data?.extensions;
+
+    
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -75,7 +80,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   useEffect(() => {
     const imageComponentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
-    imageComponentData && setData(imageComponentData.content);
+    imageComponentData && setData(imageComponentData);
     setPreviewImage(imageComponentData.url);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -86,17 +91,10 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       const imageRect = imageRef.current.getBoundingClientRect();
       const relativeX = pageX - imageRect.left;
       const relativeY = pageY - imageRect.top;
-      const newInput = {
-        type: "input",
-        x: relativeX,
-        y: relativeY,
-        width: 200,
-        height: 5,
-        question: [],
-      };
+      const newInput = createInputOverlay(relativeX, relativeY, imageRef.current);
       const newList = [...inputList, newInput];
       setInputList(newList);
-      manager.canvasManager.canvas.functions.updateActiveComponentData(
+      manager.canvasManager.canvas.updateActiveComponentData(
         imageComponentData({
           extensions: newList,
         })
@@ -104,23 +102,67 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       manager.setState("trigger", (prev: any) => !prev);
       setInputBoxDimensions((prevList) => [
         ...prevList,
-        { width: 200, height: 40 },
+        newInput.layout
       ]);
     }
   };
+  
+  const updateInputLayout = (boxIndex : number, layout : any) => {
+    setInputBoxDimensions((prevDimensions) =>
+        prevDimensions.map((dimensions, index) =>
+            index === boxIndex
+                ? {
+                  ...dimensions,
+                  size : layout.size ?? dimensions.size,
+                  position : layout.position ?? dimensions.position
+                }
+                : dimensions
+        )
+    );
+
+    const newList = inputList;
+    newList[boxIndex] = {
+      ...inputList[boxIndex],
+      layout : {
+        ...inputList[boxIndex].layout,
+        size :layout.size ?? inputList[boxIndex].layout.size,
+        position :layout.position ?? inputList[boxIndex].layout.position
+      }
+    };
+
+    manager.canvasManager.canvas.updateActiveComponentData(
+        imageComponentData({
+          extensions: newList,
+        })
+    );
+  }
 
   const onResize = (
     event: any,
     { node, size, handle }: any,
     boxIndex: number
   ) => {
-    setInputBoxDimensions((prevDimensions) =>
-      prevDimensions.map((dimensions, index) =>
-        index === boxIndex
-          ? { ...dimensions, width: size.width, height: size.height }
-          : dimensions
-      )
-    );
+
+    const updatedSize = {
+      width : size.width,
+      height : size.height,
+      widthPercent : percentValue(size.width, data.layout.size.width),
+      heightPercent : percentValue(size.height, data.layout.size.height)
+    };
+
+    updateInputLayout(boxIndex, { size : updatedSize});
+  };
+
+  const onDrag = (
+      event: any,
+      dragData : any,
+      boxIndex: number
+  ) => {
+    const updatedPosition = {
+      xAxis : { offset : dragData.x, offsetPercent : percentValue(dragData.x, data.layout.size.width)},
+      yAxis : { offset : dragData.y, offsetPercent : percentValue(dragData.y, data.layout.size.height)}
+    };
+    updateInputLayout(boxIndex, { position : updatedPosition});
   };
 
   const handleClickedInput = (input: any, index: number) => {
@@ -150,43 +192,9 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         extensions.length > 0 &&
         extensions.map((input, index) => {
           const nodeRef: any = createRef();
-
+          console.log(data);
           return (
-            <Draggable
-              key={index}
-              axis="both"
-              nodeRef={nodeRef}
-              handle=".inputHandle"
-            >
-              <Resizable
-                width={inputBoxDimensions[index].width}
-                height={inputBoxDimensions[index].height}
-                minConstraints={[20, 5]}
-                onResize={(event: any, { node, size, handle }: any) =>
-                  onResize(event, { node, size, handle }, index)
-                }
-                resizeHandles={["s", "e", "se"]}
-              >
-                <div
-                  onClick={() => handleClickedInput(input, index)}
-                  ref={nodeRef}
-                  style={{
-                    width: inputBoxDimensions[index].width + "px",
-                    height: inputBoxDimensions[index].height + "px",
-                    position: "absolute",
-                    top: `${input.y}px`,
-                    left: `${input.x}px`,
-                    zIndex: "200",
-                    padding: "0.05rem",
-                  }}
-                >
-                  <textarea
-                    className="w-full h-full p-1.5 inputHandle"
-                    placeholder={`Input ${index + 1}`}
-                  />
-                </div>
-              </Resizable>
-            </Draggable>
+            <OverlayInput index={index} ref={nodeRef} data={input} onResize={onResize} onClick={handleClickedInput} onDrag={onDrag} parentLayout={data?.layout ?? {}}/>
           );
         })}
 
