@@ -20,10 +20,10 @@ export const renderInputsAsOverlay = (inputs : any[], slide : LessonSlideInterfa
     if(inputs.length) {
         const inputArray : any[] = [];
         const answers = inputs.map((input:any) => input.value);
+        console.log(inputs);
         const fieldManager = TextFields([], slide, answers, []);
         inputs.forEach((input, index) => {
             const field = fieldManager.formatTextField(index);
-            console.log(input);
             const fieldPosition : React.CSSProperties = {
                 position : "absolute",
                 top : input.layout.position.yAxis.offsetPercent + "%",

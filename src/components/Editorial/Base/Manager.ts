@@ -761,6 +761,10 @@ class Manager implements ManagerInterface {
             .question[0].options[optionIndex],
           answer,
         };
+        if (answer) {
+          this.canvasManager.activeComponent.data.extensions[index].question[0].answers = [this.canvasManager.activeComponent.data.extensions[index]
+              .question[0].options[optionIndex].content];
+        }
       }
       this.canvasManager.canvas.saveActiveComponentData();
       return;
