@@ -6,6 +6,7 @@ import { LessonPage } from "pages";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { useDispatch } from "react-redux";
 import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+import NewLessonPage from "pages/newLessonPage";
 
 function App() {
   const datas = {
@@ -88,7 +89,7 @@ function App() {
         <Route
           path="/comp"
           element={
-            <LessonPage
+            <NewLessonPage
               title="Mollllle"
               subject="dsd"
               className="Class 2"
