@@ -8,98 +8,98 @@ import { useDispatch } from "react-redux";
 import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 
 function App() {
-  const datas = {
-    topic: "Change of things",
-    term: "1",
-    lessons: [
-      {
-        id: 1,
-        topic: "The Environment",
-      },
-      {
-        id: 2,
-        topic: "Air in Motion",
-      },
-      {
-        id: 3,
-        topic: "Basics of Living things",
-      },
-      {
-        id: 4,
-        topic: "Animals",
-      },
-      {
-        id: 5,
-        topic: "Soil",
-      },
-    ],
-  };
+    const datas = {
+        topic: "Change of things",
+        term: "1",
+        lessons: [
+            {
+                id: 1,
+                topic: "The Environment",
+            },
+            {
+                id: 2,
+                topic: "Air in Motion",
+            },
+            {
+                id: 3,
+                topic: "Basics of Living things",
+            },
+            {
+                id: 4,
+                topic: "Animals",
+            },
+            {
+                id: 5,
+                topic: "Soil",
+            },
+        ],
+    };
 
-  const [saving, setSaving] = useState(false);
-  const [date, setDate] = useState<any>();
-  const fetchLess = async () => {
-    try {
-      const response = await fetch(
-        "https://beta.api.hellotioo.com/open/lesson/475/template"
-      );
+    const [saving, setSaving] = useState(false);
+    const [data, setData] = useState<any>();
+    const fetchLess = async () => {
+        try {
+            const response = await fetch(
+                "http://localhost:8085/open/lesson/2/template"
+            );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-      const data = await response.json();
+            const data = await response.json();
 
-      if (!data.error) {
-        setDate(data.data);
-      } else {
-        console.log(data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  useEffect(() => {
-    fetchLess();
-  }, []);
+            if (!data.error) {
+                setData(data.data);
+            } else {
+                console.log(data);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    useEffect(() => {
+        fetchLess();
+    }, []);
 
-  const handleBack = () => {
-    // navigate('/')
-  };
+    const handleBack = () => {
+        // navigate('/')
+    };
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Editorial
-              data={date}
-              back={handleBack}
-              user={{
-                name: "John",
-                auth: "",
-                base: "",
-              }}
-              lessonList={datas}
-              refetch={fetchLess}
-            />
-          }
-        />
-        <Route
-          path="/comp"
-          element={
-            <LessonPage
-              title="Mollllle"
-              subject="dsd"
-              className="Class 2"
-              slides={[]}
-              back={() => {}}
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <Editorial
+                            data={data}
+                            back={handleBack}
+                            user={{
+                                name: "John",
+                                auth: "",
+                                base: "",
+                            }}
+                            lessonList={datas}
+                            refetch={fetchLess}
+                        />
+                    }
+                />
+                <Route
+                    path="/comp"
+                    element={
+                        <LessonPage
+                            title="Mollllle"
+                            subject="dsd"
+                            className="Class 2"
+                            slides={[]}
+                            back={() => {}}
+                        />
+                    }
+                />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;

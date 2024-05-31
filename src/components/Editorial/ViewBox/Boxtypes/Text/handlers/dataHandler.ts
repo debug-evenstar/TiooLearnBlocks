@@ -10,6 +10,7 @@ export const textComponentData = (
   content: string = "",
   tips: string[] = []
 ) => {
+  content = wrapTextData(content);
   const data: TextComponentDataInterface = {
     component: "Text",
     content,
@@ -19,3 +20,13 @@ export const textComponentData = (
   };
   return data;
 };
+
+
+export const wrapTextData = (
+  content : string
+) => {
+  if (content[0] != "<") {
+    return `<span class='main outline-none'>${content}</span>`;
+  }
+  return content;
+}
