@@ -28,6 +28,7 @@ const EditorialComp: FC<Props> = ({
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [showEdit, setShowEdit] = useState(false);
   const [overlay, setOverlay] = useState(false);
+
   const [manager, setManager] = useState(
     CreateManager(
       data && data.LessonSlides.map((slide: any) => slide.slide_data)

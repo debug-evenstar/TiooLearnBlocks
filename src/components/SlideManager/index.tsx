@@ -217,7 +217,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
     return (
       <div
         style={containerStyle}
-        className="w-full h-full mx-auto my-0 py-[10px] flex flex-col no-scrollbar"
+        className="w-full h-full  mx-auto my-0 py-[10px] flex flex-col no-scrollbar"
       >
         {/* {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
           {activeSlide.map((component: any, index: number) => {
@@ -229,7 +229,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         {SlideScope && (
           <CarouselEffect activeSlideIndex={activeSlideIndex}>
             {slides.map((slide: any, slideIndex: number) => (
-              <div key={slideIndex} className="w-auto h-auto grid gap-y-4 my-5">
+              <div key={slideIndex} className="w-auto h-auto  grid gap-y-4 my-5">
                 {slide.map((component: any, index: number) => {
                   const Component = loadComponent(component);
                   return (

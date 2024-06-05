@@ -121,7 +121,7 @@ const TextComponent: FC<TextComponentProps> = ({
             />
           ) : (
             <span className="text-font" key={index}>
-              (item)
+              {item}
             </span>
           )
         )}
