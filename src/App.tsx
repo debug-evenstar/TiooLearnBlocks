@@ -17,46 +17,47 @@ import {
 } from "./constants/library";
 
 function App() {
-  const datas = {
-    topic: "Change of things",
-    term: "1",
-    lessons: [
-      {
-        id: 1,
-        topic: "The Environment",
-      },
-      {
-        id: 2,
-        topic: "Air in Motion",
-      },
-      {
-        id: 3,
-        topic: "Basics of Living things",
-      },
-      {
-        id: 4,
-        topic: "Animals",
-      },
-      {
-        id: 5,
-        topic: "Soil",
-      },
-    ],
-  };
+    const datas = {
+        topic: "Change of things",
+        term: "1",
+        lessons: [
+            {
+                id: 1,
+                topic: "The Environment",
+            },
+            {
+                id: 2,
+                topic: "Air in Motion",
+            },
+            {
+                id: 3,
+                topic: "Basics of Living things",
+            },
+            {
+                id: 4,
+                topic: "Animals",
+            },
+            {
+                id: 5,
+                topic: "Soil",
+            },
+        ],
+    };
 
-  const [saving, setSaving] = useState(false);
-  const [date, setDate] = useState<any>();
-  const fetchLess = async () => {
-    try {
-      const response = await fetch(
-        "https://api.hellotioo.com/open/lesson/1/template"
-      );
+    const [saving, setSaving] = useState(false);
+    const [data, setData] = useState<any>();
+    const [ date,setDate ] = useState<any>();
+    const fetchLess = async () => {
+        try {
+            const response = await fetch(
+                "http://localhost:8085/open/lesson/2/template"
+            );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-      const data = await response.json();
+            const data = await response.json();
 
       if (!data.error) {
         setDate(data.data);

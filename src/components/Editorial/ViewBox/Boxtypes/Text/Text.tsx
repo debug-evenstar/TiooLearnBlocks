@@ -5,216 +5,241 @@ import { registerFunctions } from "./handlers/registerFuncsHandlers";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
 import { handleTextChange, removePx } from "./handlers/generalHandler";
 import {
-  CurrentStylesState,
-  OptionsDataState,
+    CurrentStylesState,
+    OptionsDataState,
 } from "components/Editorial/Base/StateInterface";
 
 const Text: FC<CanvasText> = ({
-  id,
-  viewBoxRef,
-  manager,
-  isEditable,
-  setIsEditable,
-}) => {
-  const activeId = manager.states.activeViewBox;
-  const showOptionsBox = manager.states.showOptionsBox;
-  const trigger = manager.states.trigger;
-  const { identifier, objectiveIndex } = manager.states.optionsData;
-
-  const setIdentifier = (identifier: string) => {
-    manager.setState("optionsData", (prev: any) => {
-      return { ...prev, ...{ identifier } };
-    });
-  };
-
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const editableRef = useRef<HTMLDivElement>(null);
-
-  const [textareaRowCount, setTextareaRowCount] = useState(1);
-  const [textValue, setTextValue] = useState("");
-
-  const getRange = () => {
-    const selection = window.getSelection();
-    if (!selection) return;
-    if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      return range;
-    }
-  };
-
-  const onChange = (event: any) =>
-    handleTextChange(
-      event,
-      manager,
-      textValue,
-      setTextValue,
-      viewBoxRef,
-      textareaRowCount,
-      setTextareaRowCount
-    );
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const viewBox = viewBoxRef.current;
-      const textArea = textareaRef.current;
-      if (viewBox && !viewBox.contains(event.target as Node) && textArea) {
-        setIsEditable(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEditable, viewBoxRef, textareaRef]);
-
-  useEffect(() => {
-    if (id === activeId) {
-      registerFunctions(
-        manager,
-        getRange,
-        editableRef,
-        viewBoxRef,
-        setIdentifier,
-        id
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [manager, viewBoxRef, activeId]);
-
-  useEffect(() => {
-    const textComponentData =
-      manager.canvasManager.canvas.functions.getComponentData(id);
-    textComponentData && setTextValue(textComponentData.content);
-  }, [id]);
-
-  useEffect(() => {
-    resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount);
-  }, [
-    textareaRowCount,
-    viewBoxRef,
     id,
-    textValue,
-    editableRef.current?.innerHTML,
-  ]);
+    viewBoxRef,
+    manager,
+    isEditable,
+    setIsEditable,
+}) => {
+    const activeId = manager.states.activeViewBox;
+    const showOptionsBox = manager.states.showOptionsBox;
+    const trigger = manager.states.trigger;
+    const { identifier, objectiveIndex } = manager.states.optionsData;
 
-  useEffect(() => {
-    if (id === activeId) setIsEditable(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const setIdentifier = (identifier: string) => {
+        manager.setState("optionsData", (prev: any) => {
+            return { ...prev, ...{ identifier } };
+        });
+    };
 
-  const coreData = manager.canvasManager.activeComponent.data;
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    const editableRef = useRef<HTMLDivElement>(null);
 
-  const handleClickedObjective = (
-    e: MouseEvent,
-    options: string[],
-    index: number
-  ) => {
-    e.stopPropagation();
-    handleSetObjectiveIndex(index);
-    console.log("clicked");
-    manager.setState("showOptionsBox", (prev: any) => !prev);
-    manager.setState("optionsData", (prev: OptionsDataState) => ({
-      ...prev,
-      ...({
-        wrongOption: options[0],
-        correctOption: options[1],
-      } as OptionsDataState),
-    }));
-  };
+    const [textareaRowCount, setTextareaRowCount] = useState(1);
+    const [textValue, setTextValue] = useState("");
 
-  useEffect(() => {
-    if (!coreData || !coreData.questions || id !== activeId) return;
+    const getRange = () => {
+        const selection = window.getSelection();
+        if (!selection) return;
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            return range;
+        }
+    };
 
-    coreData?.questions
-      ?.filter((question: any) => question?.identifier?.includes(id))
-      .forEach((question: any, i: number) => {
-        const inputElement = document.getElementById(question.identifier);
+    const onChange = (event: any) =>
+        handleTextChange(
+            event,
+            manager,
+            textValue,
+            setTextValue,
+            viewBoxRef,
+            textareaRowCount,
+            setTextareaRowCount
+        );
 
-        if (inputElement) {
-          if (question.type === "OBJECTIVE") {
-            inputElement.addEventListener("click", (e) =>
-              handleClickedObjective(e, question.options, i)
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const viewBox = viewBoxRef.current;
+            const textArea = textareaRef.current;
+            if (
+                viewBox &&
+                !viewBox.contains(event.target as Node) &&
+                textArea
+            ) {
+                setIsEditable(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isEditable, viewBoxRef, textareaRef]);
+
+    useEffect(() => {
+        if (id === activeId) {
+            registerFunctions(
+                manager,
+                getRange,
+                editableRef,
+                viewBoxRef,
+                setIdentifier,
+                id
             );
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [manager, viewBoxRef, activeId]);
 
-            return () => {
-              if (inputElement) {
-                inputElement.removeEventListener("click", (e) =>
-                  handleClickedObjective(e, question.options, i)
+    useEffect(() => {
+        const textComponentData =
+            manager.canvasManager.canvas.functions.getComponentData(id);
+        console.log(textComponentData);
+        textComponentData &&
+            textComponentData.content &&
+            setTextValue(textComponentData.content);
+    }, [id]);
+
+    useEffect(() => {
+        resizeBox(
+            editableRef,
+            viewBoxRef,
+            textareaRowCount,
+            setTextareaRowCount
+        );
+    }, [
+        textareaRowCount,
+        viewBoxRef,
+        id,
+        textValue,
+        editableRef.current?.innerHTML,
+    ]);
+
+    useEffect(() => {
+        if (id === activeId) setIsEditable(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const coreData = manager.canvasManager.activeComponent.data;
+
+    const handleClickedObjective = (
+        e: MouseEvent,
+        options: string[],
+        index: number
+    ) => {
+        e.stopPropagation();
+        handleSetObjectiveIndex(index);
+        console.log("clicked");
+        manager.setState("showOptionsBox", (prev: any) => !prev);
+        manager.setState("optionsData", (prev: OptionsDataState) => ({
+            ...prev,
+            ...({
+                wrongOption: options[0],
+                correctOption: options[1],
+            } as OptionsDataState),
+        }));
+    };
+
+    useEffect(() => {
+        if (!coreData || !coreData.questions || id !== activeId) return;
+
+        coreData?.questions
+            ?.filter((question: any) => question?.identifier?.includes(id))
+            .forEach((question: any, i: number) => {
+                const inputElement = document.getElementById(
+                    question.identifier
                 );
-              }
-            };
-          }
+
+                if (inputElement) {
+                    if (question.type === "OBJECTIVE") {
+                        inputElement.addEventListener("click", (e) =>
+                            handleClickedObjective(e, question.options, i)
+                        );
+
+                        return () => {
+                            if (inputElement) {
+                                inputElement.removeEventListener("click", (e) =>
+                                    handleClickedObjective(
+                                        e,
+                                        question.options,
+                                        i
+                                    )
+                                );
+                            }
+                        };
+                    }
+                }
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [coreData, identifier, trigger]);
+
+    useEffect(() => {
+        const handleSelectionChange = () => {
+            const range = getRange();
+            if (range) {
+                const element = range.commonAncestorContainer.parentElement;
+
+                if (element) {
+                    const styles = getComputedStyle(element);
+
+                    manager.setState(
+                        "currentStyles",
+                        (prev: CurrentStylesState) => {
+                            return {
+                                ...prev,
+                                ...({
+                                    textColor: styles.color,
+                                    textSize: removePx(styles.fontSize),
+                                    textSpacing: removePx(styles.lineHeight),
+                                    font: styles.fontFamily,
+                                } as CurrentStylesState),
+                            };
+                        }
+                    );
+                }
+                //setSelectedText(selectedText);
+            } else {
+                return;
+            }
+        };
+
+        document.addEventListener("selectionchange", handleSelectionChange);
+
+        return () => {
+            document.removeEventListener(
+                "selectionchange",
+                handleSelectionChange
+            );
+        };
+    }, []);
+
+    useEffect(() => {
+        if (textValue) {
+            if (textValue && textValue.length < 1) {
+                manager.setState("noTextInViewbox", true);
+            } else {
+                manager.setState("noTextInViewbox", false);
+            }
         }
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coreData, identifier, trigger]);
+        console.log(manager.states.noTextInViewbox, "text or not");
+    }, [textValue]);
 
-  useEffect(() => {
-    const handleSelectionChange = () => {
-      const range = getRange();
-      if (range) {
-        const element = range.commonAncestorContainer.parentElement;
-
-        if (element) {
-          const styles = getComputedStyle(element);
-
-          manager.setState("currentStyles", (prev: CurrentStylesState) => {
-            return {
-              ...prev,
-              ...({
-                textColor: styles.color,
-                textSize: removePx(styles.fontSize),
-                textSpacing: removePx(styles.lineHeight),
-                font: styles.fontFamily,
-              } as CurrentStylesState),
-            };
-          });
-        }
-        //setSelectedText(selectedText);
-      } else {
-        return;
-      }
-    };
-
-    document.addEventListener("selectionchange", handleSelectionChange);
-
-    return () => {
-      document.removeEventListener("selectionchange", handleSelectionChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (textValue) {
-      if (textValue && textValue.length < 1) {
-        manager.setState("noTextInViewbox", true);
-      } else {
-        manager.setState("noTextInViewbox", false);
-      }
-    }
-    console.log(manager.states.noTextInViewbox, "text or not");
-  }, [textValue]);
-
-  return (
-    <div
-      id={id}
-      className={`flex flex-col justify-between p-1 h-full w-full relative ${
-        !isEditable && "handle cursor-move"
-      }`}
-      onDoubleClick={() => setIsEditable(!isEditable)}
-    >
-      <div
-        ref={editableRef}
-        className={`w-full h-full outline-none resize-none no-scrollbar ${
-          !isEditable && "cursor-move"
-        }`}
-        contentEditable={isEditable}
-        onInput={(e) => onChange(e)}
-        onChange={(e) => onChange(e)}
-        dangerouslySetInnerHTML={{ __html: textValue }}
-      />
-    </div>
-  );
+    return (
+        <div
+            id={id}
+            className={`flex flex-col justify-between p-1 h-full w-full relative ${
+                !isEditable && "handle cursor-move"
+            }`}
+            onDoubleClick={() => setIsEditable(!isEditable)}
+        >
+            <div
+                ref={editableRef}
+                className={`w-full h-full outline-none resize-none no-scrollbar ${
+                    !isEditable && "cursor-move"
+                }`}
+                contentEditable={isEditable}
+                onInput={(e) => onChange(e)}
+                onChange={(e) => onChange(e)}
+                dangerouslySetInnerHTML={{ __html: textValue }}
+            />
+            <div></div>
+        </div>
+    );
 };
 
 export default Text;

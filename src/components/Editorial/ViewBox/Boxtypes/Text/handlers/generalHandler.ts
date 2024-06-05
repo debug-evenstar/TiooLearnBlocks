@@ -1,5 +1,15 @@
 import { ManagerInterface } from "components/Editorial/Base/Manager";
-import { textComponentData } from "./dataHandler";
+import { textComponentData, wrapTextData } from "./dataHandler";
+
+
+export const getRange = () => {
+  const selection = window.getSelection();
+  if (!selection) return;
+  if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      return range;
+  }
+};
 
 export const handleTextChange = (
   e: any,
@@ -17,7 +27,9 @@ export const handleTextChange = (
     textContentValue = textValue;
   }
 
-  setTextValue(textContentValue);
+
+  // Temporarily remove to rely on component rerender
+  // setTextValue(textContentValue);
 
   // Using innerHTML to avoid conflict with Text value on content update...
   manager.canvasManager.canvas.functions.updateActiveComponentData(
@@ -82,3 +94,35 @@ export const checkAndReturnOptions = (type: "OBJECTIVE" | "SUBJECTIVE") => {
 export function removePx(value: string): string {
   return Number.parseFloat(value.slice(0, -2)).toString();
 }
+
+
+// export const toggleTextStyle = (
+//   style: string = "",
+//   styleType: string
+// ) => {
+//   const range = getRange();
+
+//   if (
+//       range &&
+//       range.toString() &&
+//       range.startOffset !== range.endOffset
+//   ) {
+//       toggleWrapper(range, "span", style, styleType, "");
+//       const active =
+//           manager.canvasManager.activeComponentElement()?.children[0];
+//       console.log(active);
+//       manager.canvasManager.canvas.functions.updateActiveComponentData(
+//           textComponentData(active.innerHTML)
+//       );
+//       return;
+//   }
+
+//   const element = editableRef.current;
+//   if (!element) return;
+//   toggleWrapperStyle(element, style, styleType);
+//   const active =
+//       manager.canvasManager.activeComponentElement()?.children[0];
+//   manager.canvasManager.canvas.functions.updateActiveComponentData(
+//       textComponentData(active.innerHTML)
+//   );
+// };

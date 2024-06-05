@@ -167,7 +167,7 @@ export const formatTextContent = (content: string) => {
 };
 
 // To be expanded
-export const buildTextData = (data: string, viewArea : any) => {
+export const buildTextData = (data: string, viewArea: any) => {
     const abstractBody = document.createElement("body");
     abstractBody.innerHTML = data;
     const textNodeList = abstractBody.querySelectorAll("*[data-type=text]");

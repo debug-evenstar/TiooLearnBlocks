@@ -5,55 +5,69 @@ import { FiEdit } from "react-icons/fi";
 import RenderComponent from "pages/renderComp";
 
 interface Props {
-  handlePrevious: () => void;
-  showEdit: () => void;
-  parsedSlides: any;
-  slideManagerRef: any;
-  setActiveSlide: (val: number) => void;
-  handleContinue: () => void;
-  setCanProceed: (val: boolean) => void;
+    handlePrevious: () => void;
+    showEdit: () => void;
+    parsedSlides: any;
+    slideManagerRef: any;
+    setActiveSlide: (val: number) => void;
+    handleContinue: () => void;
+    setCanProceed: (val: boolean) => void;
 }
 const EditorialSlideView: FC<Props> = ({
-  handlePrevious,
-  showEdit,
-  parsedSlides,
-  slideManagerRef,
-  setActiveSlide,
-  handleContinue,
-  setCanProceed,
+    handlePrevious,
+    showEdit,
+    parsedSlides,
+    slideManagerRef,
+    setActiveSlide,
+    handleContinue,
+    setCanProceed,
 }) => {
-  return (
-    <div className="w-full relative overflow-y-auto flex items-center gap-3">
-      <div
-        className="w-[54px] h-[54px] rounded-full border-[1.5px] shadow-lg cursor-pointer border-[#87909E] flex items-center justify-center"
-        onClick={handlePrevious}
-      >
-        <FaAngleLeft className="text-[#87909E] text-[20px]" />
-      </div>
-      <div className=" w-10/12 relative mx-auto border-[0.92px] min-h-[440px] text-black rounded-[9px] shadow-md">
-        <div className="absolute z-10 top-5 right-5">
-          <FiEdit
-            className="text-[#87909E] text-xl cursor-pointer"
-            onClick={showEdit}
-          />
+    const hasSlides = () => parsedSlides.length !== 0;
+    return (
+        <div className="w-full relative overflow-y-auto flex items-center gap-3">
+            {hasSlides() && (
+                <div
+                    className="w-[54px] h-[54px] rounded-full border-[1.5px] shadow-lg cursor-pointer border-[#87909E] flex items-center justify-center"
+                    onClick={handlePrevious}
+                >
+                    <FaAngleLeft className="text-[#87909E] text-[20px]" />
+                </div>
+            )}
+            <div className=" w-10/12 relative mx-auto border-[0.92px] min-h-[440px] text-black rounded-[9px] shadow-md">
+                {hasSlides() && (
+                    <div className="absolute z-10 top-5 right-5">
+                        <FiEdit
+                            className="text-[#87909E] text-xl cursor-pointer"
+                            onClick={showEdit}
+                        />
+                    </div>
+                )}
+                {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}
+                <SlideManager
+                    lessonSlides={parsedSlides}
+                    ref={slideManagerRef}
+                    canProceed={(val: boolean) => setCanProceed(val)}
+                    handleFeedback={() => false}
+                    updateActiveSlide={(i: number) => setActiveSlide(i)}
+                />
+                {!hasSlides() && (
+                    <div className="w-full min-h-[400px] flex items-center justify-center">
+                        <p className="text-[#87909E] text-[22px]">
+                            No slides added yet
+                        </p>
+                    </div>
+                )}
+            </div>
+            {hasSlides() && (
+                <div
+                    className="w-[54px] h-[54px] rounded-full border-[1.5px] shadow-lg cursor-pointer border-[#87909E] flex items-center justify-center"
+                    onClick={handleContinue}
+                >
+                    <FaAngleRight className="text-[#87909E] text-[20px]" />
+                </div>
+            )}
         </div>
-        {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}
-        <SlideManager
-          lessonSlides={parsedSlides}
-          ref={slideManagerRef}
-          canProceed={(val: boolean) => setCanProceed(val)}
-          handleFeedback={() => false}
-          updateActiveSlide={(i: number) => setActiveSlide(i)}
-        />
-      </div>
-      <div
-        className="w-[54px] h-[54px] rounded-full border-[1.5px] shadow-lg cursor-pointer border-[#87909E] flex items-center justify-center"
-        onClick={handleContinue}
-      >
-        <FaAngleRight className="text-[#87909E] text-[20px]" />
-      </div>
-    </div>
-  );
+    );
 };
 
 export default EditorialSlideView;
