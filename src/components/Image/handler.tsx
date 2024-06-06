@@ -26,10 +26,11 @@ export const renderInputsAsOverlay = (inputs : any[], slide : LessonSlideInterfa
             console.log(input);
             const fieldPosition : React.CSSProperties = {
                 position : "absolute",
-                top : input.layout.position.yAxis.offsetPercent + "%",
-                left : input.layout.position.xAxis.offsetPercent + "%",
-                ...( input.layout?.size?.widthPercent ? {width : input.layout?.size?.widthPercent + "%"} : {}),
-                ...( input.layout?.size?.heightPercent ? {height : input.layout?.size?.heightPercent + "%"} : {})
+                
+                // top : input.layout.position.yAxis.offsetPercent + "%",
+                // left : input.layout.position.xAxis.offsetPercent + "%",
+                // ...( input.layout?.size?.widthPercent ? {width : input.layout?.size?.widthPercent + "%"} : {}),
+                // ...( input.layout?.size?.heightPercent ? {height : input.layout?.size?.heightPercent + "%"} : {})
             };
             inputArray.push( 
                 <div style={fieldPosition}>

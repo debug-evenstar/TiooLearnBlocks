@@ -128,6 +128,7 @@ class LessonSlide implements LessonSlideInterface {
       this.progress < this.answers.length
     ) {
       let answer: any = this.answers[this.progress];
+
       // Check if text exists in field
       const field = this.textFields[this.progress];
       const fieldElement = document.getElementById(
@@ -155,6 +156,7 @@ class LessonSlide implements LessonSlideInterface {
       fieldElement.style.width = `${setWidth}px`;
 
       formatTextColor(fieldElement, true);
+
       if (fieldElement.value === answer) {
         this.verifySubjectiveAnswer(
           fieldElement.value,
@@ -237,7 +239,7 @@ class LessonSlide implements LessonSlideInterface {
     if (this.answers && this.progress < this.answers.length) {
       const answer = this.answers[this.progress];
       if (answer === value) {
-        this.textFields && this.textFields[this.progress].fill(value);
+        this.textFields && this.textFields[this.progress]?.fill(value);
         this.triggerFeedback(this.SUCCESS_FEEDBACK);
         this.progress++;
         if (this.progress === this.answers.length) {

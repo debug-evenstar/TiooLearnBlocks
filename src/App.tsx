@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import RenderComponent from "pages/renderComp";
+// import RenderComponent from "pages/renderComp";
 import { Editorial } from "components";
-import { LessonPage } from "pages";
-import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { useDispatch } from "react-redux";
-import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
+// import { LessonPage } from "pages";
+// import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
+// import { useDispatch } from "react-redux";
+// import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import NewLessonPage from "pages/newLessonPage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { slides } from "dump/can";
+
+import {
+  textbook,
+  getTextbookChapters,
+  getChapterLessons,
+} from "./constants/library";
 
 function App() {
     const datas = {
@@ -38,6 +46,7 @@ function App() {
 
     const [saving, setSaving] = useState(false);
     const [data, setData] = useState<any>();
+    const [ date,setDate ] = useState<any>();
     const fetchLess = async () => {
         try {
             const response = await fetch(
@@ -50,57 +59,91 @@ function App() {
 
             const data = await response.json();
 
-            if (!data.error) {
-                setData(data.data);
-            } else {
-                console.log(data);
+      if (!data.error) {
+        setDate(data.data);
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLess();
+  }, []);
+
+  const layout = {
+    position: {
+      xAxis: {
+        offset: 0,
+        offsetPercent: 0,
+      },
+      yAxis: {},
+    },
+    size: {
+      width: 0,
+      widhtPercent: 0,
+      height: 0,
+      heightPercent: 0,
+    },
+  };
+
+  const lessons: any[] = [];
+  let chapters: any[] = getTextbookChapters().map((chapter) => ({
+    ...chapter,
+    lessons: getChapterLessons(chapter.id).map(
+      (lesson: any) => ({
+        ...lesson,
+        slides: slides.map((slide: any) => [
+          ...slide.map((comp: any) => ({
+            ...comp,
+            layout: layout,
+          })),
+        ]),
+      })
+    ),
+  }));
+
+  const handleBack = () => {
+    // navigate('/')
+  };
+
+  return (
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Editorial
+                data={date}
+                back={handleBack}
+                user={{
+                  name: "John",
+                  auth: "",
+                  base: "",
+                }}
+                lessonList={datas}
+                refetch={fetchLess}
+              />
             }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
-    useEffect(() => {
-        fetchLess();
-    }, []);
-
-    const handleBack = () => {
-        // navigate('/')
-    };
-
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route
-                    path="/"
-                    element={
-                        <Editorial
-                            data={data}
-                            back={handleBack}
-                            user={{
-                                name: "John",
-                                auth: "",
-                                base: "",
-                            }}
-                            lessonList={datas}
-                            refetch={fetchLess}
-                        />
-                    }
-                />
-                <Route
-                    path="/comp"
-                    element={
-                        <NewLessonPage
-                            title="Mollllle"
-                            subject="dsd"
-                            className="Class 2"
-                            slides={[]}
-                            back={() => {}}
-                        />
-                    }
-                />
-            </Routes>
-        </BrowserRouter>
-    );
+          />
+          <Route
+            path="/comp"
+            element={
+              <NewLessonPage
+                textbook={textbook}
+                chapters={chapters}
+                lessons={lessons}
+                back={() => console.log("back")}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
