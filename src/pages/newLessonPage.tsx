@@ -1,26 +1,22 @@
-import LessonSlide from 'components/NewLesson/LessonSlide';
-import LessonLayout from 'layouts/LessonLayout';
-import React, { FC } from 'react'
+import LessonSlides from "components/NewLesson/LessonSlides";
+import LessonLayout from "layouts/LessonLayout";
+import React, { FC } from "react";
+
+import { slides } from "dump/can";
 
 interface NewLessonPageProps {
-  subject?: string;
-  className?: string;
-  title?: string;
-  slides?: any[];
+  textbook: any;
+  chapters: any;
+  lessons: any;
   back?: Function;
 }
 const NewLessonPage: FC<NewLessonPageProps> = ({
-  // subject,
-  // className,
-  // title,
-  // slides,
-  // back,
+  textbook,
+  chapters,
+  lessons,
+  back,
 }) => {
-  return (
-    <LessonLayout>
-      <LessonSlide/>
-    </LessonLayout>
-  );
-}
+  return <LessonLayout {...{ back, textbook, chapters, lessons }} />;
+};
 
 export default NewLessonPage;

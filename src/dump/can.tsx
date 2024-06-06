@@ -195,7 +195,7 @@
     // };
 
 
-const slides = [
+export const slides = [
     // [
     //     {
     //         content:

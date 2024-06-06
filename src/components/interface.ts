@@ -5,10 +5,12 @@ export interface PositionProperties {
   offsetPercent?: number;
 }
 
+
 export interface ComponentPositionInterface {
   xAxis: PositionProperties;
   yAxis: PositionProperties;
 }
+
 
 export interface ComponentSizeInterface {
   width: number;
@@ -51,6 +53,8 @@ export interface QuestionInterface {
   options?: OptionInterface[][] | OptionInterface[];
   answers?: string[][] | string[];
 }
+
+
 
 export interface ComponentBaseDataInterface {
   id?: string; // For managing canvas id
