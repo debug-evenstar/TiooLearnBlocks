@@ -77,7 +77,7 @@ const EditorialComp: FC<Props> = ({
 
     useEffect(() => {
         manager.slideManager.handleSlidesUpdate = (updatedSlides: any[]) => {
-            setParseSlides(updatedSlides);
+            setParseSlides([...updatedSlides]);
         };
     }, [manager, manager.slideManager]);
 

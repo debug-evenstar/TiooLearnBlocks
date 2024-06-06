@@ -38,7 +38,7 @@ export class SlideManager implements SlideManagerInterface {
   }
 
   addNewSlide() {
-    const modifiedSlides = [...this.slides, []];
+    const modifiedSlides = [...(this.slides ?? []), []];
     this.slides = modifiedSlides;
     this.handleSlidesUpdate(modifiedSlides);
   }
@@ -48,9 +48,10 @@ export class SlideManager implements SlideManagerInterface {
       const currentSlides = deepClone(this.slides);
       this.manager.canvasManager.canvas.history.push(currentSlides);
     }
+
     const currentComponentData = this.slides[this.activeSlide][index];
     this.slides[this.activeSlide][index] = {
-      ...currentComponentData,
+      ...(currentComponentData ?? {}),
       ...data,
     };
     this.handleSlidesUpdate(this.slides);

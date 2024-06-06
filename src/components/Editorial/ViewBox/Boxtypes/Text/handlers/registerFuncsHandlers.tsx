@@ -12,7 +12,7 @@ import {
     setObjandSubComponentData,
 } from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
 import { checkAndReturnOptions } from "./generalHandler";
-import { textComponentData } from "./dataHandler";
+import { textComponentData } from "../handler";
 
 export const registerFunctions = (
     manager: ManagerInterface,

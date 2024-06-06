@@ -1,13 +1,13 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { resizeBox } from "./handlers/wrapperHandler";
 import { registerFunctions } from "./handlers/registerFuncsHandlers";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
-import { handleTextChange, removePx } from "./handlers/generalHandler";
+import {  getRange, handleTextChange, resizeBox, removePx, setState } from "./handler";
 import {
     CurrentStylesState,
     OptionsDataState,
 } from "components/Editorial/Base/StateInterface";
+import { text } from "stream/consumers";
 
 const Text: FC<CanvasText> = ({
     id,
@@ -33,25 +33,10 @@ const Text: FC<CanvasText> = ({
     const [textareaRowCount, setTextareaRowCount] = useState(1);
     const [textValue, setTextValue] = useState("");
 
-    const getRange = () => {
-        const selection = window.getSelection();
-        if (!selection) return;
-        if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-            return range;
-        }
-    };
-
-    const onChange = (event: any) =>
-        handleTextChange(
-            event,
-            manager,
-            textValue,
-            setTextValue,
-            viewBoxRef,
-            textareaRowCount,
-            setTextareaRowCount
-        );
+    const onChange = (event: any) => {
+        handleTextChange(event, manager );
+        resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount, /*event*/);
+    }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -72,24 +57,10 @@ const Text: FC<CanvasText> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEditable, viewBoxRef, textareaRef]);
 
-    useEffect(() => {
-        if (id === activeId) {
-            registerFunctions(
-                manager,
-                getRange,
-                editableRef,
-                viewBoxRef,
-                setIdentifier,
-                id
-            );
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [manager, viewBoxRef, activeId]);
 
     useEffect(() => {
         const textComponentData =
-            manager.canvasManager.canvas.functions.getComponentData(id);
-        console.log(textComponentData);
+            manager.canvasManager.canvas.getComponentData(id);
         textComponentData &&
             textComponentData.content &&
             setTextValue(textComponentData.content);
@@ -111,7 +82,10 @@ const Text: FC<CanvasText> = ({
     ]);
 
     useEffect(() => {
-        if (id === activeId) setIsEditable(true);
+        if (id === activeId) {
+            setIsEditable(true);
+            setState("editableTextRef", editableRef);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -124,7 +98,6 @@ const Text: FC<CanvasText> = ({
     ) => {
         e.stopPropagation();
         handleSetObjectiveIndex(index);
-        console.log("clicked");
         manager.setState("showOptionsBox", (prev: any) => !prev);
         manager.setState("optionsData", (prev: OptionsDataState) => ({
             ...prev,
@@ -216,8 +189,8 @@ const Text: FC<CanvasText> = ({
                 manager.setState("noTextInViewbox", false);
             }
         }
-        console.log(manager.states.noTextInViewbox, "text or not");
     }, [textValue]);
+
 
     return (
         <div
@@ -237,7 +210,6 @@ const Text: FC<CanvasText> = ({
                 onChange={(e) => onChange(e)}
                 dangerouslySetInnerHTML={{ __html: textValue }}
             />
-            <div></div>
         </div>
     );
 };

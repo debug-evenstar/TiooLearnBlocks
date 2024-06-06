@@ -166,27 +166,33 @@ export const formatTextContent = (content: string) => {
     return handleFormatting(content);
 };
 
+const pixelDependentStyles = ["fontSize"];
+
 // To be expanded
 export const buildTextData = (data: string, viewArea: any) => {
     const abstractBody = document.createElement("body");
     abstractBody.innerHTML = data;
     const textNodeList = abstractBody.querySelectorAll("*[data-type=text]");
     textNodeList.forEach((node: Element | any) => {
-        // For parsing font-size
-        if (node.hasAttribute("data-container-pixel") && node.style?.fontSize) {
-            const fontSize: string = node.style?.fontSize;
-            const parseFontSize: number = Number.parseInt(
-                fontSize.replace("px", "")
-            );
-            const relativeContainerPixel = node.getAttribute(
-                "data-container-pixel"
-            ) as number;
-            if (viewArea) {
-                node.style.fontSize = `${
-                    (parseFontSize / relativeContainerPixel) * viewArea.width
-                }px`;
+        // For parsing pixel dependent styles
+        pixelDependentStyles.forEach((styleName : string) => {
+            if (node && node.hasAttribute("data-container-pixel") && node.style[styleName]) {
+                const style : string = node.style[styleName];
+                // Some work left here
+                const parseFontSize: number = Number.parseInt(
+                    style.replace("px", "")
+                );
+                const relativeContainerPixel = node.getAttribute(
+                    "data-container-pixel"
+                ) as number;
+                if (viewArea) {
+                    node.style[styleName] = `${
+                        (parseFontSize / relativeContainerPixel) * viewArea.width
+                    }px`;
+                }
             }
-        }
+        });
+
     });
     return abstractBody.innerHTML;
 };

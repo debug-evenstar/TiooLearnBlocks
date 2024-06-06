@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import RightSidebar from "../components/Editorial/Sidebars/RightSidebar/RightSidebar";
 import LeftSidebar from "../components/Editorial/LeftSidebar";

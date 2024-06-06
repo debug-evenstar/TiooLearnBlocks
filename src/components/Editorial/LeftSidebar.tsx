@@ -35,6 +35,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
 		return refs
 	}, [slides])
 
+
   return (
     <div className="bg-white shadow relative w-full max-w-[20%] overflow-auto mb-20  pl-[33px] pr-[20px] overflow-y-auto  scrollbar">
       <h2 className="text-center pt-[35px] text-base text-[#87909E] font-normal">
@@ -54,9 +55,10 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             <div className="absolute w-full h-full opacity-0 bg-gray-400 z-10"></div>
             <div className="text-preview relative z-0 shadow mb-5 p-2 py-3 h-[206px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
               {item.map(
-                (component: ComponentBaseDataInterface, index: number) => {
+                (component: ComponentBaseDataInterface, componentIndex: number) => {
                   const Component = loadComponent(component);
                   const containerElement = refsById[index.toString()]?.current;
+                  console.log(containerElement);
                   const viewArea = containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null;
                   return component.layout ? (
                     <LayoutComponent layout={component.layout}>

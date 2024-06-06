@@ -12,12 +12,11 @@ import { handleTextChange } from "./handlers/generalHandler";
 import ObjectivesInputs from "../../ObjAndSubInputs/ObjectivesInputs";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import { registerFunctions } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/registerFuncsHandlers";
-import { resizeBox } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/wrapperHandler";
+import { resizeBox, removePx } from "components/Editorial/ViewBox/Boxtypes/Text/handler";
 import {
   CurrentStylesState,
   OptionsDataState,
 } from "components/Editorial/Base/StateInterface";
-import { removePx } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/generalHandler";
 
 const Text: FC<CanvasText> = ({
   id,

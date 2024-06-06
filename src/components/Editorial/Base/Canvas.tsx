@@ -18,16 +18,20 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
     const existing = slideComponents.find((item) => item.id === itemId);
 
     if (!existing) {
+
       const initializeComponent = manager.canvasManager.createComponent(
         componentName,
         itemId
       );
-      updateSlideComponents([...slideComponents, initializeComponent]);
-      // Question the importance of this
+      const updated = [...slideComponents, initializeComponent];
+      updateSlideComponents(updated);
+      // FROM THIS
       // manager.canvasManager.updateActiveSlide([
       //   ...(manager.canvasManager.activeSlide ?? []),
       //   initializeComponent,
       // ]);
+      manager.canvasManager.updateActiveSlide(updated);
+      manager.canvasManager.updateSlides();
       manager.canvasManager.setActiveComponent(itemId);
       manager.setState("activeViewBox", itemId);
     }
@@ -62,7 +66,6 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
   const updateSlideComponents = (components: any[]) => {
     setSlideComponents(() => components);
     // Also update slide manager
-    manager.slideManager.slides[manager.slideManager.activeSlide] = components;
   };
 
   const loadPosition = (component: ComponentBaseDataInterface) => {
@@ -77,7 +80,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
 
   useEffect(() => {
     const parsedSlides =
-      manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
+      manager.canvasManager.canvas.parseSlideToCanvas(slideData);
     manager.canvasManager && setSlideComponents(parsedSlides);
     manager.canvasManager.updateActiveSlide(parsedSlides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
