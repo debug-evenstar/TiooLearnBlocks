@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionInterface } from "components/interface";
 import { handleSetFeedbackStatus } from "provider/feedbackSlice";
 import { handleSetCorrectOption } from "provider/optionsDataSlice";
@@ -6,9 +6,10 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import EmojiTextArea from "components/Editorial/ViewBox/Boxtypes/Text/EmojiTextArea";
+import { FeedbackState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   type: "OBJECTIVE" | "SUBJECTIVE";
   index: number;
 }
@@ -18,21 +19,13 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
   const incorrectRadio = useRef<HTMLInputElement | null>(null);
   const neutralRadio = useRef<HTMLInputElement | null>(null);
 
-  const selector: any = useSelector(handleSetCorrectOption);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-  };
+  const { objectiveIndex } = manager.states.optionsData;
 
-  const { optionIndex } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-  };
+  const { optionIndex } = manager.states.feedback;
 
   const [feedbackValue, setFeedbackValue] = useState("");
 
-  const dispatch = useDispatch();
-
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
   const option: OptionInterface =
     coreData.extensions[index]?.question[0].options[
       type === "OBJECTIVE" ? optionIndex : 0
@@ -49,18 +42,15 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
       optionIndex,
       "Overlay"
     );
-    dispatch(handleSetFeedbackStatus(false));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return { ...prev, ...({ status: false } as FeedbackState) };
+    });
   };
 
   const handleChangeType = (
     e: React.ChangeEvent<HTMLInputElement>,
     type: string
   ) => {
-    console.log(e.target.value, "checked");
-    if (e.target.value === "on") {
-      e.target.value = "off";
-      return;
-    }
     manager.canvasManager.canvas.functions.updateFeedbackType(
       type,
       index,
@@ -78,17 +68,17 @@ const OverlayFeedback: FC<Props> = ({ manager, type, index }) => {
     );
   };
 
-  useEffect(() => {
-    console.log("opened!");
-  }, []);
-
   return (
     <div className="w-fit h-fit min-w-[20rem] min-h-[22rem] bg-white border border-black absolute right-[200px] bottom-[50px] pb-4">
       <header className="flex justify-between items-center border-b border-black text-[12px] p-2">
         <p>Set Feedback</p>
         <RiCloseLine
           size={15}
-          onClick={() => dispatch(handleSetFeedbackStatus(false))}
+          onClick={() =>
+            manager.setState("feedback", (prev: FeedbackState) => {
+              return { ...prev, ...({ status: false } as FeedbackState) };
+            })
+          }
         />
       </header>
       <main className="flex flex-col gap-6 p-4 px-6">

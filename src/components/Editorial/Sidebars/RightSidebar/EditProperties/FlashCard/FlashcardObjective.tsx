@@ -4,7 +4,7 @@ import {
   RiDeleteBinLine,
   RiFeedbackLine,
 } from "react-icons/ri";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { useDispatch, useSelector } from "react-redux";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import {
@@ -15,143 +15,135 @@ import {
 } from "provider/optionsDataSlice";
 import { MdChatBubbleOutline } from "react-icons/md";
 import { ObjectiveItemProp } from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/interfaces";
-import { OptionInterface } from "components/interface";
+import { OptionInterface, QuestionInterface } from "components/interface";
+import FeedbackIcon from "FigmaIcons/FeedbackIcon";
+import ChatIcon from "FigmaIcons/ChatIcon";
+import {
+  handleSetFeedbackStatus,
+  handleSetFeedbackType,
+  handleSetOptionIndex,
+} from "provider/feedbackSlice";
+import { handleToggleTrigger } from "provider/triggerSlice";
+import FlashcardFeedback from "./FlashcardFeedback";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   index: number;
   data: any;
 }
 
 const FlashcardObjective: FC<Props> = ({ manager, index, data }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
-
-  const [questions, setQuestions] = useState<any[]>([]);
-  const replaceContent =
-    manager.canvasManager.activeComponent.functions?.replaceContent;
-
   const addQuestion =
     manager.canvasManager.canvas.functions.updateFlashcardQuestion;
 
-  const dispatch = useDispatch();
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(false);
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+
+  const cardsIndex = manager.canvasManager.activeComponent.data.index;
+  const questionData: QuestionInterface =
+    manager.canvasManager.activeComponent.data.components[cardsIndex].cards[
+      index
+    ].question;
+  const [question, setQuestion] = useState<QuestionInterface>();
+
+  useEffect(() => {
+    if (questionData && questionData.type === "OBJECTIVE") {
+      setQuestion(questionData);
+      setIsActive(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionData, trigger]);
 
   const handleSetObjective = () => {
-    console.log(questions, "in objective");
+    if (question?.identifier) return;
     //replaceContent(questions, "OBJECTIVE", component);
     addQuestion(
       {
         type: "OBJECTIVE",
         identifier: `Input ${index + 1}`,
-        options: ["", ""],
+        options: [
+          {
+            answer: false,
+            content: "",
+            feedback: {
+              type: "",
+              content: "",
+            },
+          },
+          {
+            answer: false,
+            content: "",
+            feedback: {
+              type: "",
+              content: "",
+            },
+          },
+        ],
         answers: [""],
-        feedbacks: [],
       },
       index
     );
-    setIsActive(true);
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetObjectiveIndex(index));
-    dispatch(refreshOptionsData());
-    console.log(data, "updated");
-  };
 
-  const handleClick = () => {
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData,
-      "changed data"
-    );
-    if (questions.length > 0) {
-      //replaceContent(questions, "OBJECTIVE", component);
-      setIsActive(true);
-      dispatch(handleToggleShowOptionBox());
-      dispatch(handleSetObjectiveIndex(questions.length));
-    }
-    dispatch(handleSetCorrectOption(""));
-    dispatch(handleSetWrongOption(""));
+    setIsActive(true);
+    manager.setState("showOptionsBox", (prev: any) => !prev);
+    manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: 0,
+    });
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
+    manager.setState("trigger", (prev: any) => !prev);
   };
 
   const handleDelete = (id: string, optionIndex: number) => {
-    setQuestions((prevQuestions) => {
-      // Find the question to update
-      const questionIndex = prevQuestions.findIndex(
-        (question) => question.identifier === id
-      );
+    // Find the question to update
 
-      if (questionIndex !== -1) {
-        const updatedQuestions = [...prevQuestions];
-        const updatedQuestion = {
-          ...updatedQuestions[questionIndex],
-          options: [
-            ...updatedQuestions[questionIndex].options.slice(0, optionIndex),
-            ...updatedQuestions[questionIndex].options.slice(optionIndex + 1),
-          ],
-        };
-        updatedQuestions[questionIndex] = updatedQuestion;
-        manager.canvasManager.activeComponent.functions.updateObjectiveData(
-          updatedQuestion,
-          questionIndex
-        );
-
-        return updatedQuestions;
-      } else {
-        return prevQuestions;
-      }
-    });
+    if (!question?.options) return;
+    const updatedQuestion = {
+      ...question,
+      options: [
+        ...question.options.slice(0, optionIndex),
+        ...question.options.slice(optionIndex + 1),
+      ],
+    };
+    manager.canvasManager.canvas.functions.deleteObjectiveOptions(
+      updatedQuestion.options,
+      0,
+      "Flashcard"
+    );
+    manager.setState("trigger", (prev: any) => !prev);
   };
 
-  useEffect(() => {
-    console.log(identifier, correctOption, wrongOption, " - Options");
-  }, [identifier]);
-
-  useEffect(() => {}, [coreData, identifier]);
-
   return (
-    <div className="my-1">
+    <div className="my-1 shadow-md">
       <div
         className="w-full flex justify-between items-center cursor-pointer"
         onClick={handleSetObjective}
       >
-        <p className="text-[13px]">
-          {isActive ? <b>Set Objective</b> : "Set Objective"}
-        </p>
+        <p className="text-[13px]">Set Objective</p>
       </div>
 
       {isActive && (
         <main className="w-full p-2">
-          <div
-            className="flex justify-between items-center pb-2"
-            onClick={handleClick}
-          >
-            <p className="text-[12px]">Add an objective</p>
-            <RiAddCircleLine size={"13px"} color="grey" />
-          </div>
-
-          <section>
-            {questions &&
-              questions?.map((obj: any, i: number) => {
-                if (!obj.identifier.includes(id)) return <></>;
-                return (
-                  <ObjectiveItem
-                    key={obj.identifier}
-                    objective={obj}
-                    index={i}
-                    data={coreData}
-                    handleDelete={handleDelete}
-                    manager={manager}
-                  />
-                );
-              })}
-          </section>
+          {question?.identifier && (
+            <ObjectiveItem
+              key={question.identifier}
+              objective={question}
+              index={index}
+              data={data}
+              handleDelete={handleDelete}
+              manager={manager}
+            />
+          )}
         </main>
       )}
     </div>
@@ -167,20 +159,61 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const [isActive, setIsActive] = useState(false);
-  const dispatch = useDispatch();
+  const { status: optionStatus, type } = manager.states.feedback;
+  const [isActive, setIsActive] = useState(true);
+  const [question, setQuestion] = useState<any>();
+  const [addedOption, setAddedOption] = useState(false);
 
-  const addOption = (data: string, optionIndex: number) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOption(
+  const cardsIndex = manager.canvasManager.activeComponent.data.index;
+  const coreData =
+    manager.canvasManager.activeComponent.data.components[cardsIndex].cards[
+      index
+    ].question;
+
+  useEffect(() => {
+    setQuestion(coreData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addedOption]);
+
+  const addOption = (data: OptionInterface) => {
+    manager.canvasManager.canvas.functions.updateObjectiveOptions(
       data,
       index,
-      optionIndex
+      "Flashcard"
     );
-    console.log("cliked");
+    setAddedOption(!addedOption);
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          optionIndex: question.options ? question.options.length : 0,
+        } as FeedbackState),
+      };
+    });
+  };
+
+  const deleteOption = (i: number) => {
+    handleDelete(objective.identifier, i);
+    setAddedOption(!addedOption);
+  };
+
+  const handleShowFeedback = (index: number) => {
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "OBJECTIVE",
+          optionIndex: index,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   const handleOpenObjective = () => {
-    dispatch(handleSetObjectiveIndex(index));
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     setIsActive(!isActive);
   };
 
@@ -191,37 +224,50 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
         onClick={handleOpenObjective}
       >
         <p className="text-[12px]">
-          {isActive ? <b>Objective {index + 1}</b> : `Objective ${index + 1}`}
+          {isActive ? <b>Objective</b> : `Objective`}
         </p>
       </div>
 
       {isActive && (
         <main className="w-full p-2">
-          {objective.options?.map((option: OptionInterface, i: any) => (
-            <div key={i}>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1">
-                  <MdChatBubbleOutline />
-                  <p className="text-[12px] my-2">{option.content}</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <RiFeedbackLine />
-                  <RiDeleteBinLine
-                    onClick={() => handleDelete(objective.identifier, i)}
-                  />
+          {question &&
+            question.options?.map((option: OptionInterface, i: any) => (
+              <div key={i}>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <ChatIcon />
+                    <p className="text-[12px] my-2 mr-2">{option.content}</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div onClick={() => handleShowFeedback(i)}>
+                      <FeedbackIcon />
+                    </div>
+                    <RiDeleteBinLine onClick={() => deleteOption(i)} />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
 
           <div
-            className="flex justify-between py-2 items-center"
-            onClick={() => addOption("", objective.options.length)}
+            className="flex justify-between py-2 items-center cursor-pointer"
+            onClick={() =>
+              addOption({
+                answer: false,
+                content: "",
+                feedback: {
+                  type: "",
+                  content: "",
+                },
+              })
+            }
           >
             <p className="text-[12px]">Add option</p>
             <RiAddCircleLine size={"13px"} color="grey" />
           </div>
         </main>
+      )}
+      {type === "OBJECTIVE" && optionStatus && (
+        <FlashcardFeedback manager={manager} type="OBJECTIVE" index={index} />
       )}
     </div>
   );

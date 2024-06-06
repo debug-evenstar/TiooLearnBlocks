@@ -2,8 +2,7 @@ import { BoldText } from "./formats/BoldText"
 import { AddTooltip } from "./formats/WithTooltip"
 
 export const FormatText = (data:string) => {
-    const text = BoldText(data)
-    console.log(text);
+    const text = BoldText(data);
     
     // const withTooltip = AddTooltip(text)
     return text

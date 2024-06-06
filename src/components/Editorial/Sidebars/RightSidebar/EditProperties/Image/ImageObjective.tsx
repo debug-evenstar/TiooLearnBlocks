@@ -4,7 +4,7 @@ import {
   RiDeleteBinLine,
   RiFeedbackLine,
 } from "react-icons/ri";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { useDispatch, useSelector } from "react-redux";
 import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import {
@@ -25,46 +25,41 @@ import {
   handleSetOptionIndex,
 } from "provider/feedbackSlice";
 import OverlayFeedback from "./OverlayFeedback";
+import { handleToggleTrigger } from "provider/triggerSlice";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   index: number;
   data: any;
 }
 
 const ImageObjective: FC<Props> = ({ manager, index, data }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-
   const addQuestion =
     manager.canvasManager.canvas.functions.updateImageQuestions;
 
-  const dispatch = useDispatch();
-  const { identifier, correctOption, wrongOption } = selector.payload
-    .optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(false);
   const questionData: QuestionInterface =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
   const [question, setQuestion] = useState<QuestionInterface>();
 
   useEffect(() => {
-    console.log(trigger, "changed");
     if (questionData && questionData.type === "OBJECTIVE") {
       setQuestion(questionData);
     }
-    console.log(data, "data extensions");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionData, trigger]);
 
   const handleSetObjective = () => {
     if (question?.identifier) return;
-    console.log(question, "in objective");
+
     //replaceContent(questions, "OBJECTIVE", component);
     addQuestion(
       {
@@ -94,19 +89,36 @@ const ImageObjective: FC<Props> = ({ manager, index, data }) => {
     );
 
     setIsActive(true);
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetObjectiveIndex(index));
-    dispatch(refreshOptionsData());
-    console.log(data, "updated");
+    manager.setState("showOptionsBox", (prev: any) => !prev);
+    manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: 0,
+    });
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
   };
 
   const handleDelete = (id: string, optionIndex: number) => {
-    console.log(id);
-  };
+    // Find the question to update
 
-  useEffect(() => {
-    console.log(identifier, correctOption, wrongOption, " - Options");
-  }, [identifier]);
+    if (!question?.options) return;
+    const updatedQuestion = {
+      ...question,
+      options: [
+        ...question.options.slice(0, optionIndex),
+        ...question.options.slice(optionIndex + 1),
+      ],
+    };
+    manager.canvasManager.canvas.functions.deleteObjectiveOptions(
+      updatedQuestion.options,
+      0,
+      "Overlay"
+    );
+    manager.setState("trigger", (prev: any) => !prev);
+  };
 
   return (
     <div className="my-1 shadow-md">
@@ -144,20 +156,13 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetFeedbackStatus);
-  const { status: optionStatus, type } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(true);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
 
   const coreData =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[index]
-      ?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[index]?.question[0];
 
   useEffect(() => {
     setQuestion(coreData);
@@ -165,35 +170,44 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
+    manager.canvasManager.canvas.functions.updateObjectiveOptions(
       data,
       index,
       "Overlay"
     );
     setAddedOption(!addedOption);
-    dispatch(
-      handleSetOptionIndex(question.options ? question.options.length : 0)
-    );
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData.questions,
-      "clicked"
-    );
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          optionIndex: question.options ? question.options.length : 0,
+        } as FeedbackState),
+      };
+    });
   };
 
   const deleteOption = (i: number) => {
-    console.log(i, " is the option's index.");
     handleDelete(objective.identifier, i);
     setAddedOption(!addedOption);
   };
 
   const handleShowFeedback = (index: number) => {
-    dispatch(handleSetFeedbackType("OBJECTIVE"));
-    dispatch(handleSetOptionIndex(index));
-    dispatch(handleSetFeedbackStatus(true));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "OBJECTIVE",
+          optionIndex: index,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   const handleOpenObjective = () => {
-    dispatch(handleSetObjectiveIndex(index));
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     setIsActive(!isActive);
   };
 
@@ -216,7 +230,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <ChatIcon />
-                    <p className="text-[12px] my-2">{option.content}</p>
+                    <p className="text-[12px] my-2 mr-2">{option.content}</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <div onClick={() => handleShowFeedback(i)}>
@@ -229,7 +243,7 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
             ))}
 
           <div
-            className="flex justify-between py-2 items-center"
+            className="flex justify-between py-2 items-center cursor-pointer"
             onClick={() =>
               addOption({
                 answer: false,

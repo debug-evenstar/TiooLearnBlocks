@@ -1,3 +1,5 @@
+import { LessonSlideInterface } from "./SlideManager/handler";
+
 export interface PositionProperties {
   offset: number;
   offsetPercent?: number;
@@ -59,4 +61,10 @@ export interface ComponentBaseDataInterface {
   styles?: ComponentStylesInterface; // Manage optional styles for component view box or global per-component styles
   canvas?: boolean;
   questions?: QuestionInterface[]; // Handle question types on different components
+}
+
+
+export interface ComponentBasePropsInterface {
+  slide : LessonSlideInterface;
+  viewArea? : any // Refactor point
 }

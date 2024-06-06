@@ -5,32 +5,35 @@ import { RiArrowDropDownFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { EditProperties, getOriginalName } from "../../ViewBox/handler";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
+import SliderHeader from "./EditProperties/Slider/SliderHeader";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const ActiveSidebar: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const id: string = selector.payload.activeViewbox.value;
+  
+  const id = manager.states.activeViewBox;
+
   const popHistory = () => {
     const history = manager.canvasManager.canvas.history;
-    if(history.length){
+    if (history.length) {
       const previousState = history[history.length - 1];
       manager.slideManager.handleSlidesUpdate(previousState);
       manager.canvasManager.canvas.history.pop();
     }
-  }
+  };
+
+  const handleRefreshToggleSidebarState = () => manager.setState("rightSidebarState", false);
 
   return (
-    <div className="w-full h-full border border-gray-400 no-scrollbar">
+    <div className="w-full h-full overflow-y-visible pt-5 pb-20">
       <header className="w-full flex justify-between p-4 border-b border-gray-400 items-center">
         <div className="h-fit flex gap-2">
           <BsArrowLeft
             className="self-center cursor-pointer"
-            onClick={() => dispatch(refreshToggleSidebarState())}
+            onClick={handleRefreshToggleSidebarState}
           />
           <p className="flex item-center text-[14px] text-[#87909E] font-medium self-center">
             Components
@@ -44,13 +47,15 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
           </b>
         </div>
       </header>
-      <main className="w-full p-4">
+
+      {id.includes("Slider") && <SliderHeader manager={manager} />}
+      <main className="w-full p-4 px-[25px]">
         <section className="w-full flex justify-between py-4">
           <div className="flex gap-4">
             <MdUndo className="cursor-pointer" onClick={() => popHistory()} />
-            <MdRedo className="cursor-pointer" onClick={()=>{}}/>
+            <MdRedo className="cursor-pointer" onClick={() => {}} />
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 bg-[#E6E6FA] p-2 rounded-full">
             <BsPencil />
             <RiArrowDropDownFill />
           </div>

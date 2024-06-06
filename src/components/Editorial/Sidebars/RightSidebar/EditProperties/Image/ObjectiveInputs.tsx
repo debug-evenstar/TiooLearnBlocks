@@ -1,4 +1,5 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
 import { QuestionInterface } from "components/interface";
 import {
   handleSetCorrectOption,
@@ -10,37 +11,25 @@ import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const ObjectivesInputs: FC<Props> = ({ manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const { objectiveIndex } = selector.payload.optionsData.value as {
-    objectiveIndex: number;
-    correctOption: string;
-    wrongOption: string;
-  };
-  const trigger: boolean = selector.payload.trigger.value;
+  const { objectiveIndex } = manager.states.optionsData;
+  const trigger = manager.states.trigger;
   const data: QuestionInterface =
-    manager.canvasManager.activeComponent.data.coreData?.extensions[
-      objectiveIndex
-    ]?.question[0];
+    manager.canvasManager.activeComponent.data?.extensions[objectiveIndex]
+      ?.question[0];
   const [question, setQuestion] = useState<QuestionInterface>(data);
 
   useEffect(() => {
-    console.log(trigger, "changed");
     setQuestion(data);
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData?.extensions,
-      "data extensions"
-    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
   const handleSetOptionData = (e: any, index: number) => {
-    const value = e.target.value;
-    if (!value) return;
+    const value = e.target.value ?? "";
 
     manager.canvasManager.canvas.functions.updateObjectiveOption(
       value,
@@ -48,8 +37,13 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
       index,
       "Overlay"
     );
-    if (index > 0) dispatch(handleSetCorrectOption(value));
-    else dispatch(handleSetWrongOption(value));
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
+      ...prev,
+      ...({
+        wrongOption: index <= 0 ? value : prev.wrongOption,
+        correctOption: index > 0 ? value : prev.correctOption,
+      } as OptionsDataState),
+    }));
   };
 
   return (
@@ -59,7 +53,7 @@ const ObjectivesInputs: FC<Props> = ({ manager }) => {
           key={i}
           className="border border-black w-[8rem] p-2 rounded text-center z-[5000] relative"
           type="text"
-          value={option.content}
+          defaultValue={option.content}
           onChange={(e) => handleSetOptionData(e, i)}
         />
       ))}

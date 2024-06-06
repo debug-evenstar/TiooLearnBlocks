@@ -1,31 +1,36 @@
 import { SlideData } from "components/SlideManager/handler";
-import { EditorialManagerInterface } from "./Base/EditorialManager";
+import { ManagerInterface } from "./Base/Manager";
 
 export interface SidebarFunctions {
   addSlide: Function;
 }
 
-export interface EditorialCanvasInterface {
+export interface CanvasInterface {
   slideData: SlideData;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 export interface CanvasComponentViewBox {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   handleDelete: (id: string) => void;
 }
 
 export interface CanvasMedia {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   viewBoxRef: React.MutableRefObject<HTMLDivElement | null>;
+  data?: any;
+  currIndex?: number;
+  isFlashcardDraggable?: boolean;
 }
 
 export interface CanvasText {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   viewBoxRef: React.MutableRefObject<any>;
   isEditable: boolean;
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
+  data?: any;
+  currIndex?: number;
 }

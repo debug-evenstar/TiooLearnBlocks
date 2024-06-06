@@ -1,49 +1,43 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { CanvasMedia } from "components/Editorial/interfaces";
 import React, { FC, createRef, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
-import {
-  setImageComponentData,
-  toggleWrapperSize,
-  uploadFile,
-} from "./handler";
+import { imageComponentData, toggleWrapperSize, uploadFile } from "./handler";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
-import { useDispatch, useSelector } from "react-redux";
-import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { handleToggleTrigger } from "provider/triggerSlice";
-import ObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ObjectiveInputs";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
-import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
+import "react-resizable/css/styles.css";
+import { OptionsDataState } from "components/Editorial/Base/StateInterface";
+import {createInputOverlay} from "./InputOverlay/handler";
+import {percentValue} from "../../../../../utilities/maths";
+import OverlayInput from "./InputOverlay";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(refreshToggleSidebarState);
-  const activeId: string = selector.payload.activeViewbox.value;
-  const showOptionsBox: boolean = selector.payload.showOptionsBox.value;
+  const activeId = manager.states.activeViewBox;
+  const showOptionsBox = manager.states.showOptionsBox;
+  const overlayActive = manager.states.overlayActive;
 
   const [previewImage, setPreviewImage] = useState("");
-  const [overlayActive, setOverlayActive] = useState(false);
   const [data, setData] = useState<any>();
   const [inputList, setInputList] = useState<any[]>([]);
   const [inputBoxDimensions, setInputBoxDimensions] = useState<any[]>([]);
   const imageRef = useRef<HTMLImageElement>(null);
 
   const extensions: any[] =
-    manager.canvasManager.activeComponent.data.coreData?.extensions;
+    manager.canvasManager.activeComponent.data?.extensions;
+
+    
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (!e.target.files) return;
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      //const imageUrl = URL.createObjectURL(selectedFile);
-      //setPreviewImage(imageUrl);
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setPreviewImage(imageUrl);
       const url = await uploadFile(473, selectedFile);
       setPreviewImage(url);
-      console.log(url, "url");
-      manager.canvasManager.canvas.functions.updateActiveComponentData(
-        setImageComponentData(url)
+      manager.canvasManager.canvas.updateActiveComponentData(
+        imageComponentData({url})
       );
     }
   };
@@ -58,16 +52,18 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const handleUpload = async (files: FileList) => {
     const file = files[0];
     if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
       const url = await uploadFile(473, file);
       setPreviewImage(url);
       manager.canvasManager.canvas.functions.updateActiveComponentData(
-        setImageComponentData(url)
+        imageComponentData(url)
       );
     }
   };
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleImageSize"] = (
+    manager.canvasManager.canvas.functions["toggleImageSize"] = (
       style: string = "",
       styleType: string
     ) => {
@@ -76,18 +72,15 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       toggleWrapperSize(element, style, styleType);
     };
 
-    manager.canvasManager.activeComponent.functions["toggleOverlay"] = (
-      status: boolean
-    ) => {
-      setOverlayActive(status);
-      console.log(status, "overlay status");
+    manager.canvasManager.canvas.functions["toggleOverlay"] = () => {
+      manager.setState("overlayActive", (prev: any) => !prev);
     };
   }, [manager, viewBoxRef]);
 
   useEffect(() => {
     const imageComponentData =
       manager.canvasManager.canvas.functions.getComponentData(id);
-    imageComponentData && setData(imageComponentData.content);
+    imageComponentData && setData(imageComponentData);
     setPreviewImage(imageComponentData.url);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -98,58 +91,93 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
       const imageRect = imageRef.current.getBoundingClientRect();
       const relativeX = pageX - imageRect.left;
       const relativeY = pageY - imageRect.top;
-      const newInput = {
-        type: "input",
-        x: relativeX,
-        y: relativeY,
-        width: 200,
-        height: 5,
-        question: [],
-      };
+      const newInput = createInputOverlay(relativeX, relativeY, imageRef.current);
       const newList = [...inputList, newInput];
       setInputList(newList);
-      manager.canvasManager.canvas.functions.updateActiveComponentData(
-        setImageComponentData({
+      manager.canvasManager.canvas.updateActiveComponentData(
+        imageComponentData({
           extensions: newList,
         })
       );
-      dispatch(handleToggleTrigger());
-      console.log(
-        manager.canvasManager.activeComponent.data.coreData.extensions,
-        "updated data"
-      );
+      manager.setState("trigger", (prev: any) => !prev);
       setInputBoxDimensions((prevList) => [
         ...prevList,
-        { width: 200, height: 5 },
+        newInput.layout
       ]);
     }
   };
+  
+  const updateInputLayout = (boxIndex : number, layout : any) => {
+    setInputBoxDimensions((prevDimensions) =>
+        prevDimensions.map((dimensions, index) =>
+            index === boxIndex
+                ? {
+                  ...dimensions,
+                  size : layout.size ?? dimensions.size,
+                  position : layout.position ?? dimensions.position
+                }
+                : dimensions
+        )
+    );
+
+    const newList = inputList;
+    newList[boxIndex] = {
+      ...inputList[boxIndex],
+      layout : {
+        ...inputList[boxIndex].layout,
+        size :layout.size ?? inputList[boxIndex].layout.size,
+        position :layout.position ?? inputList[boxIndex].layout.position
+      }
+    };
+
+    manager.canvasManager.canvas.updateActiveComponentData(
+        imageComponentData({
+          extensions: newList,
+        })
+    );
+  }
 
   const onResize = (
     event: any,
     { node, size, handle }: any,
     boxIndex: number
   ) => {
-    setInputBoxDimensions((prevDimensions) =>
-      prevDimensions.map((dimensions, index) =>
-        index === boxIndex
-          ? { ...dimensions, width: size.width, height: size.height }
-          : dimensions
-      )
-    );
+
+    const updatedSize = {
+      width : size.width,
+      height : size.height,
+      widthPercent : percentValue(size.width, data.layout.size.width),
+      heightPercent : percentValue(size.height, data.layout.size.height)
+    };
+
+    updateInputLayout(boxIndex, { size : updatedSize});
+  };
+
+  const onDrag = (
+      event: any,
+      dragData : any,
+      boxIndex: number
+  ) => {
+    const updatedPosition = {
+      xAxis : { offset : dragData.x, offsetPercent : percentValue(dragData.x, data.layout.size.width)},
+      yAxis : { offset : dragData.y, offsetPercent : percentValue(dragData.y, data.layout.size.height)}
+    };
+    updateInputLayout(boxIndex, { position : updatedPosition});
   };
 
   const handleClickedInput = (input: any, index: number) => {
     if (input?.question[0] && input.question[0]?.type === "OBJECTIVE") {
-      dispatch(handleToggleShowOptionBox());
+      manager.setState("showOptionsBox", (prev: any) => !prev);
     }
-    dispatch(handleSetObjectiveIndex(index));
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
   };
 
   return (
     <div
       className={`relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center ${
-        overlayActive ? "" : "handle"
+        overlayActive ? "cursor-pointer" : "handle"
       }`}
     >
       <UploadIcon
@@ -158,54 +186,24 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         manager={manager}
       />
 
-      {extensions &&
+      {activeId === id &&
+        overlayActive &&
+        extensions &&
         extensions.length > 0 &&
         extensions.map((input, index) => {
           const nodeRef: any = createRef();
-
+          console.log(data);
           return (
-            <Draggable
-              key={index}
-              axis="both"
-              nodeRef={nodeRef}
-              handle=".inputHandle"
-            >
-              <Resizable
-                width={input.width}
-                height={input.height}
-                minConstraints={[20, 5]}
-                onResize={(event: any, { node, size, handle }: any) =>
-                  onResize(event, { node, size, handle }, index)
-                }
-                resizeHandles={["e"]}
-              >
-                <div
-                  onClick={() => handleClickedInput(input, index)}
-                  ref={nodeRef}
-                  style={{
-                    width: input.width + "px",
-                    height: input.height + "px",
-                    position: "absolute",
-                    top: `${input.y}px`,
-                    left: `${input.x}px`,
-                    zIndex: "200",
-                    padding: "0.05rem",
-                  }}
-                >
-                  <input
-                    className="w-full p-1.5 inputHandle"
-                    placeholder={`Input ${index + 1}`}
-                  />
-                </div>
-              </Resizable>
-            </Draggable>
+            <OverlayInput index={index} ref={nodeRef} data={input} onResize={onResize} onClick={handleClickedInput} onDrag={onDrag} parentLayout={data?.layout ?? {}}/>
           );
         })}
 
       {previewImage?.length > 1 && (
         <div
           className="w-full mx-auto my-6 rounded-lg overflow-hidden h-full absolute"
-          onClick={overlayActive ? handleAddInput : () => null}
+          onClick={
+            activeId === id && overlayActive ? handleAddInput : () => null
+          }
         >
           <img
             ref={imageRef}
@@ -214,12 +212,6 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
             className="w-full h-full"
             draggable={false}
           />
-        </div>
-      )}
-
-      {showOptionsBox && activeId === id && (
-        <div className="z-[500]">
-          <ObjectivesInputs manager={manager} />
         </div>
       )}
     </div>
@@ -231,10 +223,10 @@ export default Image;
 export interface UploadIconProps {
   handleChange: (e: any) => void;
   handleDrop: (e: any) => void;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
-const UploadIcon: FC<UploadIconProps> = ({
+export const UploadIcon: FC<UploadIconProps> = ({
   handleChange,
   handleDrop,
   manager,

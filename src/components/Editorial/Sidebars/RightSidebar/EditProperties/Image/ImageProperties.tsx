@@ -3,40 +3,37 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import InputResize from "../InputResize";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { Switch } from "@mui/material";
 import { FaEllipsisH } from "react-icons/fa";
-import ImageObjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageObjective";
-import ImageSubjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/ImageSubjective";
+import ImageObjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ImageObjective";
+import ImageSubjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ImageSubjective";
 import { handleSetOptionIndex } from "provider/feedbackSlice";
 import { useSelector } from "react-redux";
+import { OverlayActiveState } from "components/Editorial/Base/StateInterface";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const label = { inputProps: { "aria-label": "Switch Overlay" } };
 
 const ImageProperties: FC<Props> = ({ manager }) => {
-  const selector: any = useSelector(handleSetOptionIndex);
-  const trigger: boolean = selector.payload.trigger.value;
+  const trigger = manager.states.trigger;
 
-  const toggleOverlay =
-    manager.canvasManager.activeComponent.functions?.toggleOverlay;
-  const data: any[] =
-    manager.canvasManager.activeComponent.data.coreData?.extensions;
+  const toggleOverlay = manager.canvasManager.canvas.functions?.toggleOverlay;
+  const data: any[] = manager.canvasManager.activeComponent.data?.extensions;
 
   const [isActive, setIsActive] = useState(false);
   const [extensions, setExtensions] = useState<any[]>([]);
-  const [overlayActive, setOverlayActive] = useState(true);
+
+  const overlayActive = manager.states.overlayActive;
 
   const handleSwitchOverlay = () => {
-    setOverlayActive(!overlayActive);
-    toggleOverlay(overlayActive);
+    manager.setState("overlayActive", (prev: OverlayActiveState) => !prev);
   };
 
   useEffect(() => {
-    console.log(trigger, "changed");
     setExtensions(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
@@ -44,7 +41,9 @@ const ImageProperties: FC<Props> = ({ manager }) => {
   return (
     <div className="w-full my-5 py-2">
       <div
-        className="w-full flex justify-between items-center cursor-pointer"
+        className={`w-full flex justify-between items-center cursor-pointer ${
+          isActive ? "bg-[#E6E6FA] p-2 rounded-sm" : ""
+        }`}
         onClick={() => setIsActive(!isActive)}
       >
         <p className="text-[15px]">Image Properties</p>
@@ -56,7 +55,11 @@ const ImageProperties: FC<Props> = ({ manager }) => {
           <div className="flex justify-between items-center my-4">
             <p className="text-[14px]">Overlay</p>
             <a href="javascript:void(0)">
-              <Switch {...label} onChange={handleSwitchOverlay} />
+              <Switch
+                {...label}
+                onChange={handleSwitchOverlay}
+                checked={overlayActive}
+              />
             </a>
           </div>
 
@@ -79,7 +82,7 @@ const ImageProperties: FC<Props> = ({ manager }) => {
 export default ImageProperties;
 
 interface ImageInputsProps {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   index: number;
   input: any;
 }
@@ -97,7 +100,7 @@ const ImageInputs: FC<ImageInputsProps> = ({ manager, index, input }) => {
         />
       </div>
       {toggleQuestions && (
-        <div className="h-fit flex justify-end absolute right-0 bg-white z-50">
+        <div className="h-fit bg-white">
           <div className="tiooBoxShadow p-2">
             {!input?.question[0] || input?.question[0]?.type === "OBJECTIVE" ? (
               <ImageObjective manager={manager} index={index} data={input} />

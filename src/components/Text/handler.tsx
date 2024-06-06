@@ -1,104 +1,124 @@
-
 /* -------------------------- COMPONENT INTERFACES -------------------------- */
 
-import { ComponentBaseDataInterface } from "components/interface";
+import {
+    ComponentBaseDataInterface,
+    ComponentBasePropsInterface,
+} from "components/interface";
 import { LessonSlideInterface } from "../SlideManager/handler";
 
 interface TextStyles {
     color?: string;
-    fontSize? : string;
+    fontSize?: string;
 }
 
 export interface TextData extends ComponentBaseDataInterface {
-    component : string;
-    content : string;
-    tips? :  string[];
-    answers? : any[];
-    options? : string[][];
+    component: string;
+    content: string;
+    tips?: string[];
+    answers?: any[];
+    options?: string[][];
 }
 
-export interface TextComponentProps {
-    styles? : TextStyles;
-    data : TextData;
-    slide : LessonSlideInterface;
+export interface TextComponentProps extends ComponentBasePropsInterface {
+    styles?: TextStyles;
+    data: TextData;
     altHeaderStyle: string;
 }
 
-
 /* ------------------------ COMPONENT HANDLER HELPERS ----------------------- */
 
-const formatIdentifiers : {[key : string] : any } = {
-    bold : [ "<**" , "**>" ],
-    heading : [ "<*-" , "-*>" ],
-    italic : [ "<!!" , "!!>" ],
-    keyword : [ "<(" , ")>" ],
-}
+const formatIdentifiers: { [key: string]: any } = {
+    bold: ["<**", "**>"],
+    heading: ["<*-", "-*>"],
+    italic: ["<!!", "!!>"],
+    keyword: ["<(", ")>"],
+};
 
-const formatMappings : {[key : string] : Function} = {
-    bold : (text : string | React.ReactElement) => (<strong className="text-font">{` `}{text}{` `}</strong>),
-    heading : (text : string | React.ReactElement) => (<strong className="w-full text-center text-font heading">{` `}{text}{` `}</strong>),
-    italic : (text : string | React.ReactElement) => (<i>{` `}{text}{` `}</i>),
-    keyword : (text : string | React.ReactElement) => (<span className="!text-green-500">{` `}{text}{` `}</span>)
-}
+const formatMappings: { [key: string]: Function } = {
+    bold: (text: string | React.ReactElement) => (
+        <strong className="text-font">
+            {` `}
+            {text}
+            {` `}
+        </strong>
+    ),
+    heading: (text: string | React.ReactElement) => (
+        <strong className="w-full text-center text-font heading">
+            {` `}
+            {text}
+            {` `}
+        </strong>
+    ),
+    italic: (text: string | React.ReactElement) => (
+        <i>
+            {` `}
+            {text}
+            {` `}
+        </i>
+    ),
+    keyword: (text: string | React.ReactElement) => (
+        <span className="!text-green-500">
+            {` `}
+            {text}
+            {` `}
+        </span>
+    ),
+};
 
-const exclusions = [
-    "<~","~>"
-];
+const exclusions = ["<~", "~>"];
 
-const format = (key : string, text : string) => {
+const format = (key: string, text: string) => {
     return formatMappings[key](text);
-}
-
-
+};
 
 /* ----------------------- COMPONENT HANDLER FUNCTIONS ---------------------- */
 
+const stringContainsAny = (list: string[], text: string) => {
+    return list.filter((item: string) => text.includes(item)).length > 0;
+};
 
-const stringContainsAny = (list : string[], text : string,) => {
-    return (list.filter((item : string) => text.includes(item)).length > 0);
-}
-
-const recursiveFormatter = (identifiers : any, text : string, index : number) => {
-    var key =  identifiers[index];
+const recursiveFormatter = (identifiers: any, text: string, index: number) => {
+    var key = identifiers[index];
     const pair = formatIdentifiers[key];
-    const start = pair[0], end = pair[1];
-    var result : any = text.replace(start,"").replace(end,"");
-    if( (index+1) < identifiers.length ){
-        result = recursiveFormatter(identifiers, result, (index+1));
-        return format(key , result);
+    const start = pair[0],
+        end = pair[1];
+    var result: any = text.replace(start, "").replace(end, "");
+    if (index + 1 < identifiers.length) {
+        result = recursiveFormatter(identifiers, result, index + 1);
+        return format(key, result);
     } else {
         return format(key, result);
     }
-}
+};
 
-const formatText = (text : any) => {
+const formatText = (text: any) => {
     const identifiers = Object.keys(formatIdentifiers);
-    const identifiersPresent = identifiers.filter((key : any) => {
+    const identifiersPresent = identifiers.filter((key: any) => {
         const item = formatIdentifiers[key];
         return text.includes(item[0]);
     });
     const result = recursiveFormatter(identifiersPresent, text, 0);
     return result;
-}
+};
 
-const collectFormattingIndices  = (list : any[], index : number = 0) => {
+const collectFormattingIndices = (list: any[], index: number = 0) => {
     const identifiers = Object.values(formatIdentifiers);
     const keys = Object.keys(formatIdentifiers);
     const pair = identifiers[index];
-    const indices : any = {};
+    const indices: any = {};
     let track = false;
     for (let i = 0; i < list.length; i++) {
         const text = list[i];
-        if(stringContainsAny(exclusions, text)){
+        if (stringContainsAny(exclusions, text)) {
             continue;
         }
-        if( text.includes(pair[0]) ) {
+        if (text.includes(pair[0])) {
             track = true;
             list[i] = list[i].replace(pair[0], "");
         }
         if (track) {
             const key = keys[index];
-            if ( indices[key] ) {
+            if (indices[key]) {
                 indices[key].push(i);
             } else {
                 indices[key] = [i];
@@ -110,40 +130,69 @@ const collectFormattingIndices  = (list : any[], index : number = 0) => {
         }
     }
 
-    if( identifiers.length > (index + 1)){
-        const next : any = collectFormattingIndices(list, index + 1);
+    if (identifiers.length > index + 1) {
+        const next: any = collectFormattingIndices(list, index + 1);
         return {
-            list : next.list,
-            indices : {
+            list: next.list,
+            indices: {
                 ...indices,
-                ...next.indices
-            }
-        }
+                ...next.indices,
+            },
+        };
     }
     return {
-        list : list,
-        indices : indices
+        list: list,
+        indices: indices,
     };
+};
 
-}
-
-const handleFormatting = (content : string) => {
+const handleFormatting = (content: string) => {
     const list = content.split(" ");
     const collect = collectFormattingIndices(list);
-    for(const key in collect.indices) {
-        const indicesToFormat : any[] = collect.indices[key];
+    for (const key in collect.indices) {
+        const indicesToFormat: any[] = collect.indices[key];
         indicesToFormat.forEach((index) => {
             collect.list[index] = format(key, collect.list[index]);
         });
     }
     return collect.list;
-}
+};
 
-
-export const processTextStyles = () =>{
+export const processTextStyles = () => {
     // Some Data Here
-}
+};
 
-export const formatTextContent = (content : string) => {
+export const formatTextContent = (content: string) => {
     return handleFormatting(content);
-}
+};
+
+const pixelDependentStyles = ["fontSize"];
+
+// To be expanded
+export const buildTextData = (data: string, viewArea: any) => {
+    const abstractBody = document.createElement("body");
+    abstractBody.innerHTML = data;
+    const textNodeList = abstractBody.querySelectorAll("*[data-type=text]");
+    textNodeList.forEach((node: Element | any) => {
+        // For parsing pixel dependent styles
+        pixelDependentStyles.forEach((styleName : string) => {
+            if (node && node.hasAttribute("data-container-pixel") && node.style[styleName]) {
+                const style : string = node.style[styleName];
+                // Some work left here
+                const parseFontSize: number = Number.parseInt(
+                    style.replace("px", "")
+                );
+                const relativeContainerPixel = node.getAttribute(
+                    "data-container-pixel"
+                ) as number;
+                if (viewArea) {
+                    node.style[styleName] = `${
+                        (parseFontSize / relativeContainerPixel) * viewArea.width
+                    }px`;
+                }
+            }
+        });
+
+    });
+    return abstractBody.innerHTML;
+};

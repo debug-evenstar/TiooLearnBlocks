@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { setFlashCardComponentData } from "components/Editorial/ViewBox/Boxtypes/Flashcard/handlers/dataHandler";
 import { uploadFile } from "components/Editorial/ViewBox/Boxtypes/Image/handler";
 import React, { FC, useEffect, useRef, useState } from "react";
@@ -8,37 +8,33 @@ import FlashcardObjective from "./FlashcardObjective";
 import FlashcardSubjective from "./FlashcardSubjective";
 import { useDispatch, useSelector } from "react-redux";
 import { handleToggleTrigger } from "provider/triggerSlice";
+import { QuestionInterface } from "components/interface";
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const AddImages: FC<Props> = ({ id, manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleToggleTrigger);
-  const trigger: boolean = selector.payload.trigger.value;
+  const trigger = manager.states.trigger;
+  const activeId = manager.states.activeViewBox;
   const [images, setImages] = useState<any[]>([{ url: "" }]);
-  const coreData = manager.sidebarManager.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const cards =
       manager.canvasManager.canvas.functions.getComponentData(id).cards;
-    console.log(cards, "Cards");
 
     if (!e.target.files) return;
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       const url = await uploadFile(473, selectedFile);
-      console.log(url, "url");
 
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
-      dispatch(handleToggleTrigger());
-      console.log(cards, "Updated Cards");
-      console.log(coreData, "added");
+      manager.setState("trigger", (prev: any) => !prev);
     }
   };
 
@@ -52,9 +48,10 @@ const AddImages: FC<Props> = ({ id, manager }) => {
   return (
     <div className="w-full my-5 py-2">
       <UploadText handleUpload={handleAddImage} />
-      {images.map((image: any, index) => (
-        <FlashcardImage key={index} index={index} manager={manager} />
-      ))}
+      {activeId === id &&
+        images.map((image: any, index) => (
+          <FlashcardImage key={index} index={index} manager={manager} />
+        ))}
     </div>
   );
 };
@@ -63,11 +60,16 @@ export default AddImages;
 
 interface FlashcardImageProps {
   index: number;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const FlashcardImage: FC<FlashcardImageProps> = ({ index, manager }) => {
   const [isActive, setIsActive] = useState(false);
+
+  const question: QuestionInterface = manager.canvasManager.activeComponent.data
+    .cards
+    ? manager.canvasManager.activeComponent.data?.cards[index].question
+    : null;
 
   return (
     <div>
@@ -80,20 +82,29 @@ const FlashcardImage: FC<FlashcardImageProps> = ({ index, manager }) => {
       </div>
       {isActive && (
         <main>
-          <FlashcardObjective
-            index={index}
-            manager={manager}
-            data={{
-              content: "",
-            }}
-          />
-          <FlashcardSubjective
-            index={index}
-            manager={manager}
-            data={{
-              content: "",
-            }}
-          />
+          {!question || question?.type === "OBJECTIVE" ? (
+            <FlashcardObjective
+              index={index}
+              manager={manager}
+              data={{
+                content: "",
+              }}
+            />
+          ) : (
+            <></>
+          )}
+
+          {!question || question?.type === "SUBJECTIVE" ? (
+            <FlashcardSubjective
+              index={index}
+              manager={manager}
+              data={{
+                content: "",
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </main>
       )}
     </div>

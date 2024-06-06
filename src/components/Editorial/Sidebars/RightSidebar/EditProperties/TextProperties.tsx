@@ -1,7 +1,7 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import React, { FC, useState } from "react";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
+import React, { FC, useEffect, useState } from "react";
 import {
   RiAlignCenter,
   RiAlignJustify,
@@ -24,20 +24,30 @@ import {
 } from "react-icons/ri";
 import { ColorResult, SketchPicker } from "react-color";
 import { toggleWrapperStyle } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/stylesHandler";
+import { CurrentStylesState } from "components/Editorial/Base/StateInterface";
+import { TextFormatType, formatText, getRange, textComponentData, toggleList } from "components/Editorial/ViewBox/Boxtypes/Text/handler";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const TextProperties: FC<Props> = ({ manager }) => {
-  const toggleWrapper =
-    manager.canvasManager.activeComponent.functions?.toggleWrapper;
+  const id = manager.states.activeViewBox;
+  const parent = document.getElementById(id) as HTMLDivElement;
+  const activeElement: any = parent?.firstChild;
 
-  const toggleTextStyle =
-    manager.canvasManager.activeComponent.functions?.toggleTextStyle;
+  const states = manager.states;
+  const {
+    textColor: currentTextColor,
+    textSize: currentTextSize,
+    textSpacing: currentTextSpacing,
+    font: currentFont,
+  } = states.currentStyles;
+
+  const currentStyles = states.currentStyles;
 
   const toggleWrapperStyle =
-    manager.canvasManager.activeComponent.functions?.toggleWrapperStyle;
+    manager.canvasManager.canvas.functions?.toggleWrapperStyle;
 
   const [isActive, setIsActive] = useState(false);
   const [colorIsActive, setColorIsActive] = useState(false);
@@ -55,30 +65,53 @@ const TextProperties: FC<Props> = ({ manager }) => {
 
   const handleChangeTextColor = (color: ColorResult) => {
     setTextColor(color.hex);
-    toggleTextStyle(color.hex, "textColor");
+    // toggleTextStyle(color.hex, "textColor");
     setColorIsActive(false);
   };
 
   const handleChangeTextSize = (size: string) => {
     setTextSize(size);
-    toggleTextStyle(size, "font-size");
+    const element = formatText(TextFormatType.STYLE,'span',{ fontSize : size+"px" })
+    if (element) {
+      const canvasView = document.getElementById("editorial-canvas")
+        ?.clientWidth as number;
+      element.setAttribute("data-type", "text");
+      element.setAttribute("data-container-pixel", canvasView.toString());
+    }
   };
 
   const handleChangeTextSpacing = (spacing: string) => {
     setTextSpacing(spacing);
-    toggleTextStyle(spacing, "spacing");
+    formatText(TextFormatType.STYLE,'span',{ lineHeight : spacing })
   };
 
   const handleFontChange = (newFont: string) => {
     setSelectedFont(newFont);
-    toggleTextStyle(selectedFont, "font");
+    // toggleTextStyle(selectedFont, "font");
   };
+
+
+  useEffect(() => {
+    setTextColor(currentTextColor);
+    //setTextSize(currentTextSize);
+    //setTextSpacing(currentTextSpacing);
+    setSelectedFont(currentFont);
+  }, [currentStyles]);
+
+  useEffect(() => {
+    if (!activeElement) return;
+    manager.canvasManager.canvas.functions.updateActiveComponentData(
+      textComponentData(activeElement.innerHTML)
+    );
+  }, [activeElement?.innerHTML]);
 
   return (
     <div className="w-full my-5 py-2">
       <a
         href="javascript:void(0)"
-        className="w-full flex justify-between items-center cursor-pointer"
+        className={`w-full flex justify-between items-center cursor-pointer ${
+          isActive ? "bg-[#E6E6FA] p-2 rounded-sm" : ""
+        }`}
         onClick={() => setIsActive(!isActive)}
       >
         <p className="text-[15px]">Text Properties</p>
@@ -97,7 +130,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               <select
                 className="w-[50%] text-sm bg-white p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#4f46e5] focus:border-[#4f46e5] sm:text-sm"
                 value={selectedFont}
-                onChange={(e) => handleFontChange(e.target.value)}
+                onChange={(e) => formatText(TextFormatType.STYLE, "span", { fontFamily : e.target.value})}
               >
                 {fonts.map((font) => (
                   <option key={font} value={font} className="text-[12px]">
@@ -130,7 +163,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("div", "left", "position");
+                formatText(TextFormatType.STYLE, "span", { textAlign : "left "});
               }}
             >
               <RiAlignLeft className="cursor-pointer" />
@@ -140,7 +173,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("div", "center", "position");
+                formatText(TextFormatType.STYLE, "span", { textAlign : "center"});
               }}
             >
               <RiAlignCenter className="cursor-pointer" />
@@ -150,7 +183,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("div", "right", "position");
+                formatText(TextFormatType.STYLE, "span", { textAlign : "right"});
               }}
             >
               <RiAlignRight className="cursor-pointer" />
@@ -160,7 +193,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
               className="border p-2 cursor-pointer"
               href="javascript:void(0)"
               onClick={() => {
-                toggleWrapper("div", "justify", "position");
+                formatText(TextFormatType.STYLE, "span", { textAlign : "justify"});
               }}
             >
               <RiAlignJustify className="cursor-pointer" />
@@ -239,19 +272,14 @@ const TextProperties: FC<Props> = ({ manager }) => {
 };
 
 const TextEditProperties: FC<Props> = ({ manager }) => {
-  const toggleWrapper =
-    manager.canvasManager.activeComponent.functions?.toggleWrapper;
 
-  const toggleList =
-    manager.canvasManager.activeComponent.functions?.toggleList;
-
-  const unLink = manager.canvasManager.activeComponent.functions?.unLink;
+  const unLink = manager.canvasManager.canvas.functions?.unLink;
 
   const [linkBoxActive, setLinkBoxActive] = useState(false);
   const [linkBoxValue, setLinkBoxValue] = useState("");
 
   const handleAddLink = () => {
-    toggleWrapper("a", "blue", linkBoxValue);
+    // toggleWrapper("a", "blue", linkBoxValue);
     setLinkBoxValue("");
     setLinkBoxActive(false);
   };
@@ -262,7 +290,7 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("b");
+          formatText(TextFormatType.STYLE, "span", {fontWeight : "bold"})
         }}
       >
         <RiBold />
@@ -272,7 +300,7 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("i");
+          formatText(TextFormatType.STYLE,"span", {fontStyle : "italic"});
         }}
       >
         <RiItalic />
@@ -282,7 +310,7 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("span", "underline", "line");
+          formatText(TextFormatType.STYLE, "span", { textDecoration : "underline" });
         }}
       >
         <RiUnderline />
@@ -292,17 +320,17 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("span", "line-through", "line");
+          formatText(TextFormatType.STYLE, "span", { textDecoration : "line-through" });
         }}
       >
         <RiStrikethrough />
       </a>
 
-      <a
+      {/* <a
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("h1");
+          formatText(TextFormatType.WRAP, "h1");
         }}
       >
         <RiH1 />
@@ -312,7 +340,7 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("h2");
+          formatText(TextFormatType.WRAP, "h2");
         }}
       >
         <RiH2 />
@@ -322,11 +350,11 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
         className="border p-2 cursor-pointer"
         href="javascript:void(0)"
         onClick={() => {
-          toggleWrapper("h3");
+          formatText(TextFormatType.WRAP, "h3");
         }}
       >
         <RiH3 />
-      </a>
+      </a> */}
 
       <div className="border p-2 cursor-pointer">
         <a href="javascript:void(0)" onClick={() => toggleList("ol")}>

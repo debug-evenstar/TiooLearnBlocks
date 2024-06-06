@@ -1,104 +1,90 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
 import { ObjectiveItemProp } from "./interfaces";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-import { useDispatch, useSelector } from "react-redux";
-import { handleToggleShowOptionBox } from "provider/showOptionsBoxSlice";
-import {
-  handleSetCorrectOption,
-  handleSetObjectiveIndex,
-  handleSetWrongOption,
-  refreshOptionsData,
-} from "provider/optionsDataSlice";
-import Feedback from "./Feedback";
-import {
-  handleSetFeedbackStatus,
-  handleSetFeedbackType,
-  handleSetOptionIndex,
-} from "provider/feedbackSlice";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
-import { handleToggleTrigger } from "provider/triggerSlice";
+import {
+  FeedbackState,
+  OptionsDataState,
+} from "components/Editorial/Base/StateInterface";
+import Feedback from "./Feedback";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   component: string;
 }
 
 const Objective: FC<Props> = ({ manager, component }) => {
-  const selector: any = useSelector(handleSetCorrectOption);
-  const id = selector.payload.activeViewbox.value;
+  const id = manager.states.activeViewBox;
 
   const [questions, setQuestions] = useState<any[]>([]);
-  const replaceContent =
-    manager.canvasManager.activeComponent.functions?.replaceContent;
+  const replaceContent = manager.canvasManager.canvas.functions?.replaceContent;
 
-  const dispatch = useDispatch();
-  const { identifier } = selector.payload.optionsData.value as {
-    identifier: string;
-    correctOption: string;
-    wrongOption: string;
-  };
+  const { identifier } = manager.states.optionsData;
 
   const [isActive, setIsActive] = useState(false);
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   const handleSetObjective = () => {
     if (isActive) return;
-    console.log(questions, "in objective");
-    replaceContent(questions, "OBJECTIVE", component);
+    replaceContent(
+      coreData?.questions ? coreData.questions : [],
+      "OBJECTIVE",
+      component
+    );
     setIsActive(true);
-    dispatch(handleToggleShowOptionBox());
-    dispatch(handleSetObjectiveIndex(questions.length));
-    dispatch(refreshOptionsData());
+    manager.setState("showOptionsBox", (prev: any) => !prev);
+    manager.setState("optionsData", {
+      identifier: "",
+      correctOption: "",
+      wrongOption: "",
+      objectiveIndex: questions.length,
+    });
   };
 
   const handleClick = () => {
     if (questions.length > 0) {
-      replaceContent(questions, "OBJECTIVE", component);
+      replaceContent(
+        coreData?.questions ? coreData.questions : [],
+        "OBJECTIVE",
+        component
+      );
       setIsActive(true);
-      dispatch(handleToggleShowOptionBox());
-      dispatch(handleSetObjectiveIndex(questions.length));
-      dispatch(handleToggleTrigger());
+      manager.setState("showOptionsBox", (prev: any) => !prev);
+      manager.setState("optionsData", (prev: OptionsDataState) => ({
+        ...prev,
+        ...({ objectiveIndex: questions.length } as OptionsDataState),
+      }));
+      manager.setState("trigger", (prev: any) => !prev);
     }
-    dispatch(handleSetCorrectOption(""));
-    dispatch(handleSetWrongOption(""));
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData,
-      "changed data"
-    );
+    manager.setState("optionsData", (prev: OptionsDataState) => ({
+      ...prev,
+      ...({ correctOption: "", wrongOption: "" } as OptionsDataState),
+    }));
   };
 
-  const handleDelete = (id: string, optionIndex: number) => {
-    setQuestions((prevQuestions) => {
-      // Find the question to update
-      const questionIndex = prevQuestions.findIndex(
-        (question) => question.identifier === id
+  const handleDelete = (id: string, optionIndex: number, index: number = 0) => {
+    // Find the question to update
+
+    if (index !== -1) {
+      const updatedQuestions = [...questions];
+      const updatedQuestion = {
+        ...updatedQuestions[index],
+        options: [
+          ...updatedQuestions[index].options.slice(0, optionIndex),
+          ...updatedQuestions[index].options.slice(optionIndex + 1),
+        ],
+      };
+      manager.canvasManager.canvas.functions.deleteObjectiveOptions(
+        updatedQuestion.options,
+        index
       );
+      manager.setState("trigger", (prev: boolean) => !prev);
 
-      if (questionIndex !== -1) {
-        const updatedQuestions = [...prevQuestions];
-        const updatedQuestion = {
-          ...updatedQuestions[questionIndex],
-          options: [
-            ...updatedQuestions[questionIndex].options.slice(0, optionIndex),
-            ...updatedQuestions[questionIndex].options.slice(optionIndex + 1),
-          ],
-        };
-        manager.canvasManager.activeComponent.functions.deleteObjectiveOptions(
-          updatedQuestion.options,
-          questionIndex
-        );
-        dispatch(handleToggleTrigger());
-
-        updatedQuestions[questionIndex] = updatedQuestion;
-
-        return updatedQuestions;
-      } else {
-        return prevQuestions;
-      }
-    });
+      updatedQuestions[index] = updatedQuestion;
+    }
   };
 
   useEffect(() => {
@@ -108,7 +94,6 @@ const Objective: FC<Props> = ({ manager, component }) => {
           question?.type === "OBJECTIVE" && question?.identifier?.includes(id)
       );
       setQuestions(filteredQuestions);
-      console.log(questions);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coreData?.questions, identifier]);
@@ -165,18 +150,12 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   handleDelete,
   manager,
 }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetFeedbackStatus);
-  const { status: optionStatus, type } = selector.payload.feedback.value as {
-    optionIndex: number;
-    status: number;
-    type: string;
-  };
+  const { status: optionStatus, type } = manager.states.feedback;
   const [isActive, setIsActive] = useState(false);
   const [question, setQuestion] = useState<any>();
   const [addedOption, setAddedOption] = useState(false);
 
-  const coreData = manager.canvasManager.activeComponent.data.coreData;
+  const coreData = manager.canvasManager.activeComponent.data;
 
   useEffect(() => {
     setQuestion(coreData.questions[index]);
@@ -184,34 +163,42 @@ export const ObjectiveItem: FC<ObjectiveItemProp> = ({
   }, [addedOption]);
 
   const addOption = (data: OptionInterface) => {
-    manager.canvasManager.activeComponent.functions.updateObjectiveOptions(
-      data,
-      index
-    );
+    manager.canvasManager.canvas.functions.updateObjectiveOptions(data, index);
+
     setAddedOption(!addedOption);
-    dispatch(
-      handleSetOptionIndex(question.options ? question.options.length : 0)
-    );
-    console.log(
-      manager.canvasManager.activeComponent.data.coreData.questions,
-      "clicked"
-    );
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          optionIndex: question.options ? question.options.length : 0,
+        } as FeedbackState),
+      };
+    });
   };
 
   const deleteOption = (i: number) => {
-    console.log(i, " is the option's index.");
-    handleDelete(objective.identifier, i);
+    handleDelete(objective.identifier, i, index);
     setAddedOption(!addedOption);
+    manager.setState("trigger", (prev: boolean) => !prev);
   };
 
   const handleShowFeedback = (index: number) => {
-    dispatch(handleSetFeedbackType("OBJECTIVE"));
-    dispatch(handleSetOptionIndex(index));
-    dispatch(handleSetFeedbackStatus(true));
+    manager.setState("feedback", (prev: FeedbackState) => {
+      return {
+        ...prev,
+        ...({
+          type: "OBJECTIVE",
+          optionIndex: index,
+          status: true,
+        } as FeedbackState),
+      };
+    });
   };
 
   const handleOpenObjective = () => {
-    dispatch(handleSetObjectiveIndex(index));
+    manager.setState("optionsData", (prev: OptionsDataState) => {
+      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+    });
     setIsActive(!isActive);
   };
 

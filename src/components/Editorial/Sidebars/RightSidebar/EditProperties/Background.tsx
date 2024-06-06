@@ -3,15 +3,14 @@
 import React, { FC, useState } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
 import { ColorResult, SketchPicker } from "react-color";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { ViewBoxHandler } from "components/Editorial/ViewBox/handler";
 
 interface Props {
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const Background: FC<Props> = ({ manager }) => {
-
   const [isActive, setIsActive] = useState(false);
   const [color, setColor] = useState<any>("#561ecb");
 
@@ -24,7 +23,9 @@ const Background: FC<Props> = ({ manager }) => {
   return (
     <div className="w-full my-5 py-2">
       <div
-        className="w-full flex justify-between items-center cursor-pointer"
+        className={`w-full flex justify-between items-center cursor-pointer ${
+          isActive ? "bg-[#E6E6FA] p-2 rounded-sm" : ""
+        }`}
         onClick={() => setIsActive(!isActive)}
       >
         <p className="text-[15px]">Background</p>

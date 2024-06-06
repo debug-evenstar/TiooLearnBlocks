@@ -8,6 +8,8 @@ import showOptionsBoxSlice from "./showOptionsBoxSlice";
 import optionsDataSlice from "./optionsDataSlice";
 import feedbackSlice from "./feedbackSlice";
 import triggerSlice from "./triggerSlice";
+import overlayActiveSlice from "./overlayActiveSlice";
+import sliderSlice from "./sliderSlice";
 
 const rootReducer = combineReducers({
   rightSidebarState: rightSidebarSlice,
@@ -17,6 +19,8 @@ const rootReducer = combineReducers({
   optionsData: optionsDataSlice,
   feedback: feedbackSlice,
   trigger: triggerSlice,
+  overlayActive: overlayActiveSlice,
+  slider: sliderSlice,
 });
 
 const persistedReducer = persistReducer(
@@ -30,6 +34,8 @@ const persistedReducer = persistReducer(
       "optionsData",
       "feedback",
       "trigger",
+      "overlayActive",
+      "slider",
     ],
   },
   rootReducer

@@ -1,45 +1,44 @@
 import React, { FC, createRef, useEffect, useState } from "react";
-import { EditorialCanvasInterface } from "../interfaces";
+import { CanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
-import { useDispatch } from "react-redux";
-import {
-  handleSetSidebarState,
-  handleToggleSidebarState,
-} from "provider/rightSidebarSlice";
-import { handleSetDragItems } from "provider/dragItemsSlice";
-import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
-import { setComponentLayout } from "./EditorialManager";
+import { setComponentLayout } from "./Manager";
 import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
+import { OverlayActiveState, RightSidebarState } from "./StateInterface";
 
-const EditorialCanvas: FC<EditorialCanvasInterface> = ({
-  slideData,
-  manager,
-}) => {
-  const dispatch = useDispatch();
+const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
   const [slideComponents, setSlideComponents] = useState<any[]>([]);
-  const onDrop = (id: string) => {
-    const existingClone = slideComponents.find((item) => item.id === id);
-    const itemId = id + "-clone-" + Date.now();
+  const activeId = manager.states.activeViewBox;
 
-    if (!existingClone) {
-      // dispatch(handleSetDragItems([...slideComponents, { id: itemId }]));
+  // Come back here later
+  const onDrop = (componentName: string) => {
+    const itemId = `${componentName}-${Date.now()}`;
+    const existing = slideComponents.find((item) => item.id === itemId);
 
-      updateSlideComponents([...slideComponents, { id: itemId }]);
-      manager.canvasManager.updateActiveSlide([
-        ...(manager.canvasManager.activeSlide ?? []),
-        { id: itemId },
-      ]);
+    if (!existing) {
+
+      const initializeComponent = manager.canvasManager.createComponent(
+        componentName,
+        itemId
+      );
+      const updated = [...slideComponents, initializeComponent];
+      updateSlideComponents(updated);
+      // FROM THIS
+      // manager.canvasManager.updateActiveSlide([
+      //   ...(manager.canvasManager.activeSlide ?? []),
+      //   initializeComponent,
+      // ]);
+      manager.canvasManager.updateActiveSlide(updated);
+      manager.canvasManager.updateSlides();
       manager.canvasManager.setActiveComponent(itemId);
-      dispatch(handleSetActiveViewbox(itemId));
+      manager.setState("activeViewBox", itemId);
     }
   };
 
   const handleDelete = (id: string) => {
     const filteredItems = slideComponents.filter((item) => item.id !== id);
-    dispatch(handleSetDragItems(filteredItems));
   };
 
   const handleDragOver = (e: any) => {
@@ -51,19 +50,22 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
     const data = e.dataTransfer.getData("text/plain");
     if (!data) return;
     onDrop(data);
-    dispatch(handleToggleSidebarState());
+    manager.setState("rightSidebarState", (prev: RightSidebarState) => {
+      return !prev;
+    });
   };
 
   const handleClickedViewbox = (id: string) => {
-    dispatch(handleSetActiveViewbox(id));
-    dispatch(handleSetSidebarState(true));
     manager.canvasManager.setActiveComponent(id);
+    manager.setState("activeViewBox", id);
+    // manager.canvasManager.canvas.functions.saveActiveComponentData();
+    manager.setState("rightSidebarState", true);
+    id !== activeId && manager.setState("overlayActive", false);
   };
 
   const updateSlideComponents = (components: any[]) => {
     setSlideComponents(() => components);
     // Also update slide manager
-    manager.slideManager.slides[manager.slideManager.activeSlide] = components;
   };
 
   const loadPosition = (component: ComponentBaseDataInterface) => {
@@ -78,11 +80,18 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
 
   useEffect(() => {
     const parsedSlides =
-      manager.canvasManager.canvas.functions.parseSlideToCanvas(slideData);
+      manager.canvasManager.canvas.parseSlideToCanvas(slideData);
     manager.canvasManager && setSlideComponents(parsedSlides);
     manager.canvasManager.updateActiveSlide(parsedSlides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideData]);
+
+  useEffect(() => {
+    // console.log(manager.canvasManager.getComponentData(activeId));
+    // manager.canvasManager.canvas.updateActiveComponentData(
+    //   manager.canvasManager.getComponentData(activeId)
+    // );
+  }, [activeId]);
 
   return (
     <div
@@ -94,22 +103,25 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
       {slideComponents.map((item) => {
         const nodeRef: any = createRef();
         const handleStop = (event: any, data: any) => {
+          manager.canvasManager.setActiveComponent(item.id);
+          // Offset behaviour changed at some point
           const layout = setComponentLayout(
             manager.canvasManager.canvas.functions?.getCanvasSize(),
             {
               ...manager.canvasManager.getComponentData(item.id).layout,
               position: {
-                xAxis: { offset: data.x + loadPosition(item).x },
-                yAxis: { offset: data.y + loadPosition(item).y },
+                xAxis: { offset: data.x },
+                yAxis: { offset: data.y },
               },
             }
           );
           // Only update if position has changed
-          if ( data.x !== 0 || data.y !== 0 ) {
-            manager.slideManager.saveComponentData(
-              manager.canvasManager.getComponentIndex(item.id),
-              { layout }
-            );
+          if (data.x !== 0 || data.y !== 0) {
+            // manager.slideManager.saveComponentData(
+            //   manager.canvasManager.getComponentIndex(item.id),
+            //   { layout }
+            // );
+            manager.canvasManager.canvas.updateActiveComponentData({layout});
           }
         };
 
@@ -121,7 +133,9 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
             onStop={handleStop}
             handle=".handle"
             defaultClassName="w-fit"
-            positionOffset={loadPosition(item)}
+            //positionOffset={loadPosition(item)}
+            bounds="parent"
+            defaultPosition={loadPosition(item)}
           >
             <div
               key={item.id}
@@ -147,4 +161,4 @@ const EditorialCanvas: FC<EditorialCanvasInterface> = ({
   );
 };
 
-export default EditorialCanvas;
+export default Canvas;

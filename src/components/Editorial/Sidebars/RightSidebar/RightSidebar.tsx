@@ -1,9 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import ActiveSidebar from "./ActiveSidebar";
 import InactiveSidebar from "./InactiveSidebar";
 import { useSelector } from "react-redux";
 import { handleToggleSidebarState } from "provider/rightSidebarSlice";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 
 interface Props {
   data: any;
@@ -11,7 +11,7 @@ interface Props {
   activeSlide: number;
   slides: any;
   lessonlist: any;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const RightSidebar: FC<Props> = ({
@@ -22,11 +22,15 @@ const RightSidebar: FC<Props> = ({
   lessonlist,
   manager,
 }) => {
-  const selector: any = useSelector(handleToggleSidebarState);
-  const isActive = selector.payload.rightSidebarState.value;
+  const isActive = manager.states.rightSidebarState;
+  const { status: optionStatus } = manager.states.feedback;
 
   return (
-    <div className="border-l bg-white border-[#030036] border-opacity-10 shadow relative w-full h-screen max-w-[20%] no-scrollbar pt-5 pb-20 mb-10 px-[29px]">
+    <div
+      className={`border-l bg-white border-[#030036] border-opacity-10 shadow h-screen w-full max-w-[20%] relative no-scrollbar mb-10 ${
+        optionStatus ? "" : "overflow-y-auto"
+      }`}
+    >
       {isActive ? (
         <ActiveSidebar manager={manager} />
       ) : (

@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { ComponentBaseDataInterface } from "components/interface";
 import { handleSetActiveViewbox } from "provider/activeViewboxSlice";
 import { handleSetDragItems } from "provider/dragItemsSlice";
@@ -9,27 +9,27 @@ import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
   id: string;
-  manager : EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const Delete: FC<Props> = ({ id, manager }) => {
-  const dispatch = useDispatch();
-  const selector: any = useSelector(handleSetActiveViewbox);
-
-  const dragItems: any[] = selector.payload.dragItems.value;
-
   const handleDelete = (id: string) => {
     // Create a standalone function for this
-    const updatedSlides = manager.slideManager.slides
-    const itemIndex  = manager.canvasManager.getComponentIndex(id);
+    const updatedSlides = manager.slideManager.slides;
+    const itemIndex = manager.canvasManager.getComponentIndex(id);
     const activeSlide = updatedSlides[manager.slideManager.activeSlide];
-    const updatedSlide = activeSlide.filter((component : ComponentBaseDataInterface, index : number) => index !== itemIndex);
+    const updatedSlide = activeSlide.filter(
+      (component: ComponentBaseDataInterface, index: number) =>
+        index !== itemIndex
+    );
     updatedSlides[manager.slideManager.activeSlide] = updatedSlide;
     manager.slideManager.slides = updatedSlides;
     manager.slideManager.handleSlidesUpdate(updatedSlides);
+    const updatedComponents = manager.states.slideComponents.filter(
+      (component: any, index: number) => index !== itemIndex
+    );
+    manager.setState("slideComponents", updatedComponents);
     // const filteredItems = dragItems.filter((item) => item.id !== id);
-    // dispatch(handleSetDragItems(filteredItems));
-    // dispatch(refreshToggleSidebarState());
   };
 
   return (

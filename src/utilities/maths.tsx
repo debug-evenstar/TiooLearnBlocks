@@ -1,0 +1,1 @@
+export const percentValue = (value: number, base: number) => (value / base) * 100;

@@ -23,19 +23,20 @@ export const renderInputsAsOverlay = (inputs : any[], slide : LessonSlideInterfa
         const fieldManager = TextFields([], slide, answers, []);
         inputs.forEach((input, index) => {
             const field = fieldManager.formatTextField(index);
+            console.log(input);
             const fieldPosition : React.CSSProperties = {
                 position : "absolute",
-                top : input.y + "%",
-                left : input.x + "%",
-                ...( input.width ? {width : input.width + "%"} : {}),
-                ...( input.height ? {height : input.height + "%"} : {})
+                top : input.layout.position.yAxis.offsetPercent + "%",
+                left : input.layout.position.xAxis.offsetPercent + "%",
+                ...( input.layout?.size?.widthPercent ? {width : input.layout?.size?.widthPercent + "%"} : {}),
+                ...( input.layout?.size?.heightPercent ? {height : input.layout?.size?.heightPercent + "%"} : {})
             };
             inputArray.push( 
                 <div style={fieldPosition}>
                     {field.customElement({
                         styles : {
                             margin : 0,
-                            ...(input.width || input.height ? { width : "100%"} : {})
+                            ...(input.layout?.size?.widthPercent || input.layout?.size?.heightPercent ? { width : "100%", height : "100%"} : {})
                         }
                     })}
                 </div>

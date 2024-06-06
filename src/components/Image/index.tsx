@@ -22,20 +22,12 @@ const ImageComponent: FC<ImageComponentProps> = ({ data, slide }) => {
     return (
         <>
             <div
-                className={
-                    slide.parent 
-                        ? "w-[80%] mx-auto rounded-lg cursor-pointer relative"
-                        : "w-[80%] mx-auto rounded-lg cursor-pointer relative"
-                }
+                className={ "w-full h-full mx-auto rounded-lg cursor-pointer relative"}
             >
                 <img
                     src={data.url}
                     alt="images"
-                    className={
-                        slide.parent 
-                            ? "w-[100%] rounded-lg"
-                            : "w-[100%] rounded-lg"
-                    }
+                    className={ "w-full h-full rounded-lg"}
                     onClick={() => setPreviewImage(!previewImage)}
                 />
                 {fieldItems}

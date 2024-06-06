@@ -1,4 +1,4 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { toggleWrapperSize, uploadFile } from "../Image/handler";
@@ -6,7 +6,7 @@ import { setFlashCardComponentData } from "./handlers/dataHandler";
 
 interface Props {
   id: string;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
   viewBoxRef: any;
   image: any;
 }
@@ -30,7 +30,6 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
-      console.log(cards, "Updated Cards");
     }
   };
 
@@ -51,12 +50,11 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       manager.canvasManager.canvas.functions.updateActiveComponentData(
         setFlashCardComponentData([...cards, { url, alternatives: [] }])
       );
-      console.log(cards, "Updated Cards");
     }
   };
 
   useEffect(() => {
-    manager.canvasManager.activeComponent.functions["toggleImageSize"] = (
+    manager.canvasManager.canvas.functions["toggleImageSize"] = (
       style: string = "",
       styleType: string
     ) => {
@@ -65,11 +63,10 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       toggleWrapperSize(element, style, styleType);
     };
 
-    manager.canvasManager.activeComponent.functions["toggleOverlay"] = (
+    manager.canvasManager.canvas.functions["toggleOverlay"] = (
       status: boolean
     ) => {
       setOverlayActive(status);
-      console.log(status, "overlay status");
     };
   }, [manager, viewBoxRef]);
 
@@ -78,7 +75,6 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
       manager.canvasManager.canvas.functions.getComponentData(id);
     imageComponentData && setData(imageComponentData.content);
     setPreviewImage(imageComponentData.url);
-    console.log(imageComponentData, "Image");
   }, [id]);
 
   const [inputList, setInputList] = useState<any[]>([]);
@@ -102,6 +98,8 @@ const Image: FC<Props> = ({ id, manager, viewBoxRef, image }) => {
         handleDrop={handleDrop}
         manager={manager}
       />
+
+      <div>{image.question?.identifier}</div>
 
       {inputList.map((input, index) => (
         <input
@@ -138,7 +136,7 @@ export default Image;
 export interface UploadIconProps {
   handleChange: (e: any) => void;
   handleDrop: (e: any) => void;
-  manager: EditorialManagerInterface;
+  manager: ManagerInterface;
 }
 
 const UploadIcon: FC<UploadIconProps> = ({
