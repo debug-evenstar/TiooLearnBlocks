@@ -54,6 +54,7 @@ const ActiveEditSlide: FC<Props> = ({
     );
   };
 
+
   const saveSlide = () => {
     const slideId : number = data.LessonSlides[active]?.id ?? null;
     setIsSaving(true);
@@ -72,7 +73,7 @@ const ActiveEditSlide: FC<Props> = ({
 
   useEffect(() => {
     if (slides) {
-      setActiveSlide(slides[active]);
+      setActiveSlide([...slides[active]]);
       manager.slideManager.setActiveSlide(active);
     }
   }, [active, slides]);

@@ -24,15 +24,12 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
         itemId
       );
       const updated = [...slideComponents, initializeComponent];
+
       updateSlideComponents(updated);
-      // FROM THIS
-      // manager.canvasManager.updateActiveSlide([
-      //   ...(manager.canvasManager.activeSlide ?? []),
-      //   initializeComponent,
-      // ]);
       manager.canvasManager.updateActiveSlide(updated);
       manager.canvasManager.updateSlides();
       manager.canvasManager.setActiveComponent(itemId);
+
       manager.setState("activeViewBox", itemId);
     }
   };
@@ -92,6 +89,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
     //   manager.canvasManager.getComponentData(activeId)
     // );
   }, [activeId]);
+
 
   return (
     <div
