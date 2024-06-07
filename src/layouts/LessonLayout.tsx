@@ -11,7 +11,9 @@ import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 export interface LessonLayoutProps {
   textbook: any;
   chapters: any;
-  lessons: any;
+  lesson?: any;
+  sideBar?: boolean;
+  children?: ReactNode;
   back?: Function;
   lessonSlides? : Function
 }
@@ -36,11 +38,21 @@ export interface LessonSlideProps {
 export default function LessonLayout({
   textbook,
   chapters,
-  lessons,
+  children,
+  lesson,
+  sideBar=true,
   lessonSlides
 }: LessonLayoutProps) {
+
+
+  console.log(chapters[0].lessons);
   const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0]);
-  const [currentChapter, setCurrentChapter] = useState(chapters[0]);
+
+  console.log("printing lesson",currentLesson);
+
+  const [currentChapter, setCurrentChapter] = useState(lesson? lesson.Chapter : chapters[0]);
+
+
   const slideManagerRef = useRef<any>(null);
   const [canProceed, setCanProceed] = useState(false);
   const [activeSlide, setActiveSlide] = useState(1);
@@ -80,11 +92,14 @@ export default function LessonLayout({
   }, [currentLesson]);
 
   return (
-    <div className="flex w-full overflow-hidden urbanist">
-      <LessonSidebar
-        isOpen={sideBarOpen}
-        {...{ chapters, textbook, setCurrentLesson }}
-      />
+    <div className="flex bg-white w-screen z-[100000] w-full overflow-hidden urbanist">
+      {
+        sideBar && 
+        <LessonSidebar
+          isOpen={sideBarOpen}
+          {...{ chapters, textbook, setCurrentLesson }}
+        />
+      }
       <div className="flex flex-col w-full relative justify-between border-l h-screen">
         <LessonHeader
           getChapter={null}
@@ -97,6 +112,7 @@ export default function LessonLayout({
           { lessonSlides && lessonSlides(
             {...lessonSlidesArgs}
           )}
+          {children}
                     {/* <LessonSlides
             slideManagerRef={slideManagerRef}
             handlePrevious={handlePrevious}
