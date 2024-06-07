@@ -4,14 +4,15 @@ import LessonFooter from "components/NewLesson/Layout/LesssonFooter";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 import "./LessonLayout.css";
-import LessonSlides from "components/NewLesson/LessonSlides";
+// import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 
 export interface LessonLayoutProps {
   textbook: any;
   chapters: any;
-  lessons: any;
+  // lessons: any;
+  children?: ReactNode;
   back?: Function;
   lessonSlides? : Function
 }
@@ -36,18 +37,19 @@ export interface LessonSlideProps {
 export default function LessonLayout({
   textbook,
   chapters,
-  lessons,
+  children,
   lessonSlides
 }: LessonLayoutProps) {
   const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0]);
   const [currentChapter, setCurrentChapter] = useState(chapters[0]);
   const slideManagerRef = useRef<any>(null);
+
   const [canProceed, setCanProceed] = useState(false);
   const [activeSlide, setActiveSlide] = useState(1);
 
   const [sideBarOpen, setSideBarOpen] = useState(true);
 
-  const getCurrentChapterFromLesson = (chapter_id: number) => {
+  const getCurrentChapter = (chapter_id: number) => {
     return chapters.find((i: any) => i.id == chapter_id);
   };
 
@@ -76,7 +78,7 @@ export default function LessonLayout({
   }
 
   useEffect(() => {
-    setCurrentChapter(getCurrentChapterFromLesson(currentLesson.chapter_id));
+    setCurrentChapter(getCurrentChapter(currentLesson.chapter_id));
   }, [currentLesson]);
 
   return (
@@ -97,6 +99,7 @@ export default function LessonLayout({
           { lessonSlides && lessonSlides(
             {...lessonSlidesArgs}
           )}
+          {children}
                     {/* <LessonSlides
             slideManagerRef={slideManagerRef}
             handlePrevious={handlePrevious}
