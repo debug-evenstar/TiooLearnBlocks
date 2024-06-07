@@ -13,12 +13,31 @@ export interface LessonLayoutProps {
   chapters: any;
   lessons: any;
   back?: Function;
+  lessonSlides? : Function
+}
+
+interface NavigationHandles {
+  previous : Function;
+  continue : Function;
+}
+
+interface LessonStateActions {
+  setActiveSlide : Function;
+  setCanProceed : Function;
+}
+
+export interface LessonSlideProps {
+  managerRef : React.RefObject<any>;
+  navigationHandles : NavigationHandles;
+  slides : any[];
+  stateActions : LessonStateActions
 }
 
 export default function LessonLayout({
   textbook,
   chapters,
   lessons,
+  lessonSlides
 }: LessonLayoutProps) {
   const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0]);
   const [currentChapter, setCurrentChapter] = useState(chapters[0]);
@@ -47,6 +66,15 @@ export default function LessonLayout({
     setCanProceed(false);
   };
 
+  const lessonSlidesArgs : LessonSlideProps = {
+    managerRef : slideManagerRef,
+    navigationHandles : { continue : handleContinue, previous : handlePrevious},
+    slides : currentLesson.slides,
+    stateActions : {
+      setActiveSlide, setCanProceed
+    }
+  }
+
   useEffect(() => {
     setCurrentChapter(getCurrentChapterFromLesson(currentLesson.chapter_id));
   }, [currentLesson]);
@@ -66,14 +94,17 @@ export default function LessonLayout({
         <div className="px-28 flex flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
           <AudioButton />
           <ToggleNavBtn isOpen={sideBarOpen} handleClick={() => setSideBarOpen(!sideBarOpen)} />
-          <LessonSlides
+          { lessonSlides && lessonSlides(
+            {...lessonSlidesArgs}
+          )}
+                    {/* <LessonSlides
             slideManagerRef={slideManagerRef}
             handlePrevious={handlePrevious}
             handleContinue={handleContinue}
             slides={currentLesson.slides}
             setActiveSlide={setActiveSlide}
             setCanProceed={setCanProceed}
-          />
+          /> */}
         </div>
         <LessonFooter previous={handlePrevious} next={handleContinue} />
       </div>

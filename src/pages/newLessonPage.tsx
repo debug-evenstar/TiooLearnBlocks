@@ -1,5 +1,5 @@
 import LessonSlides from "components/NewLesson/LessonSlides";
-import LessonLayout from "layouts/LessonLayout";
+import LessonLayout, { LessonSlideProps } from "layouts/LessonLayout";
 import React, { FC } from "react";
 
 import { slides } from "dump/can";
@@ -16,7 +16,22 @@ const NewLessonPage: FC<NewLessonPageProps> = ({
   lessons,
   back,
 }) => {
-  return <LessonLayout {...{ back, textbook, chapters, lessons }} />;
+  return <LessonLayout {...{ 
+    back, 
+    textbook, 
+    chapters, 
+    lessons,
+    lessonSlides : (slideProps : LessonSlideProps) => (
+      <LessonSlides
+          slideManagerRef={slideProps.managerRef}
+          handlePrevious={slideProps.navigationHandles.previous}
+          handleContinue={slideProps.navigationHandles.continue}
+          slides={slideProps.slides}
+          setActiveSlide={slideProps.stateActions.setActiveSlide}
+          setCanProceed={slideProps.stateActions.setCanProceed}
+      />
+    )
+  }} />;
 };
 
 export default NewLessonPage;
