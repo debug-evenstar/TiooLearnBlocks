@@ -15,7 +15,8 @@ export interface LessonLayoutProps {
   sideBar?: boolean;
   children?: ReactNode;
   back?: Function;
-  lessonSlides? : Function
+  lessonSlides? : Function;
+  closePreview? : Function;
 }
 
 interface NavigationHandles {
@@ -41,6 +42,7 @@ export default function LessonLayout({
   children,
   lesson,
   sideBar=true,
+  closePreview,
   lessonSlides
 }: LessonLayoutProps) {
 
@@ -121,7 +123,7 @@ export default function LessonLayout({
             setCanProceed={setCanProceed}
           /> */}
         </div>
-        <LessonFooter previous={handlePrevious} next={handleContinue} />
+        <LessonFooter previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
       </div>
     </div>
   );
