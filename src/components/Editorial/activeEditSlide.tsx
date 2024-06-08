@@ -55,7 +55,7 @@ const ActiveEditSlide: FC<Props> = ({
     console.log("chapters",slides);
 
     return (
-      <LessonLayout textbook={{}} lesson={data} sideBar={false} chapters={chapters}  >
+      <LessonLayout textbook={{}} lesson={data} closePreview={() => setPreviewSlide(false)} sideBar={false} chapters={chapters}  >
         <>
         {slide.map((component: ComponentBaseDataInterface, index: number) => {
             const Component = loadComponent(component);
