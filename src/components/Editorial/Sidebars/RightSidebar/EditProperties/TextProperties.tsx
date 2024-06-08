@@ -25,10 +25,12 @@ import {
 import { ColorResult, SketchPicker } from "react-color";
 import { toggleWrapperStyle } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/stylesHandler";
 import { CurrentStylesState } from "components/Editorial/Base/StateInterface";
-import { TextFormatType, formatText, getRange, textComponentData, toggleList } from "components/Editorial/ViewBox/Boxtypes/Text/handler";
+import { TextFormatType, formatText, getRange, textComponentData, toggleList, verifySelectionProperty } from "components/Editorial/ViewBox/Boxtypes/Text/handler";
 
 interface Props {
   manager: ManagerInterface;
+  propertiesActiveState? : any,
+  toggleTextPropertyActiveState? : any
 }
 
 const TextProperties: FC<Props> = ({ manager }) => {
@@ -62,6 +64,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
     "Helvetica",
     "Courier New",
   ];
+  const [propertiesActiveState, setPropertiesActiveState] = useState<any>({});
 
   const handleChangeTextColor = (color: ColorResult) => {
     setTextColor(color.hex);
@@ -90,6 +93,12 @@ const TextProperties: FC<Props> = ({ manager }) => {
     // toggleTextStyle(selectedFont, "font");
   };
 
+  const toggleTextPropertyActiveState = (propertyName : string, state : boolean | null = null) => {
+    const update : any = {};
+    update[propertyName] = state !== null ? state : !propertiesActiveState[propertyName]
+    setPropertiesActiveState((prev:any) => ({...prev, ...update}));
+  }
+
 
   useEffect(() => {
     setTextColor(currentTextColor);
@@ -104,6 +113,16 @@ const TextProperties: FC<Props> = ({ manager }) => {
       textComponentData(activeElement.innerHTML)
     );
   }, [activeElement?.innerHTML]);
+
+  useEffect(()=>{
+    document.addEventListener("selectionchange", (event) => {
+        verifySelectionProperty();
+    });
+  },[]);
+
+  useEffect(()=> {
+    verifySelectionProperty();
+  },[isActive]);
 
   return (
     <div className="w-full my-5 py-2">
@@ -121,7 +140,11 @@ const TextProperties: FC<Props> = ({ manager }) => {
       {isActive && (
         <main className="w-full shadow-md relative">
           <section className="flex flex-wrap py-4">
-            <TextEditProperties manager={manager} />
+            <TextEditProperties 
+              manager={manager} 
+              propertiesActiveState={propertiesActiveState} 
+              toggleTextPropertyActiveState={toggleTextPropertyActiveState}
+            />
           </section>
 
           <section className="w-full flex justify-between items-center py-4">
@@ -130,7 +153,10 @@ const TextProperties: FC<Props> = ({ manager }) => {
               <select
                 className="w-[50%] text-sm bg-white p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#4f46e5] focus:border-[#4f46e5] sm:text-sm"
                 value={selectedFont}
-                onChange={(e) => formatText(TextFormatType.STYLE, "span", { fontFamily : e.target.value})}
+                onChange={(e) => {
+                  formatText(TextFormatType.STYLE, "span", { fontFamily : e.target.value});
+                  setSelectedFont(e.target.value);
+                }}
               >
                 {fonts.map((font) => (
                   <option key={font} value={font} className="text-[12px]">
@@ -271,7 +297,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
   );
 };
 
-const TextEditProperties: FC<Props> = ({ manager }) => {
+const TextEditProperties: FC<Props> = ({ manager,propertiesActiveState, toggleTextPropertyActiveState }) => {
 
   const unLink = manager.canvasManager.canvas.functions?.unLink;
 
@@ -284,43 +310,57 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
     setLinkBoxActive(false);
   };
 
+  
+  const handleActiveStyles = (propertyName : string) => 
+    (propertiesActiveState[propertyName] ? "text-white bg-[#E6E6FA]" : "");
+
+  useEffect(()=>{
+    manager.canvasManager.canvas.functions.toggleTextEditPropertyActiveState = (property : string, state : boolean | null = null) => {
+      toggleTextPropertyActiveState(property, state)
+    }
+  },[])
+
   return (
     <>
       <a
-        className="border p-2 cursor-pointer"
+        className={"border p-2 cursor-pointer" + handleActiveStyles("bold")}
         href="javascript:void(0)"
         onClick={() => {
-          formatText(TextFormatType.STYLE, "span", {fontWeight : "bold"})
+          formatText(TextFormatType.STYLE, "span", {fontWeight : "bold"});
+          toggleTextPropertyActiveState("bold");
         }}
       >
         <RiBold />
       </a>
 
       <a
-        className="border p-2 cursor-pointer"
+        className={"border p-2 cursor-pointer" + handleActiveStyles("italic")}
         href="javascript:void(0)"
         onClick={() => {
           formatText(TextFormatType.STYLE,"span", {fontStyle : "italic"});
+          toggleTextPropertyActiveState("italic");
         }}
       >
         <RiItalic />
       </a>
 
       <a
-        className="border p-2 cursor-pointer"
+        className={"border p-2 cursor-pointer" + handleActiveStyles("underline")}
         href="javascript:void(0)"
         onClick={() => {
           formatText(TextFormatType.STYLE, "span", { textDecoration : "underline" });
+          toggleTextPropertyActiveState("underline");
         }}
       >
         <RiUnderline />
       </a>
 
       <a
-        className="border p-2 cursor-pointer"
+        className={"border p-2 cursor-pointer" + handleActiveStyles("linethrough")}
         href="javascript:void(0)"
         onClick={() => {
           formatText(TextFormatType.STYLE, "span", { textDecoration : "line-through" });
+          toggleTextPropertyActiveState("linethrough");
         }}
       >
         <RiStrikethrough />

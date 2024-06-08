@@ -130,7 +130,7 @@ const ActiveEditSlide: FC<Props> = ({
       </div>
       {previewSlide && (
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0">
-          <div className="w-full h-full bg-cover px-5 flex justify-center items-center fw-600">
+          <div className="w-full h-full bg-cover px-5 flex justify-center items-center">
             <div className="w-full h-full">
               <RenderPreview
                   slide={previewSlideData}

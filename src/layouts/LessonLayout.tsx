@@ -45,7 +45,6 @@ export default function LessonLayout({
 }: LessonLayoutProps) {
 
 
-  console.log(chapters[0].lessons);
   const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0]);
 
   console.log("printing lesson",currentLesson);
