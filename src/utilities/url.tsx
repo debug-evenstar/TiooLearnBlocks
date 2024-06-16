@@ -1,5 +1,9 @@
 export const baseApiHost = () => {
-    return window.location.href.toLowerCase().includes("beta") || window.location.href.toLowerCase().includes("localhost")
-        ? "https://beta.api.hellotioo.com"
-        : "https://api.hellotioo.com";
+    if (window.location.href.toLowerCase().includes("beta") ){
+        return "https://beta.api.hellotioo.com";
+    }
+    if (window.location.href.toLowerCase().includes("localhost")) {
+        return "http://localhost:8085";
+    }
+    return "https://api.hellotioo.com";
 }

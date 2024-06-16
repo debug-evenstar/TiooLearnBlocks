@@ -52,7 +52,6 @@ const ActiveEditSlide: FC<Props> = ({
       }
     ];
 
-    console.log("chapters",slides);
 
     return (
       <LessonLayout textbook={{}} lesson={data} closePreview={() => setPreviewSlide(false)} sideBar={false} chapters={chapters}  >
@@ -75,14 +74,14 @@ const ActiveEditSlide: FC<Props> = ({
 
 
   const saveSlide = () => {
-    const slideId : number = data.LessonSlides[active]?.id ?? null;
+    const slideId : number = data.lesson_slides[active]?.id ?? null;
     setIsSaving(true);
     if(slideId) {
       manager.slideManager.saveSlide(slideId, activeSlide, ()=>{
         setIsSaving(false);
       });
     } else {
-      const slideIndex : number = data.LessonSlides.length;
+      const slideIndex : number = data.lesson_slides.length;
       manager.slideManager.createSlide(slideIndex, data.id, activeSlide, ()=>{
         setIsSaving(false);
       });

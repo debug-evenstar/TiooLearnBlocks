@@ -1,6 +1,7 @@
 import { CanvasStates } from "components/Editorial/Base/CanvasManager";
 import { ManagerInterface, _getManager } from "components/Editorial/Base/Manager";
 import { ComponentBaseDataInterface } from "components/interface";
+import { RefObject } from "react";
 import ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 import { objectsAreIdentical } from "utilities/object";
@@ -82,6 +83,43 @@ export const handleTextChange = (
   );
 };
 
+/* -------------- SET DEFAULT STYLES AND CLASSES OF PARENT TAG -------------- */
+
+const setDefaultStyles = (element : HTMLElement) => {
+  element.className = "main outline-none";
+  const canvasView = document.getElementById("editorial-canvas")
+      ?.clientWidth as number;
+  element.style.fontSize = "16px";
+  element.setAttribute("data-type", "text");
+  element.setAttribute("data-container-pixel", canvasView.toString());
+}
+
+
+/* ---------------- WRAP EDITABLE CONTENT IN PARENT TEXT TAG ---------------- */
+
+export const initializeParentTag = (editableRef : React.RefObject<HTMLDivElement>) => {
+  const editable : any = editableRef.current;
+  let parentTag : any = editable.querySelector("p.main");
+  if ( !parentTag && editable.innerHTML) {
+    const textNode = document.createTextNode(editable.innerHTML);
+    parentTag = document.createElement("p");
+    setDefaultStyles(parentTag);
+    parentTag.appendChild(textNode);
+    const currentValue = editable.innerHTML;
+    editable.innerHTML="";
+    editable.appendChild(parentTag);
+
+    // Set cursor
+    // Would convert to helper
+    let range = document.createRange();
+    let sel = window.getSelection();
+    range.setStart(parentTag, currentValue.length)
+    range.collapse(true)
+    sel?.removeAllRanges()
+    sel?.addRange(range)
+  }
+}
+
 
 
 /* --------------------------- ADJUST TEXTAREA BOX -------------------------- */
@@ -119,11 +157,17 @@ export const resizeBox = (
 // Function to handle text formatting properties
 export const formatText = (
   type : TextFormatType,
-  tagName : string,
+  tag : string | HTMLElement,
   styles? : {[key : string] : string}
 ) => {
     const manager = _getManager();
-    const formatted = formatTextWithWrapper(tagName, styles ?? {}, type);
+    let formatted;
+    if (typeof tag === "string") {
+      formatted = formatTextWithWrapper(tag, styles ?? {}, type);
+    } else { 
+      formatted = formatTextStyle(tag, (styles ?? {}) as any);
+    }
+
     manager.canvasManager.canvas.updateActiveComponentData(
       textComponentData(manager.states.canvasStates?.editableTextRef.current.innerHTML)
     );
@@ -132,12 +176,13 @@ export const formatText = (
 
 
 
+
 const formatTextWithWrapper = (tagName : string, styles : any, type : TextFormatType) => {
   const range = getRange();
   const manager = _getManager()
   const lastSelection = manager.states.canvasStates?.lastRangeSelection;
 
-  if (range && range.toString()) {
+  if (range?.toString()) {
     const boundingElement = range.startContainer.parentElement;
     if (undoRangeFormat(range, tagName, styles, type)) {
       return;
@@ -281,7 +326,7 @@ export const verifySelectionProperty = () => {
       });
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 
 }

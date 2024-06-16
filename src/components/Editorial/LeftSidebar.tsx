@@ -59,7 +59,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                   const containerElement = slideRefs[index]?.current;
                   const viewArea = containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null;
                   return component.layout ? (
-                    <LayoutComponent layout={component.layout}>
+                    <LayoutComponent layout={component.layout} key={index}>
                       <Component
                         key={index}
                         data={component}

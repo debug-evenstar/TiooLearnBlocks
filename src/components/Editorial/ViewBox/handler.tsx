@@ -53,6 +53,7 @@ export function getOriginalName(str: string): string {
 }
 
 // for viewbox component
+// TO BE IMPROVED
 export const ViewBoxContent = (
   id: string,
   manager: ManagerInterface,

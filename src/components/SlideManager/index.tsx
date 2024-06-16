@@ -250,6 +250,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                                     const Component = loadComponent(component);
                                     return (
                                         <LayoutComponent
+                                            key={index}
                                             layout={component.layout}
                                         >
                                             <Component

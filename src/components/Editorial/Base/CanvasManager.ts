@@ -119,7 +119,6 @@ class Canvas implements CanvasInterface {
       // Updating active slide on the slide level as well as the canvas level
       slides[this.manager.manager.slideManager.activeSlide] = activeSlide;
       this.manager.activeSlide = activeSlide;
-      this.manager.manager.slideManager.slides = slides;
       this.manager.manager.slideManager.handleSlidesUpdate(slides);
     }
   }

@@ -22,6 +22,7 @@ const EditorialComp: FC<Props> = ({
     name,
     isBusy,
 }) => {
+    const [lessonSlides, setLessonSlides] = useState<any>([]);
     const [parseSlides, setParseSlides] = useState<any[]>([]);
     const slideManagerRef = useRef<any>(null);
     const [canProceed, setCanProceed] = useState<boolean>(true);
@@ -30,7 +31,7 @@ const EditorialComp: FC<Props> = ({
     const [overlay, setOverlay] = useState(false);
     const [manager, setManager] = useState(
         CreateManager(
-            data && data.lesson_slides.map((slide: any) => slide.slide_data)
+            lessonSlides?.map((slide: any) => slide.slide_data)
         )
     );
 
@@ -57,29 +58,41 @@ const EditorialComp: FC<Props> = ({
         }, 400);
     };
 
-    const showCreateSlide = () => {
-        setOverlay(true);
-    };
+    // const showCreateSlide = () => {
+    //     setOverlay(true);
+    // };
 
     useEffect(() => {
         if (data) {
             setParseSlides(() =>
-                data.lesson_slides.map((slide: any) => slide.slide_data)
+                lessonSlides?.map((slide: any) => slide.slide_data)
             );
             setManager(
                 CreateManager(
-                    data &&
-                        data.lesson_slides.map((slide: any) => slide.slide_data)
+                    lessonSlides?.map((slide: any) => slide.slide_data)
                 )
             );
         }
-    }, [data]);
+    }, [lessonSlides]);
+
+    useEffect(()=>{
+        if(data)
+            setLessonSlides(data.lesson_slides);
+    },[data]);
 
     useEffect(() => {
         manager.slideManager.handleSlidesUpdate = (updatedSlides: any[]) => {
             setParseSlides([...updatedSlides]);
         };
+        manager.slideManager.updateLessonSlides = (generator : Function) => {
+            const updatedLessonSlides = generator(lessonSlides);
+            setLessonSlides([...updatedLessonSlides]);
+        };
     }, [manager, manager.slideManager]);
+
+    useEffect(()=>{
+        manager.slideManager.slides = parseSlides;
+    },[parseSlides])
 
     if (!data) {
         return <p>Loading...</p>;
@@ -102,28 +115,25 @@ const EditorialComp: FC<Props> = ({
                     <div className="w-full bg-white px-[30px] py-[28px]">
                         <div className="mt-6">
                             {!showEdit && (
-                                <>
-                                    <EditorialSlideView
-                                        showEdit={() => setShowEdit(true)}
-                                        setCanProceed={setCanProceed}
-                                        handlePrevious={() => handlePrevious()}
-                                        handleContinue={() => handleContinue()}
-                                        parsedSlides={parseSlides}
-                                        slideManagerRef={slideManagerRef}
-                                        setActiveSlide={setActiveSlide}
-                                    />
-                                </>
+                                <EditorialSlideView
+                                    showEdit={() => setShowEdit(true)}
+                                    setCanProceed={setCanProceed}
+                                    handlePrevious={() => handlePrevious()}
+                                    handleContinue={() => handleContinue()}
+                                    parsedSlides={parseSlides}
+                                    slideManagerRef={slideManagerRef}
+                                    setActiveSlide={setActiveSlide}
+                                />
                             )}
                             {showEdit && (
-                                <>
-                                    <ActiveEditSlide
-                                        active={activeSlide}
-                                        slides={parseSlides}
-                                        data={data}
-                                        isBusy={isBusy}
-                                        manager={manager}
-                                    />
-                                </>
+                                <ActiveEditSlide
+                                    active={activeSlide}
+                                    slides={parseSlides}
+                                    data={{...data, lesson_slides : lessonSlides}}
+                                    isBusy={isBusy}
+                                    manager={manager}
+                                />
+
                             )}
                             {/* {
               overlay && <><CreateOverlaySlide isBusy={isBusy} createOverlay={createOverlay} slideLength={parseSlides.length}/></>

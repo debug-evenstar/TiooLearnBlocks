@@ -2,7 +2,7 @@ import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { registerFunctions } from "./handlers/registerFuncsHandlers";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
-import {  getRange, handleTextChange, resizeBox, removePx, setState } from "./handler";
+import {  getRange, handleTextChange, resizeBox, removePx, setState, initializeParentTag } from "./handler";
 import {
     CurrentStylesState,
     OptionsDataState,
@@ -36,6 +36,8 @@ const Text: FC<CanvasText> = ({
     const onChange = (event: any) => {
         handleTextChange(event, manager );
         resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount, /*event*/);
+        // Wrap in parent paragraph if not present
+        initializeParentTag(editableRef);
     }
 
     useEffect(() => {
@@ -87,7 +89,7 @@ const Text: FC<CanvasText> = ({
             setState("editableTextRef", editableRef);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [activeId]);
 
     const coreData = manager.canvasManager.activeComponent.data;
 
