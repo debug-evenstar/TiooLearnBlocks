@@ -21,6 +21,7 @@ import VideoComponent from "components/Video";
 import WordMatchComponent from "components/WordMatch";
 import OptionsComponent from "components/Options";
 import GridSteps from "components/GridSteps";
+import QuestionComponent from "components/Question";
 
 declare global {
   interface Window {
@@ -481,6 +482,7 @@ const keyToComponentMapper: { [key: string]: any } = {
   GridSteps: GridSteps,
   Preface: PrefaceComponent,
   Postface: PostfaceComponent,
+  Questions: QuestionComponent
 };
 
 export const loadComponent = (componentData: any) => {

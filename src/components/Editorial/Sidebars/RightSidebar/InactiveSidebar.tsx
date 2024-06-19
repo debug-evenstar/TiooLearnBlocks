@@ -3,8 +3,9 @@ import { FaAngleDown, FaAngleUp, FaCheckCircle, FaPlusCircle, FaQuestionCircle, 
 import PromptBox from "../../promptBox";
 import { randomString } from "utilities/string";
 import { FiArrowLeft } from "react-icons/fi";
-import ActiveQuestion, { OptionTypes } from "./Questions/ActiveQuestion";
+import ActiveQuestion, { OptionInterface, OptionTypes } from "./Questions/ActiveQuestion";
 import DataListManager from "./Questions/DataListManager";
+import { _getManager } from "components/Editorial/Base/Manager";
 
 interface Props {
     data: any;
@@ -20,6 +21,7 @@ interface QuestionInterface {
     query : string;
     media : any[];
     optionType? : OptionTypes;
+    options? : OptionInterface[];
 }
 
 const InactiveSidebar: FC<Props> = ({
@@ -83,6 +85,42 @@ const InactiveSidebar: FC<Props> = ({
     useEffect(() => {
         getActiveComps();
     }, [activeSlid]);
+
+    useEffect(()=>{
+        const manager = _getManager();
+        if (manager.canvasManager.activeSlide) {
+            const updated = manager.canvasManager.activeSlide;
+            const existing = manager.canvasManager.activeSlide.filter((item : any) => item.component == "Questions");
+            if (existing.length) {
+                const questionIndex = updated.indexOf(existing[0]);
+                updated[questionIndex] = {
+                    component: "Questions",
+                    theme: null,
+                    canvas: true,
+                    abstract : true,
+                    data : questions
+                } as any
+            } else {
+                updated.push({
+                    component: "Questions",
+                    theme: null,
+                    canvas: true,
+                    abstract : true,
+                    data : questions
+                } as any);
+            }
+            manager.canvasManager.updateActiveSlide(updated);
+            manager.canvasManager.updateSlides();
+        }
+    },[questions]);
+
+    useEffect(()=>{
+        const manager = _getManager();
+        if(manager.canvasManager.activeSlide) {
+            const questions : any= manager.canvasManager.activeSlide.filter((item : any)=> item.component == "Questions");
+            questions.length && setQuestions(questions[0].data);
+        }
+    },[]);
 
     const Item = () => {
         const [isOpen, setIsOpen] = useState(true);

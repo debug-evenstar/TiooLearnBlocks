@@ -16,7 +16,7 @@ export enum OptionTypes {
     Multiple="multi",
     Button="button"
 }
-interface OptionInterface {
+export interface OptionInterface {
     title : string;
     hash : string;
     value? : string;
@@ -38,12 +38,17 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
     useEffect(()=>{
         setQuestions((prev:any) => {
             const questionIndex = prev.indexOf(question);
-            question.options = options;
+            question.options = [...options];
             question.optionType = optionType;
             prev[questionIndex] = question;
-            return prev;
+            return [...prev];
         });
     },[options, optionType]);
+
+    useEffect(() => {
+        question.options && setOptions(question.options);
+        question.optionType && setOptionType(question.optionType);
+    },[]);
 
     return (
         <div className="w-full mb-12 relative">
