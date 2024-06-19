@@ -8,6 +8,7 @@ import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
 import { OverlayActiveState, RightSidebarState } from "./StateInterface";
 import { loadComponent } from "components/SlideManager/handler";
+import { loadEditorialComponent } from "../Helpers/Loader";
 
 const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
   const [slideComponents, setSlideComponents] = useState<any[]>([]);
@@ -120,7 +121,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
           }
         };
         if (item.abstract) {
-          const Component = loadComponent(item);
+          const Component = loadEditorialComponent(item);
           return <Component data={item}/>
         }
 

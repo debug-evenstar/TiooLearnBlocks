@@ -8,7 +8,8 @@ interface Props {
     setData : Function;
     setActiveItem : Function;
     generateItem : Function;
-    bulletIcon? : Function;
+    bulletIcon? : Function | React.ReactElement;
+    bulletAction? : Function;
 }
 
 const DataListManager: FC<Props> = ({
@@ -17,7 +18,8 @@ const DataListManager: FC<Props> = ({
     setData,
     setActiveItem,
     generateItem,
-    bulletIcon = () => {}
+    bulletIcon = () => {},
+    bulletAction = () => {}
 }) => {
 
   const [isListOpen, setIsListOpen] = useState<boolean>(false);
@@ -63,7 +65,12 @@ const DataListManager: FC<Props> = ({
                                 setActiveItem(item);
                             }}
                         >
-                            {bulletIcon && bulletIcon()} 
+                            <button
+                                onClick={() => bulletAction(item)}
+                            >
+                                {typeof bulletIcon == "object" && bulletIcon}
+                                {typeof bulletIcon == "function" && bulletIcon(item)} 
+                            </button>
                             {item.title}
                         </button>
                         <FaTrash className="text-[14px] text-red-500 justify-self-end ml-1 cursor-pointer" onClick={() => deleteData(item)}/>

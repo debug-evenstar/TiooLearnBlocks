@@ -15,7 +15,7 @@ interface Props {
     lessonlist: any;
 }
 
-interface QuestionInterface {
+export interface QuestionInterface {
     hash : string,
     title : string;
     query : string;
@@ -46,15 +46,27 @@ const InactiveSidebar: FC<Props> = ({
 
     const activeSlid = slides && slides[activeSlide];
     const [comps, setComps] = useState<any[]>();
-    const [questions, setQuestions] = useState<any[]>([]);
     const [activeQuestion, setActiveQuestion] = useState<any>(null);
     const scrRef = useRef<any>(null);
+    const loadQuestions = () => {
+        const manager = _getManager();
+        if(manager.canvasManager.activeSlide) {
+            const questions : any= manager.canvasManager.activeSlide.filter((item : any)=> item.component == "Questions");
+            if (questions.length ) {
+                return questions[0].data
+            }
+        }
+        return [];
+    }
+    const [questions, setQuestions] = useState<any[]>(loadQuestions());
+
     const getActiveComps = () => {
         const comps = activeSlid
             ? activeSlid.map((item: any) => item.component)
             : [];
         setComps(comps);
     };
+
 
     const generateQuestion = (title : string) => {
         const question : QuestionInterface = {
@@ -114,13 +126,6 @@ const InactiveSidebar: FC<Props> = ({
         }
     },[questions]);
 
-    useEffect(()=>{
-        const manager = _getManager();
-        if(manager.canvasManager.activeSlide) {
-            const questions : any= manager.canvasManager.activeSlide.filter((item : any)=> item.component == "Questions");
-            questions.length && setQuestions(questions[0].data);
-        }
-    },[]);
 
     const Item = () => {
         const [isOpen, setIsOpen] = useState(true);
@@ -235,7 +240,7 @@ const InactiveSidebar: FC<Props> = ({
                                 setData={setQuestions} 
                                 setActiveItem={setActiveQuestion}
                                 generateItem={generateQuestion}
-                                bulletIcon={() => (<FaQuestionCircle className="text-[15px] text-blue-400 mr-1"/>)}
+                                bulletIcon={<FaQuestionCircle className="text-[15px] text-blue-400 mr-1"/>}
                             />
                         </div>
                     }

@@ -20,6 +20,7 @@ export interface OptionInterface {
     title : string;
     hash : string;
     value? : string;
+    isAnswer? : boolean;
     layout? : ComponentLayoutInterface
 }
 
@@ -27,13 +28,28 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
     const [options, setOptions] = useState<any>([]);
     const [activeOption, setActiveOption] = useState<any>(null);
     const [optionType, setOptionType] = useState<string>(OptionTypes.Single);
+    const optionBulletIcon = (item : any) => 
+        item.isAnswer 
+            ? (<FaStar className="text-[15px] text-blue-400 mr-1"/>)
+            : (<FaStar className="text-[15px] text-[#c9c9c9] mr-1"/>)
+
+    
     const generateOption = (title : string) => {
         const option : OptionInterface = {
             title,
             hash : randomString(8),
-            value : title
+            value : title,
         }
         return option;
+    }
+
+    const setOptionAsAnswer = (item : OptionInterface) => {
+        const updated = options.map((option : OptionInterface) => {
+            return option.hash === item.hash
+                ? {...option, isAnswer : true}
+                : {...option, isAnswer : false}
+        });
+        setOptions([...updated]);
     }
     useEffect(()=>{
         setQuestions((prev:any) => {
@@ -88,7 +104,8 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
                         setData={setOptions}
                         setActiveItem={setActiveOption}
                         generateItem={generateOption}
-                        bulletIcon={() => (<FaStar className="text-[15px] text-blue-400 mr-1"/>)}
+                        bulletIcon={optionBulletIcon}
+                        bulletAction={(item: OptionInterface) => setOptionAsAnswer(item)}
                     />
                 </div>
             </div>
