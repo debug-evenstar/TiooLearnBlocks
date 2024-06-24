@@ -122,7 +122,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
         };
         if (item.abstract) {
           const Component = loadEditorialComponent(item);
-          return <Component data={item}/>
+          return <Component data={item} key={item.id}/>
         }
 
         return (

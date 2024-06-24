@@ -29,9 +29,9 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
   manager,
 }) => {
   return (
-    <div className="h-screen w-full top-0 overflow-hidden">
+    <div className="h-screen w-full relative top-0 overflow-hidden">
       <Header activeSlide={active} back={back} name={name} />
-      <div className="w-full h-full flex">
+      <div className="w-full h-[calc(100%_-_80px)] flex">
         <LeftSidebar
           slides={slides}
           changeTo={changeTo}

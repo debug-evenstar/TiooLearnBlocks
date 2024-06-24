@@ -27,9 +27,9 @@ const RightSidebar: FC<Props> = ({
 
   return (
     <div
-      className={`border-l bg-white border-[#030036] border-opacity-10 shadow h-screen w-full max-w-[20%] relative no-scrollbar mb-10 ${
-        optionStatus ? "" : "overflow-y-auto"
-      }`}
+      className={`border-l bg-white border-[#030036] border-opacity-10 shadow h-full w-full max-w-[20%] relative no-scrollbar mb-10 
+        ${ optionStatus ? "" : ""}
+      `}
     >
       {isActive ? (
         <ActiveSidebar manager={manager} />

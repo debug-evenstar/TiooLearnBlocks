@@ -71,6 +71,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
         const [hintIsActive, setHintIsActive] = useState<boolean>(false);
         const hintRef = useRef<any>();
+        const containerRef = useRef<any>();
 
         const navigateSlide = (direction: number, slideIndex: any = null) => {
             if (
@@ -230,6 +231,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         return (
             <div
                 style={containerStyle}
+                ref={containerRef}
                 className="w-full h-full mx-auto my-0 py-[10px] flex flex-col no-scrollbar"
             >
                 {/* {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
@@ -248,6 +250,8 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                             >
                                 {slide.map((component: any, index: number) => {
                                     const Component = loadComponent(component);
+                                    const containerElement = containerRef?.current;
+                                    const viewArea = containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null;
                                     return (
                                         <LayoutComponent
                                             key={index}
@@ -263,6 +267,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                                                 activeSlideIndex={
                                                     activeSlideIndex
                                                 }
+                                                viewArea={viewArea}
                                             />
                                         </LayoutComponent>
                                     );

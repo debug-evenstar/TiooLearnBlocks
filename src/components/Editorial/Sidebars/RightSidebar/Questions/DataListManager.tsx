@@ -8,6 +8,7 @@ interface Props {
     setData : Function;
     setActiveItem : Function;
     generateItem : Function;
+    onClickItem? : Function;
     bulletIcon? : Function | React.ReactElement;
     bulletAction? : Function;
 }
@@ -18,6 +19,7 @@ const DataListManager: FC<Props> = ({
     setData,
     setActiveItem,
     generateItem,
+    onClickItem,
     bulletIcon = () => {},
     bulletAction = () => {}
 }) => {
@@ -60,9 +62,12 @@ const DataListManager: FC<Props> = ({
                         key={item.hash}
                     >
                         <button 
-                            className="flex items-center grow py-1"
-                            onClick={() => {
-                                setActiveItem(item);
+                            className="data-item flex items-center grow py-1"
+                            onClick={(e) => {
+                                if (Array.from((e.target as HTMLElement).classList).includes("data-item")) {
+                                    onClickItem?.(item);
+                                    setActiveItem(item);
+                                }
                             }}
                         >
                             <button

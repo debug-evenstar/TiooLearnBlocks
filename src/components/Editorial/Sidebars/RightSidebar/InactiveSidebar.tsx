@@ -3,7 +3,7 @@ import { FaAngleDown, FaAngleUp, FaCheckCircle, FaPlusCircle, FaQuestionCircle, 
 import PromptBox from "../../promptBox";
 import { randomString } from "utilities/string";
 import { FiArrowLeft } from "react-icons/fi";
-import ActiveQuestion, { OptionInterface, OptionTypes } from "./Questions/ActiveQuestion";
+import ActiveQuestion, { InputInterface, OptionInterface, OptionTypes } from "./Questions/ActiveQuestion";
 import DataListManager from "./Questions/DataListManager";
 import { _getManager } from "components/Editorial/Base/Manager";
 
@@ -20,8 +20,9 @@ export interface QuestionInterface {
     title : string;
     query : string;
     media : any[];
-    optionType? : OptionTypes;
+    optionType : OptionTypes;
     options? : OptionInterface[];
+    inputs? : InputInterface[];
 }
 
 const InactiveSidebar: FC<Props> = ({
@@ -44,25 +45,26 @@ const InactiveSidebar: FC<Props> = ({
         "Dual Choice",
     ];
 
-    const activeSlid = slides && slides[activeSlide];
+    const activeSlideData = slides && slides[activeSlide];
     const [comps, setComps] = useState<any[]>();
     const [activeQuestion, setActiveQuestion] = useState<any>(null);
     const scrRef = useRef<any>(null);
+
     const loadQuestions = () => {
-        const manager = _getManager();
-        if(manager.canvasManager.activeSlide) {
-            const questions : any= manager.canvasManager.activeSlide.filter((item : any)=> item.component == "Questions");
-            if (questions.length ) {
-                return questions[0].data
+        if(activeSlideData) {
+            const slideQuestions : any= activeSlideData.filter((item : any)=> item.component == "Questions");
+            if (slideQuestions.length ) {
+                return [...slideQuestions[0].data]
             }
         }
         return [];
     }
-    const [questions, setQuestions] = useState<any[]>(loadQuestions());
+
+    const [questions, setQuestions] = useState<any[]>([]);
 
     const getActiveComps = () => {
-        const comps = activeSlid
-            ? activeSlid.map((item: any) => item.component)
+        const comps = activeSlideData
+            ? activeSlideData.map((item: any) => item.component)
             : [];
         setComps(comps);
     };
@@ -73,7 +75,8 @@ const InactiveSidebar: FC<Props> = ({
             hash : randomString(8),
             title : title,
             query : "",
-            media : []
+            media : [],
+            optionType : OptionTypes.Single
         }
         return question;
     }
@@ -94,37 +97,37 @@ const InactiveSidebar: FC<Props> = ({
         e.dataTransfer.setData("text/plain", id);
     };
 
-    useEffect(() => {
-        getActiveComps();
-    }, [activeSlid]);
-
-    useEffect(()=>{
+    const updateSlideQuestions = (data : any) => {
         const manager = _getManager();
         if (manager.canvasManager.activeSlide) {
             const updated = manager.canvasManager.activeSlide;
             const existing = manager.canvasManager.activeSlide.filter((item : any) => item.component == "Questions");
+            const questionsData = {
+                component: "Questions",
+                theme: null,
+                canvas: true,
+                abstract : true,
+                data : typeof data == "function" ? data(questions) : data
+            } as any
             if (existing.length) {
                 const questionIndex = updated.indexOf(existing[0]);
-                updated[questionIndex] = {
-                    component: "Questions",
-                    theme: null,
-                    canvas: true,
-                    abstract : true,
-                    data : questions
-                } as any
+                updated[questionIndex] = questionsData;
             } else {
-                updated.push({
-                    component: "Questions",
-                    theme: null,
-                    canvas: true,
-                    abstract : true,
-                    data : questions
-                } as any);
+                updated.push(questionsData);
             }
             manager.canvasManager.updateActiveSlide(updated);
             manager.canvasManager.updateSlides();
         }
-    },[questions]);
+    }
+
+    useEffect(() => {
+        getActiveComps();
+        if (activeQuestion) {
+            setActiveQuestion(questions.filter((question: QuestionInterface) => question.hash == activeQuestion.hash)[0]);
+        }
+        setQuestions(loadQuestions());
+    }, [activeSlideData]);
+
 
 
     const Item = () => {
@@ -237,7 +240,7 @@ const InactiveSidebar: FC<Props> = ({
                             <DataListManager 
                                 title="Questions" 
                                 data={questions} 
-                                setData={setQuestions} 
+                                setData={updateSlideQuestions}
                                 setActiveItem={setActiveQuestion}
                                 generateItem={generateQuestion}
                                 bulletIcon={<FaQuestionCircle className="text-[15px] text-blue-400 mr-1"/>}
@@ -248,7 +251,7 @@ const InactiveSidebar: FC<Props> = ({
                         activeQuestion && <ActiveQuestion 
                             question={activeQuestion} 
                             setActiveQuestion={setActiveQuestion}
-                            setQuestions={setQuestions}
+                            setQuestions={updateSlideQuestions}
                         />
                     }
                 </>

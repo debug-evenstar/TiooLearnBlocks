@@ -7,6 +7,7 @@ import { FC, createRef, useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import { updateQuestionInSlide, updateQuestionOption } from "./handler";
+import MovableResizer from "../MovableResizer";
 
 interface QuestionComponentProps {
    data : any;
@@ -85,7 +86,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({data}) => {
         }
     };
 
-    const onMove = (event: any, data: any, hash : string) => {
+    const onMove = (data: any, hash : string) => {
         if(data.x !== 0 || data.y !== 0) {
             setOptionConfig(hash, {position : {x : data.x, y : data.y}} as OptionConfig)
             updateOptionPosition(data, hash);
@@ -127,11 +128,13 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({data}) => {
                 configs[option.hash] = {
                     questionHash : question.hash,
                     sourceIndex : index,
-                    width : 100, 
-                    height : 50, 
-                    mode : "move",
-                    position : { x : 0, y : 0 },
-                    ...(configs[option.hash] ?? {})
+                    width : option.layout?.size?.width ?? 100, 
+                    height : option.layout?.size?.height ?? 50, 
+                    mode : configs[option.hash]?.mode ?? "move",
+                    position : { 
+                        x : option.layout?.position?.xAxis.offset ?? 0, 
+                        y : option.layout?.position?.yAxis.offset ?? 0 
+                    },
                 }
             });
         });
@@ -145,46 +148,75 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({data}) => {
                 allOptions.map((option : OptionInterface, index : number) => {
                     const nodeRef: any = createRef();
                     return(
-                        <Draggable
-                            key={option.hash}
-                            axis={"both"}
-                            nodeRef={nodeRef}
-                            onStop={(e,d)=>{onMove(e,d,option.hash)}}
-                            handle=".option"
-                            defaultClassName="w-fit"
-                            position={{x: optionConfig(option.hash)?.position?.x ?? 0, y: optionConfig(option.hash)?.position?.y ?? 0}} //Experimental
-                            bounds="parent"
-                            disabled={optionConfig(option.hash).mode != "move"}
+                        <MovableResizer 
+                            key={index + option.title}
+                            draggableAxis="both"
+                            onMove={(data : any) => onMove(data, option.hash)}
+                            size={{
+                                width : optionConfig(option.hash).width, 
+                                height : optionConfig(option.hash).height
+                            }}
+                            onResize={()=>{}}
+                            hasHandles={true}
                         >
-                            <Resizable
-                                width={optionConfig(option.hash).width}
-                                height={optionConfig(option.hash).height}
-                                onResize={onResize(option.hash, optionConfig(option.hash), nodeRef)}
-                                resizeHandles={
-                                    optionConfig(option.hash).mode == "resize"
-                                        ? ["s", "e", "n", "w"]
-                                        : []
+                            <button 
+                                style={{
+                                    width: optionConfig(option.hash).width + "px",
+                                    height: optionConfig(option.hash).height + "px",
+                                }}
+                                className={
+                                    "absolute text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow option" +
+                                    (optionConfig(option.hash).mode == "move" ? ' hover:cursor-move' : '')
                                 }
+                                ref={nodeRef}
+                                onDoubleClick={() => setOptionConfig(option.hash, {
+                                    mode : optionConfig(option.hash).mode == "resize" ? "move" : "resize"
+                                } as OptionConfig)}
                             >
-                                <button 
-                                    style={{
-                                        width: optionConfig(option.hash).width + "px",
-                                        height: optionConfig(option.hash).height + "px",
-                                    }}
-                                    className={
-                                        "absolute text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[10px] shadow-md shadow option" +
-                                        (optionConfig(option.hash).mode == "move" ? ' hover:cursor-move' : '')
-                                    }
-                                    ref={nodeRef}
-                                    onDoubleClick={() => setOptionConfig(option.hash, {
-                                        mode : optionConfig(option.hash).mode == "resize" ? "move" : "resize"
-                                    } as OptionConfig)}
-                                >
-                                    {option.title}
-                                </button>
-                            </Resizable>
+                                {option.title}
+                            </button>
+                        </MovableResizer>
+                        // <Draggable
+                        //     key={option.hash}
+                        //     axis={"both"}
+                        //     nodeRef={nodeRef}
+                        //     onStop={(e,d)=>{onMove(e,d,option.hash)}}
+                        //     handle=".option"
+                        //     defaultClassName="w-fit"
+                        //     position={{x: optionConfig(option.hash)?.position?.x ?? 0, y: optionConfig(option.hash)?.position?.y ?? 0}} //Experimental
+                        //     bounds="parent"
+                        //     disabled={optionConfig(option.hash).mode != "move"}
+                        // >
+                        //     <Resizable
+                        //         width={optionConfig(option.hash).width}
+                        //         height={optionConfig(option.hash).height}
+                        //         minConstraints={[0,35]}
+                        //         onResize={onResize(option.hash, optionConfig(option.hash), nodeRef)}
+                        //         resizeHandles={
+                        //             optionConfig(option.hash).mode == "resize"
+                        //                 ? ["s", "e", "n", "w"]
+                        //                 : []
+                        //         }
+                        //     >
+                        //         <button 
+                        //             style={{
+                        //                 width: optionConfig(option.hash).width + "px",
+                        //                 height: optionConfig(option.hash).height + "px",
+                        //             }}
+                        //             className={
+                        //                 "absolute text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow option" +
+                        //                 (optionConfig(option.hash).mode == "move" ? ' hover:cursor-move' : '')
+                        //             }
+                        //             ref={nodeRef}
+                        //             onDoubleClick={() => setOptionConfig(option.hash, {
+                        //                 mode : optionConfig(option.hash).mode == "resize" ? "move" : "resize"
+                        //             } as OptionConfig)}
+                        //         >
+                        //             {option.title}
+                        //         </button>
+                        //     </Resizable>
 
-                        </Draggable>
+                        // </Draggable>
                 )})
             }
         </>
