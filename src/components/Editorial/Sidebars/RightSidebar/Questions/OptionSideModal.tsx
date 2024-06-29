@@ -133,6 +133,7 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
                 <div className="flex flex-col border-[#e5e5e5] border-[2px] rounded-[5px]">
                     <textarea 
                         className="w-full h-[90px] text-[14px] border-[2px] border-[#f2f2f2] rounded-[5px] p-1"
+                        value={optionFeedback.current}
                         onChange={(e) => setOptionFeedback((prev:any) => ({...prev, current : e.target.value}))}
                     ></textarea>
                     <button 
