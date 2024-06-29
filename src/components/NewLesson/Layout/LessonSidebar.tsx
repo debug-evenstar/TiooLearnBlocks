@@ -71,20 +71,22 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
 const LessonSidebar: FC<any> = ({
   chapters,
   isOpen,
+  close,
   textbook,
   setCurrentLesson,
 }) => {
-  const styles = isOpen ? "w-[390px]" : "-translate-x-full w-0";
+  const styles = isOpen ? "w-0 sm:w-[390px]" : " sm:-translate-x-full sm:w-0";
 
   return (
     // <div className="w-[413px] px-10 py-4 border-r h-[980px] ">
     <div
-      className={`${styles}  ease-in-out relative duration-1000 transition-all py-4 overflow-y-auto max-h-screen h-screen`}
+      className={`${styles} fixed sm:relative ease-in-out relative duration-1000 transition-all py-4 overflow-y-auto max-h-screen h-screen`}
     >
       {isOpen && (
-        <>
-          <div className="px-10">
+        <div className="fixed z-[10000] bg-white h-screen sm:w-auto w-screen">
+          <div className="px-10 flex items-center justify-between">
             <img src={logoImg} alt="" className="" />
+            <button onClick={() => close(false)} >close</button>
           </div>
           <div className="mt-12 px-4">
             <button>
@@ -106,8 +108,8 @@ const LessonSidebar: FC<any> = ({
               ))}
             </div>
           </div>
-        </>
-      )} 
+        </div>
+      )}  
     </div>
   );
 };

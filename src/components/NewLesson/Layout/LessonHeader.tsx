@@ -1,6 +1,7 @@
+import { FaBars } from "react-icons/fa";
 import clockImg from "../../../img/clock.svg";
 
-export default function LessonHeader({ currentLesson }: any) {
+export default function LessonHeader({ currentLesson, sideBarOpen }: any) {
 
   const slide_count = currentLesson?.slides?.length;
 
@@ -25,7 +26,7 @@ export default function LessonHeader({ currentLesson }: any) {
             }
           </div>
         </div>
-        <p className="text-gray-500 flex items-center space-x-1 ">
+        <p className="text-gray-500 hidden sm:flex items-center space-x-1 ">
           <img src={clockImg} className="w-3" alt="" />
           <span className="text-sm">10min</span>
         </p>
@@ -36,9 +37,19 @@ export default function LessonHeader({ currentLesson }: any) {
 
 
   return (
-    <div className="w-full border-b h-[90px] px-10 flex justify-between items-center">
-      <p className="font-[500] text-[18px]">{currentLesson.topic}</p>
-      <LessonProgress/>
-    </div>
+    <>
+      <div className="px-5 py-3 flex sm:hidden border-b items-center space-x-3">
+        <button>
+          <FaBars/>
+        </button>
+        <p>
+          show chapters
+        </p>
+      </div>
+      <div className="w-full sm:border-b h-[90px] px-10 flex justify-between items-center">
+        <p className="font-[500] text-[18px] hidden sm:block">{currentLesson.topic}</p>
+        <LessonProgress/>
+      </div>
+    </>
   );
 }

@@ -7,6 +7,7 @@ import "./LessonLayout.css";
 import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
+import FeedbackPopup from "components/NewLesson/Popups";
 
 export interface LessonLayoutProps {
   textbook: any;
@@ -48,8 +49,6 @@ export default function LessonLayout({
 
 
   const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0]);
-
-  console.log("printing lesson",currentLesson);
 
   const [currentChapter, setCurrentChapter] = useState(lesson? lesson.Chapter : chapters[0]);
 
@@ -93,11 +92,23 @@ export default function LessonLayout({
   }, [currentLesson]);
 
   return (
-    <div className="flex bg-white w-screen z-[100000] w-full overflow-hidden urbanist">
+    <>
+    <FeedbackPopup
+      type="wrong"
+      onClose={() => console.log("closing")}
+      title="Oops!!" content="That is not an apple"
+    />
+    <FeedbackPopup
+      type="correct"
+      onClose={() => console.log("closing")}
+      title="Good one!" content="The microwave has a computer that controls the time used to warm your food."
+    />
+    <div className="flex bg-white w-screen z-[17000] w-full overflow-hidden urbanist">
       {
         sideBar && 
         <LessonSidebar
           isOpen={sideBarOpen}
+          close={setSideBarOpen}
           {...{ chapters, textbook, setCurrentLesson }}
         />
       }
@@ -105,6 +116,7 @@ export default function LessonLayout({
         <LessonHeader
           getChapter={null}
           chapter={currentChapter}
+          sideBarOpen={sideBarOpen}
           currentLesson={currentLesson}
         />
         <div className="relative px-28 flex flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
@@ -114,17 +126,11 @@ export default function LessonLayout({
             {...lessonSlidesArgs}
           )}
           {children}
-                    {/* <LessonSlides
-            slideManagerRef={slideManagerRef}
-            handlePrevious={handlePrevious}
-            handleContinue={handleContinue}
-            slides={currentLesson.slides}
-            setActiveSlide={setActiveSlide}
-            setCanProceed={setCanProceed}
-          /> */}
+
         </div>
         <LessonFooter previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
       </div>
     </div>
+    </>
   );
 }
