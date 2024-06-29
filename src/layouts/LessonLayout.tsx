@@ -50,6 +50,7 @@ export default function LessonLayout({
 
   const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0]);
 
+
   const [currentChapter, setCurrentChapter] = useState(lesson? lesson.Chapter : chapters[0]);
 
 

@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import "./style.css";
 import catImg from "img/popup/cat.svg";
-import penguinImg from "img/popup/penguin.svg";
+import penguinImg from "img/popup/penguin.gif";
 import continueImg from "img/popup/continue-white.svg";
 import continueActiveImg from "img/popup/continue-main.svg";
 import successBg from "img/popup/success-popup-bg.svg";
@@ -41,8 +41,8 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
 
   return (
     <div className="h-full flex justify-center flex-col">
-      <div className="flex items-center space-x-2">
-        <img src={penguinImg} alt="" className="mx-auto" />
+      <div className="flex items-center space-x-2 relative">
+        <img src={penguinImg} alt="" className="mx-auto max-h-[120px]" />
         <div>
           <p className="text-sm">{title}</p>
           <p className="font-[600]">{content}</p>
