@@ -25,10 +25,13 @@ import {
 import { ColorResult, SketchPicker } from "react-color";
 import { toggleWrapperStyle } from "components/Editorial/ViewBox/Boxtypes/Text/handlers/stylesHandler";
 import { CurrentStylesState } from "components/Editorial/Base/StateInterface";
-import { TextFormatType, formatText, getRange, textComponentData, toggleList } from "components/Editorial/ViewBox/Boxtypes/Text/handler";
+import { TextFormatType, formatText, getRange, textComponentData, toggleList, verifySelectionProperty } from "components/Editorial/ViewBox/Boxtypes/Text/handler";
+import { getParseTreeNode } from "typescript";
 
 interface Props {
   manager: ManagerInterface;
+  propertiesActiveState? : any,
+  toggleTextPropertyActiveState? : any
 }
 
 const TextProperties: FC<Props> = ({ manager }) => {
@@ -62,10 +65,14 @@ const TextProperties: FC<Props> = ({ manager }) => {
     "Helvetica",
     "Courier New",
   ];
+  const defaultProperties : any= {
+    align : "left"
+  }
+  const [propertiesActiveState, setPropertiesActiveState] = useState<any>(defaultProperties);
 
   const handleChangeTextColor = (color: ColorResult) => {
     setTextColor(color.hex);
-    // toggleTextStyle(color.hex, "textColor");
+    formatText(TextFormatType.STYLE, "span", { color : color.hex});
     setColorIsActive(false);
   };
 
@@ -87,14 +94,26 @@ const TextProperties: FC<Props> = ({ manager }) => {
 
   const handleFontChange = (newFont: string) => {
     setSelectedFont(newFont);
-    // toggleTextStyle(selectedFont, "font");
   };
+
+  const toggleTextPropertyActiveState = (propertyName : string, state : any = null) => {
+    const update : any = {};
+    update[propertyName] = state !== null ? state : !propertiesActiveState[propertyName]
+    setPropertiesActiveState((prev:any) => ({...prev, ...update}));
+  }
+
+
+  // Function to get the primary text node in active component is <... class="main">....</..>
+  const getPrimaryTextNode = () => {
+    return manager.states.canvasStates?.editableTextRef.current?.querySelector(".main") as HTMLElement;
+  }
+
+  const handleActiveStyles = (propertyName : string, value : any = true) => 
+    (propertiesActiveState[propertyName] == value ? "text-white bg-[#E6E6FA]" : "");
 
 
   useEffect(() => {
     setTextColor(currentTextColor);
-    //setTextSize(currentTextSize);
-    //setTextSpacing(currentTextSpacing);
     setSelectedFont(currentFont);
   }, [currentStyles]);
 
@@ -104,6 +123,16 @@ const TextProperties: FC<Props> = ({ manager }) => {
       textComponentData(activeElement.innerHTML)
     );
   }, [activeElement?.innerHTML]);
+
+  useEffect(()=>{
+    document.addEventListener("selectionchange", (event) => {
+        verifySelectionProperty();
+    });
+  },[]);
+
+  useEffect(()=> {
+    verifySelectionProperty();
+  },[isActive]);
 
   return (
     <div className="w-full my-5 py-2">
@@ -121,7 +150,11 @@ const TextProperties: FC<Props> = ({ manager }) => {
       {isActive && (
         <main className="w-full shadow-md relative">
           <section className="flex flex-wrap py-4">
-            <TextEditProperties manager={manager} />
+            <TextEditProperties 
+              manager={manager} 
+              propertiesActiveState={propertiesActiveState} 
+              toggleTextPropertyActiveState={toggleTextPropertyActiveState}
+            />
           </section>
 
           <section className="w-full flex justify-between items-center py-4">
@@ -130,7 +163,10 @@ const TextProperties: FC<Props> = ({ manager }) => {
               <select
                 className="w-[50%] text-sm bg-white p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#4f46e5] focus:border-[#4f46e5] sm:text-sm"
                 value={selectedFont}
-                onChange={(e) => formatText(TextFormatType.STYLE, "span", { fontFamily : e.target.value})}
+                onChange={(e) => {
+                  formatText(TextFormatType.STYLE, "span", { fontFamily : e.target.value});
+                  setSelectedFont(e.target.value);
+                }}
               >
                 {fonts.map((font) => (
                   <option key={font} value={font} className="text-[12px]">
@@ -159,62 +195,61 @@ const TextProperties: FC<Props> = ({ manager }) => {
           </section>
 
           <section className="w-full border flex justify-between my-4 p-2">
-            <a
-              className="border p-2 cursor-pointer"
-              href="javascript:void(0)"
+            <button
+              className={"border p-2 cursor-pointer" + handleActiveStyles("align", "left")}
               onClick={() => {
-                formatText(TextFormatType.STYLE, "span", { textAlign : "left "});
+                formatText(TextFormatType.STYLE, getPrimaryTextNode() , { textAlign : "left "});
+                toggleTextPropertyActiveState("align", "left");
               }}
             >
               <RiAlignLeft className="cursor-pointer" />
-            </a>
+            </button>
 
-            <a
-              className="border p-2 cursor-pointer"
-              href="javascript:void(0)"
+            <button
+              className={"border p-2 cursor-pointer" + handleActiveStyles("align", "center")}
               onClick={() => {
-                formatText(TextFormatType.STYLE, "span", { textAlign : "center"});
+                formatText(TextFormatType.STYLE, getPrimaryTextNode(), { textAlign : "center"});
+                toggleTextPropertyActiveState("align", "center");
               }}
             >
               <RiAlignCenter className="cursor-pointer" />
-            </a>
+            </button>
 
-            <a
-              className="border p-2 cursor-pointer"
-              href="javascript:void(0)"
+            <button
+              className={"border p-2 cursor-pointer" + handleActiveStyles("align", "right")}
               onClick={() => {
-                formatText(TextFormatType.STYLE, "span", { textAlign : "right"});
+                formatText(TextFormatType.STYLE, getPrimaryTextNode(), { textAlign : "right"});
+                toggleTextPropertyActiveState("align", "right");
               }}
             >
               <RiAlignRight className="cursor-pointer" />
-            </a>
+            </button>
 
-            <a
-              className="border p-2 cursor-pointer"
-              href="javascript:void(0)"
+            <button
+              className={"border p-2 cursor-pointer" + handleActiveStyles("align", "justify")}
               onClick={() => {
-                formatText(TextFormatType.STYLE, "span", { textAlign : "justify"});
+                formatText(TextFormatType.STYLE, getPrimaryTextNode(), { textAlign : "justify"});
+                toggleTextPropertyActiveState("align", "justify");
               }}
             >
               <RiAlignJustify className="cursor-pointer" />
-            </a>
+            </button>
           </section>
 
           <section className="w-full py-4">
             <div
               className={`${!colorIsActive && "flex"} items-center gap-2 mb-4`}
             >
-              <p
+              <button
                 className={`text-[12px] cursor-pointer ${
                   colorIsActive && "mb-4"
                 }`}
                 onClick={() => setColorIsActive(!colorIsActive)}
               >
-                Text color:{" "}
-              </p>
-              <a href="javascript:void(0)">
+                Text color:
+              </button>
                 {!colorIsActive && (
-                  <div
+                  <button
                     className="text-center"
                     onClick={() => setColorIsActive(true)}
                   >
@@ -225,16 +260,17 @@ const TextProperties: FC<Props> = ({ manager }) => {
                         backgroundColor: textColor,
                       }}
                     />
-                  </div>
+                  </button>
                 )}
-                {colorIsActive && (
-                  <SketchPicker
-                    width="90%"
-                    color={textColor}
-                    onChangeComplete={(color) => handleChangeTextColor(color)}
-                  />
-                )}
-              </a>
+                <button onMouseDown={(e) => {e.preventDefault()}}>
+                  {colorIsActive && (
+                    <SketchPicker
+                      width="90%"
+                      color={textColor}
+                      onChange={(color) => handleChangeTextColor(color)}
+                    />
+                  )}
+                </button>
             </div>
 
             <a href="javascript:void(0)">
@@ -271,7 +307,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
   );
 };
 
-const TextEditProperties: FC<Props> = ({ manager }) => {
+const TextEditProperties: FC<Props> = ({ manager,propertiesActiveState, toggleTextPropertyActiveState }) => {
 
   const unLink = manager.canvasManager.canvas.functions?.unLink;
 
@@ -279,48 +315,61 @@ const TextEditProperties: FC<Props> = ({ manager }) => {
   const [linkBoxValue, setLinkBoxValue] = useState("");
 
   const handleAddLink = () => {
-    // toggleWrapper("a", "blue", linkBoxValue);
     setLinkBoxValue("");
     setLinkBoxActive(false);
   };
 
+  
+  const handleActiveStyles = (propertyName : string) => 
+    (propertiesActiveState[propertyName] ? "text-white bg-[#E6E6FA]" : "");
+
+  useEffect(()=>{
+    manager.canvasManager.canvas.functions.toggleTextEditPropertyActiveState = (property : string, state : boolean | null = null) => {
+      toggleTextPropertyActiveState(property, state)
+    }
+  },[])
+
   return (
     <>
       <a
-        className="border p-2 cursor-pointer"
+        className={"border p-2 cursor-pointer" + handleActiveStyles("bold")}
         href="javascript:void(0)"
         onClick={() => {
-          formatText(TextFormatType.STYLE, "span", {fontWeight : "bold"})
+          formatText(TextFormatType.STYLE, "span", {fontWeight : "bold"});
+          toggleTextPropertyActiveState("bold");
         }}
       >
         <RiBold />
       </a>
 
       <a
-        className="border p-2 cursor-pointer"
+        className={"border p-2 cursor-pointer" + handleActiveStyles("italic")}
         href="javascript:void(0)"
         onClick={() => {
           formatText(TextFormatType.STYLE,"span", {fontStyle : "italic"});
+          toggleTextPropertyActiveState("italic");
         }}
       >
         <RiItalic />
       </a>
 
       <a
-        className="border p-2 cursor-pointer"
+        className={"border p-2 cursor-pointer" + handleActiveStyles("underline")}
         href="javascript:void(0)"
         onClick={() => {
           formatText(TextFormatType.STYLE, "span", { textDecoration : "underline" });
+          toggleTextPropertyActiveState("underline");
         }}
       >
         <RiUnderline />
       </a>
 
       <a
-        className="border p-2 cursor-pointer"
+        className={"border p-2 cursor-pointer" + handleActiveStyles("linethrough")}
         href="javascript:void(0)"
         onClick={() => {
           formatText(TextFormatType.STYLE, "span", { textDecoration : "line-through" });
+          toggleTextPropertyActiveState("linethrough");
         }}
       >
         <RiStrikethrough />

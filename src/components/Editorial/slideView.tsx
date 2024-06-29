@@ -22,16 +22,17 @@ const EditorialSlideView: FC<Props> = ({
     handleContinue,
     setCanProceed,
 }) => {
+    
     const hasSlides = () => parsedSlides.length !== 0;
     return (
         <div className="w-full relative overflow-y-auto flex items-center gap-3">
             {hasSlides() && (
-                <div
+                <button
                     className="w-[54px] h-[54px] rounded-full border-[1.5px] shadow-lg cursor-pointer border-[#87909E] flex items-center justify-center"
                     onClick={handlePrevious}
                 >
                     <FaAngleLeft className="text-[#87909E] text-[20px]" />
-                </div>
+                </button>
             )}
             <div className=" w-10/12 relative mx-auto border-[0.92px] min-h-[440px] text-black rounded-[9px] shadow-md">
                 {hasSlides() && (
@@ -59,12 +60,12 @@ const EditorialSlideView: FC<Props> = ({
                 )}
             </div>
             {hasSlides() && (
-                <div
+                <button
                     className="w-[54px] h-[54px] rounded-full border-[1.5px] shadow-lg cursor-pointer border-[#87909E] flex items-center justify-center"
                     onClick={handleContinue}
                 >
                     <FaAngleRight className="text-[#87909E] text-[20px]" />
-                </div>
+                </button>
             )}
         </div>
     );

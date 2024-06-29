@@ -7,6 +7,8 @@ import { setComponentLayout } from "./Manager";
 import { ComponentBaseDataInterface } from "components/interface";
 import Slider from "../ViewBox/Boxtypes/Slider/Slider";
 import { OverlayActiveState, RightSidebarState } from "./StateInterface";
+import { loadComponent } from "components/SlideManager/handler";
+import { loadEditorialComponent } from "../Helpers/Loader";
 
 const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
   const [slideComponents, setSlideComponents] = useState<any[]>([]);
@@ -115,13 +117,13 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
           );
           // Only update if position has changed
           if (data.x !== 0 || data.y !== 0) {
-            // manager.slideManager.saveComponentData(
-            //   manager.canvasManager.getComponentIndex(item.id),
-            //   { layout }
-            // );
             manager.canvasManager.canvas.updateActiveComponentData({layout});
           }
         };
+        if (item.abstract) {
+          const Component = loadEditorialComponent(item);
+          return <Component data={item} key={item.id}/>
+        }
 
         return (
           <Draggable
@@ -139,6 +141,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
               key={item.id}
               ref={nodeRef}
               onClick={() => handleClickedViewbox(item.id)}
+              className="absolute"
             >
               {item.id.includes("Slider") ? (
                 <Slider id={item.id} manager={manager} />

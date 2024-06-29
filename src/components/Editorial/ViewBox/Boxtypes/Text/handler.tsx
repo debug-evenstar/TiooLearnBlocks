@@ -1,6 +1,7 @@
 import { CanvasStates } from "components/Editorial/Base/CanvasManager";
 import { ManagerInterface, _getManager } from "components/Editorial/Base/Manager";
 import { ComponentBaseDataInterface } from "components/interface";
+import { RefObject } from "react";
 import ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 import { objectsAreIdentical } from "utilities/object";
@@ -19,6 +20,13 @@ interface TextComponentDataInterface extends ComponentBaseDataInterface {
 export enum TextFormatType {
   STYLE,
   WRAP
+}
+
+export const supportedStyles : any = {
+  "bold" : {fontWeight : "bold"},
+  "italic" : {fontStyle : "italic"},
+  "underline" : {textDecoration : "underline"},
+  "linethrough" : {textDecoration : "line-through"},
 }
 
 
@@ -75,6 +83,43 @@ export const handleTextChange = (
   );
 };
 
+/* -------------- SET DEFAULT STYLES AND CLASSES OF PARENT TAG -------------- */
+
+const setDefaultStyles = (element : HTMLElement) => {
+  element.className = "main outline-none";
+  const canvasView = document.getElementById("editorial-canvas")
+      ?.clientWidth as number;
+  element.style.fontSize = "16px";
+  element.setAttribute("data-type", "text");
+  element.setAttribute("data-container-pixel", canvasView.toString());
+}
+
+
+/* ---------------- WRAP EDITABLE CONTENT IN PARENT TEXT TAG ---------------- */
+
+export const initializeParentTag = (editableRef : React.RefObject<HTMLDivElement>) => {
+  const editable : any = editableRef.current;
+  let parentTag : any = editable.querySelector("p.main");
+  if ( !parentTag && editable.innerHTML) {
+    const textNode = document.createTextNode(editable.innerHTML);
+    parentTag = document.createElement("p");
+    setDefaultStyles(parentTag);
+    parentTag.appendChild(textNode);
+    const currentValue = editable.innerHTML;
+    editable.innerHTML="";
+    editable.appendChild(parentTag);
+
+    // Set cursor
+    // Would convert to helper
+    let range = document.createRange();
+    let sel = window.getSelection();
+    range.setStart(parentTag, currentValue.length)
+    range.collapse(true)
+    sel?.removeAllRanges()
+    sel?.addRange(range)
+  }
+}
+
 
 
 /* --------------------------- ADJUST TEXTAREA BOX -------------------------- */
@@ -110,51 +155,44 @@ export const resizeBox = (
 
 
 // Function to handle text formatting properties
-
 export const formatText = (
   type : TextFormatType,
-  tagName : string,
+  tag : string | HTMLElement,
   styles? : {[key : string] : string}
 ) => {
     const manager = _getManager();
-    const formatted = formatTextWithWrapper(tagName, styles ?? {}, type);
+    let formatted;
+    if (typeof tag === "string") {
+      formatted = formatTextWithWrapper(tag, styles ?? {}, type);
+    } else { 
+      formatted = formatTextStyle(tag, (styles ?? {}) as any);
+    }
+
     manager.canvasManager.canvas.updateActiveComponentData(
       textComponentData(manager.states.canvasStates?.editableTextRef.current.innerHTML)
     );
     return formatted;
 }
 
-// export const formatTextt = (
-//   elementType: string,
-//   style: string = "",
-//   styleType: string = "",
-//   link: string = ""
-// ) => {
-//   const range = getRange();
-//   if (range && range.toString()) {
-//       toggleWrapper(range, elementType, style, styleType, link);
-//   }
-//   const element: HTMLDivElement = document.getElementById(
-//       manager.canvasManager.activeComponent.data.id
-//   ) as HTMLDivElement;
-//   if (styleType !== "position") return;
-//   if (!element) return;
-//   toggleWrapperStyle(element, style, styleType);
-// }
+
+
 
 const formatTextWithWrapper = (tagName : string, styles : any, type : TextFormatType) => {
   const range = getRange();
   const manager = _getManager()
   const lastSelection = manager.states.canvasStates?.lastRangeSelection;
 
-  if (range && range.toString()) {
+  if (range?.toString()) {
     const boundingElement = range.startContainer.parentElement;
     if (undoRangeFormat(range, tagName, styles, type)) {
       return;
     }
 
     // If bounding element is formatted wrapper 
-    if ((boundingElement && boundingElement.className == "ft") && type == TextFormatType.STYLE) {
+    if ((boundingElement && boundingElement.className == "ft") &&
+     type == TextFormatType.STYLE &&
+     range.toString() == boundingElement.innerText
+    ) {
       const element = formatTextStyle(boundingElement, styles);
       setState("lastRangeSelection", { element , range, styles });
       return element;
@@ -167,18 +205,26 @@ const formatTextWithWrapper = (tagName : string, styles : any, type : TextFormat
       const element = formatTextStyle(lastSelection.element, styles);
       return element;
     }
-    
+    // ran.cloneContents().childNodes[1].innerHTML
     // Final wrap option
     const element = createElementWithStyles(tagName, styles);
-    range.surroundContents(element);
-    // element.innerText = range.toString();
-    // range.deleteContents();
-    // range.insertNode(element);
+
+    try {
+      range.surroundContents(element);
+    } catch (err) {
+      const rangeContents = range.extractContents();
+      element.appendChild(rangeContents);
+      range.deleteContents();
+      range.insertNode(element);
+    }
+
+    // Clean empty elements #Change the parent element here to editable ref element
+    boundingElement && cleanEmptyNodes(boundingElement);
+
     setState("lastRangeSelection", { element , range, styles });
     return element;
 
   }
-  //range.surroundContents(element);
 
 }
 
@@ -257,6 +303,34 @@ export const toggleList = (listType : string) => {
   }
 };
 
+export const verifySelectionProperty = () => {
+  const range = getRange();
+  const manager = _getManager();
+  try {
+    if (range && range.toString()) {
+      const boundingElement = range.startContainer.parentElement;
+      if (boundingElement?.classList.contains("ft")) {
+        Object.keys(supportedStyles).forEach((style : string) => {
+          const styleName : any = Object.keys(supportedStyles[style])[0]
+          const elementStyle = boundingElement.style[styleName];
+          if ( elementStyle && elementStyle == supportedStyles[style][styleName]) {
+              manager.canvasManager.canvas.functions.toggleTextEditPropertyActiveState(style, true)
+          } else {
+            manager.canvasManager.canvas.functions.toggleTextEditPropertyActiveState(style, false)
+          }
+        });
+      }
+    } else {
+      Object.keys(supportedStyles).forEach((style : string) => {
+        manager.canvasManager.canvas.functions.toggleTextEditPropertyActiveState(style, false)
+      });
+    }
+  } catch (err) {
+    // console.log(err);
+  }
+
+}
+
 
 /* ---------------------------- HELPER FUNCTIONS ---------------------------- */
 
@@ -279,6 +353,14 @@ export function setState(key: string, data : any) {
   manager.setState("canvasStates", (prev : CanvasStates) => ({
     ...prev,  ...newData }
   ));
+}
+export function cleanEmptyNodes (parent : HTMLElement)  {
+  const nodes = parent.querySelectorAll("*");
+  nodes.forEach((node: Element | any) => {
+    if (!node.innerHTML || node.innerHTML == "") {
+      node.remove();
+    }
+  });
 }
 
 // const rangeHasStyles = () => 

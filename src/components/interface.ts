@@ -64,6 +64,7 @@ export interface ComponentBaseDataInterface {
   layout?: ComponentLayoutInterface; // Manage viewbox layout
   styles?: ComponentStylesInterface; // Manage optional styles for component view box or global per-component styles
   canvas?: boolean;
+  abstract? : boolean; // Determine if component uses view box or not.. Is Abstract
   questions?: QuestionInterface[]; // Handle question types on different components
 }
 

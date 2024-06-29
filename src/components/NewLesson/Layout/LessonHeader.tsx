@@ -3,6 +3,7 @@ import clockImg from "../../../img/clock.svg";
 
 export default function LessonHeader({ currentLesson, sideBarOpen }: any) {
 
+  const slide_count = currentLesson?.slides?.length;
 
   const LessonProgress = () => {
     return (
@@ -10,7 +11,7 @@ export default function LessonHeader({ currentLesson, sideBarOpen }: any) {
         <div>
           <p className="text-gray-500 text-sm">Your progress</p>
           <p className="text-main font-[700]">
-            {currentLesson?.slides?.length} Slides in this lesson
+            {slide_count} Slide{ slide_count > 1 && 's' } in this lesson
           </p>
           <div className="flex items-center space-x-2">
             <div className="w-10 h-[10px] rounded-full px-1 bg-main flex items-center justify-end">
@@ -27,7 +28,7 @@ export default function LessonHeader({ currentLesson, sideBarOpen }: any) {
         </div>
         <p className="text-gray-500 hidden sm:flex items-center space-x-1 ">
           <img src={clockImg} className="w-3" alt="" />
-          <span className="text-sm">39min</span>
+          <span className="text-sm">10min</span>
         </p>
       </div>
     );

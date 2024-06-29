@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, createRef, useEffect, useRef, useState } from "react";
 import {
   LessonSlideInterface,
   LessonSlideScope,
@@ -11,6 +11,7 @@ import LayoutComponent from "components/LayoutBox";
 import { ComponentBaseDataInterface } from "components/interface";
 import PreviewLayout from "./Preview/PreviewLayout";
 import LessonLayout from "layouts/LessonLayout";
+import { height } from "@mui/system";
 
 interface Props {
   active: number;
@@ -51,38 +52,56 @@ const ActiveEditSlide: FC<Props> = ({
         ]
       }
     ];
+    const [calculatedArea, setCalculatedArea] = useState<{width : number, height : number}>({width : 0 , height : 0})
+    const contRef : React.RefObject<any> = createRef();
 
-    console.log("chapters",slides);
+
+    useEffect(()=>{
+      setCalculatedArea({
+        width : contRef?.current ? contRef?.current.clientHeight * 1.6 : 0,
+        height : contRef?.current?.clientHeight ?? 0
+      })
+    }, contRef?.current)
 
     return (
       <LessonLayout textbook={{}} lesson={data} closePreview={() => setPreviewSlide(false)} sideBar={false} chapters={chapters}  >
-        <>
-        {slide.map((component: ComponentBaseDataInterface, index: number) => {
-            const Component = loadComponent(component);
-            const viewArea = { width : document.body.clientWidth, height : document.body.clientHeight };
-            return component.layout
-                ? (
-                    <LayoutComponent layout={component.layout}>
-                      <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>
-                    </LayoutComponent>
-                )
-                : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
-          })}
-        </>
+        <div 
+          ref={contRef}
+          className="w-full h-full relative"
+        >
+          <div
+            style={{
+              width : calculatedArea.width,
+            }}
+            className="mx-auto h-full relative bg-[#fafafa]"
+          >
+            {slide.map((component: ComponentBaseDataInterface, index: number) => {
+              const Component = loadComponent(component);
+              const viewArea = { width : calculatedArea.width, height : calculatedArea.height };
+              return component.layout
+                  ? (
+                      <LayoutComponent layout={component.layout}>
+                        <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>
+                      </LayoutComponent>
+                  )
+                  : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
+            })}
+          </div>
+        </div>
       </LessonLayout>
     );
   };
 
 
   const saveSlide = () => {
-    const slideId : number = data.LessonSlides[active]?.id ?? null;
+    const slideId : number = data.lesson_slides[active]?.id ?? null;
     setIsSaving(true);
     if(slideId) {
       manager.slideManager.saveSlide(slideId, activeSlide, ()=>{
         setIsSaving(false);
       });
     } else {
-      const slideIndex : number = data.LessonSlides.length;
+      const slideIndex : number = data.lesson_slides.length;
       manager.slideManager.createSlide(slideIndex, data.id, activeSlide, ()=>{
         setIsSaving(false);
       });
@@ -130,7 +149,7 @@ const ActiveEditSlide: FC<Props> = ({
       </div>
       {previewSlide && (
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0">
-          <div className="w-full h-full bg-cover px-5 flex justify-center items-center fw-600">
+          <div className="w-full h-full bg-cover px-5 flex justify-center items-center">
             <div className="w-full h-full">
               <RenderPreview
                   slide={previewSlideData}

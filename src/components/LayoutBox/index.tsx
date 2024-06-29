@@ -33,7 +33,7 @@ const LayoutComponent: FC<LayoutComponentProps> = ({ layout, children }) => {
   }, [layout]);
 
   return (
-    <div style={layoutStyles()} className="relative">
+    <div style={layoutStyles()} className="absolute">
       {children}
     </div>
   );

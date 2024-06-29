@@ -15,6 +15,7 @@ export interface SlideManagerInterface {
   setActiveSlide: Function;
   saveComponentData: Function;
   handleSlidesUpdate: Function;
+  updateLessonSlides: Function;
   addNewSlide: Function;
 }
 
@@ -23,6 +24,7 @@ export class SlideManager implements SlideManagerInterface {
   slides: any[];
   activeSlide: number = 0;
   handleSlidesUpdate: Function = () => {};
+  updateLessonSlides: Function = () => {};
 
   constructor(manager: ManagerInterface, slides: any[]) {
     this.manager = manager;
@@ -71,6 +73,7 @@ export class SlideManager implements SlideManagerInterface {
           callback();
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         callback && callback();
         return response.json();
       })
@@ -101,9 +104,19 @@ export class SlideManager implements SlideManagerInterface {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+        response.json().then(json => {
+          this.updateLessonSlides((previousSlides : any[]) => {
+            const updated = previousSlides;
+            updated[index] = {
+              id : json.data.id,
+              slide_data : payload,
+              slide_index : index
+            }
+            return updated;
+          });
+        });
         callback && callback();
         //Add a function to update the lessonSlides object with the created slide id
-        return response.json();
       })
       .then((data) => {})
       .catch((error) => {

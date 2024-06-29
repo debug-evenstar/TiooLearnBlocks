@@ -1,6 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { FaAngleDown, FaAngleUp, FaCheckCircle, FaPlusCircle, FaQuestionCircle, FaTimesCircle, FaTrash } from "react-icons/fa";
 import PromptBox from "../../promptBox";
+import { randomString } from "utilities/string";
+import { FiArrowLeft } from "react-icons/fi";
+import ActiveQuestion, { InputInterface, OptionInterface, OptionTypes } from "./Questions/ActiveQuestion";
+import DataListManager from "./Questions/DataListManager";
+import { _getManager } from "components/Editorial/Base/Manager";
 
 interface Props {
     data: any;
@@ -9,6 +14,17 @@ interface Props {
     slides: any;
     lessonlist: any;
 }
+
+export interface QuestionInterface {
+    hash : string,
+    title : string;
+    query : string;
+    media : any[];
+    optionType : OptionTypes;
+    options? : OptionInterface[];
+    inputs? : InputInterface[];
+}
+
 const InactiveSidebar: FC<Props> = ({
     slides,
     data,
@@ -29,18 +45,43 @@ const InactiveSidebar: FC<Props> = ({
         "Dual Choice",
     ];
 
-    const activeSlid = slides && slides[activeSlide];
+    const activeSlideData = slides && slides[activeSlide];
     const [comps, setComps] = useState<any[]>();
+    const [activeQuestion, setActiveQuestion] = useState<any>(null);
     const scrRef = useRef<any>(null);
+
+    const loadQuestions = () => {
+        if(activeSlideData) {
+            const slideQuestions : any= activeSlideData.filter((item : any)=> item.component == "Questions");
+            if (slideQuestions.length ) {
+                return [...slideQuestions[0].data]
+            }
+        }
+        return [];
+    }
+
+    const [questions, setQuestions] = useState<any[]>([]);
+
     const getActiveComps = () => {
-        const comps = activeSlid
-            ? activeSlid.map((item: any) => item.component)
+        const comps = activeSlideData
+            ? activeSlideData.map((item: any) => item.component)
             : [];
         setComps(comps);
     };
-    useEffect(() => {
-        getActiveComps();
-    }, [activeSlid]);
+
+
+    const generateQuestion = (title : string) => {
+        const question : QuestionInterface = {
+            hash : randomString(8),
+            title : title,
+            query : "",
+            media : [],
+            optionType : OptionTypes.Single
+        }
+        return question;
+    }
+
+
     const scroll = (scrollOffset: any) => {
         scrRef.current.scrollTop += scrollOffset;
     };
@@ -55,6 +96,39 @@ const InactiveSidebar: FC<Props> = ({
     const handleDragStart = (e: any, id: string) => {
         e.dataTransfer.setData("text/plain", id);
     };
+
+    const updateSlideQuestions = (data : any) => {
+        const manager = _getManager();
+        if (manager.canvasManager.activeSlide) {
+            const updated = manager.canvasManager.activeSlide;
+            const existing = manager.canvasManager.activeSlide.filter((item : any) => item.component == "Questions");
+            const questionsData = {
+                component: "Questions",
+                theme: null,
+                canvas: true,
+                abstract : true,
+                data : typeof data == "function" ? data(questions) : data
+            } as any
+            if (existing.length) {
+                const questionIndex = updated.indexOf(existing[0]);
+                updated[questionIndex] = questionsData;
+            } else {
+                updated.push(questionsData);
+            }
+            manager.canvasManager.updateActiveSlide(updated);
+            manager.canvasManager.updateSlides();
+        }
+    }
+
+    useEffect(() => {
+        getActiveComps();
+        if (activeQuestion) {
+            setActiveQuestion(questions.filter((question: QuestionInterface) => question.hash == activeQuestion.hash)[0]);
+        }
+        setQuestions(loadQuestions());
+    }, [activeSlideData]);
+
+
 
     const Item = () => {
         const [isOpen, setIsOpen] = useState(true);
@@ -111,54 +185,76 @@ const InactiveSidebar: FC<Props> = ({
         <div className="w-full h-full border border-gray-400">
             {!showComp && <Item />}
             {showComp && (
-                <div className="w-full mb-12">
-                    <h3 className="shadow-lg text-[15px] my-2 py-2 text-center text-[#87909E] font-medium">
-                        Components
-                    </h3>
-                    <div className="mt-4 text-[14px]">
-                        <FaAngleUp
-                            className="text-lg text-gray-500 mb-2 mx-auto cursor-pointer"
-                            onClick={() => scroll(-30)}
-                        />
-                        <div
-                            className="grid gap-4  p-3 h-[300px] overflow-y-scroll hide-scroll"
-                            ref={scrRef}
-                        >
-                            {compTypes.map((item, index) => {
-                                return (
-                                    <div
-                                        key={index}
-                                        className={`${
-                                            comps &&
-                                            {
-                                                /* comps.includes(item) */
-                                            }
-                                                ? "compactive"
-                                                : "compinactive"
-                                        } cursor-pointer mx-1 hover:scale-y-105 duration-100`}
-                                        draggable
-                                        onDragStart={(e) =>
-                                            handleDragStart(
-                                                e,
-                                                item === "Flashcard"
+                <>
+                    { !activeQuestion && 
+                        <div className="w-full mb-12">
+                            <h3 className="shadow-lg text-[15px] my-2 py-2 text-center text-[#87909E] font-medium">
+                                Components
+                            </h3>
+                            <div className="mt-4 text-[14px]">
+                                <FaAngleUp
+                                    className="text-lg text-gray-500 mb-2 mx-auto cursor-pointer"
+                                    onClick={() => scroll(-30)}
+                                />
+                                <div
+                                    className="grid gap-4  p-3 h-[300px] overflow-y-scroll hide-scroll"
+                                    ref={scrRef}
+                                >
+                                    {compTypes.map((item, index) => {
+                                        return (
+                                            <div
+                                                key={index}
+                                                className={`${
+                                                    comps &&
+                                                    {
+                                                        /* comps.includes(item) */
+                                                    }
+                                                        ? "compactive"
+                                                        : "compinactive"
+                                                } cursor-pointer mx-1 hover:scale-y-105 duration-100`}
+                                                draggable
+                                                onDragStart={(e) =>
+                                                    handleDragStart(
+                                                        e,
+                                                        item === "Flashcard"
+                                                            ? "Flash Card"
+                                                            : item
+                                                    )
+                                                }
+                                            >
+                                                {item === "Flashcard"
                                                     ? "Flash Card"
-                                                    : item
-                                            )
-                                        }
-                                    >
-                                        {item === "Flashcard"
-                                            ? "Flash Card"
-                                            : item}
-                                    </div>
-                                );
-                            })}
+                                                    : item}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <FaAngleDown
+                                    className="text-xl text-gray-500 mx-auto mt-2 cursor-pointer"
+                                    onClick={() => scroll(30)}
+                                />
+                            </div>
+                            <h3 className="text-[15px] mt-5 py-2 text-center text-[#87909E] font-medium">
+                                Utlilties
+                            </h3>
+                            <DataListManager 
+                                title="Questions" 
+                                data={questions} 
+                                setData={updateSlideQuestions}
+                                setActiveItem={setActiveQuestion}
+                                generateItem={generateQuestion}
+                                bulletIcon={<FaQuestionCircle className="text-[15px] text-blue-400 mr-1"/>}
+                            />
                         </div>
-                        <FaAngleDown
-                            className="text-xl text-gray-500 mx-auto mt-2 cursor-pointer"
-                            onClick={() => scroll(30)}
+                    }
+                    {
+                        activeQuestion && <ActiveQuestion 
+                            question={activeQuestion} 
+                            setActiveQuestion={setActiveQuestion}
+                            setQuestions={updateSlideQuestions}
                         />
-                    </div>
-                </div>
+                    }
+                </>
             )}
         </div>
     );
