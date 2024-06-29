@@ -141,6 +141,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
               key={item.id}
               ref={nodeRef}
               onClick={() => handleClickedViewbox(item.id)}
+              className="absolute"
             >
               {item.id.includes("Slider") ? (
                 <Slider id={item.id} manager={manager} />

@@ -1,41 +1,40 @@
 import { _getManager } from "components/Editorial/Base/Manager";
 import { calculateMaxResizableArea } from "components/Editorial/ViewBox/handler";
-import { FC, ReactNode, createRef, useEffect, useState } from "react";
+import { FC, ReactElement, ReactNode, createRef, useEffect, useState } from "react";
 import Draggable, { ControlPosition } from "react-draggable";
 import { Resizable } from "react-resizable";
 
 interface MovableResizerProps {
     draggableAxis : "both"|"x"|"y"|"none";
-    position? : ControlPosition; 
+    position : ControlPosition; 
     onMove : Function;
-    canMove? : boolean;
     size : { width : number, height : number};
     onResize : Function;
-    hasHandles : boolean;
-    children : ReactNode;
+    style? : React.CSSProperties;
+    children : ReactElement;
 }
 
 const MovableResizer: FC<MovableResizerProps> = ({
     draggableAxis,
     position,
     onMove,
-    canMove,
     size,
     onResize,
-    hasHandles
-}, children) => {
+    style,
+    children
+}) => {
     const nodeRef: any = createRef();
     const [dimensions, setDimensions] = useState<{width : number, height : number}>(size);
-    const [draggablePosition, setDraggablePosition] = useState<ControlPosition>(position ?? { x : 0, y : 0});
+    const [draggablePosition, setDraggablePosition] = useState<ControlPosition>({x: position?.x ?? 0, y : position?.y ?? 0});
+    const [hasHandles, setHasHandles] = useState<boolean>(false);
     
     const simulateOrigin = (offsetX : number, offsetY : number) => {
         const x = draggablePosition.x - offsetX;
         const y = draggablePosition.y - offsetY;
-        if( x < 0 || y < 0) {
-            return false
+        if( x < 0 ) {
+            return false;
         }
-        onMove({position : {x , y}});
-        return true;
+        return {x, y};
     }
 
     const handleResize = (previousSize : any, ref : React.RefObject<any>) => {
@@ -48,49 +47,66 @@ const MovableResizer: FC<MovableResizerProps> = ({
             const width = Math.min(size.width, maxArea.maxWidth);
             const height = Math.min(size.height, maxArea.maxHeight);
             if (width !== previousSize.width || height !== previousSize.height) {
+                let offsetDrag;
                 if (handle == "w" || handle == "n") {
-                    const canSimulate = simulateOrigin((width-previousSize.width), (height - previousSize.height))
-                    if (!canSimulate) { return; }
+                    offsetDrag = simulateOrigin((width-previousSize.width), (height - previousSize.height))
+                    if (!offsetDrag) { return; }
                 }
                 setDimensions({ width, height});
-                onResize({width, height});
+                onResize({width, height, position : offsetDrag});
             }
         }
     };
 
     const handleMove = (event: any, data: any) => {
         if(data.x !== 0 || data.y !== 0) {
-            onMove({position : {x : data.x, y : data.y}});
-            setDraggablePosition({x : data.x, y : data.y});
+            const moveData : any = {x : data.x, y : data.y};
+            setDraggablePosition(moveData);
+            onMove({position : moveData});
         }
     }
 
     useEffect(()=>{
         setDimensions(size);
+    },[size.width, size.height]);
+
+    useEffect(()=>{
         if(position) {
             setDraggablePosition(position)
         }
-    },[size, position]);
+    },[position]);
 
     return (
             <Draggable
                 axis={draggableAxis}
                 nodeRef={nodeRef}
                 onStop={handleMove}
-                handle=".option"
+                handle=".draggable"
                 defaultClassName="w-fit"
-                position={position} //Experimental
+                position={draggablePosition} //Experimental
                 bounds="parent"
-                disabled={canMove}
+                disabled={hasHandles}
             >
                 <Resizable
                     width={dimensions.width}
                     height={dimensions.height}
-                    minConstraints={[0,35]}
+                    minConstraints={[0,30]}
                     onResize={handleResize(dimensions, nodeRef)}
                     resizeHandles={ hasHandles ? ["s", "e", "n", "w"] : [] }
                 >
-                    {children}
+                    <div
+                        style={{ 
+                            width: dimensions.width + "px", 
+                            height: dimensions.height + "px",
+                            position : "absolute",
+                            ...(style ?? {})
+                        }}
+                        className={"attach-child absolute draggable" + ( !hasHandles ? ' hover:cursor-move' : '')}
+                        ref={nodeRef}
+                        onDoubleClick={() => setHasHandles(!hasHandles)}
+                    >
+                        {children}
+                    </div>
                 </Resizable>
             </Draggable>
     );

@@ -20,20 +20,20 @@ export const getQuestionIndex = (hash : string) => {
     return questionIndex;
 }
 
-export const updateQuestionOption = (optionIndex : number, questionHash : string, optionData : any) => {
+export const updateQuestionData = (dataIndex : number, questionHash : string, data : any, dataKey : string) => {
     const questionComponent : any = getQuestionsComponent();
     if (questionComponent) {
         const questionList = questionComponent.data;
         const activeQuestionIndex = getQuestionIndex(questionHash);
-        const options = questionList[activeQuestionIndex].options;
-        options[optionIndex] = {
-            ...(options[optionIndex] ?? {}),
-            ...optionData
+        const previousData = questionList[activeQuestionIndex][dataKey] ?? [];
+        previousData[dataIndex] = {
+            ...(previousData[dataIndex] ?? {}),
+            ...data
         }
         const questionData = {
             ...questionList[activeQuestionIndex],
-            options
         }
+        questionData[dataKey] = previousData;
         updateQuestionInSlide(questionData);
     }
 }

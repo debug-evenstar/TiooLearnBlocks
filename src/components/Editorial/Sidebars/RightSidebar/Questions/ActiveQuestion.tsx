@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import DataListManager from "./DataListManager";
 import { randomString } from "utilities/string";
-import { FaStar } from "react-icons/fa";
+import { FaAnchor, FaBriefcase, FaFill, FaStar, FaStickyNote } from "react-icons/fa";
 import { ComponentLayoutInterface } from "components/interface";
 import OptionSideModal from "./OptionSideModal";
 import { _getManager, setComponentLayout } from "components/Editorial/Base/Manager";
@@ -29,11 +29,13 @@ export interface OptionInterface {
     hash : string;
     value? : string;
     isAnswer? : boolean;
+    feedback? : string;
     layout? : ComponentLayoutInterface
 }
 
 export interface InputInterface {
     hash : string;
+    title : string;
     type : string;
     layout? : ComponentLayoutInterface
 }
@@ -41,8 +43,9 @@ export interface InputInterface {
 const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions}) => {
     const [options, setOptions] = useState<any>(question.options);
     const [activeOption, setActiveOption] = useState<any>(null);
+    const [activeInput, setActiveInput] = useState<any>(null);
     const [optionType, setOptionType] = useState<OptionTypes>(OptionTypes.Single);
-    const [inputs, setInputs] = useState(question.inputs);
+    const [inputs, setInputs] = useState(question.inputs ?? []);
     const [questionQuery, setQuestionQuery] = useState<any>({previous : "", current : ""});
     const manager = _getManager();
     const optionBulletIcon = (item : any) => 
@@ -62,6 +65,19 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
             )
         }
         return option;
+    }
+
+    const generateInput = (title : string) => {
+        const input : InputInterface = {
+            hash : randomString(8),
+            title,
+            type : InputTypes.Objective,
+            layout :  setComponentLayout(
+                manager.canvasManager.canvas.getCanvasSize(),
+                { size : { width : 80, height : 40 }, }
+            )
+        }
+        return input;
     }
 
     const resetAnswers = () => {
@@ -98,6 +114,15 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
             setActiveOption(options.filter((option: OptionInterface) => option.hash == activeOption.hash)[0]);
         }
     },[options, optionType]);
+
+    useEffect(()=>{
+        setQuestions((prev:any) => {
+            const questionIndex = prev.indexOf(question);
+            question.inputs = [...inputs];
+            prev[questionIndex] = question;
+            return [...prev];
+        });
+    },[inputs]);
 
     useEffect(() => {
         resetAnswers();
@@ -162,12 +187,11 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
                     <div>
                         <DataListManager 
                             title="Inputs" 
-                            data={options}
-                            setData={setOptions}
-                            setActiveItem={(option : OptionInterface) => setActiveOption(option.hash == activeOption?.hash ? null : option)}
-                            generateItem={generateOption}
-                            bulletIcon={optionBulletIcon}
-                            bulletAction={(item: OptionInterface) => setOptionAsAnswer(item)}
+                            data={inputs}
+                            setData={setInputs}
+                            setActiveItem={(input : InputInterface) => setActiveInput(input.hash == activeInput?.hash ? null : input)}
+                            generateItem={generateInput}
+                            bulletIcon={<FaStickyNote className="text-[15px] text-blue-400 mr-1"/>}
                         />
                     </div>
                 </div>

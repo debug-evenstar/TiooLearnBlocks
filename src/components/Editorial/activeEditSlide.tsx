@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, createRef, useEffect, useRef, useState } from "react";
 import {
   LessonSlideInterface,
   LessonSlideScope,
@@ -11,6 +11,7 @@ import LayoutComponent from "components/LayoutBox";
 import { ComponentBaseDataInterface } from "components/interface";
 import PreviewLayout from "./Preview/PreviewLayout";
 import LessonLayout from "layouts/LessonLayout";
+import { height } from "@mui/system";
 
 interface Props {
   active: number;
@@ -51,23 +52,42 @@ const ActiveEditSlide: FC<Props> = ({
         ]
       }
     ];
+    const [calculatedArea, setCalculatedArea] = useState<{width : number, height : number}>({width : 0 , height : 0})
+    const contRef : React.RefObject<any> = createRef();
 
+
+    useEffect(()=>{
+      setCalculatedArea({
+        width : contRef?.current ? contRef?.current.clientHeight * 1.6 : 0,
+        height : contRef?.current?.clientHeight ?? 0
+      })
+    }, contRef?.current)
 
     return (
       <LessonLayout textbook={{}} lesson={data} closePreview={() => setPreviewSlide(false)} sideBar={false} chapters={chapters}  >
-        <>
-        {slide.map((component: ComponentBaseDataInterface, index: number) => {
-            const Component = loadComponent(component);
-            const viewArea = { width : document.body.clientWidth, height : document.body.clientHeight };
-            return component.layout
-                ? (
-                    <LayoutComponent layout={component.layout}>
-                      <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>
-                    </LayoutComponent>
-                )
-                : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
-          })}
-        </>
+        <div 
+          ref={contRef}
+          className="w-full h-full relative"
+        >
+          <div
+            style={{
+              width : calculatedArea.width,
+            }}
+            className="mx-auto h-full relative bg-[#fafafa]"
+          >
+            {slide.map((component: ComponentBaseDataInterface, index: number) => {
+              const Component = loadComponent(component);
+              const viewArea = { width : calculatedArea.width, height : calculatedArea.height };
+              return component.layout
+                  ? (
+                      <LayoutComponent layout={component.layout}>
+                        <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>
+                      </LayoutComponent>
+                  )
+                  : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
+            })}
+          </div>
+        </div>
       </LessonLayout>
     );
   };

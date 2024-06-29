@@ -16,6 +16,9 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
     const nameInputRef: React.RefObject<any> = createRef();
     const [optionTitle , setOptionTitle] = useState<string>(option.title);
+    const [optionFeedback, setOptionFeedback] = useState<{ current : string, previous : string}>({
+        previous : "", current : ""
+    });
     const [optionSizes, setOptionSizes] = useState<any>({
         width : option.layout?.size?.width ?? 100,
         height : option.layout?.size?.height ?? 50
@@ -25,6 +28,14 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
         setOptions((prev : OptionInterface[]) => prev.map((item:OptionInterface) => {
             return item.hash == option.hash 
                 ? { ...option, title : nameInputRef.current.value ?? option.title}
+                : item;
+        }));
+    };
+
+    const saveOptionFeedback = () => {
+        setOptions((prev : OptionInterface[]) => prev.map((item:OptionInterface) => {
+            return item.hash == option.hash 
+                ? { ...option, feedback : optionFeedback.current ?? option.feedback}
                 : item;
         }));
     };
@@ -44,16 +55,24 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
         })])
     }
 
+    const feedbackCanSave = () =>
+        optionFeedback.current !== "" && optionFeedback.current !== optionFeedback.previous;
+
+
     useEffect(()=>{
         setOptionTitle(option.title);
         setOptionSizes({
             width : option.layout?.size?.width ?? 100,
             height : option.layout?.size?.height ?? 50
         })
+        setOptionFeedback({
+            current : option.feedback ?? "", 
+            previous : option.feedback ?? ""
+        })
     },[option]);
 
     return (
-        <div className="absolute w-[110%] min-h-full bg-white right-[101%] top-[20%] shadow-md border-[#e5e5e5] border-[2px] rounded-[6px]">
+        <div className="absolute w-[110%] min-h-[300px] bg-white right-[101%] top-[20%] shadow-md border-[#e5e5e5] border-[2px] rounded-[6px] pb-2">
             <p className="text-[13px] text-center font-medium border-[#e5e5e5] border-b-[2px] py-[4px]">
                 {" "}
                 Manage Option
@@ -105,6 +124,24 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
                         value={optionSizes?.height}
                         onChange={(e) => {saveOptionSize({ height : parseFloat(e.target.value) })}}
                     />
+                </div>
+            </div>
+            <div className="mt-[8px] px-[5px]">
+                <p className="text-[13px]">
+                    Feedback <span className="text-[12px]">({option.isAnswer ? "Correct" : "Wrong"})</span>
+                </p>
+                <div className="flex flex-col border-[#e5e5e5] border-[2px] rounded-[5px]">
+                    <textarea 
+                        className="w-full h-[90px] text-[14px] border-[2px] border-[#f2f2f2] rounded-[5px] p-1"
+                        onChange={(e) => setOptionFeedback((prev:any) => ({...prev, current : e.target.value}))}
+                    ></textarea>
+                    <button 
+                        className={"w-full text-white text-[14px] px-3 py-1 rounded-[5px] " + 
+                            (!feedbackCanSave() ? 'bg-[#d5d5d5]' : 'bg-green-500')
+                        }
+                        disabled={!feedbackCanSave()}
+                        onClick={() => saveOptionFeedback()}
+                    > Save feedback</button>
                 </div>
             </div>
         </div>

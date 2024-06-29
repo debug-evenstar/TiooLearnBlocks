@@ -107,7 +107,7 @@ export default function LessonLayout({
           chapter={currentChapter}
           currentLesson={currentLesson}
         />
-        <div className="px-28 flex flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
+        <div className="relative px-28 flex flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
           <AudioButton />
           <ToggleNavBtn isOpen={sideBarOpen} handleClick={() => setSideBarOpen(!sideBarOpen)} />
           { lessonSlides && lessonSlides(
