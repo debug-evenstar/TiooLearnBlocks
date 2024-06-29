@@ -101,9 +101,7 @@ export default function LessonLayout({
     <>
     <FeedbackPopup
       ref={feedbackRef}
-      type={FeedbackType.WRONG}
-      onClose={() => console.log("closing")}
-      title="Oops!!" content="That is not an apple"
+
     />
     <div className="flex bg-white w-screen z-[17000] w-full overflow-hidden urbanist">
       {

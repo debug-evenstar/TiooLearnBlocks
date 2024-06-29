@@ -15,11 +15,9 @@ export enum FeedbackType {
 }
 
 interface FeedbackPopupProps {
-  type: FeedbackType;
-  title: string;
+
   ref: any;
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-  content: string;
   onClose?: Function;
   onContinue?: Function;
 }
@@ -69,16 +67,16 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
 };
 
 const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
-  ({ type, position = "top-right", onContinue }, ref) => {
+  ({ position = "top-right", onContinue }, ref) => {
 
     const divRef = useRef<any>(null);
 
-    const isWrong = type == FeedbackType.WRONG;
     const [isVisible, setIsVisible] = useState(false);
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
-
-    console.log("visibility", isVisible);
+    const [feedbackState, setFeedbackState] = useState<FeedbackType | null>(null);
+    
+    const isWrong = feedbackState == FeedbackType.WRONG;
 
     // turn this top-right to 'top-0 right-0'
     const onClose = () => setIsVisible(!isVisible);
@@ -88,19 +86,20 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
         .map((i: string) => `${i}-0`)
         .join(" ") + " ";
 
-    const setValues = (title: string, content: string) => {
+    const setValues = (title: string, content: string, state: FeedbackType) => {
       setTitle(title);
+      setFeedbackState(state);
       setContent(content);
       setIsVisible(true);
     };
 
     useImperativeHandle(ref, () => ({
       wrongFeedback(title: string, content: string) {
-        setValues(title, content);
+        setValues(title, content, FeedbackType.WRONG);
       },
 
       correcFeedback(title: string, content: string) {
-        setValues(title, content);
+        setValues(title, content, FeedbackType.CORRECT);
       },
     }));
 
