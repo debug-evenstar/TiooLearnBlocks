@@ -4,10 +4,10 @@ import LessonFooter from "components/NewLesson/Layout/LesssonFooter";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 import "./LessonLayout.css";
-import LessonSlides from "components/NewLesson/LessonSlides";
+// import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
-import FeedbackPopup from "components/NewLesson/Popups";
+import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 
 export interface LessonLayoutProps {
   textbook: any;
@@ -55,12 +55,15 @@ export default function LessonLayout({
 
 
   const slideManagerRef = useRef<any>(null);
+
   const [canProceed, setCanProceed] = useState(false);
   const [activeSlide, setActiveSlide] = useState(1);
 
   const [sideBarOpen, setSideBarOpen] = useState(true);
 
-  const getCurrentChapterFromLesson = (chapter_id: number) => {
+  const feedbackRef = useRef<any>(null);
+
+  const getCurrentChapter = (chapter_id: number) => {
     return chapters.find((i: any) => i.id == chapter_id);
   };
 
@@ -89,20 +92,14 @@ export default function LessonLayout({
   }
 
   useEffect(() => {
-    setCurrentChapter(getCurrentChapterFromLesson(currentLesson.chapter_id));
+    setCurrentChapter(getCurrentChapter(currentLesson.chapter_id));
   }, [currentLesson]);
 
   return (
     <>
     <FeedbackPopup
-      type="wrong"
-      onClose={() => console.log("closing")}
-      title="Oops!!" content="That is not an apple"
-    />
-    <FeedbackPopup
-      type="correct"
-      onClose={() => console.log("closing")}
-      title="Good one!" content="The microwave has a computer that controls the time used to warm your food."
+      ref={feedbackRef}
+
     />
     <div className="flex bg-white w-screen z-[17000] w-full overflow-hidden urbanist">
       {
@@ -127,7 +124,7 @@ export default function LessonLayout({
             {...lessonSlidesArgs}
           )}
           {children}
-
+ 
         </div>
         <LessonFooter previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
       </div>
