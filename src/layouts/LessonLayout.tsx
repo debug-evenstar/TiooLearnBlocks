@@ -7,7 +7,7 @@ import "./LessonLayout.css";
 import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
-import FeedbackPopup from "components/NewLesson/Popups";
+import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 
 export interface LessonLayoutProps {
   textbook: any;
@@ -62,6 +62,8 @@ export default function LessonLayout({
 
   const [sideBarOpen, setSideBarOpen] = useState(true);
 
+  const feedbackRef = useRef<any>();
+
   const getCurrentChapterFromLesson = (chapter_id: number) => {
     return chapters.find((i: any) => i.id == chapter_id);
   };
@@ -97,14 +99,10 @@ export default function LessonLayout({
   return (
     <>
     <FeedbackPopup
-      type="wrong"
+      ref={feedbackRef}
+      type={FeedbackType.WRONG}
       onClose={() => console.log("closing")}
       title="Oops!!" content="That is not an apple"
-    />
-    <FeedbackPopup
-      type="correct"
-      onClose={() => console.log("closing")}
-      title="Good one!" content="The microwave has a computer that controls the time used to warm your food."
     />
     <div className="flex bg-white w-screen z-[17000] w-full overflow-hidden urbanist">
       {
@@ -129,7 +127,7 @@ export default function LessonLayout({
             {...lessonSlidesArgs}
           )}
           {children}
-
+ 
         </div>
         <LessonFooter previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
       </div>

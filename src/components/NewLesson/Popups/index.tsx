@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState, forwardRef, useImperativeHandle, useRef } from "react";
 import "./style.css";
 import catImg from "img/popup/cat.svg";
 import penguinImg from "img/popup/penguin.svg";
@@ -6,15 +6,20 @@ import continueImg from "img/popup/continue-white.svg";
 import continueActiveImg from "img/popup/continue-main.svg";
 import successBg from "img/popup/success-popup-bg.svg";
 import errorBg from "img/popup/error-popup-bg.svg";
-import { FaCross } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
+import { StringLiteralLike } from "typescript";
+
+export enum FeedbackType {
+  CORRECT,
+  WRONG,
+}
 
 interface FeedbackPopupProps {
-  type: "wrong" | "correct";
+  type: FeedbackType;
   title: string;
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
   content: string;
-  onClose: Function;
+  onClose?: Function;
   onContinue?: Function;
 }
 
@@ -62,31 +67,53 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
   );
 };
 
-const FeedbackPopup: FC<FeedbackPopupProps> = ({
-  type,
-  title,
-  position = "top-right",
-  content,
-  onClose,
-  onContinue,
-}) => {
-  const isWrong = type == "wrong";
+const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
+  ({ type, position = "top-right", onContinue }, ref) => {
 
-  // turn this top-right to 'top-0 right-0'
-  const positionStyle = position
-    .split("-")
-    .map((i: string) => `${i}-0`)
-    .join(" ");
+    const divRef = useRef<any>(null);
 
-  return (
-    <div className="bg-[#00000011] urbanist fixed h-screen w-full z-[19000] flex">
+    const isWrong = type == FeedbackType.WRONG;
+    const [isVisible, setIsVisible] = useState(false);
+    const [content, setContent] = useState("");
+    const [title, setTitle] = useState("");
+
+    console.log("visibility", isVisible);
+
+    // turn this top-right to 'top-0 right-0'
+    const onClose = () => setIsVisible(!isVisible);
+    let positionStyle =
+      position
+        .split("-")
+        .map((i: string) => `${i}-0`)
+        .join(" ") + " ";
+
+    const setValues = (title: string, content: string) => {
+      setTitle(title);
+      setContent(content);
+      setIsVisible(true);
+    };
+
+    useImperativeHandle(ref, () => ({
+      wrongFeedback(title: string, content: string) {
+        setValues(title, content);
+      },
+
+      correcFeedback(title: string, content: string) {
+        setValues(title, content);
+      },
+    }));
+
+    return (
       <div
-        className={`w-[430px] h-[250px] h-fit text-white  m-10 absolute ${positionStyle}`}
+        ref={divRef}
+        className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed ${positionStyle} ${
+          isVisible ? "-right-[40%]" : ""
+        }`}
       >
         <div className="relative">
           <button
             className="absolute z-[10] m-5 font-[500] text-xl right-0"
-            onClick={(e) => onClose(e)}
+            onClick={onClose}
           >
             <MdClose />
           </button>
@@ -102,8 +129,8 @@ const FeedbackPopup: FC<FeedbackPopupProps> = ({
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default FeedbackPopup;
