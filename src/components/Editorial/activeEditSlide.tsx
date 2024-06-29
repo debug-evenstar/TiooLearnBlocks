@@ -10,6 +10,7 @@ import { ManagerInterface } from "./Base/Manager";
 import LayoutComponent from "components/LayoutBox";
 import { ComponentBaseDataInterface } from "components/interface";
 import PreviewLayout from "./Preview/PreviewLayout";
+import LessonLayout from "layouts/LessonLayout";
 
 interface Props {
   active: number;
@@ -30,15 +31,33 @@ const ActiveEditSlide: FC<Props> = ({
   const [previewSlideData, setPreviewSlideData] = useState<any[]>([]);
   const [previewSlide, setPreviewSlide] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
+
   const RenderPreview : FC<{
     slide : any,
     subject : string,
     title : string
   }> = ({slide, subject, title}) => {
+
+    const chapters = [
+      {
+        ...data.Chapter,lessons:[
+          {
+            ...data,
+              slides: [
+                slide
+              ]
+          }
+        ]
+      }
+    ];
+
+    console.log("chapters",slides);
+
     return (
-      <PreviewLayout subject={subject} title={title}>
+      <LessonLayout textbook={{}} lesson={data} closePreview={() => setPreviewSlide(false)} sideBar={false} chapters={chapters}  >
         <>
-          {slide.map((component: ComponentBaseDataInterface, index: number) => {
+        {slide.map((component: ComponentBaseDataInterface, index: number) => {
             const Component = loadComponent(component);
             const viewArea = { width : document.body.clientWidth, height : document.body.clientHeight };
             return component.layout
@@ -50,9 +69,10 @@ const ActiveEditSlide: FC<Props> = ({
                 : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
           })}
         </>
-      </PreviewLayout>
+      </LessonLayout>
     );
   };
+
 
   const saveSlide = () => {
     const slideId : number = data.LessonSlides[active]?.id ?? null;
@@ -72,7 +92,7 @@ const ActiveEditSlide: FC<Props> = ({
 
   useEffect(() => {
     if (slides) {
-      setActiveSlide(slides[active]);
+      setActiveSlide([...slides[active]]);
       manager.slideManager.setActiveSlide(active);
     }
   }, [active, slides]);
@@ -109,8 +129,8 @@ const ActiveEditSlide: FC<Props> = ({
         <div className="pb-16"></div>
       </div>
       {previewSlide && (
-        <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0 bg-preview">
-          <div className="w-full h-full bgcomps text-white bg-cover px-5 flex justify-center items-center fw-600">
+        <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0">
+          <div className="w-full h-full bg-cover px-5 flex justify-center items-center fw-600">
             <div className="w-full h-full">
               <RenderPreview
                   slide={previewSlideData}

@@ -58,6 +58,7 @@ const TextComponent: FC<TextComponentProps> = ({
 
     const parseStyles = () => {
         // Expandable
+        if (data.canvas) { return; }
         const textStyle = `
         ${isHeading || slide.parent ? "text-center" : "text-left"}
         text-font
@@ -87,55 +88,58 @@ const TextComponent: FC<TextComponentProps> = ({
             ).data;
         }
 
-    // Handle TextFields
-    if (formatted.includes("<?>")) {
-      var textFields: any = TextFields(
-        processText,
-        slide,
-        data.answers ?? [],
-        data.options ?? []
-      );
-      processText = textFields.data;
-    }
-    setProcessed(() => processText);
-    if (data.answers && !data.options) {
-      slide.attributes["hasSubjective"] = true;
-      if (slide.functions && slide.functions.setHint) {
-        setTimeout(() => {
-          slide.functions?.setHint(true);
-        }, 1000);
-      }
-    }
-    // console.log(slide);
-  }, [formatted, data.content, slide]);
-
-
-
-  return (
-    <>
-      <div className={parseStyles()} ref={textContainerRef}>
-        {
-        data.canvas 
-        ? (<span
-            dangerouslySetInnerHTML={{ __html: ` ${buildTextData(data.content, viewArea)} ` }}
-          />)
-        
-        : processed.map((item, index) =>
-          typeof item == "string" ? (
-            <span
-              className="text-font"
-              key={index}
-              dangerouslySetInnerHTML={{ __html: ` ${item} ` }}
-            />
-          ) : (
-            <span className="text-font" key={index}>
-              {item}
-            </span>
-          )
-        )}
-      </div>
-    </>
-  );
+        // Handle TextFields
+        if (formatted.includes("<?>")) {
+            var textFields: any = TextFields(
+                processText,
+                slide,
+                data.answers ?? [],
+                data.options ?? []
+            );
+            processText = textFields.data;
+        }
+        setProcessed(() => processText);
+        if (data.answers && !data.options) {
+            slide.attributes["hasSubjective"] = true;
+            if (slide.functions && slide.functions.setHint) {
+                setTimeout(() => {
+                    slide.functions?.setHint(true);
+                }, 1000);
+            }
+        }
+    }, [formatted, data.content, slide]);
+    return (
+        <>
+            <div className={parseStyles()} ref={textContainerRef}>
+                {data.canvas ? (
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: ` ${buildTextData(
+                                data.content,
+                                viewArea
+                            )}`,
+                        }}
+                    />
+                ) : (
+                    processed.map((item, index) =>
+                        typeof item == "string" ? (
+                            <span
+                                className="text-font"
+                                key={index}
+                                dangerouslySetInnerHTML={{
+                                    __html: ` ${item} `,
+                                }}
+                            />
+                        ) : (
+                            <span className="text-font" key={index}>
+                                (item)
+                            </span>
+                        )
+                    )
+                )}
+            </div>
+        </>
+    );
 };
 
 export default TextComponent;

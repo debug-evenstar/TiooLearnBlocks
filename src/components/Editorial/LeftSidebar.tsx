@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import {
   LessonSlideInterface,
   LessonSlideScope,
@@ -20,6 +20,7 @@ interface Props {
 }
 const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
   const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
+  const [slideRefs , setSlideRefs] = useState<React.RefObject<any>[]>([]);
 
   const handleChangeSlide = (index: number) => {
     changeTo(index);
@@ -27,13 +28,12 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
     manager.setState("activeViewBox", "");
   };
 
-  const refsById = useMemo(() => {
-		const refs : any = {}
-		slides.forEach((slide : any, index : number) => {
-			refs[index.toString()] = React.createRef()
-		})
-		return refs
+  useEffect(() => {
+    if (slides.length !== slideRefs.length) {
+      setSlideRefs(() => slides.map((slide : any) => React.createRef()));
+    }
 	}, [slides])
+
 
   return (
     <div className="bg-white shadow relative w-full max-w-[20%] overflow-auto mb-20  pl-[33px] pr-[20px] overflow-y-auto  scrollbar">
@@ -46,7 +46,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             className="relative h-[208px] border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100"
             onClick={() => handleChangeSlide(index)}
             key={index}
-            ref={refsById[index.toString()]}
+            ref={slideRefs[index]}
           >
             <p className="absolute text-[#030036BD] text-sm -top-1 -left-[14px]">
               {index + 1}
@@ -54,9 +54,9 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             <div className="absolute w-full h-full opacity-0 bg-gray-400 z-10"></div>
             <div className="text-preview relative z-0 shadow mb-5 p-2 py-3 h-[206px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
               {item.map(
-                (component: ComponentBaseDataInterface, index: number) => {
+                (component: ComponentBaseDataInterface, componentIndex: number) => {
                   const Component = loadComponent(component);
-                  const containerElement = refsById[index.toString()]?.current;
+                  const containerElement = slideRefs[index]?.current;
                   const viewArea = containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null;
                   return component.layout ? (
                     <LayoutComponent layout={component.layout}>

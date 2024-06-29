@@ -7,7 +7,7 @@ import {
   QuestionInterface,
 } from "components/interface";
 import { SlideManager, SlideManagerInterface } from "./SlideManager";
-import { CanvasManager, CanvasManagerInterface } from "./CanvasManager";
+import { CanvasManager, CanvasManagerInterface, CanvasStates } from "./CanvasManager";
 import { SidebarManager, SidebarManagerInterface } from "./SidebarManager";
 import {
   ActiveViewBoxState,
@@ -22,7 +22,6 @@ import {
   SliderState,
   TriggerState,
 } from "./StateInterface";
-import { textComponentData } from "../ViewBox/Boxtypes/Text/handlers/dataHandler";
 import { percentValue } from "utilities/maths";
 
 export const setComponentLayout = (
@@ -89,6 +88,7 @@ const DataGroup: DataGroupInterface = {
 
 interface States {
   slideComponents: any[];
+  canvasStates? : CanvasStates;
   activeViewBox: ActiveViewBoxState;
   feedback: FeedbackState;
   optionsData: OptionsDataState;
@@ -109,6 +109,11 @@ export interface ManagerInterface {
   states: States;
   setState: Function;
   triggerRender: Function;
+}
+
+
+declare global {
+  interface Window { Manager: ManagerInterface; }
 }
 
 class Manager implements ManagerInterface {
@@ -156,6 +161,7 @@ class Manager implements ManagerInterface {
       },
       noTextInViewbox: false,
     };
+    this.states.canvasStates = {};
   }
 
   setState(key: string, setter: any | Function) {
@@ -872,4 +878,13 @@ class Manager implements ManagerInterface {
   /* ------------------------------------------------------------------------------------------------------------------ */
 }
 
-export const CreateManager = (slides: any[]) => new Manager(slides);
+
+export const _getManager = () => window.Manager;
+
+export const CreateManager = (slides: any[]) => {
+  if (window.Manager) {
+    return window.Manager;
+  }
+  window.Manager = new Manager(slides);
+  return window.Manager;
+}

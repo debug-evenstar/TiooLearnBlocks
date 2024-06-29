@@ -1,13 +1,16 @@
 import react, { FC } from 'react';
-import { ImageData as ImageData$1 } from 'components/Image/handler';
-import { OptionData as OptionData$1 } from 'components/Options/handler';
-import { VideoData as VideoData$1 } from 'components/Video/handler';
-import { FlashCardData as FlashCardData$1 } from 'components/FlashCards/handler';
-import { WordMatchData as WordMatchData$1 } from 'components/WordMatch/handler';
 import { ButtonGroupData as ButtonGroupData$1 } from 'components/ButtonGroup/handler';
+import { FlashCardData as FlashCardData$1 } from 'components/FlashCards/handler';
 import { GridStepsData as GridStepsData$1 } from 'components/GridSteps/handler';
-import { PrefaceData as PrefaceData$1 } from 'components/Preface/handler';
+import { OptionData as OptionData$1 } from 'components/Options/handler';
 import { PostfaceData as PostfaceData$1 } from 'components/Postface/handler';
+import { PrefaceData as PrefaceData$1 } from 'components/Preface/handler';
+import { SliderData as SliderData$1 } from 'components/Slider/handler';
+import { TextData as TextData$1 } from 'components/Text/handler';
+import { VideoData as VideoData$1 } from 'components/Video/handler';
+import { WordMatchData as WordMatchData$1 } from 'components/WordMatch/handler';
+import { ImageData as ImageData$2 } from 'components/Image/handler';
+import { ComponentBaseDataInterface } from 'components/interface';
 import { LessonSlideInterface as LessonSlideInterface$1 } from 'components/SlideManager/handler';
 
 declare global {
@@ -15,6 +18,7 @@ declare global {
         SlideEventListener: any;
     }
 }
+type SlideData = (TextData$1 | ButtonGroupData$1 | SliderData$1 | ImageData | FlashCardData$1 | VideoData$1 | WordMatchData$1 | OptionData$1 | GridStepsData$1 | PrefaceData$1 | PostfaceData$1)[];
 interface LessonSlideInterface {
     options?: any[];
     answers?: any[];
@@ -51,87 +55,8 @@ interface LessonSlideInterface {
     checkSlideCanProceed: Function;
 }
 
-interface TextStyles {
-    color?: string;
-}
-interface TextData {
-    component: string;
-    content: string;
-    tips?: string[];
-    answers?: any[];
-    options?: string[][];
-}
-interface TextComponentProps {
-    styles?: TextStyles;
-    data: TextData;
-    slide: LessonSlideInterface;
-    altHeaderStyle: string;
-}
-
-interface ButtonGroupData {
-    answers: string[];
-    options?: string[][];
-    feedbacks?: any[];
-}
-
-interface SliderData {
-    slides: (TextData | ButtonGroupData$1 | ImageData$1 | FlashCardData$1 | VideoData$1 | WordMatchData$1 | OptionData$1)[][];
-}
-interface SliderComponentProps {
-    data: SliderData;
-    slide: LessonSlideInterface;
-}
-
-interface ImageData {
-    component: string;
-    url: string;
-}
-interface ImageComponentProps {
-    data: ImageData;
-    slide: LessonSlideInterface;
-}
-
-interface FlashCardData {
-    component: string;
-    cards: any[];
-}
-interface FlashCardComponentProps {
-    data: FlashCardData;
-    slide: LessonSlideInterface;
-}
-
-interface VideoData {
-    component: string;
-    url: string;
-}
-interface VideoComponentProps {
-    data: VideoData;
-    slide: LessonSlideInterface;
-}
-
-interface WordMatchData {
-    component: string;
-    answers: string[];
-    options: string[];
-    feedbacks: any[];
-}
-interface WordMatchComponentProps {
-    data: WordMatchData;
-    slide: LessonSlideInterface;
-}
-
-interface OptionData {
-    component: string;
-    options: string[];
-    answers: string[];
-}
-interface OptionsComponentProps {
-    data: OptionData;
-    slide: LessonSlideInterface;
-}
-
 interface SlideManagerProps {
-    lessonSlides: (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData | GridStepsData$1 | PrefaceData$1 | PostfaceData$1)[][];
+    lessonSlides: SlideData[];
     canProceed: Function;
     handleFeedback: Function;
     updateActiveSlide: Function;
@@ -142,6 +67,12 @@ interface SlideManagerProps {
     lessonTitle?: string;
 }
 declare const SlideManager: FC<SlideManagerProps>;
+
+interface ButtonGroupData {
+    answers: string[];
+    options?: string[][];
+    feedbacks?: any[];
+}
 
 interface ButtonGroupProps {
     data: ButtonGroupData;
@@ -159,15 +90,79 @@ interface ButtonProps {
 }
 declare const ButtonComponent: react.FC<ButtonProps>;
 
+interface FlashCardData {
+    component: string;
+    cards: any[];
+}
+interface FlashCardComponentProps {
+    data: FlashCardData;
+    slide: LessonSlideInterface;
+}
+
 declare const FlashCardsComponent: FC<FlashCardComponentProps>;
+
+interface ImageData$1 {
+    component: string;
+    url: string;
+    extensions?: any[];
+}
+interface ImageComponentProps {
+    data: ImageData$1;
+    slide: LessonSlideInterface;
+}
 
 declare const ImageComponent: FC<ImageComponentProps>;
 
+interface OptionData {
+    component: string;
+    options: string[];
+    answers: string[];
+}
+interface OptionsComponentProps {
+    data: OptionData;
+    slide: LessonSlideInterface;
+}
+
 declare const OptionsComponent: react.FC<OptionsComponentProps>;
+
+interface TextStyles {
+    color?: string;
+    fontSize?: string;
+}
+interface TextData extends ComponentBaseDataInterface {
+    component: string;
+    content: string;
+    tips?: string[];
+    answers?: any[];
+    options?: string[][];
+}
+interface TextComponentProps {
+    styles?: TextStyles;
+    data: TextData;
+    slide: LessonSlideInterface;
+    altHeaderStyle: string;
+}
+
+interface SliderData {
+    slides: (TextData | ButtonGroupData$1 | ImageData$2 | FlashCardData$1 | VideoData$1 | WordMatchData$1 | OptionData$1)[][];
+}
+interface SliderComponentProps {
+    data: SliderData;
+    slide: LessonSlideInterface;
+}
 
 declare const SliderComponent: FC<SliderComponentProps>;
 
 declare const TextComponent: FC<TextComponentProps>;
+
+interface VideoData {
+    component: string;
+    url: string;
+}
+interface VideoComponentProps {
+    data: VideoData;
+    slide: LessonSlideInterface;
+}
 
 declare global {
     interface Window {
@@ -175,6 +170,17 @@ declare global {
     }
 }
 declare const VideoComponent: FC<VideoComponentProps>;
+
+interface WordMatchData {
+    component: string;
+    answers: string[];
+    options: string[];
+    feedbacks: any[];
+}
+interface WordMatchComponentProps {
+    data: WordMatchData;
+    slide: LessonSlideInterface;
+}
 
 declare const WordMatchComponent: FC<WordMatchComponentProps>;
 

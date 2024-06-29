@@ -7,6 +7,8 @@ export interface TextFieldsInterface {
         [key: string]: string;
     };
     fieldReplacementFill: Function;
+    triggerReplacement: Function;
+    setFiller: Function;
     slide: LessonSlideInterface;
     setFieldValue: Function;
     answers: any[];
@@ -14,6 +16,7 @@ export interface TextFieldsInterface {
     simulateAnswerWidth: Function;
     inputAnswerMatch: Function;
     slideScopeIndex: Function;
+    registerField: Function;
 }
 declare class TextFieldsHandler implements TextFieldsInterface {
     data: (string | React.ReactElement)[];
@@ -27,13 +30,13 @@ declare class TextFieldsHandler implements TextFieldsInterface {
     constructor(data: any, slide: LessonSlideInterface, answers?: any[], options?: any[]);
     getIdentifier(): string;
     generateToolTip(content: string): void;
-    setFieldValue(id: string, value: string): void;
-    fieldReplacementFill(index: number, value: string, data: any[]): any[];
-    formatTextField(answerIndex?: number): {
-        id: string;
-        index: number;
-        element: import("react/jsx-runtime").JSX.Element;
-    };
+    setFiller(id: any, callback: Function): void;
+    setFieldValue(id: string, value: string, callback?: Function): void;
+    fieldReplacementFill(value: string): import("react/jsx-runtime").JSX.Element;
+    triggerReplacement(): void;
+    formatTextField(answerIndex?: number): any;
+    registerField(field: any): void;
+    updateFieldInSlide(id: string): void;
     processTextFields(): (string | import("react").ReactElement<any, string | import("react").JSXElementConstructor<any>>)[];
     simulateAnswerWidth(answer: string | string[]): number;
     inputAnswerMatch(input: string, answer: string | string[]): boolean;

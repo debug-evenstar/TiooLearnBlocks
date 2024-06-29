@@ -1,6 +1,6 @@
 import { ComponentBaseDataInterface } from "components/interface";
 import { DataGroupInterface, ManagerInterface } from "./Manager";
-import { textComponentData } from "../ViewBox/Boxtypes/Text/handlers/dataHandler";
+import { textComponentData } from "../ViewBox/Boxtypes/Text/handler";
 import {
   flashcardComponentData,
   gridComponentData,
@@ -30,6 +30,8 @@ interface CanvasInterface {
   data: { [key: string]: any }; // For backward compatibility
   functions: { [key: string]: Function }; // For backward compatibility
 }
+
+export type CanvasStates = {[key : string] : any};
 
 class Canvas implements CanvasInterface {
   manager: CanvasManagerInterface;
@@ -92,7 +94,6 @@ class Canvas implements CanvasInterface {
   }
 
   updateActiveComponentData(data: any) {
-    console.log(data);
     if (this.manager.activeComponent.data) {
       this.manager.activeComponent.data = {
         ...this.manager.activeComponent.data,
@@ -135,6 +136,7 @@ export interface CanvasManagerInterface {
   activeSlide?: ComponentBaseDataInterface[];
   setActiveComponent: Function;
   updateActiveSlide: Function;
+  updateSlides : Function;
   getComponentIndex: Function;
   getComponentData: Function;
   activeComponentElement: Function;
@@ -162,6 +164,9 @@ export class CanvasManager implements CanvasManagerInterface {
       const componentIndexInSlide: number = this.activeSlide.findIndex(
         (data: any) => data.id === id
       );
+      if (componentIndexInSlide == -1) {
+        return;
+      } 
       this.activeComponent.data = componentIndexInSlide !== this.activeComponent.data.index 
         ? {} : this.activeComponent.data;
       this.activeComponent.data.index = componentIndexInSlide;
@@ -170,6 +175,13 @@ export class CanvasManager implements CanvasManagerInterface {
 
   updateActiveSlide(slideData: ComponentBaseDataInterface[]) {
     this.activeSlide = slideData;
+  }
+
+  updateSlides() {
+    const slides: any[] = this.manager.slideManager.slides;
+    slides[this.manager.slideManager.activeSlide] = this.activeSlide;
+    this.manager.slideManager.slides = slides;
+    this.manager.slideManager.handleSlidesUpdate(slides);
   }
 
   getComponentIndex(id: string) {

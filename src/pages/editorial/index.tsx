@@ -30,7 +30,7 @@ const EditorialComp: FC<Props> = ({
     const [overlay, setOverlay] = useState(false);
     const [manager, setManager] = useState(
         CreateManager(
-            data && data.LessonSlides.map((slide: any) => slide.slide_data)
+            data && data.lesson_slides.map((slide: any) => slide.slide_data)
         )
     );
 
@@ -64,12 +64,12 @@ const EditorialComp: FC<Props> = ({
     useEffect(() => {
         if (data) {
             setParseSlides(() =>
-                data.LessonSlides.map((slide: any) => slide.slide_data)
+                data.lesson_slides.map((slide: any) => slide.slide_data)
             );
             setManager(
                 CreateManager(
                     data &&
-                        data.LessonSlides.map((slide: any) => slide.slide_data)
+                        data.lesson_slides.map((slide: any) => slide.slide_data)
                 )
             );
         }
@@ -77,7 +77,7 @@ const EditorialComp: FC<Props> = ({
 
     useEffect(() => {
         manager.slideManager.handleSlidesUpdate = (updatedSlides: any[]) => {
-            setParseSlides(updatedSlides);
+            setParseSlides([...updatedSlides]);
         };
     }, [manager, manager.slideManager]);
 

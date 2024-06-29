@@ -7,14 +7,17 @@ import "./LessonLayout.css";
 // import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
+import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 
 export interface LessonLayoutProps {
   textbook: any;
   chapters: any;
-  // lessons: any;
+  lesson?: any;
+  sideBar?: boolean;
   children?: ReactNode;
   back?: Function;
-  lessonSlides? : Function
+  lessonSlides? : Function;
+  closePreview? : Function;
 }
 
 interface NavigationHandles {
@@ -38,16 +41,29 @@ export default function LessonLayout({
   textbook,
   chapters,
   children,
+  lesson,
+  sideBar=true,
+  closePreview,
   lessonSlides
 }: LessonLayoutProps) {
+
+
+  // console.log(chapters[0].lessons);
   const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0]);
-  const [currentChapter, setCurrentChapter] = useState(chapters[0]);
+
+  // console.log("printing lesson",currentLesson);
+
+  const [currentChapter, setCurrentChapter] = useState(lesson? lesson.Chapter : chapters[0]);
+
+
   const slideManagerRef = useRef<any>(null);
 
   const [canProceed, setCanProceed] = useState(false);
   const [activeSlide, setActiveSlide] = useState(1);
 
   const [sideBarOpen, setSideBarOpen] = useState(true);
+
+  const feedbackRef = useRef<any>(null);
 
   const getCurrentChapter = (chapter_id: number) => {
     return chapters.find((i: any) => i.id == chapter_id);
@@ -82,15 +98,27 @@ export default function LessonLayout({
   }, [currentLesson]);
 
   return (
-    <div className="flex w-full overflow-hidden urbanist">
-      <LessonSidebar
-        isOpen={sideBarOpen}
-        {...{ chapters, textbook, setCurrentLesson }}
-      />
+    <>
+    <FeedbackPopup
+      ref={feedbackRef}
+      type={FeedbackType.WRONG}
+      onClose={() => console.log("closing")}
+      title="Oops!!" content="That is not an apple"
+    />
+    <div className="flex bg-white w-screen z-[17000] w-full overflow-hidden urbanist">
+      {
+        sideBar && 
+        <LessonSidebar
+          isOpen={sideBarOpen}
+          close={setSideBarOpen}
+          {...{ chapters, textbook, setCurrentLesson }}
+        />
+      }
       <div className="flex flex-col w-full relative justify-between border-l h-screen">
         <LessonHeader
           getChapter={null}
           chapter={currentChapter}
+          sideBarOpen={sideBarOpen}
           currentLesson={currentLesson}
         />
         <div className="px-28 flex flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
@@ -100,17 +128,11 @@ export default function LessonLayout({
             {...lessonSlidesArgs}
           )}
           {children}
-                    {/* <LessonSlides
-            slideManagerRef={slideManagerRef}
-            handlePrevious={handlePrevious}
-            handleContinue={handleContinue}
-            slides={currentLesson.slides}
-            setActiveSlide={setActiveSlide}
-            setCanProceed={setCanProceed}
-          /> */}
+ 
         </div>
-        <LessonFooter previous={handlePrevious} next={handleContinue} />
+        <LessonFooter previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
       </div>
     </div>
+    </>
   );
 }

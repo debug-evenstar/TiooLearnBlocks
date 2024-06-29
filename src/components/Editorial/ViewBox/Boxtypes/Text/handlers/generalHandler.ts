@@ -1,61 +1,5 @@
 import { ManagerInterface } from "components/Editorial/Base/Manager";
-import { textComponentData, wrapTextData } from "./dataHandler";
 
-
-export const getRange = () => {
-  const selection = window.getSelection();
-  if (!selection) return;
-  if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      return range;
-  }
-};
-
-export const handleTextChange = (
-  e: any,
-  manager: ManagerInterface,
-  textValue: string,
-  setTextValue: React.Dispatch<React.SetStateAction<string>>,
-  viewBoxRef: React.MutableRefObject<any>,
-  textareaRowCount: number,
-  setTextareaRowCount: React.Dispatch<React.SetStateAction<number>>
-) => {
-  let textContentValue = e.target.value;
-
-  // Fix problem of undefined content value
-  if (e.target.value === undefined && textValue) {
-    textContentValue = textValue;
-  }
-
-
-  // Temporarily remove to rely on component rerender
-  // setTextValue(textContentValue);
-
-  // Using innerHTML to avoid conflict with Text value on content update...
-  manager.canvasManager.canvas.functions.updateActiveComponentData(
-    textComponentData(e.target.innerHTML)
-  );
-
-  const editableDiv = e.target as HTMLElement;
-
-  const lineHeight = parseFloat(
-    window.getComputedStyle(editableDiv).lineHeight
-  );
-  const numberOfRows = Math.floor(editableDiv.scrollHeight / lineHeight);
-
-  editableDiv.style.height = "auto";
-  editableDiv.style.height = editableDiv.scrollHeight + "px";
-
-  const viewBox = viewBoxRef.current;
-  if (viewBox) {
-    if (numberOfRows > textareaRowCount) {
-      setTextareaRowCount(numberOfRows);
-      const heightDifference = lineHeight * (numberOfRows - textareaRowCount);
-      const newHeight = viewBox.offsetHeight + heightDifference;
-      viewBox.style.height = newHeight + "px";
-    }
-  }
-};
 
 export const checkAndReturnOptions = (type: "OBJECTIVE" | "SUBJECTIVE") => {
   if (type === "OBJECTIVE") {
@@ -91,9 +35,7 @@ export const checkAndReturnOptions = (type: "OBJECTIVE" | "SUBJECTIVE") => {
   }
 };
 
-export function removePx(value: string): string {
-  return Number.parseFloat(value.slice(0, -2)).toString();
-}
+
 
 
 // export const toggleTextStyle = (
