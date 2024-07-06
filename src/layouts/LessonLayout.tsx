@@ -8,6 +8,7 @@ import "./LessonLayout.css";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
+import { LessonContext } from "contexts/LessonContext";
 
 export interface LessonLayoutProps {
   textbook: any;
@@ -99,7 +100,6 @@ export default function LessonLayout({
     <>
     <FeedbackPopup
       ref={feedbackRef}
-
     />
     <div className="flex bg-white w-screen z-[17000] w-full overflow-hidden urbanist">
       {
@@ -123,8 +123,12 @@ export default function LessonLayout({
           { lessonSlides && lessonSlides(
             {...lessonSlidesArgs}
           )}
-          {children}
- 
+          <LessonContext.Provider value={{
+            lesson,
+            feedbackRef
+          }}>
+            {children}
+          </LessonContext.Provider>
         </div>
         <LessonFooter previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
       </div>

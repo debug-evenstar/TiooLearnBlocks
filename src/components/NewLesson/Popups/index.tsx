@@ -46,8 +46,8 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
   return (
     <div className="h-full flex justify-center flex-col">
       <div className="flex items-center space-x-2 relative">
-        <img src={penguinImg} alt="" className="mx-auto max-h-[120px]" />
-        <div>
+        <img src={penguinImg} alt="" className="max-h-[90px]" />
+        <div className="mr-auto">
           <p className="text-sm">{title}</p>
           <p className="font-[600]">{content}</p>
         </div>
@@ -94,20 +94,16 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     };
 
     useImperativeHandle(ref, () => ({
-      wrongFeedback(title: string, content: string) {
-        setValues(title, content, FeedbackType.WRONG);
-      },
-
-      correcFeedback(title: string, content: string) {
-        setValues(title, content, FeedbackType.CORRECT);
+      showFeedback(title: string, content: string, type : FeedbackType) {
+        setValues(title, content, type);
       },
     }));
 
     return (
       <div
         ref={divRef}
-        className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed ${positionStyle} ${
-          isVisible ? "-right-[40%]" : ""
+        className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed ${
+          isVisible ? positionStyle : "top-0 -right-[40%]"
         }`}
       >
         <div className="relative">

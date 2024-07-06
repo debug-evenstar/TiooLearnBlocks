@@ -223,24 +223,11 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             setSlides(() => lessonSlides);
         }, [lessonSlides]);
 
-        const containerStyle = {
-            //   background:
-            //   "url('https://res.cloudinary.com/dic7regoe/image/upload/v1691354626/praxeum/Frame_1000004416_iflseu.png')",
-            // backgroundSize: "100% 100%",
-        };
         return (
             <div
-                style={containerStyle}
                 ref={containerRef}
                 className="w-full h-full mx-auto my-0 py-[10px] flex flex-col no-scrollbar"
             >
-                {/* {SlideScope && <div className="w-full mx-auto w-10/12 grid gap-y-5 my-5">
-          {activeSlide.map((component: any, index: number) => {
-            const Component = loadComponent(component);
-            return <Component key={index} data={component} slide={SlideScope} altHeaderStyle={altHeaderStyle} />;
-          })}
-        </div>} */}
-
                 {SlideScope && (
                     <CarouselEffect activeSlideIndex={activeSlideIndex}>
                         {slides.map((slide: any, slideIndex: number) => (

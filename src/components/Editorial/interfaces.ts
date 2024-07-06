@@ -1,5 +1,6 @@
 import { SlideData } from "components/SlideManager/handler";
 import { ManagerInterface } from "./Base/Manager";
+import { FeedbackType } from "components/NewLesson/Popups";
 
 export interface SidebarFunctions {
   addSlide: Function;
@@ -33,4 +34,9 @@ export interface CanvasText {
   setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
   data?: any;
   currIndex?: number;
+}
+
+export interface Feedback {
+  title : string;
+  content : string;
 }

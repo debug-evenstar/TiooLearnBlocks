@@ -7,6 +7,7 @@ import { ComponentLayoutInterface } from "components/interface";
 import OptionSideModal from "./OptionSideModal";
 import { _getManager, setComponentLayout } from "components/Editorial/Base/Manager";
 import { QuestionInterface } from "../InactiveSidebar";
+import { Feedback } from "components/Editorial/interfaces";
 
 interface Props {
     question: QuestionInterface;
@@ -29,7 +30,7 @@ export interface OptionInterface {
     hash : string;
     value? : string;
     isAnswer? : boolean;
-    feedback? : string;
+    feedback? : Feedback;
     layout? : ComponentLayoutInterface
 }
 
@@ -47,7 +48,16 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
     const [optionType, setOptionType] = useState<OptionTypes>(OptionTypes.Single);
     const [inputs, setInputs] = useState(question.inputs ?? []);
     const [questionQuery, setQuestionQuery] = useState<any>({previous : "", current : ""});
+    const [topicSearchValue, setTopicSearchValue] = useState<string>("")
+    const [topicSearchResults, setTopicSearchResults] = useState<any[]>([])
+    const [linkedTopics, setLinkedTopics] = useState<any>([])
     const manager = _getManager();
+    const mockTopics = [
+        { title : "Plants and animals"},
+        { title : "Quadratic Equations"},
+        { title : "Polynomials"},
+        { title : "Demand and Supply"}
+    ]
     const optionBulletIcon = (item : any) => 
         item.isAnswer 
             ? (<FaStar className="text-[15px] text-blue-400 mr-1"/>)
@@ -101,6 +111,26 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
     const saveQuestionQuery = () => {
         setQuestionQuery((prev:any) => ({...prev, previous : questionQuery.current}));
     }
+
+    const searchTopic = (value : string) => {
+        if (value !== "") {
+            setTopicSearchResults(mockTopics.filter((topic : any)=>{
+                return topic.title.toLowerCase().includes(value.toLowerCase()) && 
+                    !linkedTopics.map((t:any) => t.title.toLowerCase()).includes(topic.title.toLowerCase());
+            }))
+        } else {
+            setTopicSearchResults([]);
+        }
+        setTopicSearchValue(value)
+    }
+
+    const linkTopic = (topic : any) => {
+        setLinkedTopics((prev : any) => ([...prev, topic]));
+    }
+
+    useEffect(() => {
+        searchTopic(topicSearchValue);
+    },[linkedTopics])
 
     useEffect(()=>{
         setQuestions((prev:any) => {
@@ -209,6 +239,44 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
                         disabled={!queryCanSave()}
                         onClick={() => saveQuestionQuery()}
                     > Save </button>
+                </div>
+                <div className="px-2 mt-[15px]">
+                    <p className="text-[14px] font-bold">Link Topics</p>
+                    <div className="w-full">
+                        {
+                            linkedTopics.map((topic : any) => {
+                                return (
+                                    <p key={topic.title} className="px-[3px] py-[2px] rounded-[6px] border-[#e1deff] border-[2px] text-center text-[13px]">
+                                        {topic.title}
+                                    </p>
+                                );
+                            })
+                        }
+                    </div>
+                    <input 
+                        className="w-full border-[2px] border-[#f2f2f2] rounded-[5px] py-1 px-1 text-[13px] mt-[5px] outline-none"
+                        placeholder="Type to search topics"
+                        onChange={(e) => searchTopic(e.target.value)}
+                    />
+                    <div className="w-full border-x-[1px] border-[#f2f2f2] mt-[2px] max-h-[300px]">
+                        {topicSearchResults.length 
+                            ?topicSearchResults.map((topic: any) => {
+                                return (
+                                    <button 
+                                        key={topic.title} 
+                                        className="w-full py-[5px] text-[#303030] text-center text-[13px] border-[#f2f2f2] border-b-[1px] hover:bg-[#f5f5f5]"
+                                        onClick={() => linkTopic(topic)}
+                                    >
+                                        {topic.title}
+                                    </button>
+                                );
+                            })
+                            :(<p 
+                                className="w-full py-[5px] text-[#a5a5a5] text-center text-[13px] border-[#f2f2f2] border-b-[1px]"
+                            >No topics matching query</p>)
+                        }
+
+                    </div>
                 </div>
             </div>
 

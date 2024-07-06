@@ -6,6 +6,7 @@ import { FaCheckCircle, FaEdit, FaPencilAlt, FaStar } from "react-icons/fa";
 import { ComponentLayoutInterface } from "components/interface";
 import { OptionInterface } from "./ActiveQuestion";
 import { _getManager, setComponentLayout } from "components/Editorial/Base/Manager";
+import { Feedback } from "components/Editorial/interfaces";
 
 interface Props {
     option: OptionInterface;
@@ -16,8 +17,8 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
     const [isEditingName, setIsEditingName] = useState<boolean>(false);
     const nameInputRef: React.RefObject<any> = createRef();
     const [optionTitle , setOptionTitle] = useState<string>(option.title);
-    const [optionFeedback, setOptionFeedback] = useState<{ current : string, previous : string}>({
-        previous : "", current : ""
+    const [optionFeedback, setOptionFeedback] = useState<{ current : Feedback, previous : Feedback}>({
+        previous : {} as Feedback, current : {} as Feedback
     });
     const [optionSizes, setOptionSizes] = useState<any>({
         width : option.layout?.size?.width ?? 100,
@@ -56,7 +57,9 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
     }
 
     const feedbackCanSave = () =>
-        optionFeedback.current !== "" && optionFeedback.current !== optionFeedback.previous;
+        optionFeedback.current.title !== "" && optionFeedback.current.content !== "" &&
+        (optionFeedback.current.title !== optionFeedback.previous.title ||
+         optionFeedback.current.content !== optionFeedback.previous.content);
 
 
     useEffect(()=>{
@@ -65,9 +68,11 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
             width : option.layout?.size?.width ?? 100,
             height : option.layout?.size?.height ?? 50
         })
+        const title = option.feedback?.title ?? "";
+        const content = option.feedback?.content ?? "";
         setOptionFeedback({
-            current : option.feedback ?? "", 
-            previous : option.feedback ?? ""
+            current : { title, content},
+            previous : { title , content}
         })
     },[option]);
 
@@ -127,17 +132,30 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
                 </div>
             </div>
             <div className="mt-[8px] px-[5px]">
-                <p className="text-[13px]">
+                <p className="text-[13px] font-bold">
                     Feedback <span className="text-[12px]">({option.isAnswer ? "Correct" : "Wrong"})</span>
                 </p>
-                <div className="flex flex-col border-[#e5e5e5] border-[2px] rounded-[5px]">
+                <div className="flex flex-col rounded-[5px]">
+                    <span className="text-[12px] font-bold">Title</span>
+                    <textarea 
+                        className="w-full h-[40px] text-[14px] border-[2px] border-[#f2f2f2] rounded-[5px] p-1"
+                        value={optionFeedback.current.title}
+                        onChange={(e) => setOptionFeedback((prev:any) => ({
+                            ...prev, 
+                            current : { ...prev.current ,title : e.target.value }
+                        }))}
+                    ></textarea>
+                    <span className="text-[12px] font-bold">Content</span>
                     <textarea 
                         className="w-full h-[90px] text-[14px] border-[2px] border-[#f2f2f2] rounded-[5px] p-1"
-                        value={optionFeedback.current}
-                        onChange={(e) => setOptionFeedback((prev:any) => ({...prev, current : e.target.value}))}
+                        value={optionFeedback.current.content}
+                        onChange={(e) => setOptionFeedback((prev:any) => ({
+                            ...prev, 
+                            current : { ...prev.current ,content : e.target.value }
+                        }))}
                     ></textarea>
                     <button 
-                        className={"w-full text-white text-[14px] px-3 py-1 rounded-[5px] " + 
+                        className={"w-full text-white text-[14px] px-3 py-1 rounded-[5px] mt-2 " + 
                             (!feedbackCanSave() ? 'bg-[#d5d5d5]' : 'bg-green-500')
                         }
                         disabled={!feedbackCanSave()}
