@@ -6,7 +6,7 @@ import { Editorial } from "components";
 // import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 // import { useDispatch } from "react-redux";
 // import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
-import NewLessonPage from "pages/newLessonPage";
+import LessonPage from "pages/LessonPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { slides } from "dump/can";
 
@@ -133,7 +133,7 @@ function App() {
           <Route
             path="/comp"
             element={
-              <NewLessonPage
+              <LessonPage
                 textbook={textbook}
                 chapters={chapters}
                 lessons={lessons}
