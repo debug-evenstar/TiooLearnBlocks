@@ -1,7 +1,7 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { FC } from "react";
 interface Props {
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
 }
 declare const Tips: FC<Props>;
 export default Tips;

@@ -1,2 +1,2 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
-export declare const registerFunctions: (manager: EditorialManagerInterface, getRange: () => Range | undefined, viewBoxRef: React.MutableRefObject<any>, setIdentifier: (id: string) => void, componentId: string) => void;
+import { ManagerInterface } from "components/Editorial/Base/Manager";
+export declare const registerFunctions: (manager: ManagerInterface, getRange: () => Range | undefined, editableRef: React.RefObject<HTMLDivElement>, viewBoxRef: React.MutableRefObject<any>, setIdentifier: (id: string) => void, componentId: string) => void;

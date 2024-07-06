@@ -10,7 +10,7 @@ import { TextData as TextData$1 } from 'components/Text/handler';
 import { VideoData as VideoData$1 } from 'components/Video/handler';
 import { WordMatchData as WordMatchData$1 } from 'components/WordMatch/handler';
 import { ImageData as ImageData$2 } from 'components/Image/handler';
-import { ComponentBaseDataInterface } from 'components/interface';
+import { ComponentBasePropsInterface, ComponentBaseDataInterface } from 'components/interface';
 import { LessonSlideInterface as LessonSlideInterface$1 } from 'components/SlideManager/handler';
 
 declare global {
@@ -136,10 +136,9 @@ interface TextData extends ComponentBaseDataInterface {
     answers?: any[];
     options?: string[][];
 }
-interface TextComponentProps {
+interface TextComponentProps extends ComponentBasePropsInterface {
     styles?: TextStyles;
     data: TextData;
-    slide: LessonSlideInterface;
     altHeaderStyle: string;
 }
 
@@ -237,11 +236,10 @@ interface PostfaceComponentProps {
 declare const PostfaceComponent: FC<PostfaceComponentProps>;
 
 interface LessonPageProps {
-    subject: string;
-    className: string;
-    title: string;
-    slides: any[];
-    back: Function;
+    textbook: any;
+    chapters: any;
+    lessons: any;
+    back?: Function;
 }
 declare const LessonPage: FC<LessonPageProps>;
 
