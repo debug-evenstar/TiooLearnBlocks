@@ -1,4 +1,4 @@
-import muteImg from "img/mute.svg";
+import muteImg from "../../../img/mute.svg";
 
 const AudioButton = () => (
   <button className="absolute w-fit right-[3rem] outline-none top-[7rem]">
