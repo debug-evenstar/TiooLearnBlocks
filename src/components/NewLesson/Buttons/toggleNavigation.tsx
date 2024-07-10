@@ -1,4 +1,4 @@
-import circleLeft from "img/circle-left.svg";
+import circleLeft from "../../../img/circle-left.svg";
 
 const ToggleNavBtn = ({ isOpen,handleClick }: any) => {
   return (
