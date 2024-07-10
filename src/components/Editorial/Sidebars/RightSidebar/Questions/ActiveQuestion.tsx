@@ -42,7 +42,7 @@ export interface InputInterface {
 }
 
 const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions}) => {
-    const [options, setOptions] = useState<any>(question.options);
+    const [options, setOptions] = useState<any>(question.options ?? []);
     const [activeOption, setActiveOption] = useState<any>(null);
     const [activeInput, setActiveInput] = useState<any>(null);
     const [optionType, setOptionType] = useState<OptionTypes>(OptionTypes.Single);
