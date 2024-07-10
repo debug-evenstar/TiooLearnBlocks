@@ -1,11 +1,11 @@
 import React, { FC, useState, forwardRef, useImperativeHandle, useRef } from "react";
 import "./style.css";
-import catImg from "img/popup/cat.svg";
-import penguinImg from "img/popup/penguin.gif";
-import continueImg from "img/popup/continue-white.svg";
-import continueActiveImg from "img/popup/continue-main.svg";
-import successBg from "img/popup/success-popup-bg.svg";
-import errorBg from "img/popup/error-popup-bg.svg";
+import catImg from "../../../img/popup/cat.svg";
+import penguinImg from "../../../img/popup/penguin.gif";
+import continueImg from "../../../img/popup/continue-white.svg";
+import continueActiveImg from "../../../img/popup/continue-main.svg";
+import successBg from "../../../img/popup/success-popup-bg.svg";
+import errorBg from "../../../img/popup/error-popup-bg.svg";
 import { MdClose } from "react-icons/md";
 import { StringLiteralLike } from "typescript";
 
