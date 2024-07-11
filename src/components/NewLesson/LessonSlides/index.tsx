@@ -55,7 +55,7 @@ const LessonSlides = ({
         <div className="absolute z-10 top-5 right-5"></div>
         {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}
         <SlideManager
-          lessonSlides={slides}
+          lessonSlides={slides.map((slide : any) => slide.slide_data)}
           ref={slideManagerRef}
           canProceed={(val: boolean) => setCanProceed(val)}
           handleFeedback={() => false}
