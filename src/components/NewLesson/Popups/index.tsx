@@ -80,11 +80,6 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
 
     // turn this top-right to 'top-0 right-0'
     const onClose = () => setIsVisible(!isVisible);
-    let positionStyle =
-      position
-        .split("-")
-        .map((i: string) => `${i}-0`)
-        .join(" ") + " ";
 
     const setValues = (title: string, content: string, state: FeedbackType) => {
       setTitle(title);
@@ -102,9 +97,11 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     return (
       <div
         ref={divRef}
-        className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed ${
-          isVisible ? positionStyle : "top-0 -right-[40%]"
-        }`}
+        style={{
+          top : 0,
+          right : isVisible ? 0 : "-50%"
+        }}
+        className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
       >
         <div className="relative">
           <button

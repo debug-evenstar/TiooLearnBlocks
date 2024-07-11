@@ -75,12 +75,15 @@ const LessonSidebar: FC<any> = ({
   textbook,
   setCurrentLesson,
 }) => {
-  const styles = isOpen ? "w-0 sm:w-[390px]" : " sm:-translate-x-full sm:w-0";
+
+  const getClassName = () => 
+    isOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-1000 transition-all py-4 overflow-y-auto max-h-screen h-screen`
+    : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-1000 transition-all py-4 overflow-y-auto max-h-screen h-screen`;
 
   return (
     // <div className="w-[413px] px-10 py-4 border-r h-[980px] ">
     <div
-      className={`${styles} fixed sm:relative ease-in-out relative duration-1000 transition-all py-4 overflow-y-auto max-h-screen h-screen`}
+      className={getClassName()}
     >
       {isOpen && (
         <div className="fixed z-[10000] bg-white h-screen sm:w-auto w-screen">
