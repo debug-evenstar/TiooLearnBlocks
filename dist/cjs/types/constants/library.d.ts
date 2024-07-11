@@ -43,6 +43,7 @@ export declare const getChapterLessons: (id: number) => {
     objective: string;
     additional_instruction: string;
     week: string;
+    lesson_slides: never[];
     start_date: null;
     end_date: null;
     published: number;
