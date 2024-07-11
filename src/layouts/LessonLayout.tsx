@@ -86,7 +86,7 @@ export default function LessonLayout({
   const lessonSlidesArgs : LessonSlideProps = {
     managerRef : slideManagerRef,
     navigationHandles : { continue : handleContinue, previous : handlePrevious},
-    slides : currentLesson.slides,
+    slides : currentLesson.lesson_slides,
     stateActions : {
       setActiveSlide, setCanProceed
     }
