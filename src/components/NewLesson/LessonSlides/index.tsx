@@ -51,7 +51,7 @@ const LessonSlides = ({
 
   return (
     <div className="w-full relative  flex items-center gap-3">
-      <div className=" w-10/12 relative mx-auto min-h-[calc(100vh_-_170px)] text-black">
+      <div className=" w-10/12 h-full relative mx-auto min-h-[calc(100vh_-_170px)] text-black">
         <div className="absolute z-10 top-5 right-5"></div>
         {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}
         <SlideManager

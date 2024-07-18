@@ -47,14 +47,14 @@ const CarouselEffect : FC<CarouselEffectProps> = (props : any) => {
 
     return (
         <>
-            <div ref={carouselContainerRef} className="w-full mx-auto no-scrollbar">
-                <div id={uniqueId} ref={carouselRef} className="w-auto whitespace-nowrap relative no-scrollbar">
+            <div ref={carouselContainerRef} className="w-full h-full mx-auto no-scrollbar">
+                <div id={uniqueId} ref={carouselRef} className="w-auto h-full whitespace-nowrap relative no-scrollbar">
                     {(children instanceof Array) && children?.map((child : any, index : number) => (
                         <div 
                             key={index}
                             style={internalStyles.slideBox}
                             className={`inline-block relative box-border left-0 no-scrollbar
-                                ${activeIndex === index ? "slide-transition slide-box w-full h-auto opacity-100 px-[10px]" : "slide-box-clip opacity-0 w-0 h-0"}
+                                ${activeIndex === index ? "slide-transition slide-box w-full h-full opacity-100 px-[10px]" : "slide-box-clip opacity-0 w-0 h-0"}
                             `}
                         >
                             {child}
