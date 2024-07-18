@@ -24,7 +24,7 @@ const EditorialSlideView: FC<Props> = ({
     
     const hasSlides = () => parsedSlides.length !== 0;
     return (
-        <div className="w-full relative overflow-y-auto flex items-center gap-3">
+        <div className="w-full h-full relative flex items-center gap-3">
             {hasSlides() && (
                 <button
                     className="w-[54px] h-[54px] rounded-full border-[1.5px] shadow-lg cursor-pointer border-[#87909E] flex items-center justify-center"
@@ -33,7 +33,7 @@ const EditorialSlideView: FC<Props> = ({
                     <FaAngleLeft className="text-[#87909E] text-[20px]" />
                 </button>
             )}
-            <div className=" w-10/12 relative mx-auto border-[0.92px] min-h-[440px] text-black rounded-[9px] shadow-md">
+            <div className=" w-10/12 h-full relative mx-auto border-[0.92px] min-h-[440px] text-black rounded-[9px] shadow-md">
                 {hasSlides() && (
                     <div className="absolute z-10 top-5 right-5">
                         <FiEdit

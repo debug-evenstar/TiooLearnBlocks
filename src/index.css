@@ -184,9 +184,9 @@ input[type="file"] {
   transition: opacity 0.8s, left 0.8s;
 }
 
-.slide-box {
+/* .slide-box {
   height: fit-content;
-}
+} */
 
 .slide-box-clip {
   clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);

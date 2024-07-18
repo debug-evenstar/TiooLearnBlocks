@@ -239,7 +239,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                                     const Component = loadComponent(component);
                                     const containerElement = containerRef?.current;
                                     const viewArea = containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null;
-                                    return (
+                                    return component.layout ? (
                                         <LayoutComponent
                                             key={index}
                                             layout={component.layout}
@@ -257,6 +257,19 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                                                 viewArea={viewArea}
                                             />
                                         </LayoutComponent>
+                                    ) : (
+                                        <Component
+                                            key={index}
+                                            data={component}
+                                            slide={loadSlideManager(
+                                                slideIndex
+                                            )}
+                                            altHeaderStyle={altHeaderStyle}
+                                            activeSlideIndex={
+                                                activeSlideIndex
+                                            }
+                                            viewArea={viewArea}
+                                        />
                                     );
                                 })}
                             </div>
