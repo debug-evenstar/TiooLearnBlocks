@@ -30,7 +30,7 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
         onClick={() => setIsActive(!isActive)}
         className="cursor-pointer flex items-center justify-between border-gray-200 border-b"
       >
-        <p className="text-light pb-1">{title}</p>
+        <p className="text-[#a5a5a5] pb-1">{title}</p>
         <button className="outline-none">
           <img
             src={downCarret}
@@ -48,7 +48,7 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
           <li
             key={index}
             onClick={() => setCurrentLesson(lesson)}
-            className="flex items-center mb-5 space-x-2 text-[13px] cursor-pointer hover:bg-gray-100 px-2 rounded py-1"
+            className="flex items-center mb-5 space-x-2 cursor-pointer hover:bg-gray-100 px-2 rounded py-1"
           >
             <img
               // src={type == "reading" ? readingImg : assessmentImg}
@@ -58,8 +58,8 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
             />
             <p className="text-start">
               {/* <span className="capitalize font-[600]">{type}: </span> */}
-              <span className="capitalize font-[600]">Reading: </span>
-              <span className="text-nowrap">{lesson.topic}</span>
+              <span className="text-[14px] capitalize font-[600]">Reading: </span>
+              <span className="text-[14px] text-nowrap">{lesson.topic}</span>
             </p>
           </li>
         ))}
@@ -77,8 +77,8 @@ const LessonSidebar: FC<any> = ({
 }) => {
 
   const getClassName = () => 
-    isOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-1000 transition-all py-4 overflow-y-auto max-h-screen h-screen`
-    : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-1000 transition-all py-4 overflow-y-auto max-h-screen h-screen`;
+    isOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`
+    : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`;
 
   return (
     // <div className="w-[413px] px-10 py-4 border-r h-[980px] ">
@@ -86,7 +86,7 @@ const LessonSidebar: FC<any> = ({
       className={getClassName()}
     >
       {isOpen && (
-        <div className="fixed z-[10000] bg-white h-screen sm:w-auto w-screen">
+        <div className="absolute z-[10000] bg-white h-screen sm:w-auto w-screen py-4">
           <div className="px-10 flex items-center justify-between">
             <img src={logoImg} alt="" className="" />
             <button onClick={() => close(false)} >close</button>
