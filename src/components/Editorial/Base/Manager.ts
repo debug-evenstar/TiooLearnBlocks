@@ -109,6 +109,7 @@ export interface ManagerInterface {
   states: States;
   setState: Function;
   triggerRender: Function;
+  lesson? : any;
 }
 
 
@@ -122,6 +123,7 @@ class Manager implements ManagerInterface {
   slideManager: SlideManagerInterface;
   states: States;
   triggerRender: Function = () => {};
+  lesson?: any;
 
   constructor(slides: any[]) {
     this.slideManager = new SlideManager(this, slides);

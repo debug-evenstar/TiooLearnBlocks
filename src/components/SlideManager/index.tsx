@@ -222,6 +222,67 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         useEffect(() => {
             setSlides(() => lessonSlides);
         }, [lessonSlides]);
+        
+
+        const RenderComponent : FC<{
+            index : number,
+            component : any,
+            viewAreaRef : any,
+            slideIndex : number
+        }> = ({index, component, viewAreaRef, slideIndex}) => {
+
+            const Component = loadComponent(component);
+            const [viewArea, setViewArea] = useState<any>();
+
+            useEffect(()=>{
+                // Temporary solution
+                const containerElement = viewAreaRef?.current;
+                setViewArea(containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null);
+                setTimeout(()=>{
+                    setViewArea(containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null);
+                }, 1000);
+            },[viewAreaRef])
+            
+            return (
+                <>
+                    {
+                        component.layout ? (
+                            <LayoutComponent
+                                key={index}
+                                layout={component.layout}
+                            >
+                                <Component
+                                    key={index}
+                                    data={component}
+                                    slide={loadSlideManager(
+                                        slideIndex
+                                    )}
+                                    altHeaderStyle={altHeaderStyle}
+                                    activeSlideIndex={
+                                        activeSlideIndex
+                                    }
+                                    viewArea={viewArea}
+                                />
+                            </LayoutComponent>
+                        ) : (
+                            <Component
+                                key={index}
+                                data={component}
+                                slide={loadSlideManager(
+                                    slideIndex
+                                )}
+                                altHeaderStyle={altHeaderStyle}
+                                activeSlideIndex={
+                                    activeSlideIndex
+                                }
+                                viewArea={viewArea}
+                            />
+                        )
+                    }
+                </>
+            );
+        }
+
 
         return (
             <div
@@ -236,41 +297,13 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                                 className="w-auto h-auto grid gap-y-4 my-5"
                             >
                                 {slide.map((component: any, index: number) => {
-                                    const Component = loadComponent(component);
-                                    const containerElement = containerRef?.current;
-                                    const viewArea = containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null;
-                                    return component.layout ? (
-                                        <LayoutComponent
-                                            key={index}
-                                            layout={component.layout}
-                                        >
-                                            <Component
-                                                key={index}
-                                                data={component}
-                                                slide={loadSlideManager(
-                                                    slideIndex
-                                                )}
-                                                altHeaderStyle={altHeaderStyle}
-                                                activeSlideIndex={
-                                                    activeSlideIndex
-                                                }
-                                                viewArea={viewArea}
-                                            />
-                                        </LayoutComponent>
-                                    ) : (
-                                        <Component
-                                            key={index}
-                                            data={component}
-                                            slide={loadSlideManager(
-                                                slideIndex
-                                            )}
-                                            altHeaderStyle={altHeaderStyle}
-                                            activeSlideIndex={
-                                                activeSlideIndex
-                                            }
-                                            viewArea={viewArea}
-                                        />
-                                    );
+                                    return <RenderComponent
+                                        key={index}
+                                        index={index}
+                                        component={component}
+                                        slideIndex={slideIndex}
+                                        viewAreaRef={containerRef}
+                                    />
                                 })}
                             </div>
                         ))}

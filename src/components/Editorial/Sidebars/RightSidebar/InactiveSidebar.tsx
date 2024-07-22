@@ -23,6 +23,7 @@ export interface QuestionInterface {
     optionType : OptionTypes;
     options? : OptionInterface[];
     inputs? : InputInterface[];
+    topics? : any[];
 }
 
 const InactiveSidebar: FC<Props> = ({
@@ -72,7 +73,7 @@ const InactiveSidebar: FC<Props> = ({
 
     const generateQuestion = (title : string) => {
         const question : QuestionInterface = {
-            hash : randomString(8),
+            hash : randomString(10),
             title : title,
             query : "",
             media : [],
