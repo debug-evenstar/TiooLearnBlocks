@@ -110,7 +110,7 @@ const TextComponent: FC<TextComponentProps> = ({
     }, [formatted, data.content, slide]);
     return (
         <>
-            <div className={parseStyles()} ref={textContainerRef}>
+            <div className={parseStyles() + "text-wrap"} ref={textContainerRef}>
                 {data.canvas ? (
                     <div
                         dangerouslySetInnerHTML={{
