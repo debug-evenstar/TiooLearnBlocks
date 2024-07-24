@@ -8,6 +8,7 @@ import OptionSideModal from "./OptionSideModal";
 import { _getManager, setComponentLayout } from "components/Editorial/Base/Manager";
 import { QuestionInterface } from "../InactiveSidebar";
 import { Feedback } from "components/Editorial/interfaces";
+import QuestionsResource from "services/api/resources/QuestionsResource";
 
 interface Props {
     question: QuestionInterface;
@@ -42,6 +43,7 @@ export interface InputInterface {
 }
 
 const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions}) => {
+    console.log(question);
     const [options, setOptions] = useState<any>(question.options ?? []);
     const [activeOption, setActiveOption] = useState<any>(null);
     const [activeInput, setActiveInput] = useState<any>(null);
@@ -51,13 +53,9 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
     const [topicSearchValue, setTopicSearchValue] = useState<string>("")
     const [topicSearchResults, setTopicSearchResults] = useState<any[]>([])
     const [linkedTopics, setLinkedTopics] = useState<any>([])
+    const [subjectTopics, setSubjectTopics] = useState<any[]>([]);
     const manager = _getManager();
-    const mockTopics = [
-        { title : "Plants and animals"},
-        { title : "Quadratic Equations"},
-        { title : "Polynomials"},
-        { title : "Demand and Supply"}
-    ]
+
     const optionBulletIcon = (item : any) => 
         item.isAnswer 
             ? (<FaStar className="text-[15px] text-blue-400 mr-1"/>)
@@ -114,9 +112,9 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
 
     const searchTopic = (value : string) => {
         if (value !== "") {
-            setTopicSearchResults(mockTopics.filter((topic : any)=>{
-                return topic.title.toLowerCase().includes(value.toLowerCase()) && 
-                    !linkedTopics.map((t:any) => t.title.toLowerCase()).includes(topic.title.toLowerCase());
+            setTopicSearchResults(subjectTopics.filter((topic : any)=>{
+                return topic.name.toLowerCase().includes(value.toLowerCase()) && 
+                    !linkedTopics.map((t:any) => t.name.toLowerCase()).includes(topic.name.toLowerCase());
             }))
         } else {
             setTopicSearchResults([]);
@@ -126,6 +124,18 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
 
     const linkTopic = (topic : any) => {
         setLinkedTopics((prev : any) => ([...prev, topic]));
+        setTopicSearchValue("");
+    }
+
+    const loadTopics = async () => {
+        const subjectId = _getManager()?.lesson?.Textbook?.subject_id;
+        if( subjectId ) {
+            const topics = await QuestionsResource.getTopics(subjectId);
+            setSubjectTopics(topics.data);
+            if (question.topics && question.topics.length) {
+                setLinkedTopics(topics.data.filter((topic : any) => question.topics?.includes(topic.id)))
+            }
+        }
     }
 
     useEffect(() => {
@@ -145,6 +155,7 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
         }
     },[options, optionType]);
 
+
     useEffect(()=>{
         setQuestions((prev:any) => {
             const questionIndex = prev.indexOf(question);
@@ -162,7 +173,18 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
     useEffect(() => {
         question.options && setOptions(question.options);
         question.optionType && setOptionType(question.optionType);
+        loadTopics();
     },[question]); //Possible loop
+
+    useEffect(() => {
+        setQuestions((prev:any) => {
+            const questionIndex = prev.indexOf(question);
+            // question.topics = [...linkedTopics.map((topic: any) => topic.id)];
+            question.query = questionQuery.previous;
+            prev[questionIndex] = question;
+            return [...prev];
+        });
+    },[linkedTopics, questionQuery.previous]);
 
     return (
         <div className="w-full h-full mb-12 relative flex flex-col">
@@ -246,8 +268,8 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
                         {
                             linkedTopics.map((topic : any) => {
                                 return (
-                                    <p key={topic.title} className="px-[3px] py-[2px] rounded-[6px] border-[#e1deff] border-[2px] text-center text-[13px]">
-                                        {topic.title}
+                                    <p key={topic.name} className="px-[3px] py-[2px] rounded-[6px] border-[#e1deff] border-[2px] text-center text-[12px]">
+                                        {topic.name}
                                     </p>
                                 );
                             })
@@ -257,21 +279,22 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
                         className="w-full border-[2px] border-[#f2f2f2] rounded-[5px] py-1 px-1 text-[13px] mt-[5px] outline-none"
                         placeholder="Type to search topics"
                         onChange={(e) => searchTopic(e.target.value)}
+                        value={topicSearchValue}
                     />
                     <div className="w-full border-x-[1px] border-[#f2f2f2] mt-[2px] max-h-[300px]">
                         {topicSearchResults.length 
-                            ?topicSearchResults.map((topic: any) => {
+                            ? topicSearchResults.map((topic: any) => {
                                 return (
                                     <button 
-                                        key={topic.title} 
+                                        key={topic.name} 
                                         className="w-full py-[5px] text-[#303030] text-center text-[13px] border-[#f2f2f2] border-b-[1px] hover:bg-[#f5f5f5]"
                                         onClick={() => linkTopic(topic)}
                                     >
-                                        {topic.title}
+                                        {topic.name}
                                     </button>
                                 );
                             })
-                            :(<p 
+                            :(topicSearchValue && <p 
                                 className="w-full py-[5px] text-[#a5a5a5] text-center text-[13px] border-[#f2f2f2] border-b-[1px]"
                             >No topics matching query</p>)
                         }

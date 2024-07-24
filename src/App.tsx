@@ -47,6 +47,7 @@ function App() {
     const [saving, setSaving] = useState(false);
     const [data, setData] = useState<any>();
     const [ date,setDate ] = useState<any>();
+    const [ bookData,setBookData ] = useState<any>();
     const fetchLess = async () => {
         try {
             const response = await fetch(
@@ -61,6 +62,7 @@ function App() {
             const data = await response.json();
 
       if (!data.error) {
+        // console.log(data.data);
         setDate(data.data);
       } else {
         console.log(data);
@@ -70,8 +72,32 @@ function App() {
     }
   };
 
+  const fetchTextbook = async () => {
+    try {
+        const response = await fetch(
+            "http://localhost:8085/open/textbook/22"
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      
+
+        const data = await response.json();
+
+  if (!data.error) {
+    setBookData(data.data);
+  } else {
+    console.log(data);
+  }
+} catch (error) {
+  console.error("Error fetching data:", error);
+}
+};
+
   useEffect(() => {
     fetchLess();
+    fetchTextbook();
   }, []);
 
   const layout = {
@@ -139,6 +165,17 @@ function App() {
                 lessons={lessons}
                 back={() => console.log("back")}
               />
+            }
+          />
+          <Route
+            path="/study"
+            element={
+              bookData ? <LessonPage
+                textbook={bookData}
+                chapters={bookData.chapters}
+                lessons={[]}
+                back={() => console.log("back")}
+              /> : <></>
             }
           />
         </Routes>

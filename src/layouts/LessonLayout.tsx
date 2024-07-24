@@ -120,13 +120,13 @@ export default function LessonLayout({
         <div className="relative px-28 flex flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
           <AudioButton />
           <ToggleNavBtn isOpen={sideBarOpen} handleClick={() => setSideBarOpen(!sideBarOpen)} />
-          { lessonSlides && lessonSlides(
-            {...lessonSlidesArgs}
-          )}
           <LessonContext.Provider value={{
             lesson,
             feedbackRef
           }}>
+            { lessonSlides && lessonSlides(
+              {...lessonSlidesArgs}
+            )}
             {children}
           </LessonContext.Provider>
         </div>

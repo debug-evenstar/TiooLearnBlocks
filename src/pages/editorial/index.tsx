@@ -78,6 +78,7 @@ const EditorialComp: FC<Props> = ({
     useEffect(()=>{
         if(data)
             setLessonSlides(data.lesson_slides);
+            manager.lesson = data;
     },[data]);
 
     useEffect(() => {
@@ -88,6 +89,7 @@ const EditorialComp: FC<Props> = ({
             const updatedLessonSlides = generator(lessonSlides);
             setLessonSlides([...updatedLessonSlides]);
         };
+        manager.lesson = data;
     }, [manager, manager.slideManager]);
 
     useEffect(()=>{

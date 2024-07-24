@@ -1,6 +1,6 @@
 import { CreateManager } from "components/Editorial/Base/Manager";
 import SlideManager from "components/SlideManager";
-import { useEffect, useRef, useState } from "react";
+import { createRef, useEffect, useRef, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 
@@ -49,18 +49,36 @@ const LessonSlides = ({
     }, 400);
   };
 
+  const [calculatedArea, setCalculatedArea] = useState<{width : number, height : number}>({width : 0 , height : 0})
+  const contRef : React.RefObject<any> = createRef();
+
+
+  useEffect(()=>{
+    setCalculatedArea({
+      width : contRef?.current ? contRef?.current.clientHeight * 1.4 : 0,
+      height : contRef?.current?.clientHeight ?? 0
+    })
+  }, [contRef?.current])
+
   return (
-    <div className="w-full relative  flex items-center gap-3">
-      <div className=" w-10/12 h-full relative mx-auto min-h-[calc(100vh_-_170px)] text-black">
+    <div className="w-full relative flex items-center gap-3">
+      <div ref={contRef} className=" w-10/12 h-full relative mx-auto min-h-[calc(100vh_-_170px)] text-black">
         <div className="absolute z-10 top-5 right-5"></div>
         {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}
-        <SlideManager
-          lessonSlides={slides.map((slide : any) => slide.slide_data)}
-          ref={slideManagerRef}
-          canProceed={(val: boolean) => setCanProceed(val)}
-          handleFeedback={() => false}
-          updateActiveSlide={(i: number) => setActiveSlide(i)}
-        />
+        <div 
+          style={{
+            width : calculatedArea.width,
+          }}
+          className="h-full relative mx-auto"
+        >
+          <SlideManager
+            lessonSlides={slides.map((slide : any) => slide.slide_data)}
+            ref={slideManagerRef}
+            canProceed={(val: boolean) => setCanProceed(val)}
+            handleFeedback={() => false}
+            updateActiveSlide={(i: number) => setActiveSlide(i)}
+          />
+        </div>
       </div>
     </div>
   );
