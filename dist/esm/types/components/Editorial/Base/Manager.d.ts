@@ -54,6 +54,7 @@ export interface ManagerInterface {
     states: States;
     setState: Function;
     triggerRender: Function;
+    lesson?: any;
 }
 declare global {
     interface Window {
