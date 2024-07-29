@@ -70,7 +70,7 @@ export default function LessonLayout({
 
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
-    if (currentSlideIndex === currentLesson.slides.length - 1) {
+    if (currentSlideIndex === currentLesson.lesson_slides.length - 1) {
       // back();
     } else {
       slideManagerRef?.current?.navigator(1);

@@ -26,3 +26,4 @@ root.render(
 reportWebVitals();
 // export * from "./components";
 // export * from "./pages";
+// export * from "./setup";
