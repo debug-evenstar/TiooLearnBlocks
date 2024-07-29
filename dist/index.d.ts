@@ -243,4 +243,12 @@ interface LessonPageProps {
 }
 declare const LessonPage: FC<LessonPageProps>;
 
-export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, LessonPage, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };
+interface ConfigurationOptions {
+    baseUrl: string;
+}
+declare const Configuration: {
+    save(config: ConfigurationOptions): void;
+    load(): ConfigurationOptions | null;
+};
+
+export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Configuration as ConfigureLibrary, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, LessonPage, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };
