@@ -58,7 +58,7 @@ const TextComponent: FC<TextComponentProps> = ({
 
     const parseStyles = () => {
         // Expandable
-        if (data.canvas) { return; }
+        if (data.canvas) { return "whitespace-normal"; }
         const textStyle = `
         ${isHeading || slide.parent ? "text-center" : "text-left"}
         text-font
@@ -110,7 +110,7 @@ const TextComponent: FC<TextComponentProps> = ({
     }, [formatted, data.content, slide]);
     return (
         <>
-            <div className={parseStyles() + "text-wrap"} ref={textContainerRef}>
+            <div className={parseStyles()} ref={textContainerRef}>
                 {data.canvas ? (
                     <div
                         dangerouslySetInnerHTML={{
