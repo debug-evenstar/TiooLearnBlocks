@@ -47,7 +47,7 @@ export default function LessonHeader({ currentLesson, sideBarOpen }: any) {
         </p>
       </div>
       <div className="w-full sm:border-b h-[90px] px-10 flex justify-between items-center">
-        <p className="font-[500] text-[18px] hidden sm:block">{currentLesson.topic}</p>
+        <p className="font-[500] text-[18px] hidden sm:block">{currentLesson?.topic ?? ""}</p>
         <LessonProgress/>
       </div>
     </>
