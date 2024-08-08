@@ -124,7 +124,7 @@ const InactiveSidebar: FC<Props> = ({
     useEffect(() => {
         getActiveComps();
         if (activeQuestion) {
-            setActiveQuestion({...questions.filter((question: QuestionInterface) => question.hash == activeQuestion.hash)[0]});
+            setActiveQuestion({...questions.find((question: QuestionInterface) => question.hash == activeQuestion.hash)});
         }
         setQuestions(loadQuestions());
     }, [activeSlideData]);
