@@ -43,7 +43,6 @@ export interface InputInterface {
 }
 
 const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions}) => {
-    console.log(question);
     const [options, setOptions] = useState<any>(question.options ?? []);
     const [activeOption, setActiveOption] = useState<any>(null);
     const [activeInput, setActiveInput] = useState<any>(null);
@@ -138,13 +137,9 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
         }
     }
 
-    useEffect(() => {
-        searchTopic(topicSearchValue);
-    },[linkedTopics])
-
-    useEffect(()=>{
+    const updateOptionsData = () => {
         setQuestions((prev:any) => {
-            const questionIndex = prev.indexOf(question);
+            const questionIndex = prev.findIndex((q : QuestionInterface) => question.hash == q.hash);
             question.options = [...options];
             question.optionType = optionType;
             prev[questionIndex] = question;
@@ -153,12 +148,16 @@ const ActiveQuestion: FC<Props> = ({ question, setActiveQuestion, setQuestions})
         if (activeOption) {
             setActiveOption(options.filter((option: OptionInterface) => option.hash == activeOption.hash)[0]);
         }
-    },[options, optionType]);
+    }
+
+    useEffect(() => {
+        searchTopic(topicSearchValue);
+    },[linkedTopics])
 
 
     useEffect(()=>{
         setQuestions((prev:any) => {
-            const questionIndex = prev.indexOf(question);
+            const questionIndex = prev.findIndex((q : QuestionInterface) => question.hash == q.hash);
             question.inputs = [...inputs];
             prev[questionIndex] = question;
             return [...prev];
