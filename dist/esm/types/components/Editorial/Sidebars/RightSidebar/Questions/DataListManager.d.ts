@@ -8,6 +8,7 @@ interface Props {
     onClickItem?: Function;
     bulletIcon?: Function | React.ReactElement;
     bulletAction?: Function;
+    richText?: boolean;
 }
 declare const DataListManager: FC<Props>;
 export default DataListManager;
