@@ -56,6 +56,8 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, viewArea }) => {
         }
     }
 
+    const valueIsUrl = (value: string) => value.includes("https://");
+
 
     useEffect(() => {
         setQuestions([...(data?.data ? 
@@ -90,14 +92,18 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, viewArea }) => {
                                             100
                                         }px`,
                                     }}
-                                    className={`w-full h-full absolute border-[2px] 
+                                    className={`w-full h-full absolute border-[2px] inherit-font overflow-hidden
                                         border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow cursor-pointer ` + 
                                         optionColor(option) +
                                         ` hover:shadow-[0_0_6px_2px_rgba(155,41,178,0.6)] hover:border-[0.5px]`
                                     }
                                     onClick={() => selectOption(option, question)}
+                                    dangerouslySetInnerHTML={{ 
+                                        __html : valueIsUrl(option.title) 
+                                            ? `<img className='h-full' src="${option.title}" alt="Option" draggable="false"/>`
+                                            : option.title
+                                    }}
                                 >
-                                    {option.title}
                                 </button>
                             </LayoutComponent>
                         );

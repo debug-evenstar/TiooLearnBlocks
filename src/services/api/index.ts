@@ -3,17 +3,19 @@ import { baseApiHost } from "utilities/url";
 const Request = async (
     method: string,
     url: string,
-    body?: { [key: string]: string },
+    body?: FormData | { [key: string]: string },
     callback?: Function
 ) => {
     const fullUrl = `${baseApiHost()}/${url}`;
     const response = await fetch(fullUrl, {
         method: method,
         headers: {
-            "Content-Type": "application/json",
+            ...(body instanceof FormData
+                ? {}
+                : { "Content-Type": "application/json" }),
         },
-        body: JSON.stringify(body),
-    })
+        body: body instanceof FormData ? body : JSON.stringify(body),
+    });
     if (!response.ok) {
         callback && callback();
         throw new Error(`HTTP error! status: ${response.status}`);

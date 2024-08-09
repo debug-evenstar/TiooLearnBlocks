@@ -15,6 +15,7 @@ import {
   getTextbookChapters,
   getChapterLessons,
 } from "./constants/library";
+import { ConfigureLibrary } from "setup";
 
 function App() {
     const datas = {
@@ -135,6 +136,12 @@ function App() {
   const handleBack = () => {
     // navigate('/')
   };
+
+  useEffect(()=>{
+    ConfigureLibrary.save({
+      baseUrl : "http://localhost:8085"
+    });
+  },[]);
 
   return (
     <div>

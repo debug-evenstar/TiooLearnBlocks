@@ -1,5 +1,5 @@
 import { Api } from "..";
-import { GET_TOPICS_URL } from "../routes";
+import { GET_TOPICS_URL} from "../routes";
 
 export default {
     getTopics : async (subjectId : number) => {
