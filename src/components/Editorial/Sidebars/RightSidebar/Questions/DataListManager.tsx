@@ -102,12 +102,12 @@ const DataListManager: FC<Props> = ({
                                     }
                                 }}
                             >
-                                <button onClick={() => bulletAction(item)}>
+                                <a onClick={() => bulletAction(item)}>
                                     {typeof bulletIcon == "object" &&
                                         bulletIcon}
                                     {typeof bulletIcon == "function" &&
                                         bulletIcon(item)}
-                                </button>
+                                </a>
                                 {!titleIsUrl(item.title) &&
                                     (richText ? (
                                         <div

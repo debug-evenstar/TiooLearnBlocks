@@ -81,16 +81,19 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     // turn this top-right to 'top-0 right-0'
     const onClose = () => setIsVisible(!isVisible);
 
-    const setValues = (title: string, content: string, state: FeedbackType) => {
+    const setValues = (title: string, content: string, state: FeedbackType, visible = true) => {
       setTitle(title);
       setFeedbackState(state);
       setContent(content);
-      setIsVisible(true);
+      setIsVisible(visible);
     };
 
     useImperativeHandle(ref, () => ({
       showFeedback(title: string, content: string, type : FeedbackType) {
         setValues(title, content, type);
+      },
+      hideFeedback() {
+        setIsVisible(false);
       },
     }));
 
@@ -101,7 +104,7 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
           top : 0,
           right : isVisible ? 0 : "-50%"
         }}
-        className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
+        className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-1000 m-10 fixed`}
       >
         <div className="relative">
           <button
