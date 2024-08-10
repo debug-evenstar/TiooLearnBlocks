@@ -50,6 +50,7 @@ const InactiveSidebar: FC<Props> = ({
     const [comps, setComps] = useState<any[]>();
     const [activeQuestion, setActiveQuestion] = useState<any>(null);
     const scrRef = useRef<any>(null);
+    const [questions, setQuestions] = useState<any[]>([]);
 
     const loadQuestions = () => {
         if(activeSlideData) {
@@ -61,7 +62,6 @@ const InactiveSidebar: FC<Props> = ({
         return [];
     }
 
-    const [questions, setQuestions] = useState<any[]>([]);
 
     const getActiveComps = () => {
         const comps = activeSlideData
@@ -123,13 +123,12 @@ const InactiveSidebar: FC<Props> = ({
 
     useEffect(() => {
         getActiveComps();
-        if (activeQuestion) {
-            setActiveQuestion({...questions.find((question: QuestionInterface) => question.hash == activeQuestion.hash)});
-        }
         setQuestions(loadQuestions());
+        if (activeQuestion) {
+            let previousActive = questions.find((question: QuestionInterface) => question.hash == activeQuestion.hash);
+            setActiveQuestion(previousActive ? {...previousActive} : null);
+        }
     }, [activeSlideData]);
-
-
 
     const Item = () => {
         const [isOpen, setIsOpen] = useState(true);

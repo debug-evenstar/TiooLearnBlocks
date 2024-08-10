@@ -33,9 +33,9 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, viewArea }) => {
                     ...prev.filter((h:string) => h !==option.hash)
                 ];
             });
-            allInputs.length && option.isAnswer &&  setAnswered([...answered, option]);
+            option.isAnswer &&  setAnswered([...answered, option]);
             setTimeout(()=>{
-                allInputs.length && option.isAnswer && setLocked([...locked, option])
+                option.isAnswer && setLocked([...locked, option])
             },1500)
             if ( option.feedback && lessonContext) {
                 const feedback = option.feedback;

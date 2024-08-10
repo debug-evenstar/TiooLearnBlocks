@@ -60,7 +60,7 @@ const ActiveQuestion: FC<Props> = ({
     const [activeOption, setActiveOption] = useState<any>(null);
     const [activeInput, setActiveInput] = useState<any>(null);
     const [optionType, setOptionType] = useState<OptionTypes>(
-        OptionTypes.Single
+        question.optionType ?? OptionTypes.Single
     );
     const [inputs, setInputs] = useState(question.inputs ?? []);
     const [questionQuery, setQuestionQuery] = useState<any>({
@@ -192,7 +192,6 @@ const ActiveQuestion: FC<Props> = ({
                 (q: QuestionInterface) => question.hash == q.hash
             );
             question.options = [...options];
-            question.optionType = optionType;
             prev[questionIndex] = question;
             return [...prev];
         });
@@ -206,12 +205,24 @@ const ActiveQuestion: FC<Props> = ({
         }
     };
 
+    const updateOptionType = () => {
+        setQuestions((prev: any) => {
+            const questionIndex = prev.findIndex(
+                (q: QuestionInterface) => question.hash == q.hash
+            );
+            question.optionType = optionType;
+            prev[questionIndex] = question;
+            return [...prev];
+        });
+    }
+
     useEffect(() => {
         // Temporary solution to prevent multiple update
-        if( JSON.stringify(options) !== JSON.stringify(question.options) ||
-            optionType != question.optionType
-        ) {
+        if( JSON.stringify(options) !== JSON.stringify(question.options)) {
             updateOptionsData();
+        }
+        if (optionType !== question.optionType) {
+            updateOptionType();
         }
     }, [options, optionType]);
 
@@ -231,7 +242,9 @@ const ActiveQuestion: FC<Props> = ({
     }, [inputs]);
 
     useEffect(() => {
-        resetAnswers();
+        if (optionType !== question.optionType) {
+            resetAnswers();
+        }
     }, [optionType]);
 
     useEffect(() => {

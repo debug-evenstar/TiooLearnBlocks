@@ -74,6 +74,7 @@ export default function LessonLayout({
       // back();
     } else {
       slideManagerRef?.current?.navigator(1);
+      feedbackRef?.current.hideFeedback();
       setCanProceed(false);
     }
   };
@@ -101,6 +102,7 @@ export default function LessonLayout({
   return (
     <>
     <FeedbackPopup
+      onContinue={handleContinue}
       ref={feedbackRef}
     />
     <div className="flex bg-white w-screen z-[17000] w-full overflow-hidden urbanist">

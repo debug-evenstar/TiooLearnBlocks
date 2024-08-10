@@ -52,15 +52,19 @@ const ActiveEditSlide: FC<Props> = ({
         ]
       }
     ];
-    const [calculatedArea, setCalculatedArea] = useState<{width : number, height : number}>({width : 0 , height : 0})
+    const [calculatedArea, setCalculatedArea] = useState<{width : number, height : number}>({width : 0 , height : 0});
+    const [clientHeight , setClientHeight] = useState<any>(0);
     const contRef : React.RefObject<any> = createRef();
 
 
     useEffect(()=>{
-      setCalculatedArea({
-        width : contRef?.current ? contRef?.current.clientHeight * 1.6 : 0,
-        height : contRef?.current?.clientHeight ?? 0
-      })
+      if ( contRef?.current.clientHeight !== clientHeight ) {
+        setCalculatedArea({
+          width : contRef?.current ? contRef?.current.clientHeight * 1.6 : 0,
+          height : contRef?.current?.clientHeight ?? 0
+        });
+        setClientHeight(contRef?.current.clientHeight ?? 0);
+      }
     }, contRef?.current)
 
     return (

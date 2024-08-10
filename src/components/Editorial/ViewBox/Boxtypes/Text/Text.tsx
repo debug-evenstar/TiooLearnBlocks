@@ -1,7 +1,5 @@
 import { CanvasText } from "components/Editorial/interfaces";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { registerFunctions } from "./handlers/registerFuncsHandlers";
-import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
 import {  getRange, handleTextChange, resizeBox, removePx, setState, initializeParentTag } from "./handler";
 import {
     CurrentStylesState,
@@ -17,15 +15,6 @@ const Text: FC<CanvasText> = ({
     setIsEditable,
 }) => {
     const activeId = manager.states.activeViewBox;
-    const showOptionsBox = manager.states.showOptionsBox;
-    const trigger = manager.states.trigger;
-    const { identifier, objectiveIndex } = manager.states.optionsData;
-
-    const setIdentifier = (identifier: string) => {
-        manager.setState("optionsData", (prev: any) => {
-            return { ...prev, ...{ identifier } };
-        });
-    };
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const editableRef = useRef<HTMLDivElement>(null);
@@ -38,6 +27,7 @@ const Text: FC<CanvasText> = ({
         resizeBox(editableRef, viewBoxRef, textareaRowCount, setTextareaRowCount, /*event*/);
         // Wrap in parent paragraph if not present
         initializeParentTag(editableRef);
+        
     }
 
     useEffect(() => {
@@ -91,57 +81,6 @@ const Text: FC<CanvasText> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeId]);
 
-    const coreData = manager.canvasManager.activeComponent.data;
-
-    const handleClickedObjective = (
-        e: MouseEvent,
-        options: string[],
-        index: number
-    ) => {
-        e.stopPropagation();
-        handleSetObjectiveIndex(index);
-        manager.setState("showOptionsBox", (prev: any) => !prev);
-        manager.setState("optionsData", (prev: OptionsDataState) => ({
-            ...prev,
-            ...({
-                wrongOption: options[0],
-                correctOption: options[1],
-            } as OptionsDataState),
-        }));
-    };
-
-    useEffect(() => {
-        if (!coreData || !coreData.questions || id !== activeId) return;
-
-        coreData?.questions
-            ?.filter((question: any) => question?.identifier?.includes(id))
-            .forEach((question: any, i: number) => {
-                const inputElement = document.getElementById(
-                    question.identifier
-                );
-
-                if (inputElement) {
-                    if (question.type === "OBJECTIVE") {
-                        inputElement.addEventListener("click", (e) =>
-                            handleClickedObjective(e, question.options, i)
-                        );
-
-                        return () => {
-                            if (inputElement) {
-                                inputElement.removeEventListener("click", (e) =>
-                                    handleClickedObjective(
-                                        e,
-                                        question.options,
-                                        i
-                                    )
-                                );
-                            }
-                        };
-                    }
-                }
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [coreData, identifier, trigger]);
 
     useEffect(() => {
         const handleSelectionChange = () => {
