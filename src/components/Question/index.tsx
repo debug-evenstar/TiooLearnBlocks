@@ -17,7 +17,7 @@ interface QuestionComponentProps {
 const QuestionComponent: FC<QuestionComponentProps> = ({ data, viewArea }) => {
     const [questions, setQuestions] = useState<any>(data?.data ?? []);
     const [allInputs, setAllInputs] = useState<any>([]);
-    const optionFontSizeFraction = 1.4;
+    const optionFontSizeFraction = 1.7;
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [answered, setAnswered] = useState<any[]>([]);
     const [locked, setLocked] = useState<any[]>([]);
