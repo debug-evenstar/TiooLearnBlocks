@@ -49,7 +49,7 @@ export default function LessonLayout({
 }: LessonLayoutProps) {
 
 
-  const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0]);
+  const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0] ?? null);
 
 
   const [currentChapter, setCurrentChapter] = useState(lesson? lesson.Chapter : chapters[0]);
@@ -70,7 +70,7 @@ export default function LessonLayout({
 
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
-    if (currentSlideIndex === currentLesson.lesson_slides.length - 1) {
+    if (currentLesson && (currentSlideIndex === currentLesson.lesson_slides.length - 1)) {
       // back();
     } else {
       slideManagerRef?.current?.navigator(1);
@@ -86,14 +86,16 @@ export default function LessonLayout({
   const lessonSlidesArgs : LessonSlideProps = {
     managerRef : slideManagerRef,
     navigationHandles : { continue : handleContinue, previous : handlePrevious},
-    slides : currentLesson.lesson_slides,
+    slides : currentLesson?.lesson_slides ?? [] ,
     stateActions : {
       setActiveSlide, setCanProceed
     }
   }
 
   useEffect(() => {
-    setCurrentChapter(getCurrentChapter(currentLesson.chapter_id));
+    if(currentLesson) {
+      setCurrentChapter(getCurrentChapter(currentLesson?.chapter_id));
+    }
   }, [currentLesson]);
 
   return (

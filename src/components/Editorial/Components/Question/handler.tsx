@@ -14,9 +14,7 @@ export const getQuestionsComponent = () => {
 
 export const getQuestionIndex = (hash : string) => {
     const questions : any = getQuestionsComponent();
-    const questionIndex = questions.data.indexOf(
-        questions.data.filter((q:QuestionInterface) => q.hash == hash)[0]
-    );
+    const questionIndex = questions.data.findIndex((q:QuestionInterface) => q.hash == hash);
     return questionIndex;
 }
 
