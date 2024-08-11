@@ -99,9 +99,9 @@ export default function LessonLayout({
   return (
     <>
     <FeedbackPopup
-      ref={feedbackRef}
+      ref={feedbackRef as any}
     />
-    <div className="flex bg-white w-screen z-[17000] w-full overflow-hidden urbanist">
+    <div className="flex bg-white  z-[17000] w-full overflow-hidden urbanist">
       {
         sideBar && 
         <LessonSidebar
