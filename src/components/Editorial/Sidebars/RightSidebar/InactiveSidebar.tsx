@@ -100,7 +100,7 @@ const InactiveSidebar: FC<Props> = ({
 
     const updateSlideQuestions = (data : any) => {
         const manager = _getManager();
-        if (manager.canvasManager.activeSlide) {
+        if (manager.canvasManager.activeSlide && manager.canvasManager.activeSlide.length) {
             const updated = manager.canvasManager.activeSlide;
             const existing = manager.canvasManager.activeSlide.filter((item : any) => item.component == "Questions");
             const questionsData = {

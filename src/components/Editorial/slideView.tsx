@@ -21,7 +21,6 @@ const EditorialSlideView: FC<Props> = ({
     handleContinue,
     setCanProceed,
 }) => {
-    
     const hasSlides = () => parsedSlides.length !== 0;
     return (
         <div className="w-full h-full relative flex items-center gap-3">
