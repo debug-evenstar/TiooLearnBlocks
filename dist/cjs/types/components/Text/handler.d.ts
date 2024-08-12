@@ -1,5 +1,4 @@
-import { ComponentBaseDataInterface } from "components/interface";
-import { LessonSlideInterface } from "../SlideManager/handler";
+import { ComponentBaseDataInterface, ComponentBasePropsInterface } from "components/interface";
 interface TextStyles {
     color?: string;
     fontSize?: string;
@@ -11,12 +10,12 @@ export interface TextData extends ComponentBaseDataInterface {
     answers?: any[];
     options?: string[][];
 }
-export interface TextComponentProps {
+export interface TextComponentProps extends ComponentBasePropsInterface {
     styles?: TextStyles;
     data: TextData;
-    slide: LessonSlideInterface;
     altHeaderStyle: string;
 }
 export declare const processTextStyles: () => void;
 export declare const formatTextContent: (content: string) => any;
+export declare const buildTextData: (data: string, viewArea: any) => string;
 export {};

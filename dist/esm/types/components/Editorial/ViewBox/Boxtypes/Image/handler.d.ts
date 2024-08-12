@@ -10,7 +10,7 @@ interface ImageExtensions {
     height: number;
     question?: QuestionInterface;
 }
-export declare const setImageComponentData: (imageData: {
+export declare const imageComponentData: (imageData: {
     url?: string;
     extensions?: ImageExtensions[];
 }) => ImageComponentDataInterface;

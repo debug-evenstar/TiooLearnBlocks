@@ -30,7 +30,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
 }) => {
   return (
     <div className="h-screen w-full relative top-0 overflow-hidden">
-      <Header activeSlide={active} back={back} name={name} />
+      <Header activeSlide={active} lesson={manager?.lesson} back={back} name={name} />
       <div className="w-full h-[calc(100%_-_80px)] flex">
         <LeftSidebar
           slides={slides}
