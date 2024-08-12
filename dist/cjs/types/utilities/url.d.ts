@@ -1,1 +1,1 @@
-export declare const baseApiHost: () => "https://beta.api.hellotioo.com" | "https://api.hellotioo.com";
+export declare const baseApiHost: () => string | undefined;

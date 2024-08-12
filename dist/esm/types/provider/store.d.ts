@@ -1,4 +1,4 @@
-/// <reference types="redux-persist/types/persistreducer" />
+/// <reference types="redux-persist/types/persistReducer" />
 /// <reference types="redux-persist/types/types" />
 /// <reference types="redux-persist" />
 declare const store: import("@reduxjs/toolkit").EnhancedStore<{
@@ -32,6 +32,15 @@ declare const store: import("@reduxjs/toolkit").EnhancedStore<{
     trigger: {
         value: boolean;
     };
+    overlayActive: {
+        value: boolean;
+    };
+    slider: {
+        value: {
+            activeCompName: string;
+            activeCompIndex: number;
+        };
+    };
 } & import("redux-persist/es/persistReducer").PersistPartial, import("redux").UnknownAction, import("@reduxjs/toolkit").Tuple<[import("redux").StoreEnhancer<{
     dispatch: import("redux-thunk").ThunkDispatch<{
         rightSidebarState: {
@@ -63,6 +72,15 @@ declare const store: import("@reduxjs/toolkit").EnhancedStore<{
         };
         trigger: {
             value: boolean;
+        };
+        overlayActive: {
+            value: boolean;
+        };
+        slider: {
+            value: {
+                activeCompName: string;
+                activeCompIndex: number;
+            };
         };
     } & import("redux-persist/es/persistReducer").PersistPartial, undefined, import("redux").UnknownAction>;
 }, {}>, import("redux").StoreEnhancer<{}, {}>]>>;

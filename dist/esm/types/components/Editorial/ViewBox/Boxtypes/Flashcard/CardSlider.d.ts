@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 interface ImageCarouselProps {
     id: string;
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
 }
 declare const CardSlider: FC<ImageCarouselProps>;
 export default CardSlider;

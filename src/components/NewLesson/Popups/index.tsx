@@ -1,13 +1,15 @@
 import React, { FC, useState, forwardRef, useImperativeHandle, useRef } from "react";
 import "./style.css";
-import catImg from "../../../img/popup/cat.svg";
-import penguinImg from "../../../img/popup/penguin.gif";
-import continueImg from "../../../img/popup/continue-white.svg";
-import continueActiveImg from "../../../img/popup/continue-main.svg";
-import successBg from "../../../img/popup/success-popup-bg.svg";
-import errorBg from "../../../img/popup/error-popup-bg.svg";
+import catImg from "img/popup/cat.gif";
+import penguinImg from "img/popup/penguin.gif";
+import continueImg from "img/popup/continue-white.svg";
+import continueActiveImg from "img/popup/continue-main.svg";
+import successBg from "img/popup/success-popup-bg.svg";
+import errorBg from "img/popup/error-popup-bg.svg";
 import { MdClose } from "react-icons/md";
-import { StringLiteralLike } from "typescript";
+import { AudioManager } from "../AudioManager/AudioManager";
+
+// import { StringLiteralLike } from "typescript";
 
 export enum FeedbackType {
   CORRECT,
@@ -15,7 +17,6 @@ export enum FeedbackType {
 }
 
 interface FeedbackPopupProps {
-
   ref: any;
   position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
   onClose?: Function;
@@ -76,10 +77,11 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     const [title, setTitle] = useState("");
     const [feedbackState, setFeedbackState] = useState<FeedbackType | null>(null);
     
-    const isWrong = feedbackState == FeedbackType.WRONG;
-
-    // turn this top-right to 'top-0 right-0'
+    const isWrong = feedbackState === FeedbackType.WRONG;
+    
     const onClose = () => setIsVisible(!isVisible);
+    
+    const audioManager = new AudioManager();
 
     const setValues = (title: string, content: string, state: FeedbackType) => {
       setTitle(title);
@@ -89,19 +91,24 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     };
 
     useImperativeHandle(ref, () => ({
-      showFeedback(title: string, content: string, type : FeedbackType) {
+      showFeedback(title: string, content: string, type: FeedbackType) {
+        type === FeedbackType.WRONG ?
+          audioManager.playWrong()
+          :
+          audioManager.playCorrect();
         setValues(title, content, type);
       },
     }));
-
+    ;
     return (
       <div
         ref={divRef}
         style={{
-          top : 0,
-          right : isVisible ? 0 : "-50%"
+          top: 0,
+          right: isVisible ? 0 : "-50%"
         }}
-        className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
+        // className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
+        className={`w-[430px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
       >
         <div className="relative">
           <button

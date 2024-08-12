@@ -1,8 +1,8 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { FC } from "react";
 interface Props {
     id: string;
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
     viewBoxRef: any;
     image: any;
 }
@@ -11,5 +11,5 @@ export default Image;
 export interface UploadIconProps {
     handleChange: (e: any) => void;
     handleDrop: (e: any) => void;
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
 }

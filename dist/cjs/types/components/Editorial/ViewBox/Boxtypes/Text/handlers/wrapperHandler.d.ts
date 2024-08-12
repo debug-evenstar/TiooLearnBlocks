@@ -5,4 +5,3 @@ export declare function calculateCharacterWidth(element: HTMLInputElement): numb
 export declare const createInput: (id: string) => HTMLDivElement;
 export declare const replaceContent: (range: Range, id: string) => void;
 export declare const addTooltip: (range: Range, tip: string) => void;
-export declare const resizeBox: (editableRef: React.RefObject<HTMLDivElement>, viewBoxRef: React.MutableRefObject<any>, textareaRowCount: number, setTextareaRowCount: (value: React.SetStateAction<number>) => void) => void;

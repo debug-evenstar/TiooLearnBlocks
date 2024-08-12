@@ -1,3 +1,4 @@
+import { LessonSlideInterface } from "./SlideManager/handler";
 export interface PositionProperties {
     offset: number;
     offsetPercent?: number;
@@ -48,6 +49,11 @@ export interface ComponentBaseDataInterface {
     layout?: ComponentLayoutInterface;
     styles?: ComponentStylesInterface;
     canvas?: boolean;
+    abstract?: boolean;
     questions?: QuestionInterface[];
+}
+export interface ComponentBasePropsInterface {
+    slide: LessonSlideInterface;
+    viewArea?: any;
 }
 export {};

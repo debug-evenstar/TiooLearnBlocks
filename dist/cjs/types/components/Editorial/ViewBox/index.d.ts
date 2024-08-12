@@ -1,9 +1,9 @@
 import { FC } from "react";
 import "react-resizable/css/styles.css";
-import { EditorialManagerInterface } from "../Base/EditorialManager";
+import { ManagerInterface } from "../Base/Manager";
 interface Props {
     id: string;
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
     handleDelete: Function;
 }
 declare const ViewBox: FC<Props>;

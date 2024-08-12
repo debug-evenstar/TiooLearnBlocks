@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 interface Props {
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
 }
 declare const ActiveSidebar: FC<Props>;
 export default ActiveSidebar;

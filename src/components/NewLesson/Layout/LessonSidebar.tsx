@@ -89,7 +89,7 @@ const LessonSidebar: FC<any> = ({
         <div className="absolute z-[10000] bg-white h-screen sm:w-auto w-screen py-4">
           <div className="px-10 flex items-center justify-between">
             <img src={logoImg} alt="" className="" />
-            <button onClick={() => close(false)} >close</button>
+            <button className="sm:hidden" onClick={() => close(false)} >&times;</button>
           </div>
           <div className="mt-12 px-4">
             <button>

@@ -1,8 +1,8 @@
-import { EditorialManagerInterface } from "components/Editorial/Base/EditorialManager";
+import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { FC } from "react";
 interface Props {
     id: string;
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
 }
 declare const AddImages: FC<Props>;
 export default AddImages;

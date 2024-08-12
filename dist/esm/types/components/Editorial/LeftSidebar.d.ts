@@ -1,10 +1,10 @@
 import { FC } from "react";
-import { EditorialManagerInterface } from "./Base/EditorialManager";
+import { ManagerInterface } from "./Base/Manager";
 interface Props {
     slides: any;
     changeTo: (index: number) => void;
     data: any;
-    manager: EditorialManagerInterface;
+    manager: ManagerInterface;
 }
 declare const LeftSidebar: FC<Props>;
 export default LeftSidebar;
