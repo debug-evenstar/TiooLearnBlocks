@@ -4,8 +4,6 @@
   useState,
 } from "react";
 import { RiArrowDropDownFill, RiArrowDropUpFill } from "react-icons/ri";
-import Objective from "./Objective";
-import Subjective from "./Subjective";
 import Tips from "./Tips";
 import { ManagerInterface } from "components/Editorial/Base/Manager";
 
@@ -33,8 +31,6 @@ const Extensions: FC<Props> = ({ manager }) => {
       {isActive && (
         <main>
           <a href="javascript:void(0)">
-            <Objective manager={manager} component="Text" />
-            <Subjective manager={manager} component="Text" />
             <Tips manager={manager} />
           </a>
         </main>

@@ -13,7 +13,6 @@ import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 import ImageProperties from "../Sidebars/RightSidebar/EditProperties/Image/ImageProperties";
 import { useSelector } from "react-redux";
 import { handleSetActiveCompName } from "provider/sliderSlice";
-import { SliderProperties } from "./Boxtypes/Slider/handler";
 import Grid from "./Boxtypes/Grid/Grid";
 import AddGrid from "../Sidebars/RightSidebar/EditProperties/Grid/AddGrid";
 import GridType from "../Sidebars/RightSidebar/EditProperties/Grid/GridType/GridType";
@@ -95,8 +94,6 @@ export const EditProperties = (
 ) => {
   const componentName = getOriginalName(id);
 
-  const activeCompName = manager.states.slider.activeCompName;
-
   const viewboxTypes: {
     [key: string]: JSX.Element;
   } = {
@@ -136,7 +133,6 @@ export const EditProperties = (
         <GridExtensions manager={manager} />
       </>
     ),
-    Slider: SliderProperties(manager, activeCompName),
   };
   return viewboxTypes[componentName];
 };

@@ -2,10 +2,8 @@ import React, { FC, createRef, useEffect, useState } from "react";
 import { CanvasInterface } from "../interfaces";
 import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
-import CardSlider from "../ViewBox/Boxtypes/Flashcard/CardSlider";
 import { setComponentLayout } from "./Manager";
 import { ComponentBaseDataInterface } from "components/interface";
-import Slider from "../ViewBox/Boxtypes/Slider/Slider";
 import { OverlayActiveState, RightSidebarState } from "./StateInterface";
 import { loadComponent } from "components/SlideManager/handler";
 import { loadEditorialComponent } from "../Helpers/Loader";
@@ -143,17 +141,11 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
               onClick={() => handleClickedViewbox(item.id)}
               className="absolute"
             >
-              {item.id.includes("Slider") ? (
-                <Slider id={item.id} manager={manager} />
-              ) : item.id.includes("Flash") ? (
-                <CardSlider id={item.id} manager={manager} />
-              ) : (
                 <ViewBox
                   id={item.id}
                   manager={manager}
                   handleDelete={handleDelete}
                 />
-              )}
             </div>
           </Draggable>
         );

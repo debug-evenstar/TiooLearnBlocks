@@ -13,8 +13,6 @@ import OverlayInput from "./InputOverlay";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const activeId = manager.states.activeViewBox;
-  const showOptionsBox = manager.states.showOptionsBox;
-  const overlayActive = manager.states.overlayActive;
 
   const [previewImage, setPreviewImage] = useState("");
   const [data, setData] = useState<any>();
@@ -176,9 +174,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
 
   return (
     <div
-      className={`relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center ${
-        overlayActive ? "cursor-pointer" : "handle"
-      }`}
+      className={`relative flex flex-col h-full w-full p-3 cursor-move justify-center items-center handle`}
     >
       <UploadIcon
         handleChange={handleChange}
@@ -186,24 +182,10 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
         manager={manager}
       />
 
-      {activeId === id &&
-        overlayActive &&
-        extensions &&
-        extensions.length > 0 &&
-        extensions.map((input, index) => {
-          const nodeRef: any = createRef();
-          console.log(data);
-          return (
-            <OverlayInput index={index} ref={nodeRef} data={input} onResize={onResize} onClick={handleClickedInput} onDrag={onDrag} parentLayout={data?.layout ?? {}}/>
-          );
-        })}
-
       {previewImage?.length > 1 && (
         <div
           className="w-full mx-auto my-6 rounded-lg overflow-hidden h-full absolute"
-          onClick={
-            activeId === id && overlayActive ? handleAddInput : () => null
-          }
+          onClick={ () => null }
         >
           <img
             ref={imageRef}

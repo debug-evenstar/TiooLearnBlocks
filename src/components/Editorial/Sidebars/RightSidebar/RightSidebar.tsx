@@ -23,13 +23,10 @@ const RightSidebar: FC<Props> = ({
   manager,
 }) => {
   const isActive = manager.states.rightSidebarState;
-  const { status: optionStatus } = manager.states.feedback;
 
   return (
     <div
-      className={`border-l bg-white border-[#030036] border-opacity-10 shadow h-full w-full max-w-[20%] relative no-scrollbar mb-10 
-        ${ optionStatus ? "" : ""}
-      `}
+      className={`border-l bg-white border-[#030036] border-opacity-10 shadow h-full w-full max-w-[20%] relative no-scrollbar mb-10`}
     >
       {isActive ? (
         <ActiveSidebar manager={manager} />

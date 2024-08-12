@@ -117,8 +117,8 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
         questions.forEach((question: any) => {
             const questionOptions = question.options ?? [];
             const questionInputs = question.inputs ?? [];
-            options = [...questionOptions];
-            inputs = [...questionInputs];
+            options = [...options, ...questionOptions];
+            inputs = [...inputs, ...questionInputs];
             [questionOptions, questionInputs].forEach(
                 (list: any[], listIndex: number) => {
                     const dataConfigs =

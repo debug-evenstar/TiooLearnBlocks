@@ -4,8 +4,6 @@ import { uploadFile } from "components/Editorial/ViewBox/Boxtypes/Image/handler"
 import React, { FC, useEffect, useRef, useState } from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { RiAddCircleLine } from "react-icons/ri";
-import FlashcardObjective from "./FlashcardObjective";
-import FlashcardSubjective from "./FlashcardSubjective";
 import { useDispatch, useSelector } from "react-redux";
 import { handleToggleTrigger } from "provider/triggerSlice";
 import { QuestionInterface } from "components/interface";
@@ -80,33 +78,6 @@ const FlashcardImage: FC<FlashcardImageProps> = ({ index, manager }) => {
         <p>Image {index + 1}</p>
         {isActive ? <MdArrowDropUp /> : <MdArrowDropDown />}
       </div>
-      {isActive && (
-        <main>
-          {!question || question?.type === "OBJECTIVE" ? (
-            <FlashcardObjective
-              index={index}
-              manager={manager}
-              data={{
-                content: "",
-              }}
-            />
-          ) : (
-            <></>
-          )}
-
-          {!question || question?.type === "SUBJECTIVE" ? (
-            <FlashcardSubjective
-              index={index}
-              manager={manager}
-              data={{
-                content: "",
-              }}
-            />
-          ) : (
-            <></>
-          )}
-        </main>
-      )}
     </div>
   );
 };

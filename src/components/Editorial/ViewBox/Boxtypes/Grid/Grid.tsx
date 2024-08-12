@@ -56,7 +56,8 @@ interface GridStepsProps {
 }
 
 const GridSteps: FC<GridStepsProps> = ({ data, size, manager, id, height }) => {
-  const isEditable = manager.states.grid.gridIsEditable;
+  // const isEditable = manager.states.grid.gridIsEditable;
+  const isEditable = false;
   const [padding, setPadding] = useState(20);
   const [activeCell, setActiveCell] = useState({ rowIndex: 0, colIndex: 0 });
   const [cellColor, setCellColor] = useState("black");

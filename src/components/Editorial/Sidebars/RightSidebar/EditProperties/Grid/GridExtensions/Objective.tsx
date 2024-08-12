@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
 import { ManagerInterface } from "components/Editorial/Base/Manager";
-import { ObjectiveItemProp } from "components/Editorial/Sidebars/RightSidebar/EditProperties/Extensions/interfaces";
 import { OptionInterface, QuestionInterface } from "components/interface";
 import FeedbackIcon from "FigmaIcons/FeedbackIcon";
 import ChatIcon from "FigmaIcons/ChatIcon";
@@ -19,7 +18,6 @@ interface Props {
 }
 
 const Objective: FC<Props> = ({ manager, index, data }) => {
-  const { identifier, correctOption, wrongOption } = manager.states.optionsData;
   const trigger = manager.states.trigger;
 
   const [isActive, setIsActive] = useState(false);
@@ -96,7 +94,7 @@ const Objective: FC<Props> = ({ manager, index, data }) => {
         <p className="text-[13px]">Set Objective</p>
       </div>
 
-      {isActive && (
+      {/* {isActive && (
         <main className="w-full p-2">
           {buttons?.identifier && (
             <ObjectiveItem
@@ -109,135 +107,135 @@ const Objective: FC<Props> = ({ manager, index, data }) => {
             />
           )}
         </main>
-      )}
+      )} */}
     </div>
   );
 };
 
 export default Objective;
 
-export const ObjectiveItem: FC<ObjectiveItemProp> = ({
-  objective,
-  index,
-  data,
-  handleDelete,
-  manager,
-}) => {
-  const { status: optionStatus, type } = manager.states.feedback;
-  const [isActive, setIsActive] = useState(true);
-  const [buttons, setButtons] = useState<any>();
-  const [addedOption, setAddedOption] = useState(false);
+// export const ObjectiveItem: FC<ObjectiveItemProp> = ({
+//   objective,
+//   index,
+//   data,
+//   handleDelete,
+//   manager,
+// }) => {
+//   const { status: optionStatus, type } = manager.states.feedback;
+//   const [isActive, setIsActive] = useState(true);
+//   const [buttons, setButtons] = useState<any>();
+//   const [addedOption, setAddedOption] = useState(false);
 
-  const buttonsData: any = manager.canvasManager.activeComponent.data;
-  const coreData = manager.canvasManager.activeComponent.data.buttons;
+//   const buttonsData: any = manager.canvasManager.activeComponent.data;
+//   const coreData = manager.canvasManager.activeComponent.data.buttons;
 
-  useEffect(() => {
-    setButtons(coreData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addedOption]);
+//   useEffect(() => {
+//     setButtons(coreData);
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [addedOption]);
 
-  const addOption = (data: OptionInterface) => {
-    buttonsData.buttons.options = [...buttonsData.buttons.options, data];
+//   const addOption = (data: OptionInterface) => {
+//     buttonsData.buttons.options = [...buttonsData.buttons.options, data];
 
-    setAddedOption(!addedOption);
-    manager.setState("feedback", (prev: FeedbackState) => {
-      return {
-        ...prev,
-        ...({
-          optionIndex: buttons.options ? buttons.options.length : 0,
-        } as FeedbackState),
-      };
-    });
-  };
+//     setAddedOption(!addedOption);
+//     manager.setState("feedback", (prev: FeedbackState) => {
+//       return {
+//         ...prev,
+//         ...({
+//           optionIndex: buttons.options ? buttons.options.length : 0,
+//         } as FeedbackState),
+//       };
+//     });
+//   };
 
-  const deleteOption = (i: number) => {
-    handleDelete(objective.identifier, i);
-    setAddedOption(!addedOption);
-  };
+//   const deleteOption = (i: number) => {
+//     handleDelete(objective.identifier, i);
+//     setAddedOption(!addedOption);
+//   };
 
-  const handleOpenObjective = () => {
-    manager.setState("optionsData", (prev: OptionsDataState) => {
-      return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
-    });
-    setIsActive(!isActive);
-  };
+//   const handleOpenObjective = () => {
+//     manager.setState("optionsData", (prev: OptionsDataState) => {
+//       return { ...prev, ...({ objectiveIndex: index } as OptionsDataState) };
+//     });
+//     setIsActive(!isActive);
+//   };
 
-  const handleChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    e.preventDefault();
-    if (!e.target.files) return;
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      //const imageUrl = URL.createObjectURL(selectedFile);
-      const url = await uploadFile(473, selectedFile);
-      buttonsData.buttons.options[index].url = url;
-      manager.setState("trigger", (prev: any) => !prev);
-    }
-  };
+//   const handleChange = async (
+//     e: React.ChangeEvent<HTMLInputElement>,
+//     index: number
+//   ) => {
+//     e.preventDefault();
+//     if (!e.target.files) return;
+//     const selectedFile = e.target.files[0];
+//     if (selectedFile) {
+//       //const imageUrl = URL.createObjectURL(selectedFile);
+//       const url = await uploadFile(473, selectedFile);
+//       buttonsData.buttons.options[index].url = url;
+//       manager.setState("trigger", (prev: any) => !prev);
+//     }
+//   };
 
-  return (
-    <div className="py-1">
-      <div
-        className="w-full flex justify-between items-center cursor-pointer"
-        onClick={handleOpenObjective}
-      >
-        <p className="text-[12px]">
-          {isActive ? <b>Objective</b> : `Objective`}
-        </p>
-      </div>
+//   return (
+//     <div className="py-1">
+//       <div
+//         className="w-full flex justify-between items-center cursor-pointer"
+//         onClick={handleOpenObjective}
+//       >
+//         <p className="text-[12px]">
+//           {isActive ? <b>Objective</b> : `Objective`}
+//         </p>
+//       </div>
 
-      {isActive && (
-        <main className="w-full p-2">
-          {buttons &&
-            buttons.options?.map((option: OptionInterface, i: any) => (
-              <div key={i}>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <ChatIcon />
-                    <p className="text-[12px] my-2 mr-2">{option.content}</p>
-                  </div>
-                  <div className="flex items-center gap-1 cursor-pointer">
-                    <div>
-                      {buttonsData.buttons.options[i].url?.length > 1 ? (
-                        <img
-                          src={buttonsData.buttons.options[i].url}
-                          alt="placeholder"
-                          className="w-4 h-4"
-                          draggable={false}
-                        />
-                      ) : (
-                        <GridOptionImageIcon
-                          index={i}
-                          handleChange={handleChange}
-                        />
-                      )}
-                    </div>
-                    <RiDeleteBinLine onClick={() => deleteOption(i)} />
-                  </div>
-                </div>
-              </div>
-            ))}
+//       {isActive && (
+//         <main className="w-full p-2">
+//           {buttons &&
+//             buttons.options?.map((option: OptionInterface, i: any) => (
+//               <div key={i}>
+//                 <div className="flex justify-between items-center">
+//                   <div className="flex items-center gap-2">
+//                     <ChatIcon />
+//                     <p className="text-[12px] my-2 mr-2">{option.content}</p>
+//                   </div>
+//                   <div className="flex items-center gap-1 cursor-pointer">
+//                     <div>
+//                       {buttonsData.buttons.options[i].url?.length > 1 ? (
+//                         <img
+//                           src={buttonsData.buttons.options[i].url}
+//                           alt="placeholder"
+//                           className="w-4 h-4"
+//                           draggable={false}
+//                         />
+//                       ) : (
+//                         <GridOptionImageIcon
+//                           index={i}
+//                           handleChange={handleChange}
+//                         />
+//                       )}
+//                     </div>
+//                     <RiDeleteBinLine onClick={() => deleteOption(i)} />
+//                   </div>
+//                 </div>
+//               </div>
+//             ))}
 
-          <div
-            className="flex justify-between py-2 items-center cursor-pointer"
-            onClick={() =>
-              addOption({
-                answer: false,
-                content: "",
-                feedback: {
-                  type: "",
-                  content: "",
-                },
-              })
-            }
-          >
-            <p className="text-[12px]">Add option</p>
-            <RiAddCircleLine size={"13px"} color="grey" />
-          </div>
-        </main>
-      )}
-    </div>
-  );
-};
+//           <div
+//             className="flex justify-between py-2 items-center cursor-pointer"
+//             onClick={() =>
+//               addOption({
+//                 answer: false,
+//                 content: "",
+//                 feedback: {
+//                   type: "",
+//                   content: "",
+//                 },
+//               })
+//             }
+//           >
+//             <p className="text-[12px]">Add option</p>
+//             <RiAddCircleLine size={"13px"} color="grey" />
+//           </div>
+//         </main>
+//       )}
+//     </div>
+//   );
+// };

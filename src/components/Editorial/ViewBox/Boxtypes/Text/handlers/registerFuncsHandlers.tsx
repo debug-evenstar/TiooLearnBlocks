@@ -7,10 +7,7 @@ import {
     toggleWrapper,
     unLink,
 } from "./wrapperHandler";
-import {
-    addObjandSubComponentData,
-    setObjandSubComponentData,
-} from "components/Editorial/ViewBox/ObjAndSubInputs/handler";
+
 import { checkAndReturnOptions } from "./generalHandler";
 import { textComponentData } from "../handler";
 
@@ -82,116 +79,116 @@ export const registerFunctions = (
         );
     };
 
-    manager.canvasManager.canvas.functions["replaceContent"] = (
-        questions: any,
-        type: "OBJECTIVE" | "SUBJECTIVE",
-        component: string,
-        isSlider?: boolean,
-        slideIndex?: number
-    ) => {
-        const range = getRange();
-        if (range && range.toString() && component === "Text") {
-            const id = componentId + "-" + range?.toString() + "-" + Date.now();
-            setIdentifier(id);
-            if (questions.length > 0) {
-                manager.canvasManager.canvas.functions.updateActiveComponentObjective(
-                    addObjandSubComponentData(
-                        type,
-                        id,
-                        [
-                            {
-                                answer: false,
-                                content: "",
-                                feedback: {
-                                    type: "",
-                                    content: "",
-                                },
-                            },
-                            {
-                                answer: false,
-                                content: "",
-                                feedback: {
-                                    type: "",
-                                    content: "",
-                                },
-                            },
-                        ],
-                        [""]
-                    ),
-                    isSlider ? "Slider" : null,
-                    isSlider ? slideIndex : null
-                );
-            } else {
-                manager.canvasManager.canvas.functions.updateActiveComponentData(
-                    setObjandSubComponentData(
-                        type,
-                        id,
-                        checkAndReturnOptions(type),
-                        [""]
-                    ),
-                    isSlider ? "Slider" : null,
-                    isSlider ? slideIndex : null
-                );
-            }
-            replaceContent(range, id);
-        } else if (component === "FlashCards") {
-            const id = componentId;
-            setIdentifier(id);
-            if (questions.length > 0) {
-                manager.canvasManager.canvas.functions.updateActiveComponentObjective(
-                    addObjandSubComponentData(
-                        type,
-                        id,
-                        [
-                            {
-                                answer: false,
-                                content: "",
-                                feedback: {
-                                    type: "",
-                                    content: "",
-                                },
-                            },
-                            {
-                                answer: false,
-                                content: "",
-                                feedback: {
-                                    type: "",
-                                    content: "",
-                                },
-                            },
-                        ],
-                        [""]
-                    )
-                );
-            } else {
-                manager.canvasManager.canvas.functions.updateActiveComponentData(
-                    setObjandSubComponentData(
-                        type,
-                        id,
-                        [
-                            {
-                                answer: false,
-                                content: "",
-                                feedback: {
-                                    type: "",
-                                    content: "",
-                                },
-                            },
-                            {
-                                answer: false,
-                                content: "",
-                                feedback: {
-                                    type: "",
-                                    content: "",
-                                },
-                            },
-                        ],
-                        [""]
-                    )
-                );
-            }
-        }
-    };
+    // manager.canvasManager.canvas.functions["replaceContent"] = (
+    //     questions: any,
+    //     type: "OBJECTIVE" | "SUBJECTIVE",
+    //     component: string,
+    //     isSlider?: boolean,
+    //     slideIndex?: number
+    // ) => {
+    //     const range = getRange();
+    //     if (range && range.toString() && component === "Text") {
+    //         const id = componentId + "-" + range?.toString() + "-" + Date.now();
+    //         setIdentifier(id);
+    //         if (questions.length > 0) {
+    //             manager.canvasManager.canvas.functions.updateActiveComponentObjective(
+    //                 addObjandSubComponentData(
+    //                     type,
+    //                     id,
+    //                     [
+    //                         {
+    //                             answer: false,
+    //                             content: "",
+    //                             feedback: {
+    //                                 type: "",
+    //                                 content: "",
+    //                             },
+    //                         },
+    //                         {
+    //                             answer: false,
+    //                             content: "",
+    //                             feedback: {
+    //                                 type: "",
+    //                                 content: "",
+    //                             },
+    //                         },
+    //                     ],
+    //                     [""]
+    //                 ),
+    //                 isSlider ? "Slider" : null,
+    //                 isSlider ? slideIndex : null
+    //             );
+    //         } else {
+    //             manager.canvasManager.canvas.functions.updateActiveComponentData(
+    //                 setObjandSubComponentData(
+    //                     type,
+    //                     id,
+    //                     checkAndReturnOptions(type),
+    //                     [""]
+    //                 ),
+    //                 isSlider ? "Slider" : null,
+    //                 isSlider ? slideIndex : null
+    //             );
+    //         }
+    //         replaceContent(range, id);
+    //     } else if (component === "FlashCards") {
+    //         const id = componentId;
+    //         setIdentifier(id);
+    //         if (questions.length > 0) {
+    //             manager.canvasManager.canvas.functions.updateActiveComponentObjective(
+    //                 addObjandSubComponentData(
+    //                     type,
+    //                     id,
+    //                     [
+    //                         {
+    //                             answer: false,
+    //                             content: "",
+    //                             feedback: {
+    //                                 type: "",
+    //                                 content: "",
+    //                             },
+    //                         },
+    //                         {
+    //                             answer: false,
+    //                             content: "",
+    //                             feedback: {
+    //                                 type: "",
+    //                                 content: "",
+    //                             },
+    //                         },
+    //                     ],
+    //                     [""]
+    //                 )
+    //             );
+    //         } else {
+    //             manager.canvasManager.canvas.functions.updateActiveComponentData(
+    //                 setObjandSubComponentData(
+    //                     type,
+    //                     id,
+    //                     [
+    //                         {
+    //                             answer: false,
+    //                             content: "",
+    //                             feedback: {
+    //                                 type: "",
+    //                                 content: "",
+    //                             },
+    //                         },
+    //                         {
+    //                             answer: false,
+    //                             content: "",
+    //                             feedback: {
+    //                                 type: "",
+    //                                 content: "",
+    //                             },
+    //                         },
+    //                     ],
+    //                     [""]
+    //                 )
+    //             );
+    //         }
+    //     }
+    // };
 
     manager.canvasManager.canvas.functions["addTooltip"] = (tip: string) => {
         const range = getRange();

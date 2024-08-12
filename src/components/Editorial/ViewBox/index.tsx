@@ -8,8 +8,6 @@ import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
 import { ComponentBaseDataInterface } from "components/interface";
 import { useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import ObjectivesInputs from "./ObjAndSubInputs/ObjectivesInputs";
-import ImageObjectivesInputs from "../Sidebars/RightSidebar/EditProperties/Image/Overlay/ObjectiveInputs";
 import GridObjectivesInputs from "../Sidebars/RightSidebar/EditProperties/Grid/GridExtensions/ObjectiveInputs";
 
 interface Props {
@@ -20,7 +18,6 @@ interface Props {
 
 const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
   const activeId = manager.states.activeViewBox;
-  const showOptionsBox = manager.states.showOptionsBox;
   const noTextInViewbox = manager.states.noTextInViewbox;
 
   const [viewBoxSize, setViewBoxSize] = useState({
@@ -136,24 +133,6 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
           )}
         </div>
       </Resizable>
-
-      {showOptionsBox && activeId === id && id.includes("Text") && (
-        <div className="z-[500]">
-          <ObjectivesInputs manager={manager} />
-        </div>
-      )}
-
-      {showOptionsBox && activeId === id && id.includes("Image") && (
-        <div className="z-[500]">
-          <ImageObjectivesInputs manager={manager} />
-        </div>
-      )}
-
-      {showOptionsBox && activeId === id && id.includes("Grid") && (
-        <div className="z-[500]">
-          <GridObjectivesInputs manager={manager} />
-        </div>
-      )}
     </>
   );
 };

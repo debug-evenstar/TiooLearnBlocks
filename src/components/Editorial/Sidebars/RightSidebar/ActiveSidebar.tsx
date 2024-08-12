@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { EditProperties, getOriginalName } from "../../ViewBox/handler";
 import { ManagerInterface } from "components/Editorial/Base/Manager";
-import SliderHeader from "./EditProperties/Slider/SliderHeader";
 
 interface Props {
   manager: ManagerInterface;
@@ -48,7 +47,6 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
         </div>
       </header>
 
-      {id.includes("Slider") && <SliderHeader manager={manager} />}
       <main className="w-full p-4 px-[25px]">
         <section className="w-full flex justify-between py-4">
           <div className="flex gap-4">

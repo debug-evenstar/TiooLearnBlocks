@@ -9,7 +9,6 @@ import {
 } from "components/interface";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import FlashcardObjectivesInputs from "components/Editorial/Sidebars/RightSidebar/EditProperties/FlashCard/ObjectiveInputs";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
 import { calculateMaxResizableArea, getOriginalName } from "../../handler";
 import { OptionsDataState } from "components/Editorial/Base/StateInterface";
@@ -159,12 +158,6 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
           />
         </div>
       </Resizable>
-
-      {showOptionsBox && activeId === id && question && (
-        <div className="z-[500]">
-          <FlashcardObjectivesInputs manager={manager} />
-        </div>
-      )}
     </>
   );
 };

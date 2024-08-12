@@ -6,8 +6,6 @@ import InputResize from "../InputResize";
 import { ManagerInterface } from "components/Editorial/Base/Manager";
 import { Switch } from "@mui/material";
 import { FaEllipsisH } from "react-icons/fa";
-import ImageObjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ImageObjective";
-import ImageSubjective from "components/Editorial/Sidebars/RightSidebar/EditProperties/Image/Overlay/ImageSubjective";
 import { handleSetOptionIndex } from "provider/feedbackSlice";
 import { useSelector } from "react-redux";
 import { OverlayActiveState } from "components/Editorial/Base/StateInterface";
@@ -21,17 +19,11 @@ const label = { inputProps: { "aria-label": "Switch Overlay" } };
 const ImageProperties: FC<Props> = ({ manager }) => {
   const trigger = manager.states.trigger;
 
-  const toggleOverlay = manager.canvasManager.canvas.functions?.toggleOverlay;
   const data: any[] = manager.canvasManager.activeComponent.data?.extensions;
 
   const [isActive, setIsActive] = useState(false);
   const [extensions, setExtensions] = useState<any[]>([]);
 
-  const overlayActive = manager.states.overlayActive;
-
-  const handleSwitchOverlay = () => {
-    manager.setState("overlayActive", (prev: OverlayActiveState) => !prev);
-  };
 
   useEffect(() => {
     setExtensions(data);
@@ -52,26 +44,6 @@ const ImageProperties: FC<Props> = ({ manager }) => {
 
       {isActive && (
         <main>
-          <div className="flex justify-between items-center my-4">
-            <p className="text-[14px]">Overlay</p>
-            <a href="javascript:void(0)">
-              <Switch
-                {...label}
-                onChange={handleSwitchOverlay}
-                checked={overlayActive}
-              />
-            </a>
-          </div>
-
-          <section>
-            {extensions &&
-              extensions.length > 0 &&
-              extensions.map((input, i) => (
-                <main key={i} className="relative">
-                  <ImageInputs manager={manager} index={i} input={input} />
-                </main>
-              ))}
-          </section>
           <InputResize manager={manager} componentType="image" />
         </main>
       )}
@@ -80,43 +52,3 @@ const ImageProperties: FC<Props> = ({ manager }) => {
 };
 
 export default ImageProperties;
-
-interface ImageInputsProps {
-  manager: ManagerInterface;
-  index: number;
-  input: any;
-}
-
-const ImageInputs: FC<ImageInputsProps> = ({ manager, index, input }) => {
-  const [toggleQuestions, setToggleQuestions] = useState(false);
-
-  return (
-    <>
-      <div className="flex justify-between items-center my-2">
-        <p className="text-[14px]">Input {index + 1}</p>
-        <FaEllipsisH
-          className="cursor-pointer"
-          onClick={() => setToggleQuestions(!toggleQuestions)}
-        />
-      </div>
-      {toggleQuestions && (
-        <div className="h-fit bg-white">
-          <div className="tiooBoxShadow p-2">
-            {!input?.question[0] || input?.question[0]?.type === "OBJECTIVE" ? (
-              <ImageObjective manager={manager} index={index} data={input} />
-            ) : (
-              <></>
-            )}
-
-            {!input?.question[0] ||
-            input?.question[0]?.type === "SUBJECTIVE" ? (
-              <ImageSubjective manager={manager} index={index} data={input} />
-            ) : (
-              <></>
-            )}
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
