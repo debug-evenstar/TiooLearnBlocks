@@ -7,8 +7,9 @@ import continueActiveImg from "img/popup/continue-main.svg";
 import successBg from "img/popup/success-popup-bg.svg";
 import errorBg from "img/popup/error-popup-bg.svg";
 import { MdClose } from "react-icons/md";
-import { AudioManager } from "../AudioManager/AudioManager";
-
+import { AudioManager } from "components/NewLesson/AudioManager/AudioManager";
+import correctTipImg from "img/popup/correct-tip.svg"
+import wrongTipImg from "img/popup/wrong-tip.svg"
 // import { StringLiteralLike } from "typescript";
 
 export enum FeedbackType {
@@ -23,9 +24,13 @@ interface FeedbackPopupProps {
   onContinue?: Function;
 }
 
+// now everyone has access
+const audioManager = new AudioManager();
+
 const ErrorLayout = ({ title, content }: any) => {
   return (
-    <div className="pt-5">
+    <div className="pt-5 relative">
+      <img src={wrongTipImg} alt="" className="absolute w-[2rem] -top-3 right-20"/>
       <div className="px-16">
         <p className="text-sm font-[500]">{title}</p>
         <p className="text-lg font-[600]">{content}</p>
@@ -44,8 +49,14 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
     e.target.src = continueImg;
   };
 
+  const handleContinueClick = (e: any) => {
+    audioManager.playContinue();
+    // onContinue(e);
+  }
+
   return (
-    <div className="h-full flex justify-center flex-col">
+    <div className="h-full flex justify-center flex-col relative">
+      <img src={correctTipImg} alt="" className="absolute w-[2rem] -top-3 right-20"/>
       <div className="flex items-center space-x-2 relative">
         <img src={penguinImg} alt="" className="max-h-[90px]" />
         <div className="mr-auto">
@@ -54,7 +65,7 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
         </div>
       </div>
       <div className="flex justify-end mt-3">
-        <button onClick={onContinue} className="w-[30%] hover:scale-[1.08]">
+        <button onClick={handleContinueClick} className="w-[30%] hover:scale-[1.08]">
           <img
             src={continueImg}
             alt=""
@@ -81,7 +92,6 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     
     const onClose = () => setIsVisible(!isVisible);
     
-    const audioManager = new AudioManager();
 
     const setValues = (title: string, content: string, state: FeedbackType) => {
       setTitle(title);
