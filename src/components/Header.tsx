@@ -51,8 +51,7 @@ export const Header: FC<Props> = ({ activeSlide, back, name, lesson }) => {
                 {truncateString(lesson?.topic ?? "", 17)}
               </h3>
               <p className="text-[#87909E] text-[12px] font-inter font-normal pt-1">
-                <span>{slidesCount ?? "0"}</span> Lesson slide <span>
-                  {slidesCount > 1 ? "s" : ""}
+                <span>{slidesCount ?? "0"}</span> Lesson slide<span>{slidesCount > 1 ? "s" : ""}
                 </span>
               </p>
             </div>
