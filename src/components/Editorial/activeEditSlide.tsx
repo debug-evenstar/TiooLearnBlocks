@@ -158,10 +158,10 @@ const ActiveEditSlide: FC<Props> = ({
               />
             </div>
           </div>
-          <FaTimes
-            className="absolute text-[40px] top-10 right-10 text-white cursor-pointer hover:scale-110 duration-100"
+          {/* <FaTimes
+            className="absolute text-[40px] top-10 right-10 text-white bg-orange-400 cursor-pointer hover:scale-110 duration-100"
             onClick={() => setPreviewSlide(false)}
-          />
+          /> */}
         </div>
       )}
     </div>

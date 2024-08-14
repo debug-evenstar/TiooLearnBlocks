@@ -1,10 +1,13 @@
 import React, { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   activeSlide: number
   back: () => void
   name: string;
-  lesson: any;
+  manager: any;
+  showEdit: any;
+  closeEdit: any;
 }
 const truncateString = (str: string, maxLength: number) => {
   if (str.length <= maxLength) {
@@ -12,22 +15,31 @@ const truncateString = (str: string, maxLength: number) => {
   }
   return str.slice(0, maxLength) + "...";
 };
-export const Header: FC<Props> = ({ activeSlide, back, name, lesson }) => {
 
+export const Header: FC<Props> = ({ activeSlide, back, name, showEdit, closeEdit, manager }) => {
+
+  const lesson = manager.lesson;
   const slidesCount = lesson?.lesson_slides?.length ?? 0;
-  const NameAvat = () => {
-    const nameRow = name.split(' ')
-    const fname = nameRow[0]?.charAt(0)
-    const lname = nameRow.length > 1 && nameRow[1].charAt(0)
+  const navigate = useNavigate();
 
-    return <div className="h-full w-full bg-[#4F46E5] rounded-[50px] font-semibold text-white text-xl flex items-center justify-center">{fname}{lname}</div>
+  const handleBackClick = () => {
+    showEdit ?
+      closeEdit() : navigate(-1);
   }
+
+  // const NameAvat = () => {e
+  //   const nameRow = name.split(' ')
+  //   const fname = nameRow[0]?.charAt(0)
+  //   const lname = nameRow.length > 1 && nameRow[1].charAt(0)
+
+  //   return <div className="h-full w-full bg-[#4F46E5] rounded-[50px] font-semibold text-white text-xl flex items-center justify-center">{fname}{lname}</div>
+  // }
   return (
     <div className="sticky top-0 z-30 shadow border-b bg-white border-[#030036] border-opacity-10 px-6 w-full flex items-center h-[80px]">
       <div className="flex px-[22px] items-center justify-between w-full relative">
-        <div className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-2 cursor-pointer text-semibold" onClick={back}>
+        <button onClick={handleBackClick} className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-2 cursor-pointer text-semibold" >
           Back
-        </div>
+        </button>
         <div className="w-8/12">
           <h3 className="text-center text-[#030036] opacity-70 text-[18px]">
             <span className="font-normal"> Slide {activeSlide + 1}</span>

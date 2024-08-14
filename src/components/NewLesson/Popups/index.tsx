@@ -51,7 +51,8 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
 
   const handleContinueClick = (e: any) => {
     audioManager.playContinue();
-    // onContinue(e);
+    console.log("moving to next slide ")
+    onContinue(e);
   }
 
   return (

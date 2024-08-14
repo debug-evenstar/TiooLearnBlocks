@@ -70,6 +70,7 @@ export default function LessonLayout({
 
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
+    console.log("really moving on to the next slide now")
     if (currentLesson && (currentSlideIndex === currentLesson.lesson_slides.length - 1)) {
       // back();
     } else {
@@ -101,14 +102,15 @@ export default function LessonLayout({
   return (
     <>
     <FeedbackPopup
-      ref={feedbackRef as any}
+      ref={feedbackRef}
+      onContinue={handleContinue}
     />
-    <div className="flex bg-white  z-[17000] w-full overflow-hidden urbanist">
+    <div className="flex bg-white z-[17000] w-full overflow-hidden urbanist">
       {
         sideBar && 
         <LessonSidebar
           isOpen={sideBarOpen}
-          close={setSideBarOpen}
+          close={() => setSideBarOpen(false)}
           {...{ chapters, textbook, setCurrentLesson }}
         />
       }
@@ -116,6 +118,7 @@ export default function LessonLayout({
         <LessonHeader
           getChapter={null}
           chapter={currentChapter}
+          activeSlide={activeSlide}
           sideBarOpen={sideBarOpen}
           currentLesson={currentLesson}
         />

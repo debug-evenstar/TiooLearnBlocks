@@ -12,6 +12,7 @@ interface MainLayoutProps {
   showComp: boolean;
   back: () => void;
   lessonlist: any;
+  closeEdit: any;
   name: string;
   data: any;
   manager: ManagerInterface;
@@ -22,6 +23,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
   changeTo,
   active,
   showComp,
+  closeEdit,
   back,
   lessonlist,
   name,
@@ -30,7 +32,7 @@ const EditorialLayout: React.FC<MainLayoutProps> = ({
 }) => {
   return (
     <div className="h-screen w-full relative top-0 overflow-hidden">
-      <Header activeSlide={active} lesson={manager?.lesson} back={back} name={name} />
+      <Header activeSlide={active} showEdit={showComp} closeEdit={closeEdit} manager={manager} back={back} name={name} />
       <div className="w-full h-[calc(100%_-_80px)] flex">
         <LeftSidebar
           slides={slides}

@@ -75,29 +75,34 @@ const EditorialComp: FC<Props> = ({
         }
     }, [lessonSlides]);
 
-    useEffect(()=>{
-        if(data)
+    useEffect(() => {
+        if (data)
             setLessonSlides(data.lesson_slides);
-            manager.lesson = data;
-    },[data]);
+        manager.lesson = data;
+    }, [data]);
 
     useEffect(() => {
         manager.slideManager.handleSlidesUpdate = (updatedSlides: any[]) => {
             setParseSlides([...updatedSlides]);
         };
-        manager.slideManager.updateLessonSlides = (generator : Function) => {
+        manager.slideManager.updateLessonSlides = (generator: Function) => {
             const updatedLessonSlides = generator(lessonSlides);
             setLessonSlides([...updatedLessonSlides]);
         };
         manager.lesson = data;
     }, [manager, manager.slideManager]);
 
-    useEffect(()=>{
+    useEffect(() => {
         manager.slideManager.slides = parseSlides;
-    },[parseSlides])
+    }, [parseSlides])
 
     if (!data) {
-        return <p className="mx-auto mt-10 w-fit">Loading...</p>;
+
+        return (
+            <div className="inset-0 bg-white flex items-center justify-center">
+                <p>Loading...</p>
+            </div>
+        );
     }
 
     return (
@@ -109,6 +114,7 @@ const EditorialComp: FC<Props> = ({
                     changeTo={changeSlide}
                     active={activeSlide}
                     showComp={showEdit}
+                    closeEdit={() => setShowEdit(false)}
                     back={back}
                     lessonlist={lessonlist}
                     name={name}
@@ -131,7 +137,7 @@ const EditorialComp: FC<Props> = ({
                                 <ActiveEditSlide
                                     active={activeSlide}
                                     slides={parseSlides}
-                                    data={{...data, lesson_slides : lessonSlides}}
+                                    data={{ ...data, lesson_slides: lessonSlides }}
                                     isBusy={isBusy}
                                     manager={manager}
                                 />
@@ -150,7 +156,7 @@ const EditorialComp: FC<Props> = ({
                                     <div className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold">
                                         Preview
                                     </div>
-                                </div>  
+                                </div>
                                 <div className="pb-16"></div>
                             </div>
                         )}

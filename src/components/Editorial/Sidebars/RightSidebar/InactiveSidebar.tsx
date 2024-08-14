@@ -134,56 +134,57 @@ const InactiveSidebar: FC<Props> = ({
     const Item = () => {
         const [isOpen, setIsOpen] = useState(true);
         const [isActive, setIsActive] = useState(1);
-        return (
-            <div className="w-full my-5 p-4">
-                <h3 className="text-[12px] text-[#87909E] font-medium">
-                    {formatTerm(lessonlist.term)}
-                </h3>
-                <div className="w-full flex items-center justify-between">
-                    <h3
-                        className="text-[#030036] text-[13px] font-medium w-[137px] opacity-70 cursor-pointer py-[8px]"
-                        onClick={() => setIsOpen(!isOpen)}
-                    >
-                        {lessonlist.topic}
-                    </h3>
-                    <div
-                        className="cursor-pointer"
-                        onClick={() => setIsOpen(!isOpen)}
-                    >
-                        {isOpen ? (
-                            <FaAngleUp className="text-[15px] text-[#030036]" />
-                        ) : (
-                            <FaAngleDown className="text-[15px] text-[#030036]" />
-                        )}
-                    </div>
-                </div>
-                {isOpen && (
-                    <div>
-                        {lessonlist &&
-                            lessonlist.lessons?.map(
-                                (data: any, index: number) => {
-                                    return (
-                                        <div
-                                            key={index}
-                                            onClick={() => setIsActive(data.id)}
-                                            className={` ${
-                                                isActive === data.id
-                                                    ? `w-full p-[9px] text-[#4F46E5] text-[11px] font-medium border-l-[3.3px] border-[#4F46E5] bg-[#E3E2FF] rounded-[4px] overflow-hidden cursor-pointer`
-                                                    : `w-full p-[9px] text-[#87909E] text-[11px] font-normal cursor-pointer`
-                                            }`}
-                                        >
-                                            Lesson {index + 1}: {data.topic}
-                                        </div>
-                                    );
-                                }
-                            )}
-                    </div>
-                )}
-            </div>
-        );
+        return <div></div>
+        // return (
+        //     <div className="w-full my-5 p-4">
+        //         <h3 className="text-[12px] text-[#87909E] font-medium">
+        //             {formatTerm(lessonlist.term)}
+        //         </h3>
+        //         <div className="w-full flex items-center justify-between">
+        //             <h3
+        //                 className="text-[#030036] text-[13px] font-medium w-[137px] opacity-70 cursor-pointer py-[8px]"
+        //                 onClick={() => setIsOpen(!isOpen)}
+        //             >
+        //                 {lessonlist.topic}
+        //             </h3>
+        //             <div
+        //                 className="cursor-pointer"
+        //                 onClick={() => setIsOpen(!isOpen)}
+        //             >
+        //                 {isOpen ? (
+        //                     <FaAngleUp className="text-[15px] text-[#030036]" />
+        //                 ) : (
+        //                     <FaAngleDown className="text-[15px] text-[#030036]" />
+        //                 )}
+        //             </div>
+        //         </div>
+        //         {isOpen && (
+        //             <div>
+        //                 {lessonlist &&
+        //                     lessonlist.lessons?.map(
+        //                         (data: any, index: number) => {
+        //                             return (
+        //                                 <div
+        //                                     key={index}
+        //                                     onClick={() => setIsActive(data.id)}
+        //                                     className={` ${
+        //                                         isActive === data.id
+        //                                             ? `w-full p-[9px] text-[#4F46E5] text-[11px] font-medium border-l-[3.3px] border-[#4F46E5] bg-[#E3E2FF] rounded-[4px] overflow-hidden cursor-pointer`
+        //                                             : `w-full p-[9px] text-[#87909E] text-[11px] font-normal cursor-pointer`
+        //                                     }`}
+        //                                 >
+        //                                     Lesson {index + 1}: {data.topic}
+        //                                 </div>
+        //                             );
+        //                         }
+        //                     )}
+        //             </div>
+        //         )}
+        //     </div>
+        // );
     };
     return (
-        <div className="w-full h-full border border-gray-400">
+        <div className="w-full h-full border">
             {!showComp && <Item />}
             {showComp && (
                 <>

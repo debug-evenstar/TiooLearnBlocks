@@ -5,6 +5,7 @@ import readingImg from "../../../img/reading.svg";
 
 import LeftArrow from "FigmaIcons/LeftArrow";
 import { FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface LessonProps {
   type: "reading" | "assessment";
@@ -80,6 +81,10 @@ const LessonSidebar: FC<any> = ({
     isOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`
     : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`;
 
+
+
+  const navigate = useNavigate();
+
   return (
     // <div className="w-[413px] px-10 py-4 border-r h-[980px] ">
     <div
@@ -89,10 +94,10 @@ const LessonSidebar: FC<any> = ({
         <div className="absolute z-[10000] bg-white h-screen sm:w-auto w-screen py-4">
           <div className="px-10 flex items-center justify-between">
             <img src={logoImg} alt="" className="" />
-            <button className="sm:hidden" onClick={() => close(false)} >&times;</button>
+            <button className="sm:hidden" onClick={() => close()} >&times;</button>
           </div>
           <div className="mt-12 px-4">
-            <button>
+            <button onClick={() => navigate(-1)}>
               <LeftArrow fill="#000000" className="w-[14px]" />
               {/* <img src={leftArrow} className="w-[18px] text-black" /> */}
             </button>
