@@ -17,6 +17,7 @@ import {
   TriggerState,
 } from "./StateInterface";
 import { percentValue } from "utilities/maths";
+import { EventManager, EventManagerInterface } from "./EventManager";
 
 export const setComponentLayout = (
   canvasProps: { width: number; height: number },
@@ -90,6 +91,7 @@ interface States {
   noTextInViewbox: NoTextInTextBoxState;
 }
 
+
 export interface ManagerInterface {
   sidebarManager: SidebarManagerInterface;
   canvasManager: CanvasManagerInterface;
@@ -98,6 +100,7 @@ export interface ManagerInterface {
   setState: Function;
   triggerRender: Function;
   lesson? : any;
+  event : EventManagerInterface;
 }
 
 
@@ -112,6 +115,7 @@ class Manager implements ManagerInterface {
   states: States;
   triggerRender: Function = () => {};
   lesson?: any;
+  event: EventManagerInterface;
 
   constructor(slides: any[]) {
     this.slideManager = new SlideManager(this, slides);
@@ -132,6 +136,7 @@ class Manager implements ManagerInterface {
       noTextInViewbox: false,
     };
     this.states.canvasStates = {};
+    this.event = new EventManager();
   }
 
   setState(key: string, setter: any | Function) {

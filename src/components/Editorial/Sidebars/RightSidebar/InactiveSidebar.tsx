@@ -52,6 +52,7 @@ const InactiveSidebar: FC<Props> = ({
     const scrRef = useRef<any>(null);
     const [questions, setQuestions] = useState<any[]>([]);
 
+
     const loadQuestions = () => {
         if(activeSlideData) {
             const slideQuestions : any= activeSlideData.filter((item : any)=> item.component == "Questions");
@@ -60,6 +61,13 @@ const InactiveSidebar: FC<Props> = ({
             }
         }
         return [];
+    }
+
+    const toggleQuestion = (question : QuestionInterface, state : boolean) => {
+        const manager = _getManager();
+        manager.event.emit("questionToggle", {
+            hash : question.hash, state
+        });
     }
 
 
@@ -244,6 +252,8 @@ const InactiveSidebar: FC<Props> = ({
                                 setActiveItem={setActiveQuestion}
                                 generateItem={generateQuestion}
                                 bulletIcon={<FaQuestionCircle className="text-[15px] text-blue-400 mr-1"/>}
+                                canToggle={true}
+                                onToggle={toggleQuestion}
                             />
                         </div>
                     }

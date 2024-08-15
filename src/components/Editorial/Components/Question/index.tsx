@@ -38,6 +38,15 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
     const [inputConfigurations, setInputConfigurations] = useState<{
         [key: string]: Config;
     }>({});
+    const [questionToggleState, setQuestionToggleState] = useState<{
+        [key: string]: boolean;
+    }>(
+        (data?.data ?? []).reduce(
+            (a: any, v: QuestionInterface) => ({ ...a, [v.hash]: true }),
+            {}
+        )
+    );
+
     const manager = _getManager();
 
     const optionConfig = (hash: string): Config => {
@@ -129,6 +138,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                             index: number
                         ) => {
                             const itemData = {
+                                visible : questionToggleState[question.hash],
                                 questionHash: question.hash,
                                 sourceIndex: index,
                                 width: data.layout?.size?.width ?? 100,
@@ -151,10 +161,23 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
         setInputConfigurations(inputConfigs);
     }, [questions]);
 
+
+    useEffect(() => {
+        manager.event.listen(
+            "questionToggle",
+            (data: { hash: string; state: boolean }) => {
+                const updated = questionToggleState;
+                updated[data.hash] = data.state;
+                setQuestionToggleState({...updated});
+            }
+        );
+    }, [manager]);
+
     return (
         <>
             {allOptions.map((option: OptionInterface, index: number) => {
-                return (
+                const config = optionConfig(option.hash);
+                return questionToggleState[config.questionHash]  ? (
                     <MovableResizer
                         key={index + option.title}
                         draggableAxis="both"
@@ -172,7 +195,12 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                     >
                         {valueIsUrl(option.title) ? (
                             <button className="relative text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow overflow-hidden flex justify-center align-center">
-                                <img className="h-full" src={option.title} alt="Option" draggable={false}/>
+                                <img
+                                    className="h-full"
+                                    src={option.title}
+                                    alt="Option"
+                                    draggable={false}
+                                />
                             </button>
                         ) : (
                             <button
@@ -183,10 +211,13 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                             ></button>
                         )}
                     </MovableResizer>
+                ) : (
+                    <></>
                 );
             })}
             {allInputs.map((input: InputInterface, index: number) => {
-                return (
+                const config = inputConfig(input.hash);
+                return questionToggleState[config.questionHash] ? (
                     <MovableResizer
                         key={index + input.title}
                         draggableAxis="both"
@@ -210,6 +241,8 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                                 {option.title}
                             </button> */}
                     </MovableResizer>
+                ) : (
+                    <></>
                 );
             })}
         </>

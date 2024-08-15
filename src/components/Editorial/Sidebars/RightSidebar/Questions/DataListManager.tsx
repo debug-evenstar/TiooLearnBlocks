@@ -4,6 +4,8 @@ import {
     FaAngleDown,
     FaAngleUp,
     FaCheckCircle,
+    FaEye,
+    FaEyeSlash,
     FaPlusCircle,
     FaTimesCircle,
     FaTrash,
@@ -20,6 +22,8 @@ interface Props {
     bulletIcon?: Function | React.ReactElement;
     bulletAction?: Function;
     richText?: boolean;
+    canToggle?: boolean;
+    onToggle?: Function;
 }
 
 enum DataType {
@@ -37,10 +41,13 @@ const DataListManager: FC<Props> = ({
     bulletIcon = () => {},
     bulletAction = () => {},
     richText = false,
+    canToggle = false,
+    onToggle = () => {}
 }) => {
     const [isListOpen, setIsListOpen] = useState<boolean>(false);
     const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
     const [itemType, setItemType] = useState<string>(DataType.TEXT);
+    const [isHidden, setIsHidden] = useState<boolean[]>(data.map(() => false));
     const DataTypes: string[] = [...Object.values(DataType)];
     const newItemRef = useRef<any>();
 
@@ -57,11 +64,13 @@ const DataListManager: FC<Props> = ({
 
         // Create question object :: work in progress
         const item = generateItem(title);
+        setIsHidden([...isHidden, false])
         setData((prev: any) => [...prev, item]);
         setIsAddingItem(false);
     };
 
     const deleteData = (item: any) => {
+        setIsHidden(isHidden.slice(0, -1));
         setData((prev: any) => [
             ...prev.filter((d: any, i: number) => d.hash != item.hash),
         ]);
@@ -84,7 +93,7 @@ const DataListManager: FC<Props> = ({
             </button>
             {isListOpen && (
                 <div className="w-full py-2">
-                    {data.map((item: any) => (
+                    {data.map((item: any, index : number) => (
                         <div
                             className="w-full px-3 text-[14px] flex items-center justify-between mb-1 hover:bg-[#f1f1f1]"
                             key={item.hash}
@@ -118,12 +127,30 @@ const DataListManager: FC<Props> = ({
                                     ) : (
                                         item.title
                                     ))}
-                                {
-                                    titleIsUrl(item.title) && (
-                                        <img className="max-h-[35px]" src={item.title} alt="Item"/>
-                                    )
-                                }
+                                {titleIsUrl(item.title) && (
+                                    <img
+                                        className="max-h-[35px]"
+                                        src={item.title}
+                                        alt="Item"
+                                    />
+                                )}
                             </button>
+                            { canToggle && <>
+                                {isHidden[index] && <FaEye
+                                    className="text-[14px] text-gray-500 justify-self-end mr-1 cursor-pointer"
+                                    onClick={() => {
+                                        onToggle(item, true);
+                                        setIsHidden((prev : any) => { prev[index] = false; return [...prev]});
+                                    }}
+                                />}
+                                {!isHidden[index] && <FaEyeSlash
+                                    className="text-[14px] text-gray-500 justify-self-end mr-1 cursor-pointer"
+                                    onClick={() => {
+                                        onToggle(item, false);
+                                        setIsHidden((prev : any) => { prev[index] = true; return [...prev]});
+                                    }}
+                                />}
+                            </>}
                             <FaTrash
                                 className="text-[14px] text-red-500 justify-self-end ml-1 cursor-pointer"
                                 onClick={() => deleteData(item)}
