@@ -7,7 +7,7 @@ import continueActiveImg from "img/popup/continue-main.svg";
 import successBg from "img/popup/success-popup-bg.svg";
 import errorBg from "img/popup/error-popup-bg.svg";
 import { MdClose } from "react-icons/md";
-import { AudioManager } from "components/NewLesson/AudioManager/AudioManager";
+import { audioManager } from "components/NewLesson/AudioManager/AudioManager";
 import correctTipImg from "img/popup/correct-tip.svg"
 import wrongTipImg from "img/popup/wrong-tip.svg"
 // import { StringLiteralLike } from "typescript";
@@ -25,7 +25,7 @@ interface FeedbackPopupProps {
 }
 
 // now everyone has access
-const audioManager = new AudioManager();
+
 
 const ErrorLayout = ({ title, content }: any) => {
   return (
@@ -119,7 +119,7 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
           right: isVisible ? 0 : "-50%"
         }}
         // className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
-        className={`w-[430px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
+        className={`w-full sm:w-[430px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
       >
         <div className="relative">
           <button

@@ -184,7 +184,7 @@ const InactiveSidebar: FC<Props> = ({
         // );
     };
     return (
-        <div className="w-full h-full border">
+        <div className="w-full h-full border shadow">
             {!showComp && <Item />}
             {showComp && (
                 <>

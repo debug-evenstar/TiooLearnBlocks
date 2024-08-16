@@ -8,7 +8,8 @@ const PreviewLayout :FC<{
 }> = ({children, subject, title}) => {
     return (
         <div>
-            <div className="lg:pt-8 w-full grow overflow-y-hidden">
+            <div className="lg:pt-8 w-full grow bg-orange-400 overflow-y-hidden">
+                <p>Big preview screen</p>
                 {children}
             </div>
         </div>
