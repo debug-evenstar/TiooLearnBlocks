@@ -1,5 +1,5 @@
 
-import { FC, useState } from "react";
+import { FC, useState, useRef } from "react";
 
 import { FaMicrophone } from "react-icons/fa";
 import { PiPaperPlaneRightFill } from "react-icons/pi";
@@ -30,13 +30,28 @@ const ChatMessage: FC<MessageProps> = ({text, role}) => {
 const ChatSection: FC<ChatSectionProps> = ({visible, slideData}) => {
   const [ message, setMessage ] = useState<string>('');
 
+  const chatRef = useRef<any>();
 
+  const handleSendMessage = () => {
+  	setMessages([ ... messages, { text: message, role: 'user'}]);
+  	if(chatRef.current){
+  		// chatRef.current.scrollIntoView();
+  	}
+  }
 
+  const handleRecordAudio = () => {
+
+  }
 
 
   const [ messages, setMessages ] = useState<MessageProps[]>([
     { text: "Hi there 👋. I’m Longs, do you need help solving this problem?", role: 'ai'},
     { text: "Yes please", role: "user"},
+    { text: "Hi there 👋. I’m Longs, do you need help solving this problem?", role: 'ai'},
+    { text: "Yes please", role: "user"},
+    { text: "Hi there 👋. I’m Longs, do you need help solving this problem?", role: 'ai'},
+    { text: "Yes please", role: "user"},
+
     { text: `Calculate the amount of reduction: 
               Reduction = 5% of N160,000
               Reduction = (5/100) * N160,000 = N8,000
@@ -49,10 +64,10 @@ const ChatSection: FC<ChatSectionProps> = ({visible, slideData}) => {
   ]);
 
   return (
-    <div className={`${visible? "w-[40rem]":"w-0"} overflow-hidden relative border-l h-full flex flex-col justify-between `}>
+    <div className={`${visible? "w-[60rem]":"w-0"} overflow-hidden relative border-l h-full flex flex-col justify-between `}>
       { visible && 
-          <div className="grow px-4 transition-none overflow-y-auto pt-5">
-            { messages?.map((item) => <ChatMessage {...item} />)}
+          <div className="grow px-4 max-h-[calc(70vh)] transition-none overflow-y-auto pt-5" ref={chatRef}>
+	            { messages?.map((item) => <ChatMessage {...item} />)}
           </div>
       }
       <div className="border-t transition-none h-[80px] flex items-center px-4 w-full px-">
@@ -67,7 +82,7 @@ const ChatSection: FC<ChatSectionProps> = ({visible, slideData}) => {
             </span>
             <input value={message} onChange={(e) => setMessage(e.target.value)} type="text" placeholder="Ask a question" className="text outline-none w-full"/>
           </div>
-          <button className="bg-main rounded-[5px] h-[45px] px-4 rounded text-xl">
+          <button onClick={ message.length ? handleSendMessage: handleRecordAudio} className="bg-main rounded-[5px] h-[45px] px-4 rounded text-xl">
               { message.length ? <PiPaperPlaneRightFill color="white" /> : <FaMicrophone color="white"/> }
           </button>
         </div>

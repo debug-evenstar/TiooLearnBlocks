@@ -150,7 +150,7 @@ export default function LessonLayout({
                   {children}
                 </LessonContext.Provider>
               </div>
-              <div className="relative w-full">
+              <div className="relative w-full h-[80px]">
                 { !showAI && <button onClick={handleShowAI} className="text-main px-4 font-[500] text-sm rounded-full border-main border py-1 absolute right-10 -top-10"> Explain this screen</button> }
                 <LessonFooter previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
               </div>
