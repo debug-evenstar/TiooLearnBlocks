@@ -37,7 +37,7 @@ const ChatSection: FC<ChatSectionProps> = ({visible, slideData}) => {
   	if(chatRef.current){
   		// chatRef.current.scrollIntoView();
   	}
-  }
+  } 
 
   const handleRecordAudio = () => {
 

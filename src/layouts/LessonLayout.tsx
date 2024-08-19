@@ -133,8 +133,9 @@ export default function LessonLayout({
           <div className="flex w-full">
             <div className={`${showAI ? "w-full pointer-events-none": "w-full"} relative z-[100200]`}>
               { showAI && 
-                <div  className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000011] flex justify-center items-end ">
-                    <button onClick={handlecloseAI} className="w-14 h-14 relative bottom-40 rounded-full bg-main text-white font-[600] text-[23px]">&times;</button>
+                <div  className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
+                    <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-main text-white font-[600] text-[23px]">
+                    close chat</button>
                 </div>  
               }
               <div className="relative px-28 flex grow flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
@@ -152,7 +153,7 @@ export default function LessonLayout({
               </div>
               <div className="relative w-full h-[80px]">
                 { !showAI && <button onClick={handleShowAI} className="text-main px-4 font-[500] text-sm rounded-full border-main border py-1 absolute right-10 -top-10"> Explain this screen</button> }
-                <LessonFooter previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
+                <LessonFooter chatVisible={showAI} previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
               </div>
             </div>
             <ChatSection visible={showAI}/>
