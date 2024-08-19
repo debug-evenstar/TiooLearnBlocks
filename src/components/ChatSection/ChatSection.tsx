@@ -1,0 +1,79 @@
+
+import { FC, useState } from "react";
+
+import { FaMicrophone } from "react-icons/fa";
+import { PiPaperPlaneRightFill } from "react-icons/pi";
+
+interface MessageProps {
+  text: string;
+  role: 'user' | 'ai';
+}
+
+interface ChatSectionProps {
+  visible: boolean;
+  slideData?: any;
+}
+
+
+const ChatMessage: FC<MessageProps> = ({text, role}) => {
+  const isUser = role === 'user';
+  return (
+    <div className={`flex ${ isUser ? "justify-end":"justify-start"} mb-6`}>
+      <p className={`px-3 py-2  urbanist w-[65%]  rounded-[10px] ${!isUser? "text-gray-500 border": "text-white bg-main" } `}>
+        {text}
+      </p>
+    </div>
+  );
+}
+
+
+const ChatSection: FC<ChatSectionProps> = ({visible, slideData}) => {
+  const [ message, setMessage ] = useState<string>('');
+
+
+
+
+
+  const [ messages, setMessages ] = useState<MessageProps[]>([
+    { text: "Hi there 👋. I’m Longs, do you need help solving this problem?", role: 'ai'},
+    { text: "Yes please", role: "user"},
+    { text: `Calculate the amount of reduction: 
+              Reduction = 5% of N160,000
+              Reduction = (5/100) * N160,000 = N8,000
+
+              Subtract the reduction from the original price to find the amount Mrs. Udeme paid: 
+              Amount Paid = Original Price - Reduction Amount Paid = N160,000 - N8,000 = N152,000
+              So, Mrs. Udeme paid N152,000 after receiving a 5% reduction in price.`,
+      role: "ai"
+    }
+  ]);
+
+  return (
+    <div className={`${visible? "w-[40rem]":"w-0"} overflow-hidden relative border-l h-full flex flex-col justify-between `}>
+      { visible && 
+          <div className="grow px-4 transition-none overflow-y-auto pt-5">
+            { messages?.map((item) => <ChatMessage {...item} />)}
+          </div>
+      }
+      <div className="border-t transition-none h-[80px] flex items-center px-4 w-full px-">
+        <div className="flex transition-none items-center h-[45px] w-full gap-x-5 justify-between">
+          <div className="border rounded-[5px] h-full w-full flex items-center gap-x-3 px-3">
+            <span>
+              <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 20.7518H4.5C4.30109 20.7518 4.11032 20.6728 3.96967 20.5322C3.82902 20.3915 3.75 20.2008 3.75 20.0018V15.8125C3.75 15.714 3.7694 15.6165 3.80709 15.5255C3.84478 15.4345 3.90003 15.3518 3.96967 15.2822L15.2197 4.03217C15.3603 3.89152 15.5511 3.8125 15.75 3.8125C15.9489 3.8125 16.1397 3.89152 16.2803 4.03217L20.4697 8.22151C20.6103 8.36216 20.6893 8.55293 20.6893 8.75184C20.6893 8.95075 20.6103 9.14152 20.4697 9.28217L9 20.7518Z" stroke="#9C29B2"  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12.75 6.5L18 11.75" stroke="#9C29B2" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M20.2492 20.7492H8.99916L3.79688 15.5469" stroke="#9C29B2"  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </span>
+            <input value={message} onChange={(e) => setMessage(e.target.value)} type="text" placeholder="Ask a question" className="text outline-none w-full"/>
+          </div>
+          <button className="bg-main rounded-[5px] h-[45px] px-4 rounded text-xl">
+              { message.length ? <PiPaperPlaneRightFill color="white" /> : <FaMicrophone color="white"/> }
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ChatSection;

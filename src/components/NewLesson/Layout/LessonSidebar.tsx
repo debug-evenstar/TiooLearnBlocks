@@ -78,8 +78,8 @@ const LessonSidebar: FC<any> = ({
 }) => {
 
   const getClassName = () => 
-    isOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`
-    : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`;
+    isOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-300 transition-all overflow-y-auto max-h-screen h-screen`
+    : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-300 transition-all overflow-y-auto max-h-screen h-screen`;
 
 
 
