@@ -1,5 +1,5 @@
 import EditorialComp from "pages/editorial";
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 interface UserProps {
   name: string;
   auth: string;

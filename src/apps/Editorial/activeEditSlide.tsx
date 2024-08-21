@@ -153,7 +153,7 @@ const ActiveEditSlide: FC<Props> = ({
       </div>
       {previewSlide && (
         <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0">
-          <div className="w-full h-full bg-cover px-5 flex justify-center items-center">
+          <div className="w-full h-full bg-cover flex justify-center items-center">
             <div className="w-full h-full">
               <RenderPreview
                   slide={previewSlideData}
@@ -162,10 +162,10 @@ const ActiveEditSlide: FC<Props> = ({
               />
             </div>
           </div>
-          <FaTimes
-            className="absolute text-[40px] top-10 right-10 text-white cursor-pointer hover:scale-110 duration-100"
+          {/* <FaTimes
+            className="absolute text-[40px] top-10 right-10 text-white bg-orange-400 cursor-pointer hover:scale-110 duration-100"
             onClick={() => setPreviewSlide(false)}
-          />
+          /> */}
         </div>
       )}
     </div>

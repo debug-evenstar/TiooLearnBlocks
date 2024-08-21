@@ -17,11 +17,13 @@ const Config = [
                 file: "dist/cjs/index.js",
                 format: "cjs",
                 sourcemap: true,
+                inlineDynamicImports: true,
             },
             {
                 file: "dist/esm/index.js",
                 format: "esm",
                 sourcemap: true,
+                inlineDynamicImports: true,
             },
         ],
         plugins: [
@@ -32,7 +34,8 @@ const Config = [
             postcss(),
             typescript({ tsconfig: "./tsconfig.json" }),
             terser(),
-            url(), svgr({ icon: true }),
+            url(),
+            svgr({ icon: true }),
         ],
         external: ["react", "react-dom", "styled-components"],
     },
