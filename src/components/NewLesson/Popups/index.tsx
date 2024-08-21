@@ -74,6 +74,7 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     const [isVisible, setIsVisible] = useState(false);
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
+    const [canProceed, setCanProceed] = useState<boolean>(true);
     const [feedbackState, setFeedbackState] = useState<FeedbackType | null>(null);
     
     const isWrong = feedbackState == FeedbackType.WRONG;
@@ -88,9 +89,18 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
       setIsVisible(visible);
     };
 
+    const handleContinue = () => {
+      if ( canProceed ) {
+        onContinue && onContinue();
+      } else {
+        setIsVisible(false);
+      }
+    }
+
     useImperativeHandle(ref, () => ({
-      showFeedback(title: string, content: string, type : FeedbackType) {
+      showFeedback(title: string, content: string, type : FeedbackType, shouldContinue? : boolean) {
         setValues(title, content, type);
+        setCanProceed(!!shouldContinue);
       },
       hideFeedback() {
         setIsVisible(false);

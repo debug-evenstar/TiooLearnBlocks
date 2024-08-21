@@ -1,10 +1,10 @@
 import { FC, useEffect, useRef, useState } from "react";
 import MainLayout from "../../layouts/EditorialLayout";
-import EditorialSlideView from "components/Editorial/slideView";
-import ActiveEditSlide from "components/Editorial/activeEditSlide";
-import { SidebarFunctions } from "components/Editorial/interfaces";
-import { CreateManager } from "components/Editorial/Base/Manager";
-import StateManager from "components/Editorial/Base/StateManager";
+import EditorialSlideView from "apps/Editorial/slideView";
+import ActiveEditSlide from "apps/Editorial/activeEditSlide";
+import { SidebarFunctions } from "apps/Editorial/interfaces";
+import { CreateManager } from "apps/Editorial/Base/Manager";
+import StateManager from "apps/Editorial/Base/StateManager";
 
 interface Props {
     data?: any;

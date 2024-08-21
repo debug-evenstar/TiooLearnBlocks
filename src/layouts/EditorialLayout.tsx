@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import Header from "../components/Header";
-import RightSidebar from "../components/Editorial/Sidebars/RightSidebar/RightSidebar";
-import LeftSidebar from "../components/Editorial/LeftSidebar";
-import { ManagerInterface } from "components/Editorial/Base/Manager";
+import RightSidebar from "../apps/Editorial/Sidebars/RightSidebar/RightSidebar";
+import LeftSidebar from "../apps/Editorial/LeftSidebar";
+import { ManagerInterface } from "apps/Editorial/Base/Manager";
 
 interface MainLayoutProps {
   children: React.ReactElement;
