@@ -1,9 +1,5 @@
 import React, { FC, useState, forwardRef, useImperativeHandle, useRef } from "react";
 import "./style.css";
-import catImg from "img/popup/cat.gif";
-import penguinImg from "img/popup/penguin.gif";
-import continueImg from "img/popup/continue-white.svg";
-import continueActiveImg from "img/popup/continue-main.svg";
 import successBg from "img/popup/success-popup-bg.svg";
 import errorBg from "img/popup/error-popup-bg.svg";
 import { MdClose } from "react-icons/md";
@@ -43,11 +39,11 @@ const ErrorLayout = ({ title, content }: any) => {
 
 const SuccessLayout = ({ title, content, onContinue }: any) => {
   const mouseEnter = (e: any) => {
-    e.target.src = continueActiveImg;
+    e.target.src = "https://res.cloudinary.com/dbgorivob/image/upload/v1724529090/continue-main_qtksts.svg";
   };
 
   const mouseLeave = (e: any) => {
-    e.target.src = continueImg;
+    e.target.src = "https://res.cloudinary.com/dbgorivob/image/upload/v1724529008/continue-white_vbm2cr.svg";
   };
 
   const handleContinueClick = (e: any) => {
@@ -69,7 +65,7 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
       <div className="flex justify-end mt-3">
         <button onClick={handleContinueClick} className="w-[30%] hover:scale-[1.08]">
           <img
-            src={continueImg}
+            src="https://res.cloudinary.com/dbgorivob/image/upload/v1724529008/continue-white_vbm2cr.svg"
             alt=""
             onMouseEnter={mouseEnter}
             onMouseLeave={mouseLeave}
