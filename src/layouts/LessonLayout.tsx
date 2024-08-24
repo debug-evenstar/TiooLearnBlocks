@@ -2,11 +2,12 @@ import LessonHeader from "components/NewLesson/Layout/LessonHeader";
 import LessonSidebar from "components/NewLesson/Layout/LessonSidebar";
 import LessonFooter from "components/NewLesson/Layout/LesssonFooter";
 import ChatSection from "components/ChatSection/ChatSection";
-import { ReactNode, useEffect, FC, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import "./LessonLayout.css";
 // import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
+import TransitionButton from "components/NewLesson/Buttons/TransitionButton"
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 import { LessonContext } from "contexts/LessonContext";
@@ -58,7 +59,7 @@ export default function LessonLayout({
   const [canProceed, setCanProceed] = useState(false);
   const [activeSlide, setActiveSlide] = useState(1);
   const [sideBarOpen, setSideBarOpen] = useState(true)
-  const [showAI, setShowAI ] = useState(false);
+  const [showAI, setShowAI] = useState(false);
 
   const feedbackRef = useRef<any>(null);
 
@@ -82,7 +83,7 @@ export default function LessonLayout({
     setCanProceed(false);
   };
 
-  const handleShowAI =  () => {
+  const handleShowAI = () => {
     setShowAI(true);
     setSideBarOpen(false);
   }
@@ -128,15 +129,16 @@ export default function LessonLayout({
             chapter={currentChapter}
             activeSlide={activeSlide}
             sideBarOpen={sideBarOpen}
-            currentLesson={currentLesson}r
+            currentLesson={currentLesson} r
           />
           <div className="flex w-full">
-            <div className={`${showAI ? "w-full pointer-events-none": "w-full"} relative z-[100200]`}>
-              { showAI && 
-                <div  className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
-                    <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-main text-white font-[600] text-[23px]">
-                    close chat</button>
-                </div>  
+            <div className={`${showAI ? "w-full pointer-events-none" : "w-full"} relative z-[100200]`}>
+              {showAI &&
+                <div className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
+                  <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-main text-white font-[600] text-[23px]">
+                    close chat
+                  </button>
+                </div>
               }
               <div className="relative px-28 flex grow flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
@@ -151,12 +153,15 @@ export default function LessonLayout({
                   {children}
                 </LessonContext.Provider>
               </div>
+
               <div className="relative w-full h-[80px]">
-                { !showAI && <button onClick={handleShowAI} className="text-main px-4 font-[500] text-sm rounded-full border-main border py-1 absolute right-10 -top-10"> Explain this screen</button> }
+                {!showAI &&
+                  <TransitionButton handleShowAI={handleShowAI} />
+                }
                 <LessonFooter chatVisible={showAI} previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
               </div>
             </div>
-            <ChatSection visible={showAI}/>
+            <ChatSection visible={showAI} />
           </div>
         </div>
       </div>

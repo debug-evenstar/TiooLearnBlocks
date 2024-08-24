@@ -5,6 +5,7 @@ import ActiveEditSlide from "components/Editorial/activeEditSlide";
 import { SidebarFunctions } from "components/Editorial/interfaces";
 import { CreateManager } from "components/Editorial/Base/Manager";
 import StateManager from "components/Editorial/Base/StateManager";
+import { ScaleLoader } from "react-spinners";
 
 interface Props {
     data?: any;
@@ -99,8 +100,10 @@ const EditorialComp: FC<Props> = ({
     if (!data) {
 
         return (
-            <div className="inset-0 bg-white flex items-center justify-center">
-                <p>Loading...</p>
+            <div className="w-full h-screen grid place-content-center">
+                <span>
+                    <ScaleLoader height={30} speedMultiplier={1.3} color=" #9c29b2" />
+                </span>
             </div>
         );
     }
