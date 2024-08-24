@@ -1,5 +1,5 @@
 import React from "react";
-import { ManagerInterface } from "components/Editorial/Base/Manager";
+import { ManagerInterface } from "apps/Editorial/Base/Manager";
 interface MainLayoutProps {
     children: React.ReactElement;
     slides: any;
@@ -8,6 +8,7 @@ interface MainLayoutProps {
     showComp: boolean;
     back: () => void;
     lessonlist: any;
+    closeEdit: any;
     name: string;
     data: any;
     manager: ManagerInterface;
