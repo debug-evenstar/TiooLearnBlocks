@@ -1,11 +1,15 @@
 import React, { FC, useState, forwardRef, useImperativeHandle, useRef } from "react";
 import "./style.css";
-import successBg from "img/popup/success-popup-bg.svg";
-import errorBg from "img/popup/error-popup-bg.svg";
+import catImg from "../../../img/popup/cat.gif";
+import penguinImg from "../../../img/popup/penguin.gif";
+import continueImg from "../../../img/popup/continue-white.svg";
+import continueActiveImg from "../../../img/popup/continue-main.svg";
+import successBg from "../../../img/popup/success-popup-bg.svg";
+import errorBg from "../../../img/popup/error-popup-bg.svg";
 import { MdClose } from "react-icons/md";
 import { audioManager } from "components/NewLesson/AudioManager/AudioManager";
-import correctTipImg from "img/popup/correct-tip.svg"
-import wrongTipImg from "img/popup/wrong-tip.svg"
+import correctTipImg from "../../../img/popup/correct-tip.svg"
+import wrongTipImg from "../../../img/popup/wrong-tip.svg"
 // import { StringLiteralLike } from "typescript";
 
 export enum FeedbackType {
@@ -32,18 +36,18 @@ const ErrorLayout = ({ title, content }: any) => {
         <p className="text-sm font-[500]">{title}</p>
         <p className="text-lg font-[600]">{content}</p>
       </div>
-      <img src="https://res.cloudinary.com/dbgorivob/image/upload/v1724507751/cat_crhrdl.gif" alt="" className="py-2 h-full mx-auto w-[26%]" />
+      <img src={catImg} alt="" className="py-2 h-full mx-auto w-[26%]" />
     </div>
   );
 };
 
 const SuccessLayout = ({ title, content, onContinue }: any) => {
   const mouseEnter = (e: any) => {
-    e.target.src = "https://res.cloudinary.com/dbgorivob/image/upload/v1724529090/continue-main_qtksts.svg";
+    e.target.src = continueActiveImg;
   };
 
   const mouseLeave = (e: any) => {
-    e.target.src = "https://res.cloudinary.com/dbgorivob/image/upload/v1724529008/continue-white_vbm2cr.svg";
+    e.target.src = continueImg;
   };
 
   const handleContinueClick = (e: any) => {
@@ -56,7 +60,7 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
     <div className="h-full flex justify-center flex-col relative">
       <img src={correctTipImg} alt="" className="absolute w-[2rem] -top-3 right-20"/>
       <div className="flex items-center space-x-2 relative">
-        <img src="https://res.cloudinary.com/dbgorivob/image/upload/v1724507753/penguin_ydwsez.gif" alt="" className="max-h-[90px]" />
+        <img src={penguinImg} alt="" className="max-h-[90px]" />
         <div className="mr-auto">
           <p className="text-sm">{title}</p>
           <p className="font-[600]">{content}</p>
@@ -65,7 +69,7 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
       <div className="flex justify-end mt-3">
         <button onClick={handleContinueClick} className="w-[30%] hover:scale-[1.08]">
           <img
-            src="https://res.cloudinary.com/dbgorivob/image/upload/v1724529008/continue-white_vbm2cr.svg"
+            src={continueImg}
             alt=""
             onMouseEnter={mouseEnter}
             onMouseLeave={mouseLeave}
