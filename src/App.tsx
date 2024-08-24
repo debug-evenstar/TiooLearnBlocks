@@ -6,9 +6,8 @@ import { Editorial } from "components";
 // import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 // import { useDispatch } from "react-redux";
 // import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
-// import LessonPage from "pages/LessonPage";
-import { LessonPage } from '@Praxeum-ai/LearnBlocks';
-// const { LessonPage } = require("@Praxeum-ai/LearnBlocks");
+import LessonPage from "pages/LessonPage";
+// import { LessonPage } from '@Praxeum-ai/LearnBlocks';
 
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import { slides } from "dump/can";
@@ -52,6 +51,7 @@ function App() {
   // const [data, setData] = useState<any>();
   const [date, setDate] = useState<any>();
   const [bookData, setBookData] = useState<any>();
+
   const fetchLess = async () => {
     try {
       const response = await fetch(
@@ -61,12 +61,10 @@ function App() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-
+      
       const data = await response.json();
 
       if (!data.error) {
-        // console.log(data.data);
         setDate(data.data);
       } else {
         console.log(data);
@@ -85,7 +83,6 @@ function App() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
 
       const data = await response.json();
 

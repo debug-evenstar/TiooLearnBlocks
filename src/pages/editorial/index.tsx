@@ -1,10 +1,10 @@
 import { FC, useEffect, useRef, useState } from "react";
 import MainLayout from "../../layouts/EditorialLayout";
-import EditorialSlideView from "components/Editorial/slideView";
-import ActiveEditSlide from "components/Editorial/activeEditSlide";
-import { SidebarFunctions } from "components/Editorial/interfaces";
-import { CreateManager } from "components/Editorial/Base/Manager";
-import StateManager from "components/Editorial/Base/StateManager";
+import EditorialSlideView from "apps/Editorial/slideView";
+import ActiveEditSlide from "apps/Editorial/activeEditSlide";
+import { SidebarFunctions } from "apps/Editorial/interfaces";
+import { CreateManager } from "apps/Editorial/Base/Manager";
+import StateManager from "apps/Editorial/Base/StateManager";
 
 interface Props {
     data?: any;
@@ -75,29 +75,34 @@ const EditorialComp: FC<Props> = ({
         }
     }, [lessonSlides]);
 
-    useEffect(()=>{
-        if(data)
+    useEffect(() => {
+        if (data)
             setLessonSlides(data.lesson_slides);
-            manager.lesson = data;
-    },[data]);
+        manager.lesson = data;
+    }, [data]);
 
     useEffect(() => {
         manager.slideManager.handleSlidesUpdate = (updatedSlides: any[]) => {
             setParseSlides([...updatedSlides]);
         };
-        manager.slideManager.updateLessonSlides = (generator : Function) => {
+        manager.slideManager.updateLessonSlides = (generator: Function) => {
             const updatedLessonSlides = generator(lessonSlides);
             setLessonSlides([...updatedLessonSlides]);
         };
         manager.lesson = data;
     }, [manager, manager.slideManager]);
 
-    useEffect(()=>{
+    useEffect(() => {
         manager.slideManager.slides = parseSlides;
-    },[parseSlides])
+    }, [parseSlides])
 
     if (!data) {
-        return <p className="mx-auto mt-10 w-fit">Loading...</p>;
+
+        return (
+            <div className="inset-0 bg-white flex items-center justify-center">
+                <p>Loading...</p>
+            </div>
+        );
     }
 
     return (
@@ -109,6 +114,7 @@ const EditorialComp: FC<Props> = ({
                     changeTo={changeSlide}
                     active={activeSlide}
                     showComp={showEdit}
+                    closeEdit={() => setShowEdit(false)}
                     back={back}
                     lessonlist={lessonlist}
                     name={name}
@@ -131,7 +137,7 @@ const EditorialComp: FC<Props> = ({
                                 <ActiveEditSlide
                                     active={activeSlide}
                                     slides={parseSlides}
-                                    data={{...data, lesson_slides : lessonSlides}}
+                                    data={{ ...data, lesson_slides: lessonSlides }}
                                     isBusy={isBusy}
                                     manager={manager}
                                 />

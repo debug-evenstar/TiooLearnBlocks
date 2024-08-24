@@ -1,4 +1,4 @@
-import { CreateManager } from "components/Editorial/Base/Manager";
+import { CreateManager } from "apps/Editorial/Base/Manager";
 import SlideManager from "components/SlideManager";
 import { createRef, useEffect, useRef, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";

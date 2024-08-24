@@ -1,4 +1,4 @@
-import { ManagerInterface } from "components/Editorial/Base/Manager";
+import { ManagerInterface } from "apps/Editorial/Base/Manager";
 import React, { FC } from "react";
 
 const ImageIcon = () => {
