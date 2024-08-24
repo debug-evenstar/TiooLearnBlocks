@@ -1,7 +1,7 @@
-import correctAudio from "audio/correct.mp3";
-import saveAudio from "audio/save.mp3";
-import wrongAudio from "audio/wrong.mp3";
-import continueAudio from "audio/continue.mp3";
+import correctAudio from "../../../audio/correct.mp3";
+import saveAudio from "../../../audio/save.mp3";
+import wrongAudio from "../../../audio/wrong.mp3";
+import continueAudio from "../../../audio/continue.mp3";
 
 
 
