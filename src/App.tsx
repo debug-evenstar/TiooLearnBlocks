@@ -7,7 +7,9 @@ import { Editorial } from "components";
 // import { useDispatch } from "react-redux";
 // import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import LessonPage from "pages/LessonPage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { LessonPage } from '@Praxeum-ai/LearnBlocks';
+
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import { slides } from "dump/can";
 
 import {
@@ -18,52 +20,51 @@ import {
 import { ConfigureLibrary } from "setup";
 
 function App() {
-    const datas = {
-        topic: "Change of things",
-        term: "1",
-        lessons: [
-            {
-                id: 1,
-                topic: "The Environment",
-            },
-            {
-                id: 2,
-                topic: "Air in Motion",
-            },
-            {
-                id: 3,
-                topic: "Basics of Living things",
-            },
-            {
-                id: 4,
-                topic: "Animals",
-            },
-            {
-                id: 5,
-                topic: "Soil",
-            },
-        ],
-    };
+  const datas = {
+    topic: "Change of things",
+    term: "1",
+    lessons: [
+      {
+        id: 1,
+        topic: "The Environment",
+      },
+      {
+        id: 2,
+        topic: "Air in Motion",
+      },
+      {
+        id: 3,
+        topic: "Basics of Living things",
+      },
+      {
+        id: 4,
+        topic: "Animals",
+      },
+      {
+        id: 5,
+        topic: "Soil",
+      },
+    ],
+  };
 
-    const [saving, setSaving] = useState(false);
-    const [data, setData] = useState<any>();
-    const [ date,setDate ] = useState<any>();
-    const [ bookData,setBookData ] = useState<any>();
-    const fetchLess = async () => {
-        try {
-            const response = await fetch(
-                "http://localhost:8085/open/lesson/2/template"
-            );
+  // const [saving, setSaving] = useState(false);
+  // const [data, setData] = useState<any>();
+  const [date, setDate] = useState<any>();
+  const [bookData, setBookData] = useState<any>();
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-          
+  const fetchLess = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8085/open/lesson/2/template"
+      );
 
-            const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
 
       if (!data.error) {
-        // console.log(data.data);
         setDate(data.data);
       } else {
         console.log(data);
@@ -75,26 +76,25 @@ function App() {
 
   const fetchTextbook = async () => {
     try {
-        const response = await fetch(
-            "http://localhost:8085/open/textbook/22"
-        );
+      const response = await fetch(
+        "http://localhost:8085/open/textbook/22"
+      );
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-        const data = await response.json();
+      const data = await response.json();
 
-  if (!data.error) {
-    setBookData(data.data);
-  } else {
-    console.log(data);
-  }
-} catch (error) {
-  console.error("Error fetching data:", error);
-}
-};
+      if (!data.error) {
+        setBookData(data.data);
+      } else {
+        // console.log(data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
     fetchLess();
@@ -137,11 +137,12 @@ function App() {
     // navigate('/')
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     ConfigureLibrary.save({
-      baseUrl : "http://localhost:8085"
+      baseUrl: "http://localhost:8085"
     });
-  },[]);
+  }, []);
+
 
   return (
     <div>
