@@ -12,7 +12,7 @@ interface MessageProps {
 
 interface ChatSectionProps {
     visible: boolean;
-    slideData?: any;``
+    slideData?: any;
     lesson: any;
     slide: number;
 }
