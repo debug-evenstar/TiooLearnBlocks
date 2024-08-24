@@ -28,6 +28,7 @@ interface FeedbackPopupProps {
 
 
 const ErrorLayout = ({ title, content }: any) => {
+
   return (
     <div className="pt-5 relative">
       <img src={wrongTipImg} alt="" className="absolute w-[2rem] -top-3 right-20"/>
@@ -35,7 +36,7 @@ const ErrorLayout = ({ title, content }: any) => {
         <p className="text-sm font-[500]">{title}</p>
         <p className="text-lg font-[600]">{content}</p>
       </div>
-      <img src={catImg} alt="" className="py-2 h-full mx-auto w-[26%]" />
+      <img src="https://res.cloudinary.com/dbgorivob/image/upload/v1724507751/cat_crhrdl.gif" alt="" className="py-2 h-full mx-auto w-[26%]" />
     </div>
   );
 };
@@ -59,7 +60,7 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
     <div className="h-full flex justify-center flex-col relative">
       <img src={correctTipImg} alt="" className="absolute w-[2rem] -top-3 right-20"/>
       <div className="flex items-center space-x-2 relative">
-        <img src={penguinImg} alt="" className="max-h-[90px]" />
+        <img src="https://res.cloudinary.com/dbgorivob/image/upload/v1724507753/penguin_ydwsez.gif" alt="" className="max-h-[90px]" />
         <div className="mr-auto">
           <p className="text-sm">{title}</p>
           <p className="font-[600]">{content}</p>
