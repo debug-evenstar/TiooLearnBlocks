@@ -2,7 +2,7 @@ import LessonHeader from "components/NewLesson/Layout/LessonHeader";
 import LessonSidebar from "components/NewLesson/Layout/LessonSidebar";
 import LessonFooter from "components/NewLesson/Layout/LesssonFooter";
 import ChatSection from "components/ChatSection/ChatSection";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, FC, useRef, useState } from "react";
 
 import "./LessonLayout.css";
 // import LessonSlides from "components/NewLesson/LessonSlides";
@@ -67,6 +67,8 @@ export default function LessonLayout({
     return chapters.find((i: any) => i.id === chapter_id);
   };
 
+  const lessonHasSlides = () => Boolean(currentLesson?.lesson_slides && currentLesson.lesson_slides.length);
+
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
     console.log("really moving on to the next slide now")
@@ -74,6 +76,8 @@ export default function LessonLayout({
       // back();
     } else {
       slideManagerRef?.current?.navigator(1);
+      setActiveSlide(activeSlide + 1);
+      feedbackRef?.current.hideFeedback();
       setCanProceed(false);
     }
   };
@@ -153,15 +157,12 @@ export default function LessonLayout({
                   {children}
                 </LessonContext.Provider>
               </div>
-
               <div className="relative w-full h-[80px]">
-                {!showAI &&
-                  <TransitionButton handleShowAI={handleShowAI} />
-                }
+                { !showAI && <button onClick={handleShowAI} className="text-main px-4 font-[500] text-sm rounded-full border-main border py-1 absolute right-10 -top-10"> Explain this screen</button> }
                 <LessonFooter chatVisible={showAI} previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
               </div>
             </div>
-            <ChatSection visible={showAI} />
+            <ChatSection visible={showAI} lesson={currentLesson} slide={activeSlide}/>
           </div>
         </div>
       </div>

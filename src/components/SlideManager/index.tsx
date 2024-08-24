@@ -287,7 +287,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         return (
             <div
                 ref={containerRef}
-                className="w-full h-full mx-auto my-0 py-[10px] flex flex-col no-scrollbar"
+                className="w-full h-full mx-auto my-0 py-[10px] flex flex-col no-scrollbar slide-area"
             >
                 {SlideScope && (
                     <CarouselEffect activeSlideIndex={activeSlideIndex}>

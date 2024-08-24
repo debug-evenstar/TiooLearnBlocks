@@ -1,0 +1,178 @@
+import zIndex from "@mui/material/styles/zIndex";
+import { _getManager } from "apps/Editorial/Base/Manager";
+import { calculateMaxResizableArea } from "apps/Editorial/ViewBox/handler";
+import {
+    FC,
+    ReactElement,
+    ReactNode,
+    createRef,
+    useEffect,
+    useState,
+} from "react";
+import Draggable, { ControlPosition } from "react-draggable";
+import { Resizable } from "react-resizable";
+import { transform } from "typescript";
+
+interface MovableResizerProps {
+    draggableAxis: "both" | "x" | "y" | "none";
+    position: ControlPosition;
+    onMove: Function;
+    size: { width: number; height: number };
+    onResize: Function;
+    style?: React.CSSProperties;
+    identifier? : string;
+    isDraggable? : boolean;
+    children: ReactElement;
+}
+
+const MovableResizer: FC<MovableResizerProps> = ({
+    draggableAxis,
+    position,
+    onMove,
+    size,
+    onResize,
+    style,
+    children,
+    identifier,
+    isDraggable,
+}) => {
+    const nodeRef: any = createRef();
+    const shadowRef: any = createRef();
+    const [dimensions, setDimensions] = useState<{
+        width: number;
+        height: number;
+    }>(size);
+    const [draggablePosition, setDraggablePosition] = useState<ControlPosition>(
+        { x: position?.x ?? 0, y: position?.y ?? 0 }
+    );
+    const [shadowPosition, setShadowPosition] = useState<ControlPosition>(
+        { x: position?.x ?? 0, y: position?.y ?? 0 }
+    );
+    const [hasHandles, setHasHandles] = useState<boolean>(false);
+
+    const simulateOrigin = (offsetX: number, offsetY: number) => {
+        const x = draggablePosition.x - offsetX;
+        const y = draggablePosition.y - offsetY;
+        if (x < 0) {
+            return false;
+        }
+        return { x, y };
+    };
+
+    const handleResize = (previousSize: any, ref: React.RefObject<any>) => {
+        return (event: any, { node, size, handle }: any) => {
+            const canvas = document.getElementById("editorial-canvas");
+            if (!canvas || !ref) return;
+            const canvasSize = canvas.getBoundingClientRect();
+            const elementPosition = ref.current.getBoundingClientRect();
+            const maxArea = calculateMaxResizableArea(
+                elementPosition,
+                canvasSize
+            );
+            const width = Math.min(size.width, maxArea.maxWidth);
+            const height = Math.min(size.height, maxArea.maxHeight);
+            if (
+                width !== previousSize.width ||
+                height !== previousSize.height
+            ) {
+                let offsetDrag;
+                if (handle == "w" || handle == "n") {
+                    offsetDrag = simulateOrigin(
+                        width - previousSize.width,
+                        height - previousSize.height
+                    );
+                    if (!offsetDrag) {
+                        return;
+                    }
+                }
+                setDimensions({ width, height });
+                onResize({ width, height, position: offsetDrag });
+            }
+        };
+    };
+
+    const handleMove = (event: any, data: any) => {
+        if (data.x !== 0 || data.y !== 0) {
+            const moveData: any = { x: data.x, y: data.y };
+            setDraggablePosition(moveData);
+            onMove({ position: moveData });
+        }
+    };
+
+    const handleDrag = (event: any, { x, y}: any) => {
+        setShadowPosition({ x , y});
+    }
+
+    const handleDragStart  = (e:any) => {
+        e.dataTransfer.setData("text/plain", identifier);
+    }
+
+    const shadowStyle = () => {
+        return {
+            width : dimensions.width, 
+            height : dimensions.height,
+            transform: `translate(${shadowPosition.x}px, ${shadowPosition.y}px)`,
+            ...(isDraggable ? { zIndex : 99 } : {})
+        };
+    }
+
+    const toggleActiveClass = (event : any) => {
+        shadowRef.current.classList.toggle("shadow-active");
+    }
+
+    useEffect(() => {
+        setDimensions(size);
+    }, [size.width, size.height]);
+
+    useEffect(() => {
+        if (position) {
+            setDraggablePosition(position);
+        }
+    }, [position]);
+
+    return (
+        <>
+            <div ref={shadowRef} draggable={true} onDragStart={handleDragStart} style={shadowStyle()} className="absolute"></div>
+            <Draggable
+                axis={draggableAxis}
+                nodeRef={nodeRef}
+                onDrag={handleDrag}
+                onStop={handleMove}
+                handle=".draggable"
+                defaultClassName="w-fit"
+                position={draggablePosition} //Experimental
+                bounds="parent"
+                disabled={hasHandles}
+            >
+                <Resizable
+                    width={dimensions.width}
+                    height={dimensions.height}
+                    minConstraints={[0, 30]}
+                    onResize={handleResize(dimensions, nodeRef)}
+                    resizeHandles={hasHandles ? ["s", "e", "n", "w"] : []}
+                >
+                    <div
+                        style={{
+                            width: dimensions.width + "px",
+                            height: dimensions.height + "px",
+                            position: "absolute",
+                            ...(style ?? {}),
+                        }}
+                        className={
+                            "attach-child absolute draggable" +
+                            (!hasHandles ? " hover:cursor-move" : "")
+                        }
+                        ref={nodeRef}
+                        onDoubleClick={() => setHasHandles(!hasHandles)}
+                        onMouseEnter={toggleActiveClass} 
+                        onMouseLeave={toggleActiveClass} 
+                    >
+                        {children}
+                    </div>
+                </Resizable>
+            </Draggable>
+        </>
+    );
+};
+
+export default MovableResizer;
