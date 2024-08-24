@@ -11,13 +11,11 @@ import {
 } from "react-icons/fa";
 import { ComponentLayoutInterface } from "components/interface";
 import OptionSideModal from "./OptionSideModal";
-import {
-    _getManager,
-    setComponentLayout,
-} from "apps/Editorial/Base/Manager";
+import { _getManager, setComponentLayout } from "apps/Editorial/Base/Manager";
 import { QuestionInterface } from "../InactiveSidebar";
 import { Feedback } from "apps/Editorial/interfaces";
 import QuestionsResource from "services/api/resources/QuestionsResource";
+import InputSideModal from "./InputSideModal";
 
 interface Props {
     question: QuestionInterface;
@@ -35,6 +33,12 @@ export enum InputTypes {
     Objective = "objective",
     Subjective = "subjective",
 }
+
+export enum InputLinkedStates {
+    Unlinked = 0,
+    PendingLink = 1,
+    Linked = 2,
+}
 export interface OptionInterface {
     title: string;
     hash: string;
@@ -48,6 +52,7 @@ export interface InputInterface {
     hash: string;
     title: string;
     type: string;
+    linkState?: number;
     layout?: ComponentLayoutInterface;
 }
 
@@ -98,6 +103,7 @@ const ActiveQuestion: FC<Props> = ({
             hash: randomString(8),
             title,
             type: InputTypes.Objective,
+            linkState: InputLinkedStates.Unlinked,
             layout: setComponentLayout(
                 manager.canvasManager.canvas.getCanvasSize(),
                 { size: { width: 80, height: 40 } }
@@ -214,11 +220,11 @@ const ActiveQuestion: FC<Props> = ({
             prev[questionIndex] = question;
             return [...prev];
         });
-    }
+    };
 
     useEffect(() => {
         // Temporary solution to prevent multiple update
-        if( JSON.stringify(options) !== JSON.stringify(question.options)) {
+        if (JSON.stringify(options) !== JSON.stringify(question.options)) {
             updateOptionsData();
         }
         if (optionType !== question.optionType) {
@@ -231,14 +237,24 @@ const ActiveQuestion: FC<Props> = ({
     }, [linkedTopics]);
 
     useEffect(() => {
-        setQuestions((prev: any) => {
-            const questionIndex = prev.findIndex(
-                (q: QuestionInterface) => question.hash == q.hash
-            );
-            question.inputs = [...inputs];
-            prev[questionIndex] = question;
-            return [...prev];
-        });
+        if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
+            setQuestions((prev: any) => {
+                const questionIndex = prev.findIndex(
+                    (q: QuestionInterface) => question.hash == q.hash
+                );
+                question.inputs = [...inputs];
+                prev[questionIndex] = question;
+                return [...prev];
+            });
+            if (activeInput) {
+                setActiveInput(
+                    inputs.filter(
+                        (input: InputInterface) =>
+                            input.hash == activeInput.hash
+                    )[0]
+                );
+            }
+        }
     }, [inputs]);
 
     useEffect(() => {
@@ -269,6 +285,22 @@ const ActiveQuestion: FC<Props> = ({
         });
     }, [linkedTopics, questionQuery.previous]);
 
+    useEffect(() => {
+        manager.event.listen("linkQuestionInput", (data: any) => {
+            if (question.hash == data.questionHash) {
+                setInputs((prev: InputInterface[]) => {
+                    return [
+                        ...prev.map((i: InputInterface) => {
+                            return i.hash == data.hash
+                                ? { ...i, linkState: InputLinkedStates.Linked }
+                                : i;
+                        }),
+                    ];
+                });
+            }
+        });
+    }, [manager]);
+
     return (
         <div className="w-full h-full mb-12 relative flex flex-col">
             {activeOption && (
@@ -276,6 +308,9 @@ const ActiveQuestion: FC<Props> = ({
                     option={activeOption}
                     setOptions={setOptions}
                 />
+            )}
+            {activeInput && (
+                <InputSideModal input={activeInput} setInputs={setInputs} closeModal={() => setActiveInput(null)}/>
             )}
             <div className="relative h-[50px]">
                 <button

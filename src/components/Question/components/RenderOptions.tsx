@@ -5,6 +5,7 @@ import { useLessonContext } from "contexts/LessonContext";
 import { FC, useState } from "react";
 import { triggerFeedback } from "../handler";
 import { QuestionInterface } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
+import { LessonSlideInterface } from "components/SlideManager/handler";
 
 const RenderOptions: FC<{
     options: OptionInterface[];
@@ -12,8 +13,9 @@ const RenderOptions: FC<{
     setAnswered : Function;
     question : QuestionInterface,
     questionIndex: number;
+    slideManager : LessonSlideInterface,
     viewArea : any;
-}> = ({ options, answered, setAnswered, question, questionIndex, viewArea }) => {
+}> = ({ options, answered, setAnswered, question, questionIndex, slideManager, viewArea }) => {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [locked, setLocked] = useState<any[]>([]);
     const optionFontSizeFraction = 2;
@@ -45,14 +47,21 @@ const RenderOptions: FC<{
                         ...prev.filter((h: string) => h !== option.hash),
                     ];
                 });
-            const updatedAnsweredList = [...answered, option];
-            option.isAnswer && setAnswered(updatedAnsweredList);
-            setTimeout(() => {
-                option.isAnswer && setLocked([...locked, option]);
-            }, 1500);
-            triggerFeedback(option, lessonContext, (updatedAnsweredList.length == "Length of question".length));
+            processAnswered(option);
         }
     };
+
+    const processAnswered = (option:OptionInterface) => {
+        const updatedAnsweredList = [...answered, option];
+        if ( option.isAnswer ) {
+            setAnswered(updatedAnsweredList);
+            slideManager.dispatch("answerQuestion", {question, option})
+            setTimeout(() => {
+                setLocked([...locked, option]);
+            }, 1500);
+        }
+        triggerFeedback(option, lessonContext, (updatedAnsweredList.length == "Length of question".length));
+    }
     const showOptionShadow = (questionIndex: number) => {
         return answered.length > questionIndex
             ? ""

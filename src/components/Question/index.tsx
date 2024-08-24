@@ -11,14 +11,16 @@ import { FC, createRef, useEffect, useState } from "react";
 import { triggerFeedback } from "./handler";
 import RenderOptions from "./components/RenderOptions";
 import RenderInputs from "./components/RenderInputs";
+import { LessonSlideInterface } from "components/SlideManager/handler";
 
 
 interface QuestionComponentProps {
     data: any;
+    slide : LessonSlideInterface;
     viewArea: any;
 }
 
-const QuestionComponent: FC<QuestionComponentProps> = ({ data, viewArea }) => {
+const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea }) => {
     const [questions, setQuestions] = useState<any>(data?.data ?? []);
     const [answered, setAnswered] = useState<any[]>([]);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
@@ -61,6 +63,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, viewArea }) => {
                             viewArea={viewArea}
                             question={question}
                             questionIndex={index}
+                            slideManager={slide}
                         />}
                         <RenderInputs
                             inputs={question.inputs ?? []}

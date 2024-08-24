@@ -1,6 +1,7 @@
 import { _getManager } from "apps/Editorial/Base/Manager";
 import {
     InputInterface,
+    InputLinkedStates,
 } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import LayoutComponent from "components/LayoutBox";
 import { FC } from "react";
@@ -13,7 +14,7 @@ const RenderInputs: FC<{
     return (
         <>
             {inputs.map((input: InputInterface, inputIndex: number) => {
-                return (
+                return input.linkState !== InputLinkedStates.Linked ? (
                     <LayoutComponent
                         key={inputIndex + input.title}
                         layout={input.layout ?? {}}
@@ -29,6 +30,8 @@ const RenderInputs: FC<{
                             </div>
                         )}
                     </LayoutComponent>
+                ) : (
+                    <></>
                 );
             })}
         </>

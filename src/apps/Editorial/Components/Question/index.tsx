@@ -1,11 +1,9 @@
 import { height } from "@mui/system";
-import {
-    _getManager,
-    setComponentLayout,
-} from "apps/Editorial/Base/Manager";
+import { _getManager, setComponentLayout } from "apps/Editorial/Base/Manager";
 import { QuestionInterface } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 import {
     InputInterface,
+    InputLinkedStates,
     OptionInterface,
 } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import { calculateMaxResizableArea } from "apps/Editorial/ViewBox/handler";
@@ -218,7 +216,8 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
             })}
             {allInputs.map((input: InputInterface, index: number) => {
                 const config = inputConfig(input.hash);
-                return questionToggleState[config.questionHash] ? (
+                return questionToggleState[config.questionHash] &&
+                    !(input.linkState == InputLinkedStates.Linked) ? (
                     <MovableResizer
                         key={index + input.title}
                         draggableAxis="both"
@@ -234,6 +233,11 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                         }
                         position={inputConfig(input.hash).position}
                         style={{ zIndex: 10 }}
+                        identifier={`Questions.${config.questionHash}.input.${input.hash}`}
+                        isDraggable={
+                            input.linkState == InputLinkedStates.PendingLink
+                        }
+                        // data={`JSON.stringify(More structured data)`} // Switch to this format later
                     >
                         <input className="relative bg-white text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md" />
                         {/* <button

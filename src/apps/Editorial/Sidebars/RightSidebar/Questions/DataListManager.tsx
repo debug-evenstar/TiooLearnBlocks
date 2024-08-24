@@ -81,7 +81,10 @@ const DataListManager: FC<Props> = ({
     const titleIsUrl = (title: string) => title.includes("https://");
 
     useEffect(()=>{
-        setIsHidden(toggleStates.map((t:boolean) => !t));
+        if (canToggle) {
+            setIsHidden(toggleStates.map((t:boolean) => !t));
+
+        }
     }, [toggleStates]);
 
     return (

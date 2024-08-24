@@ -45,7 +45,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
   const handleDrop = (e: any) => {
     e.preventDefault();
     const data = e.dataTransfer.getData("text/plain");
-    if (!data) return;
+    if (!data || data.includes(".")) return; // Temporary fix to prevent drop capture for non high level components
     onDrop(data);
     manager.setState("rightSidebarState", (prev: RightSidebarState) => {
       return !prev;

@@ -18,8 +18,6 @@ const TextComponent: FC<TextComponentProps> = ({
 
     const [formatted, setFormatted] = useState<any[]>([]);
 
-    const [isHeading, setIsHeading] = useState<boolean>(false);
-
     const textContainerRef = useRef<any>(null);
 
     const hideText = () => {
@@ -30,47 +28,8 @@ const TextComponent: FC<TextComponentProps> = ({
         textContainerRef.current.style.display = "block";
     };
 
-    // Needs to be refactored later // No time right now //
-    const answerBelongsToPrevious = (answer: string) => {
-        if (data.answers) {
-            for (let i = 0; i < data.answers.length; i++) {
-                const ans = data.answers[i];
-                if (typeof ans == "string") {
-                    if (answer.toLowerCase() === ans.toLowerCase()) {
-                        return false;
-                    }
-                } else {
-                    // If answer is list of answers
-                    for (let j = 0; j < ans.length; j++) {
-                        const item = ans[j];
-                        if (item.toLowerCase() === answer.toLowerCase()) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        } else {
-            // Yet to be handled for option based
-            return false;
-        }
-        return true;
-    };
-
-    const parseStyles = () => {
-        // Expandable
-        if (data.canvas) { return "whitespace-normal"; }
-        const textStyle = `
-        ${isHeading || slide.parent ? "text-center" : "text-left"}
-        text-font
-        ${styles?.fontSize ? "text-[" + styles.fontSize + "]" : ""}
-      `;
-        return textStyle;
-    };
 
     useEffect(() => {
-        if (data.content.includes("<*-") && data.content.includes("-*>")) {
-            setIsHeading(() => true);
-        }
         // Handle initial text formatting
         setFormatted(formatTextContent(data.content));
         slide.setFunction("hideText", hideText);
@@ -87,30 +46,26 @@ const TextComponent: FC<TextComponentProps> = ({
                 data.tips
             ).data;
         }
-
-        // Handle TextFields
-        if (formatted.includes("<?>")) {
-            var textFields: any = TextFields(
-                processText,
-                slide,
-                data.answers ?? [],
-                data.options ?? []
-            );
-            processText = textFields.data;
-        }
         setProcessed(() => processText);
-        if (data.answers && !data.options) {
-            slide.attributes["hasSubjective"] = true;
-            if (slide.functions && slide.functions.setHint) {
-                setTimeout(() => {
-                    slide.functions?.setHint(true);
-                }, 1000);
-            }
-        }
     }, [formatted, data.content, slide]);
+
+    // Can be optimized
+    useEffect(() => {
+        slide.on("answerQuestion", (data : any) => {
+            // Check if any linked inputs exists and populate them
+            const linkedInput = document.querySelector(`.text-render input[data-question-hash=${data.question.hash}]`);
+            if (linkedInput) {
+                const parent = linkedInput.parentElement;
+                const textFill = document.createElement("span");
+                textFill.className = "font-bold text-[#409972] text-[20px] mx-[3px]";
+                textFill.innerHTML = ` ${data.option.title} `;
+                parent?.replaceChild(textFill, linkedInput);
+            }
+        });
+    },[slide]);
     return (
         <>
-            <div className={parseStyles()} ref={textContainerRef}>
+            <div className="text-render whitespace-normal" ref={textContainerRef}>
                 {data.canvas ? (
                     <div
                         dangerouslySetInnerHTML={{

@@ -66,6 +66,8 @@ export default function LessonLayout({
     return chapters.find((i: any) => i.id === chapter_id);
   };
 
+  const lessonHasSlides = () => Boolean(currentLesson?.lesson_slides && currentLesson.lesson_slides.length);
+
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
     console.log("really moving on to the next slide now")
@@ -73,6 +75,7 @@ export default function LessonLayout({
       // back();
     } else {
       slideManagerRef?.current?.navigator(1);
+      setActiveSlide(activeSlide + 1);
       feedbackRef?.current.hideFeedback();
       setCanProceed(false);
     }
@@ -131,8 +134,8 @@ export default function LessonLayout({
             sideBarOpen={sideBarOpen}
             currentLesson={currentLesson}r
           />
-          <div className="flex w-full">
-            <div className={`${showAI ? "w-full pointer-events-none": "w-full"} relative z-[100200]`}>
+          {lessonHasSlides() && <div className="flex w-full">
+            <div className={`${showAI ? "w-[65%] pointer-events-none": "w-full"} relative z-[100200]`}>
               { showAI && 
                 <div  className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
                     <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-main text-white font-[600] text-[23px]">
@@ -157,8 +160,8 @@ export default function LessonLayout({
                 <LessonFooter chatVisible={showAI} previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
               </div>
             </div>
-            <ChatSection visible={showAI}/>
-          </div>
+            <ChatSection visible={showAI} lesson={currentLesson} slide={activeSlide}/>
+          </div>}
         </div>
       </div>
     </>
