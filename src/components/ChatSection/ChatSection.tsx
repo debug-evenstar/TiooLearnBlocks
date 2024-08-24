@@ -190,7 +190,7 @@ const ChatSection: FC<ChatSectionProps> = ({
                                 ? handleSendMessage
                                 : handleRecordAudio
                         }
-                        className="bg-main rounded-[5px] h-[45px] px-4 rounded text-xl"
+                        className="bg-main rounded-[5px] h-[45px] px-4 text-xl"
                     >
                         {message.length ? (
                             <PiPaperPlaneRightFill color="white" />
