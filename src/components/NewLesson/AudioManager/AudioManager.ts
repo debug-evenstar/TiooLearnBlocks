@@ -1,8 +1,3 @@
-import correctAudio from "../../../audio/correct.mp3";
-import saveAudio from "../../../audio/save.mp3";
-import wrongAudio from "../../../audio/wrong.mp3";
-import continueAudio from "../../../audio/continue.mp3";
-
 
 
 class AudioManager {
@@ -32,17 +27,16 @@ class AudioManager {
   }
 
   public playCorrect() {
-    this.playSound(correctAudio);
+    this.playSound("https://res.cloudinary.com/dbgorivob/video/upload/v1724531976/onxko3tgciatas5tzfqc.mp3");
   }
   public playContinue(){
-    this.playSound(continueAudio);
+    this.playSound("https://res.cloudinary.com/dbgorivob/video/upload/v1724531976/dnatog5ulj3gk9gdljn2.mp3");
   }
   public playWrong(){
-    this.playSound(wrongAudio);
+    this.playSound("https://res.cloudinary.com/dbgorivob/video/upload/v1724531976/ifqdu3wszmmcctnme41t.mp3");
   }
-
   public playSave() {
-    this.playSound(saveAudio);
+    this.playSound("https://res.cloudinary.com/dbgorivob/video/upload/v1724531977/akqquxh60ycfqzd1gpra.mp3");
   }
 }
 
