@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC } from "react";
 
 interface Props {
   activeSlide: number
@@ -20,11 +19,10 @@ export const Header: FC<Props> = ({ activeSlide, back, name, showEdit, closeEdit
 
   const lesson = manager.lesson;
   const slidesCount = lesson?.lesson_slides?.length ?? 0;
-  const navigate = useNavigate();
 
   const handleBackClick = () => {
     showEdit ?
-      closeEdit() : navigate(-1);
+      closeEdit() : back();
   }
 
   // const NameAvat = () => {e
