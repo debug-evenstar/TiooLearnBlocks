@@ -133,7 +133,7 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
           right: isVisible ? 0 : "-50%"
         }}
         // className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
-        className={`w-full sm:w-[430px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
+        className={`w-full sm:w-[430px] h-fit text-white ease-in z-[2000] duration-300 m-10 fixed`}
       >
         <div className="relative">
           <button

@@ -136,10 +136,10 @@ export default function LessonLayout({
             currentLesson={currentLesson} r
           />
           <div className="flex w-full">
-            <div className={`${showAI ? "w-full pointer-events-none" : "w-full"} relative z-[100200]`}>
+            <div className={`${showAI ? "w-[65%] pointer-events-none" : "w-full"} relative z-[1200]`}>
               {showAI &&
                 <div className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
-                  <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-main text-white font-[600] text-[23px]">
+                  <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-[#7E1593] text-white font-[600] text-[23px]">
                     close chat
                   </button>
                 </div>
@@ -158,7 +158,7 @@ export default function LessonLayout({
                 </LessonContext.Provider>
               </div>
               <div className="relative w-full h-[80px]">
-                { !showAI && <button onClick={handleShowAI} className="text-main px-4 font-[500] text-sm rounded-full border-main border py-1 absolute right-10 -top-10"> Explain this screen</button> }
+                { !showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button> }
                 <LessonFooter chatVisible={showAI} previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
               </div>
             </div>

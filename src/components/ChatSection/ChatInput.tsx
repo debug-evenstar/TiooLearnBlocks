@@ -25,7 +25,7 @@ const ChatInput: FC<ChatInputProps> = ({message, setMessage, handleRecordAudio, 
             </span>
             <input value={message} onChange={(e) => setMessage(e.target.value)} type="text" placeholder="Ask a question" className="text outline-none w-full"/>
           </div>
-          <button onClick={ message.length ? handleSendMessage: handleRecordAudio} className="bg-main rounded-[5px] h-[45px] px-4 rounded text-xl">
+          <button onClick={ message.length ? handleSendMessage: handleRecordAudio} className="bg-[#7E1593] rounded-[5px] h-[45px] px-4 rounded text-xl">
               { message.length ? <PiPaperPlaneRightFill color="white" /> : <FaMicrophone color="white"/> }
           </button>
         </div>

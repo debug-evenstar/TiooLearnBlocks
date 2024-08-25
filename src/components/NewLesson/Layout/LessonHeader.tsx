@@ -13,7 +13,7 @@ export default function LessonHeader({ currentLesson, activeSlide, sideBarOpen }
       <div className="flex items-center space-x-5">
         <div>
           <p className="text-gray-500 text-sm">Your progress</p>
-          <p className="text-main font-[700]">
+          <p className="text-[#7E1593] font-[700]">
             {slide_count} Slide{slide_count > 1 && 's'} in this lesson
           </p>
           <div className="flex items-center w-fit bg-gray-50 rounded-full overflow-hidden">
@@ -22,7 +22,7 @@ export default function LessonHeader({ currentLesson, activeSlide, sideBarOpen }
                 const active =  position >= (index + 1);
                 const isCurrentColumn = position == (index + 1 );
                 return (
-                  <div className={`w-10 h-[10px] px-1 ${active ? "bg-main":""} ${isCurrentColumn && 'rounded-r-full'} flex items-center justify-end`}>
+                  <div className={`w-10 h-[10px] px-1 ${active ? "bg-[#7E1593]":""} ${isCurrentColumn && 'rounded-r-full'} flex items-center justify-end`}>
                     <div className="h-[5px] w-[5px] rounded-full bg-gray-300"></div>
                   </div>
                 )

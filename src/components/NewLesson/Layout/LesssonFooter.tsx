@@ -7,7 +7,7 @@ export default function LessonFooter({previous,isPreview, closePreview, next, ch
     <div className="w-full border-t px-10 flex h-[80px] items-center justify-between">
       {
         isPreview ? <p></p> :
-        <button onClick={previous} className="text-main outline-none text-[20px] font-[500] flex items-center space-x-3">
+        <button onClick={previous} className="text-[#7E1593] outline-none text-[20px] font-[500] flex items-center space-x-3">
         <img src={leftArrow} className="w-[18px]" alt="" />
         <span>Previous</span>
       </button>
