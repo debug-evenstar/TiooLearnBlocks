@@ -8,6 +8,7 @@ import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import svgr from '@svgr/rollup'
 import url from '@rollup/plugin-url'
 import json from '@rollup/plugin-json';
+import image from "@rollup/plugin-image";
 
 const Config = [
     {
@@ -17,13 +18,13 @@ const Config = [
                 file: "dist/cjs/index.js",
                 format: "cjs",
                 sourcemap: true,
-                inlineDynamicImports: true,
+                // inlineDynamicImports: true,
             },
             {
                 file: "dist/esm/index.js",
                 format: "esm",
                 sourcemap: true,
-                inlineDynamicImports: true,
+                // inlineDynamicImports: true,
             },
         ],
         plugins: [
@@ -34,8 +35,9 @@ const Config = [
             postcss(),
             typescript({ tsconfig: "./tsconfig.json" }),
             terser(),
+            image(),
             url(),
-            svgr({ icon: true }),
+            // svgr({ icon: true }),
         ],
         external: ["react", "react-dom", "styled-components"],
     },

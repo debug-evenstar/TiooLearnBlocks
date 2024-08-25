@@ -25,7 +25,7 @@ const ChatMessage: FC<MessageProps> = ({ content, role }) => {
         >
             <p
                 className={`px-3 py-2  urbanist w-[65%]  rounded-[10px] break-words ${
-                    !isUser ? "text-gray-500 border" : "text-white bg-main"
+                    !isUser ? "text-gray-500 border" : "text-white bg-[#7E1593]"
                 } `}
                 dangerouslySetInnerHTML={{ __html: content }}
             ></p>
@@ -190,7 +190,7 @@ const ChatSection: FC<ChatSectionProps> = ({
                                 ? handleSendMessage
                                 : handleRecordAudio
                         }
-                        className="bg-main rounded-[5px] h-[45px] px-4 text-xl"
+                        className="bg-[#7E1593] rounded-[5px] h-[45px] px-4 text-xl"
                     >
                         {message.length ? (
                             <PiPaperPlaneRightFill color="white" />
