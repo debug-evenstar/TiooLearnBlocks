@@ -137,7 +137,7 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
       >
         <div className="relative">
           <button
-            className="absolute z-[10] m-5 font-[500] text-xl right-0"
+            className="absolute z-[2001] m-5 font-[500] text-xl right-0"
             onClick={onClose}
           >
             <MdClose />
