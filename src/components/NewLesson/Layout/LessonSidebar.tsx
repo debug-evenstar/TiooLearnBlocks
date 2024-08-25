@@ -5,7 +5,6 @@ import readingImg from "../../../img/reading.svg";
 
 import LeftArrow from "FigmaIcons/LeftArrow";
 import { FC, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface LessonProps {
   type: "reading" | "assessment";
@@ -82,9 +81,6 @@ const LessonSidebar: FC<any> = ({
     : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-300 transition-all overflow-y-auto max-h-screen h-screen`;
 
 
-
-  const navigate = useNavigate();
-
   return (
     // <div className="w-[413px] px-10 py-4 border-r h-[980px] ">
     <div
@@ -97,7 +93,7 @@ const LessonSidebar: FC<any> = ({
             <button className="sm:hidden" onClick={() => close()} >&times;</button>
           </div>
           <div className="mt-12 px-4">
-            <button onClick={() => navigate(-1)}>
+            <button onClick={() => history.back()}>
               <LeftArrow fill="#000000" className="w-[14px]" />
               {/* <img src={leftArrow} className="w-[18px] text-black" /> */}
             </button>
