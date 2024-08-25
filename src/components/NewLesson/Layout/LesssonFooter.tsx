@@ -1,5 +1,6 @@
 import leftArrow from "../../../img/left-arrow.svg";
 import gotItImg from "../../../img/got-it.png";
+import TransitionButton from "../../../components/NewLesson/Buttons/TransitionButton";
 
 export default function LessonFooter({previous,isPreview, closePreview, next, chatVisible}: any) {
   return (

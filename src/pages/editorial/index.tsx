@@ -5,6 +5,7 @@ import ActiveEditSlide from "apps/Editorial/activeEditSlide";
 import { SidebarFunctions } from "apps/Editorial/interfaces";
 import { CreateManager } from "apps/Editorial/Base/Manager";
 import StateManager from "apps/Editorial/Base/StateManager";
+import { ScaleLoader } from "react-spinners";
 
 interface Props {
     data?: any;
@@ -99,8 +100,10 @@ const EditorialComp: FC<Props> = ({
     if (!data) {
 
         return (
-            <div className="inset-0 bg-white flex items-center justify-center">
-                <p>Loading...</p>
+            <div className="w-full h-screen grid place-content-center">
+                <span>
+                    <ScaleLoader height={30} speedMultiplier={1.3} color=" #9c29b2" />
+                </span>
             </div>
         );
     }
@@ -147,7 +150,7 @@ const EditorialComp: FC<Props> = ({
               overlay && <><CreateOverlaySlide isBusy={isBusy} createOverlay={createOverlay} slideLength={parseSlides.length}/></>
           } */}
                         </div>
-                        {/* {!overlay && !showEdit && (
+                        {!overlay && !showEdit && (
                             <div className="w-full mb-[30px] mt-[30px] bottom-0 z-50 relative px-[30px]">
                                 <div className="w-full h-[50px] flex items-center justify-between">
                                     <div className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold">
@@ -156,10 +159,10 @@ const EditorialComp: FC<Props> = ({
                                     <div className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold">
                                         Preview
                                     </div>
-                                </div>  
+                                </div>
                                 <div className="pb-16"></div>
                             </div>
-                        )} */}
+                        )}
                     </div>
                 </MainLayout>
             )}

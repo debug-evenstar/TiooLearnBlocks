@@ -2035,42 +2035,6 @@
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
-"@Praxeum-ai/LearnBlocks@file:":
-  version "0.1.0"
-  resolved "file:"
-  dependencies:
-    "@emotion/react" "^11.11.3"
-    "@emotion/styled" "^11.11.0"
-    "@mui/material" "^5.15.3"
-    "@Praxeum-ai/LearnBlocks" "file:"
-    "@react-native-async-storage/async-storage" "^1.21.0"
-    "@reduxjs/toolkit" "^2.0.1"
-    "@testing-library/jest-dom" "^5.16.5"
-    "@testing-library/react" "^13.4.0"
-    "@testing-library/user-event" "^13.5.0"
-    "@types/jest" "^27.5.2"
-    "@types/node" "^16.18.38"
-    "@types/react" "^18.2.14"
-    "@types/react-dom" "^18.2.6"
-    autoprefixer "^10.4.14"
-    axios "^1.5.0"
-    emoji-picker-react "^4.6.9"
-    postcss "^8.4.24"
-    react-color "^2.19.3"
-    react-draggable "^4.4.6"
-    react-emoji-picker "^1.0.13"
-    react-icons "^4.10.1"
-    react-image-crop "^10.1.5"
-    react-redux "^9.0.4"
-    react-resizable "^3.0.5"
-    react-router-dom "^6.14.1"
-    react-scripts "5.0.1"
-    redux "^5.0.0"
-    redux-persist "^6.0.0"
-    swiper "^9.4.1"
-    typescript "^4.9.5"
-    web-vitals "^2.1.4"
-
 "@react-native-async-storage/async-storage@^1.21.0":
   version "1.21.0"
   resolved "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.21.0.tgz"
@@ -6350,11 +6314,6 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
-fsevents@^2.3.2, fsevents@~2.3.2:
-  version "2.3.2"
-  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
-
 function-bind@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz"
@@ -10321,6 +10280,11 @@ react-shallow-renderer@^16.15.0:
   dependencies:
     object-assign "^4.1.1"
     react-is "^16.12.0 || ^17.0.0 || ^18.0.0"
+
+react-spinners@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.npmjs.org/react-spinners/-/react-spinners-0.14.1.tgz"
+  integrity sha512-2Izq+qgQ08HTofCVEdcAQCXFEYfqTDdfeDQJeo/HHQiQJD4imOicNLhkfN2eh1NYEWVOX4D9ok2lhuDB0z3Aag==
 
 react-transition-group@^4.4.5:
   version "4.4.5"
