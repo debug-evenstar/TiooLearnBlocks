@@ -143,7 +143,7 @@ function App() {
     });
   }, []);
 
-
+  console.log(bookData);
   return (
     <div>
       <BrowserRouter>
@@ -183,7 +183,7 @@ function App() {
                 chapters={bookData.chapters}
                 lessons={[]}
                 back={() => console.log("back")}
-              /> : <></>
+              /> : <> </>
             }
           />
         </Routes>
