@@ -11,7 +11,7 @@ import TransitionButton from "components/NewLesson/Buttons/TransitionButton"
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 import { LessonContext } from "contexts/LessonContext";
-
+import { GoRocket } from "react-icons/go";
 
 
 export interface LessonLayoutProps {
@@ -42,6 +42,21 @@ export interface LessonSlideProps {
   stateActions: LessonStateActions
 }
 
+
+
+const StartScreen = () => {
+  return (
+    <div className="w-full h-full flex items-center justify-center ">
+      
+      <div>
+      <GoRocket/>
+      <p>Click on a lesson to get started   </p>
+      </div>
+
+    </div>
+  );
+}
+
 export default function LessonLayout({
   textbook,
   chapters,
@@ -53,7 +68,7 @@ export default function LessonLayout({
 }: LessonLayoutProps) {
 
 
-  const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0] ?? null);
+  const [currentLesson, setCurrentLesson] = useState<any>(null);
   const [currentChapter, setCurrentChapter] = useState(lesson ? lesson.Chapter : chapters[0]);
   const slideManagerRef = useRef<any>(null);
   const [canProceed, setCanProceed] = useState(false);
@@ -133,14 +148,14 @@ export default function LessonLayout({
             chapter={currentChapter}
             activeSlide={activeSlide}
             sideBarOpen={sideBarOpen}
-            currentLesson={currentLesson} r
+            currentLesson={currentLesson} 
           />
           <div className="flex w-full">
             <div className={`${showAI ? "w-[65%] pointer-events-none" : "w-full"} relative z-[1200]`}>
               {showAI &&
                 <div className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
                   <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-[#7E1593] text-white font-[600] text-[23px]">
-                    close chat
+                    &times; close chat
                   </button>
                 </div>
               }
@@ -158,11 +173,19 @@ export default function LessonLayout({
                 </LessonContext.Provider>
               </div>
               <div className="relative w-full h-[80px]">
-                { !showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button> }
-                <LessonFooter chatVisible={showAI} previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
+                {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
+
+                <LessonFooter
+                  handleShowAI={handleShowAI}
+                  feedbackRef={feedbackRef} chatVisible={showAI}
+                  previous={handlePrevious}
+                  closePreview={closePreview}
+                  isPreview={!!lesson}
+                  next={handleContinue}
+                />
               </div>
             </div>
-            <ChatSection visible={showAI} lesson={currentLesson} slide={activeSlide}/>
+            <ChatSection visible={showAI} lesson={currentLesson} slide={activeSlide} />
           </div>
         </div>
       </div>

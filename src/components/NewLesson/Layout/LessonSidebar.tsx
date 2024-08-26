@@ -93,7 +93,7 @@ const LessonSidebar: FC<any> = ({
             <button className="sm:hidden" onClick={() => close()} >&times;</button>
           </div>
           <div className="mt-12 px-4">
-            <button onClick={() => history.back()}>
+            <button onClick={() => window.history.back()}>
               <LeftArrow fill="#000000" className="w-[14px]" />
               {/* <img src={leftArrow} className="w-[18px] text-black" /> */}
             </button>
