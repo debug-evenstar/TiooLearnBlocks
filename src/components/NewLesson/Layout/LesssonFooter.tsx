@@ -114,11 +114,12 @@ export default function LessonFooter({
           <button onClick={(e) => (isPreview ? closePreview && closePreview(e) : next && next(e))} className="outline-none relative">
             <img src={gotItImg} className="w-[170px]" alt="Got It" />
           </button>
+          
         </div>
       );
     }
 
-    if (isPreview) {
+    if (isPreview ) {
       return (
         <>
           <button onClick={(e) => (isPreview ? closePreview && closePreview(e) : next && next(e))} className="outline-none relative">
