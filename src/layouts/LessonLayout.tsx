@@ -54,7 +54,9 @@ export default function LessonLayout({
 }: LessonLayoutProps) {
 
 
-  const [currentLesson, setCurrentLesson] = useState<any>(null);
+  const isPreview = !!lesson;
+
+  const [currentLesson, setCurrentLesson] = useState<any>(isPreview ? chapters[0]?.lessons[0] : null);
   const [currentChapter, setCurrentChapter] = useState(lesson ? lesson.Chapter : chapters[0]);
   const slideManagerRef = useRef<any>(null);
   const [canProceed, setCanProceed] = useState(false);
@@ -63,6 +65,10 @@ export default function LessonLayout({
   const [showAI, setShowAI] = useState(false);
 
   const feedbackRef = useRef<any>(null);
+
+
+
+  console.log("current lesson", currentLesson)
 
   const getCurrentChapter = (chapter_id: number) => {
     return chapters.find((i: any) => i.id === chapter_id);
@@ -172,6 +178,7 @@ export default function LessonLayout({
                   previous={handlePrevious}
                   closePreview={closePreview}
                   isPreview={!!lesson}
+                  canProceed={canProceed}
                   next={handleContinue}
                 />
               </div>

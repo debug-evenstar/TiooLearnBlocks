@@ -7,10 +7,9 @@ const TransitionButton = ({ strings, handleShowAI }: any) => {
   useEffect(() => {
     const interval = setTimeout(() => {
       const nextIndex = (index >= (strings.length - 1)) ? 0 : index + 1;
-      console.log(index)
       setIndex(nextIndex)
     }, 3000);
-    // return () => clearTimeout(interval); // 
+    return () => clearTimeout(interval); // 
   }, [index]);
 
 

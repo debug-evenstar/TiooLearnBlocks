@@ -11,12 +11,12 @@ import { FC, createRef, useEffect, useState } from "react";
 import { triggerFeedback } from "./handler";
 import RenderOptions from "./components/RenderOptions";
 import RenderInputs from "./components/RenderInputs";
-import { LessonSlideInterface } from "components/SlideManager/handler";
+import { LessonSlideInterface, LessonSlideScope } from "components/SlideManager/handler";
 
 
 interface QuestionComponentProps {
     data: any;
-    slide : LessonSlideInterface;
+    slide: LessonSlideInterface;
     viewArea: any;
 }
 
@@ -24,13 +24,21 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea }
     const [questions, setQuestions] = useState<any>(data?.data ?? []);
     const [answered, setAnswered] = useState<any[]>([]);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
+    const [slideScope] = useState<LessonSlideInterface>(LessonSlideScope());
+    useEffect(() => {
+        if (questions.length == answered.length) {
+            // slide.dispatch
+            slide.dispatch('showContinue');
+        }
+    }, [answered]);
+
     useEffect(() => {
         setQuestions([
             ...(data?.data
                 ? data.data.map((q: QuestionInterface, index: number) => ({
-                      ...q,
-                      index,
-                  }))
+                    ...q,
+                    index,
+                }))
                 : []),
         ]);
         let inputs: InputInterface[] = [];
@@ -49,7 +57,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea }
                 setActiveQuestionIndex(answered.length);
             }, 1500);
         }
-    },[answered])
+    }, [answered])
 
     return (
         <>

@@ -19,7 +19,7 @@
 //         <span>Previous</span>
 //       </button>
 //       : <p></p>)
-    
+
 
 
 //   const renderNextBtn = !chatVisible && isPreview ?
@@ -55,6 +55,7 @@ import TransitionButton from "../../../components/NewLesson/Buttons/TransitionBu
 interface LessonFooterProps {
   previous: () => void;
   currentLesson: any;
+  canProceed: any;
   hasPrevious: boolean;
   isPreview: boolean;
   closePreview: Function | undefined;
@@ -68,6 +69,7 @@ export default function LessonFooter({
   previous,
   currentLesson,
   hasPrevious,
+  canProceed,
   isPreview,
   closePreview,
   next,
@@ -98,25 +100,36 @@ export default function LessonFooter({
   };
 
   const renderNextButton = () => {
-    if (chatVisible || !isPreview) {
+
+    if (canProceed && !isPreview) {
       return (
-        <TransitionButton
-          strings={["AI TUTOR", "Explain this screen"]}
-          handleShowAI={handleExplainClick}
-        />
+        <div>
+          <div className="absolute -top-4 right-7">
+            <TransitionButton
+              strings={["AI TUTOR", "Explain this screen"]}
+              handleShowAI={handleExplainClick}
+            />
+          </div>
+
+          <button onClick={(e) => (isPreview ? closePreview && closePreview(e) : next && next(e))} className="outline-none relative">
+            <img src={gotItImg} className="w-[170px]" alt="Got It" />
+          </button>
+        </div>
       );
     }
 
-    return (
-      <button onClick={(e) => (isPreview ? closePreview && closePreview(e) : next && next(e))} className="outline-none relative">
-        {isPreview && (
-          <span className="lilita-one text-white absolute font-[500] text-lg right-[30%] px-4 top-2 bg-[#aa18b8]">
-            Back
-          </span>
-        )}
-        <img src={gotItImg} className="w-[170px]" alt="Got It" />
-      </button>
-    );
+    if (isPreview) {
+      return (
+        <>
+          <button onClick={(e) => (isPreview ? closePreview && closePreview(e) : next && next(e))} className="outline-none relative">
+            <span className="lilita-one text-white absolute font-[500] text-lg right-[30%] px-4 top-2 bg-[#aa18b8]">
+              Back
+            </span>
+            <img src={gotItImg} className="w-[170px]" alt="Got It" />
+          </button>
+        </>
+      );
+    }
   };
 
   return (

@@ -73,6 +73,15 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         const hintRef = useRef<any>();
         const containerRef = useRef<any>();
 
+
+        useEffect(() => {
+            SlideScope.on('showContinue', () => {
+               canProceed(true,0); 
+               console.log("setting can proceed to true");
+            });
+        }, []);
+
+
         const navigateSlide = (direction: number, slideIndex: any = null) => {
             if (
                 slideIndex !== null &&
@@ -222,27 +231,27 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         useEffect(() => {
             setSlides(() => lessonSlides);
         }, [lessonSlides]);
-        
 
-        const RenderComponent : FC<{
-            index : number,
-            component : any,
-            viewAreaRef : any,
-            slideIndex : number
-        }> = ({index, component, viewAreaRef, slideIndex}) => {
+
+        const RenderComponent: FC<{
+            index: number,
+            component: any,
+            viewAreaRef: any,
+            slideIndex: number
+        }> = ({ index, component, viewAreaRef, slideIndex }) => {
 
             const Component = loadComponent(component);
             const [viewArea, setViewArea] = useState<any>();
 
-            useEffect(()=>{
+            useEffect(() => {
                 // Temporary solution
                 const containerElement = viewAreaRef?.current;
-                setViewArea(containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null);
-                setTimeout(()=>{
-                    setViewArea(containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null);
+                setViewArea(containerElement ? { width: containerElement?.clientWidth, height: containerElement?.clientHeight } : null);
+                setTimeout(() => {
+                    setViewArea(containerElement ? { width: containerElement?.clientWidth, height: containerElement?.clientHeight } : null);
                 }, 1000);
-            },[viewAreaRef])
-            
+            }, [viewAreaRef])
+
             return (
                 <>
                     {
