@@ -4,6 +4,7 @@ import LessonFooter from "components/NewLesson/Layout/LesssonFooter";
 import ChatSection from "components/ChatSection/ChatSection";
 import { ReactNode, useEffect, FC, useRef, useState } from "react";
 
+
 import "./LessonLayout.css";
 // import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
@@ -11,7 +12,7 @@ import TransitionButton from "components/NewLesson/Buttons/TransitionButton"
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 import { LessonContext } from "contexts/LessonContext";
-import { GoRocket } from "react-icons/go";
+import StartScreen from "components/NewLesson/Layout/StartScreen";
 
 
 export interface LessonLayoutProps {
@@ -43,19 +44,6 @@ export interface LessonSlideProps {
 }
 
 
-
-const StartScreen = () => {
-  return (
-    <div className="w-full h-full flex items-center justify-center ">
-      
-      <div>
-      <GoRocket/>
-      <p>Click on a lesson to get started   </p>
-      </div>
-
-    </div>
-  );
-}
 
 export default function LessonLayout({
   textbook,
@@ -148,7 +136,7 @@ export default function LessonLayout({
             chapter={currentChapter}
             activeSlide={activeSlide}
             sideBarOpen={sideBarOpen}
-            currentLesson={currentLesson} 
+            currentLesson={currentLesson}
           />
           <div className="flex w-full">
             <div className={`${showAI ? "w-[65%] pointer-events-none" : "w-full"} relative z-[1200]`}>
@@ -159,23 +147,29 @@ export default function LessonLayout({
                   </button>
                 </div>
               }
-              <div className="relative px-28 flex grow flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
+              <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
                 <ToggleNavBtn isOpen={sideBarOpen} handleClick={() => setSideBarOpen(!sideBarOpen)} />
-                <LessonContext.Provider value={{
-                  lesson,
-                  feedbackRef
-                }}>
-                  {lessonSlides && lessonSlides(
-                    { ...lessonSlidesArgs }
-                  )}
-                  {children}
-                </LessonContext.Provider>
+                {currentLesson ?
+                  <LessonContext.Provider value={{
+                    lesson,
+                    feedbackRef
+                  }}>
+                    {lessonSlides && lessonSlides(
+                      { ...lessonSlidesArgs }
+                    )}
+                    {children}
+                  </LessonContext.Provider>
+
+                  : <StartScreen />
+                }
               </div>
               <div className="relative w-full h-[80px]">
                 {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
 
                 <LessonFooter
+                  currentLesson={currentLesson}
+                  hasPrevious={activeSlide !== 1}
                   handleShowAI={handleShowAI}
                   feedbackRef={feedbackRef} chatVisible={showAI}
                   previous={handlePrevious}

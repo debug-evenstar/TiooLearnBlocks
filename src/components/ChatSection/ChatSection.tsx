@@ -76,7 +76,7 @@ const ChatSection: FC<ChatSectionProps> = ({
             },
             body: JSON.stringify({
                 lesson_id: lesson.id,
-                slide_id: lesson.lesson_slides[slide - 1].id,
+                slide_id: lesson?.lesson_slides[slide - 1]?.id,
                 conversation: updatedConversation.map((convo) => convo.content),
             }),
         })
