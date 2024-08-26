@@ -43,8 +43,6 @@ export interface LessonSlideProps {
   stateActions: LessonStateActions
 }
 
-
-
 export default function LessonLayout({
   textbook,
   chapters,
@@ -74,7 +72,6 @@ export default function LessonLayout({
 
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
-    console.log("really moving on to the next slide now")
     if (currentLesson && (currentSlideIndex === currentLesson.lesson_slides.length - 1)) {
       // back();
     } else {
