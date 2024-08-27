@@ -24,11 +24,12 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea }
     const [questions, setQuestions] = useState<any>(data?.data ?? []);
     const [answered, setAnswered] = useState<any[]>([]);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
-    const [slideScope] = useState<LessonSlideInterface>(LessonSlideScope());
+    // const [slideScope] = useState<LessonSlideInterface>(LessonSlideScope());
     useEffect(() => {
-        if (questions.length == answered.length) {
-            // slide.dispatch
+        if (questions.length == answered.length && questions.length !== 0) {
+            // slideScope.dispatch('showContinue');
             slide.dispatch('showContinue');
+            console.log("fired continue");
         }
     }, [answered]);
 

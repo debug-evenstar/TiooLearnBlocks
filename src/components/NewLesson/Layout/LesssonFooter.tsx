@@ -84,7 +84,7 @@ export default function LessonFooter({
   };
 
   const renderPreviousButton = () => {
-    if (isPreview) return <p></p>;
+    if (isPreview) return <p>preview state</p>;
 
     return hasPrevious ? (
       <button
@@ -101,16 +101,15 @@ export default function LessonFooter({
 
   const renderNextButton = () => {
 
-    if (canProceed && !isPreview) {
+    if (canProceed && !isPreview && !chatVisible) {
       return (
         <div>
-          <div className="absolute -top-4 right-7">
+          <div className="absolute -top-8 right-12">
             <TransitionButton
               strings={["AI TUTOR", "Explain this screen"]}
               handleShowAI={handleExplainClick}
             />
           </div>
-
           <button onClick={(e) => (isPreview ? closePreview && closePreview(e) : next && next(e))} className="outline-none relative">
             <img src={gotItImg} className="w-[170px]" alt="Got It" />
           </button>

@@ -90,6 +90,7 @@ export default function LessonLayout({
 
   const handlePrevious = () => {
     slideManagerRef?.current?.navigator(-1);
+    setActiveSlide(activeSlide - 1);
     setCanProceed(false);
   };
 
@@ -172,9 +173,10 @@ export default function LessonLayout({
 
                 <LessonFooter
                   currentLesson={currentLesson}
-                  hasPrevious={activeSlide !== 1}
+                  hasPrevious={activeSlide > 1}
                   handleShowAI={handleShowAI}
-                  feedbackRef={feedbackRef} chatVisible={showAI}
+                  feedbackRef={feedbackRef}
+                  chatVisible={showAI}
                   previous={handlePrevious}
                   closePreview={closePreview}
                   isPreview={!!lesson}

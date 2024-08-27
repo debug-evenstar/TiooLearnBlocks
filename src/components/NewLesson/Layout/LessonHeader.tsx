@@ -3,12 +3,10 @@ import clockImg from "../../../img/clock.svg";
 
 export default function LessonHeader({ currentLesson, activeSlide, sideBarOpen }: any) {
 
-  const slide_count = currentLesson?.slides?.length;
+  const slide_count = currentLesson?.lesson_slides?.length;
   const position = Math.floor((activeSlide / slide_count) * 5);
 
   const duration = currentLesson?.duration?.toLowerCase().replace('minute', 'min')
-
-  console.log(currentLesson)
 
   const LessonProgress = () => {
     return (
