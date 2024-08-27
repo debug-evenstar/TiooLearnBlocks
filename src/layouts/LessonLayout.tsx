@@ -13,12 +13,12 @@ import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 import { LessonContext } from "contexts/LessonContext";
 import { GoRocket } from "react-icons/go";
-import catImg from "../../../img/popup/cat.webp"
+import catImg from "../img/popup/cat.webp"
 
 
 
 
-function StartScreen(){
+function StartScreen() {
   return (
     <div className="w-full h-full flex items-center justify-center ">
       <div className="flex flex-col items-center gap-y-3">
