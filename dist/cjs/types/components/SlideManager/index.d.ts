@@ -3,6 +3,7 @@ import { SlideData } from "./handler";
 interface SlideManagerProps {
     lessonSlides: SlideData[];
     canProceed: Function;
+    canFeedbackProceed?: Function;
     handleFeedback: Function;
     updateActiveSlide: Function;
     ref: any;
