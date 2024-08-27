@@ -199,12 +199,14 @@ export default function LessonLayout({
               </div>
               <div className="relative w-full h-[80px]">
                 {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
-                <div className="absolute right-10 -top-8">
-                  <TransitionButton
-                    strings={["AI TUTOR", "Explain this screen"]}
-                    handleShowAI={handleShowAI}
-                  />
-                </div>
+                {currentLesson &&
+                  <div className="absolute right-10 -top-8">
+                    <TransitionButton
+                      strings={["AI TUTOR", "Explain this screen"]}
+                      handleShowAI={handleShowAI}
+                    />
+                  </div>
+                }
 
                 <LessonFooter
                   ref={lessonFooterRef}
