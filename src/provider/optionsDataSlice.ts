@@ -13,7 +13,7 @@ export const optionsDataSlice = createSlice({
   reducers: {
     handleSetIdentifier: (state, action) => {
       state.value.identifier = action.payload;
-      console.log(action.payload, "successful");
+      // console.log(action.payload, "successful");
     },
     handleSetCorrectOption: (state, action) => {
       state.value.correctOption = action.payload;

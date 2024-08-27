@@ -58,7 +58,7 @@ const ChatSection: FC<ChatSectionProps> = ({
             setMessages(updatedConversation);
             setMessage("");
             if (chatRef.current) {
-                console.log(chatRef.current.scrollHeight);
+                // console.log(chatRef.current.scrollHeight);
                 setTimeout(() => {
                     chatRef.current.scroll({
                         top: chatRef.current.scrollHeight,

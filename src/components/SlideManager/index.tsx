@@ -171,7 +171,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
 
         useEffect(() => {
             SlideScope.on('showContinue', (data: any) => {
-                console.log("data from question event", data);
                 canProceed(true, data);
             });
 

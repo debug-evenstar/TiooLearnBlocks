@@ -121,9 +121,8 @@ export default function LessonLayout({
     stateActions: {
       setActiveSlide,
       setCanProceed: (value: boolean, data: any = {}) => {
-        console.log("data from lesson layout", data)
+        // console.log("data from lesson layout", data)
         if (!data.hasFeedback) {
-
           lessonFooterRef?.current && lessonFooterRef?.current.toggleContinue(value);
         }
         feedbackRef?.current && feedbackRef?.current.toggleContinue(value);
