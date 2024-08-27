@@ -27,9 +27,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea }
     // const [slideScope] = useState<LessonSlideInterface>(LessonSlideScope());
     useEffect(() => {
         if (questions.length == answered.length && questions.length !== 0) {
-            // slideScope.dispatch('showContinue');
             slide.dispatch('showContinue');
-            console.log("fired continue");
         }
     }, [answered]);
 

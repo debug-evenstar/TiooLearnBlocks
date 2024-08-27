@@ -382,6 +382,7 @@ class LessonSlide implements LessonSlideInterface {
     this.eventManager().trigger(eventName, data);
   }
 
+  // Marked for removal
   checkSlideCanProceed = (slide: any, strict: boolean = false) => {
     let activate = true;
     const strictComponents = [

@@ -73,15 +73,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         const hintRef = useRef<any>();
         const containerRef = useRef<any>();
 
-
-        useEffect(() => {
-            SlideScope.on('showContinue', () => {
-               canProceed(true,0); 
-               console.log("setting can proceed to true");
-            });
-        }, []);
-
-
         const navigateSlide = (direction: number, slideIndex: any = null) => {
             if (
                 slideIndex !== null &&
@@ -106,15 +97,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             setActiveSlideIndex(() => index);
             updateActiveSlide(index);
             SlideScope.registerSlideData(nextSlide);
-            if (SlideScope.checkSlideCanProceed(nextSlide)) {
-                setTimeout(() => {
-                    canProceed(true, 0);
-                }, 1500);
-            } else {
-                setTimeout(() => {
-                    canProceed(false, 0);
-                }, 500);
-            }
             setHintIsActive(false);
         };
 
@@ -131,22 +113,22 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             },
         }));
 
-        const proceed = (slide: any, state: number = 1) => {
-            if (activeSlide.length) {
-                if (
-                    activeSlide[0].component !== "Preface" &&
-                    activeSlide[0].component !== "Postface"
-                ) {
-                    if (SlideScope.checkSlideCanProceed(slide, true)) {
-                        canProceed(true, state);
-                    } else {
-                        canProceed(false, state);
-                    }
-                } else {
-                    canProceed(false);
-                }
-            }
-        };
+        // const proceed = (slide: any, state: number = 1) => {
+        //     if (activeSlide.length) {
+        //         if (
+        //             activeSlide[0].component !== "Preface" &&
+        //             activeSlide[0].component !== "Postface"
+        //         ) {
+        //             if (SlideScope.checkSlideCanProceed(slide, true)) {
+        //                 canProceed(true, state);
+        //             } else {
+        //                 canProceed(false, state);
+        //             }
+        //         } else {
+        //             canProceed(false);
+        //         }
+        //     }
+        // };
 
         const preloadImages = (slides: any[]) => {
             for (let i = 0; i < slides.length; i++) {
@@ -175,6 +157,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             // setSlides((prev: any) =>  prev.slice(1));
         };
 
+        
         // Core effects
         useEffect(() => {
             activeSlide && SlideScope.registerSlideData(activeSlide);
@@ -182,13 +165,21 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             SlideScope.setAttribute("lessonTitle", lessonTitle);
         }, []);
 
+
+
+        useEffect(() => {
+            SlideScope.on('showContinue', () => {
+               canProceed(true); 
+            });
+        }, [SlideScope]);
+
         useEffect(() => {
             // SlideScope.registerSlideData(activeSlide); // Removed because it happens on slide change already
-            activeSlide &&
-                SlideScope.setFunction("allowProceed", () =>
-                    proceed(activeSlide)
-                );
-            SlideScope.setFunction("canProceed", canProceed);
+            // activeSlide &&
+            //     SlideScope.setFunction("allowProceed", () =>
+            //         proceed(activeSlide)
+            //     );
+            // SlideScope.setFunction("canProceed", canProceed);
             SlideScope.setFunction("navigateSlide", navigateSlide);
             SlideScope.setFunction("setHint", (val: boolean) =>
                 setHintIsActive(val)
@@ -198,7 +189,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                 () => handleContinue && handleContinue()
             );
             SlideScope.setFunction("beginLesson", () => beginLesson());
-            activeSlide && proceed(activeSlide, 0);
+            // activeSlide && proceed(activeSlide, 0);
             if (!parent && activeSlide) {
                 const compWithTheme = activeSlide.filter((c: any) => c.theme);
                 setPageTheme(

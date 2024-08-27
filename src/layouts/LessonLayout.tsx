@@ -59,22 +59,32 @@ export default function LessonLayout({
   const [currentLesson, setCurrentLesson] = useState<any>(isPreview ? chapters[0]?.lessons[0] : null);
   const [currentChapter, setCurrentChapter] = useState(lesson ? lesson.Chapter : chapters[0]);
   const slideManagerRef = useRef<any>(null);
-  const [canProceed, setCanProceed] = useState(false);
   const [activeSlide, setActiveSlide] = useState(1);
   const [sideBarOpen, setSideBarOpen] = useState(true)
   const [showAI, setShowAI] = useState(false);
+  const lessonFooterRef = useRef<any>(null);
 
   const feedbackRef = useRef<any>(null);
 
-
-
-  console.log("current lesson", currentLesson)
 
   const getCurrentChapter = (chapter_id: number) => {
     return chapters.find((i: any) => i.id === chapter_id);
   };
 
   const lessonHasSlides = () => Boolean(currentLesson?.lesson_slides && currentLesson.lesson_slides.length);
+
+  const slideHasQuestion = (lesson : any) => {
+    const slides = lesson.lesson_slides;
+    if ( slides && slides.length ){
+      const currentSlide = slides.length ? slides[activeSlide - 1] : null;
+      if ( currentSlide ) {
+        const hasQuestion = currentSlide.slide_data.find((item:any) => item.component == "Questions");
+        return !!hasQuestion;
+      }
+      return false;
+    }
+    return false;
+  }
 
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
@@ -84,14 +94,12 @@ export default function LessonLayout({
       slideManagerRef?.current?.navigator(1);
       setActiveSlide(activeSlide + 1);
       feedbackRef?.current.hideFeedback();
-      setCanProceed(false);
     }
   };
 
   const handlePrevious = () => {
     slideManagerRef?.current?.navigator(-1);
     setActiveSlide(activeSlide - 1);
-    setCanProceed(false);
   };
 
   const handleShowAI = () => {
@@ -109,7 +117,10 @@ export default function LessonLayout({
     navigationHandles: { continue: handleContinue, previous: handlePrevious },
     slides: currentLesson?.lesson_slides ?? [],
     stateActions: {
-      setActiveSlide, setCanProceed
+      setActiveSlide, 
+      setCanProceed : (value:boolean) => {
+        lessonFooterRef?.current && lessonFooterRef?.current.toggleContinue(value)
+      }
     }
   }
 
@@ -118,6 +129,16 @@ export default function LessonLayout({
       setCurrentChapter(getCurrentChapter(currentLesson?.chapter_id));
     }
   }, [currentLesson]);
+
+  useEffect(() => {
+    if (currentLesson) {
+      if ( slideHasQuestion(currentLesson) ) {
+        lessonFooterRef?.current.toggleContinue(false);
+      } else {
+        lessonFooterRef?.current.toggleContinue(true);
+      }
+    }
+  }, [activeSlide, currentLesson]);
 
   return (
     <>
@@ -172,6 +193,7 @@ export default function LessonLayout({
                 {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
 
                 <LessonFooter
+                  ref={lessonFooterRef}
                   currentLesson={currentLesson}
                   hasPrevious={activeSlide > 1}
                   handleShowAI={handleShowAI}
@@ -180,7 +202,6 @@ export default function LessonLayout({
                   previous={handlePrevious}
                   closePreview={closePreview}
                   isPreview={!!lesson}
-                  canProceed={canProceed}
                   next={handleContinue}
                 />
               </div>
