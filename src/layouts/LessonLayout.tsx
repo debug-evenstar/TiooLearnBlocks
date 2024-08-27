@@ -34,6 +34,7 @@ interface NavigationHandles {
 interface LessonStateActions {
   setActiveSlide: Function;
   setCanProceed: Function;
+  // setFeedbackCanProceed: Function;
 }
 
 export interface LessonSlideProps {
@@ -62,6 +63,7 @@ export default function LessonLayout({
   const [activeSlide, setActiveSlide] = useState(1);
   const [sideBarOpen, setSideBarOpen] = useState(true)
   const [showAI, setShowAI] = useState(false);
+
   const lessonFooterRef = useRef<any>(null);
 
   const feedbackRef = useRef<any>(null);
@@ -73,12 +75,12 @@ export default function LessonLayout({
 
   const lessonHasSlides = () => Boolean(currentLesson?.lesson_slides && currentLesson.lesson_slides.length);
 
-  const slideHasQuestion = (lesson : any) => {
+  const slideHasQuestion = (lesson: any) => {
     const slides = lesson.lesson_slides;
-    if ( slides && slides.length ){
+    if (slides && slides.length) {
       const currentSlide = slides.length ? slides[activeSlide - 1] : null;
-      if ( currentSlide ) {
-        const hasQuestion = currentSlide.slide_data.find((item:any) => item.component == "Questions");
+      if (currentSlide) {
+        const hasQuestion = currentSlide.slide_data.find((item: any) => item.component == "Questions");
         return !!hasQuestion;
       }
       return false;
@@ -117,9 +119,14 @@ export default function LessonLayout({
     navigationHandles: { continue: handleContinue, previous: handlePrevious },
     slides: currentLesson?.lesson_slides ?? [],
     stateActions: {
-      setActiveSlide, 
-      setCanProceed : (value:boolean) => {
-        lessonFooterRef?.current && lessonFooterRef?.current.toggleContinue(value)
+      setActiveSlide,
+      setCanProceed: (value: boolean, data: any = {}) => {
+        console.log("data from lesson layout", data)
+        if (!data.hasFeedback) {
+
+          lessonFooterRef?.current && lessonFooterRef?.current.toggleContinue(value);
+        }
+        feedbackRef?.current && feedbackRef?.current.toggleContinue(value);
       }
     }
   }
@@ -132,7 +139,7 @@ export default function LessonLayout({
 
   useEffect(() => {
     if (currentLesson) {
-      if ( slideHasQuestion(currentLesson) ) {
+      if (slideHasQuestion(currentLesson)) {
         lessonFooterRef?.current.toggleContinue(false);
       } else {
         lessonFooterRef?.current.toggleContinue(true);
@@ -156,6 +163,7 @@ export default function LessonLayout({
           />
         }
         <div className="flex flex-col w-full relative justify-between border-l h-screen">
+
           <LessonHeader
             getChapter={null}
             chapter={currentChapter}
@@ -191,6 +199,12 @@ export default function LessonLayout({
               </div>
               <div className="relative w-full h-[80px]">
                 {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
+                <div className="absolute right-10 -top-8">
+                  <TransitionButton
+                    strings={["AI TUTOR", "Explain this screen"]}
+                    handleShowAI={handleShowAI}
+                  />
+                </div>
 
                 <LessonFooter
                   ref={lessonFooterRef}

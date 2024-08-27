@@ -22,12 +22,14 @@ interface QuestionComponentProps {
 
 const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea }) => {
     const [questions, setQuestions] = useState<any>(data?.data ?? []);
-    const [answered, setAnswered] = useState<any[]>([]);
+    const [answered, setAnswered] = useState<OptionInterface[]>([]);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
     // const [slideScope] = useState<LessonSlideInterface>(LessonSlideScope());
     useEffect(() => {
         if (questions.length == answered.length && questions.length !== 0) {
-            slide.dispatch('showContinue');
+            slide.dispatch('showContinue', {
+                hasFeedback: !!answered[answered.length - 1].feedback
+            });
         }
     }, [answered]);
 

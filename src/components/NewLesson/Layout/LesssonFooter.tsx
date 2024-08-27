@@ -85,7 +85,7 @@ const LessonFooter = forwardRef(
         };
 
         const renderPreviousButton = () => {
-            if (isPreview) return <p>preview state</p>;
+            if (isPreview) return <p></p>;
 
             return hasPrevious ? (
                 <button
@@ -104,12 +104,6 @@ const LessonFooter = forwardRef(
             if (canProceed && !isPreview && !chatVisible) {
                 return (
                     <div>
-                        <div className="absolute -top-8 right-12">
-                            <TransitionButton
-                                strings={["AI TUTOR", "Explain this screen"]}
-                                handleShowAI={handleExplainClick}
-                            />
-                        </div>
                         <button
                             onClick={(e) =>
                                 isPreview

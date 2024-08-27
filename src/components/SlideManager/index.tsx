@@ -35,6 +35,7 @@ import LayoutComponent from "components/LayoutBox";
 interface SlideManagerProps {
     lessonSlides: SlideData[];
     canProceed: Function;
+    canFeedbackProceed?: Function;
     handleFeedback: Function;
     updateActiveSlide: Function;
     ref: any;
@@ -49,6 +50,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         {
             lessonSlides,
             canProceed,
+            canFeedbackProceed,
             handleFeedback,
             updateActiveSlide,
             parent,
@@ -157,7 +159,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             // setSlides((prev: any) =>  prev.slice(1));
         };
 
-        
+
         // Core effects
         useEffect(() => {
             activeSlide && SlideScope.registerSlideData(activeSlide);
@@ -168,9 +170,11 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
 
 
         useEffect(() => {
-            SlideScope.on('showContinue', () => {
-               canProceed(true); 
+            SlideScope.on('showContinue', (data: any) => {
+                console.log("data from question event", data);
+                canProceed(true, data);
             });
+
         }, [SlideScope]);
 
         useEffect(() => {
