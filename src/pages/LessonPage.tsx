@@ -29,6 +29,7 @@ const LessonPage: FC<LessonPageProps> = ({
           slides={slideProps.slides}
           setActiveSlide={slideProps.stateActions.setActiveSlide}
           setCanProceed={slideProps.stateActions.setCanProceed}
+          // setFeedbackCanProceed={slideProps.stateActions.setFeedbackCanProceed}
       />
     )
   }} />;

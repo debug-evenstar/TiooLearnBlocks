@@ -58,6 +58,7 @@ const ActiveEditSlide: FC<Props> = ({
 
 
     useEffect(()=>{
+      if (contRef?.current)
       if ( contRef?.current.clientHeight !== clientHeight ) {
         setCalculatedArea({
           width : contRef?.current ? contRef?.current.clientHeight * 1.6 : 0,
@@ -65,7 +66,7 @@ const ActiveEditSlide: FC<Props> = ({
         });
         setClientHeight(contRef?.current.clientHeight ?? 0);
       }
-    }, contRef?.current)
+    }, [contRef?.current])
 
     return (
       <LessonLayout textbook={{}} lesson={data} closePreview={() => setPreviewSlide(false)} sideBar={false} chapters={chapters}  >

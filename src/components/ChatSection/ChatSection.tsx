@@ -24,9 +24,8 @@ const ChatMessage: FC<MessageProps> = ({ content, role }) => {
             className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6`}
         >
             <p
-                className={`px-3 py-2  urbanist w-[65%]  rounded-[10px] break-words ${
-                    !isUser ? "text-gray-500 border" : "text-white bg-[#7E1593]"
-                } `}
+                className={`px-3 py-2  urbanist w-[65%]  rounded-[10px] break-words ${!isUser ? "text-gray-500 border" : "text-white bg-[#7E1593]"
+                    } `}
                 dangerouslySetInnerHTML={{ __html: content }}
             ></p>
         </div>
@@ -44,7 +43,7 @@ const ChatSection: FC<ChatSectionProps> = ({
 
     const chatRef = useRef<any>();
 
-    const handleRecordAudio = () => {};
+    const handleRecordAudio = () => { };
 
     const [messages, setMessages] = useState<MessageProps[]>([]);
 
@@ -59,7 +58,7 @@ const ChatSection: FC<ChatSectionProps> = ({
             setMessages(updatedConversation);
             setMessage("");
             if (chatRef.current) {
-                console.log(chatRef.current.scrollHeight);
+                // console.log(chatRef.current.scrollHeight);
                 setTimeout(() => {
                     chatRef.current.scroll({
                         top: chatRef.current.scrollHeight,
@@ -77,7 +76,7 @@ const ChatSection: FC<ChatSectionProps> = ({
             },
             body: JSON.stringify({
                 lesson_id: lesson.id,
-                slide_id: lesson.lesson_slides[slide - 1].id,
+                slide_id: lesson?.lesson_slides[slide - 1]?.id,
                 conversation: updatedConversation.map((convo) => convo.content),
             }),
         })
@@ -113,9 +112,8 @@ const ChatSection: FC<ChatSectionProps> = ({
 
     return (
         <div
-            className={`${
-                visible ? "w-[35%]" : "w-0"
-            } overflow-hidden relative border-l h-full flex flex-col justify-between `}
+            className={`${visible ? "w-[35%]" : "w-0"
+                } overflow-hidden relative border-l h-full flex flex-col justify-between z-[1500]`}
         >
             {visible && (
                 <div

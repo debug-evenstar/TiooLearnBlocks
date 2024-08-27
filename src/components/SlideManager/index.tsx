@@ -35,6 +35,7 @@ import LayoutComponent from "components/LayoutBox";
 interface SlideManagerProps {
     lessonSlides: SlideData[];
     canProceed: Function;
+    canFeedbackProceed?: Function;
     handleFeedback: Function;
     updateActiveSlide: Function;
     ref: any;
@@ -49,6 +50,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         {
             lessonSlides,
             canProceed,
+            canFeedbackProceed,
             handleFeedback,
             updateActiveSlide,
             parent,
@@ -97,15 +99,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             setActiveSlideIndex(() => index);
             updateActiveSlide(index);
             SlideScope.registerSlideData(nextSlide);
-            if (SlideScope.checkSlideCanProceed(nextSlide)) {
-                setTimeout(() => {
-                    canProceed(true, 0);
-                }, 1500);
-            } else {
-                setTimeout(() => {
-                    canProceed(false, 0);
-                }, 500);
-            }
             setHintIsActive(false);
         };
 
@@ -122,22 +115,22 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             },
         }));
 
-        const proceed = (slide: any, state: number = 1) => {
-            if (activeSlide.length) {
-                if (
-                    activeSlide[0].component !== "Preface" &&
-                    activeSlide[0].component !== "Postface"
-                ) {
-                    if (SlideScope.checkSlideCanProceed(slide, true)) {
-                        canProceed(true, state);
-                    } else {
-                        canProceed(false, state);
-                    }
-                } else {
-                    canProceed(false);
-                }
-            }
-        };
+        // const proceed = (slide: any, state: number = 1) => {
+        //     if (activeSlide.length) {
+        //         if (
+        //             activeSlide[0].component !== "Preface" &&
+        //             activeSlide[0].component !== "Postface"
+        //         ) {
+        //             if (SlideScope.checkSlideCanProceed(slide, true)) {
+        //                 canProceed(true, state);
+        //             } else {
+        //                 canProceed(false, state);
+        //             }
+        //         } else {
+        //             canProceed(false);
+        //         }
+        //     }
+        // };
 
         const preloadImages = (slides: any[]) => {
             for (let i = 0; i < slides.length; i++) {
@@ -166,6 +159,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             // setSlides((prev: any) =>  prev.slice(1));
         };
 
+
         // Core effects
         useEffect(() => {
             activeSlide && SlideScope.registerSlideData(activeSlide);
@@ -173,13 +167,22 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             SlideScope.setAttribute("lessonTitle", lessonTitle);
         }, []);
 
+
+
+        useEffect(() => {
+            SlideScope.on('showContinue', (data: any) => {
+                canProceed(true, data);
+            });
+
+        }, [SlideScope]);
+
         useEffect(() => {
             // SlideScope.registerSlideData(activeSlide); // Removed because it happens on slide change already
-            activeSlide &&
-                SlideScope.setFunction("allowProceed", () =>
-                    proceed(activeSlide)
-                );
-            SlideScope.setFunction("canProceed", canProceed);
+            // activeSlide &&
+            //     SlideScope.setFunction("allowProceed", () =>
+            //         proceed(activeSlide)
+            //     );
+            // SlideScope.setFunction("canProceed", canProceed);
             SlideScope.setFunction("navigateSlide", navigateSlide);
             SlideScope.setFunction("setHint", (val: boolean) =>
                 setHintIsActive(val)
@@ -189,7 +192,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                 () => handleContinue && handleContinue()
             );
             SlideScope.setFunction("beginLesson", () => beginLesson());
-            activeSlide && proceed(activeSlide, 0);
+            // activeSlide && proceed(activeSlide, 0);
             if (!parent && activeSlide) {
                 const compWithTheme = activeSlide.filter((c: any) => c.theme);
                 setPageTheme(
@@ -222,27 +225,27 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         useEffect(() => {
             setSlides(() => lessonSlides);
         }, [lessonSlides]);
-        
 
-        const RenderComponent : FC<{
-            index : number,
-            component : any,
-            viewAreaRef : any,
-            slideIndex : number
-        }> = ({index, component, viewAreaRef, slideIndex}) => {
+
+        const RenderComponent: FC<{
+            index: number,
+            component: any,
+            viewAreaRef: any,
+            slideIndex: number
+        }> = ({ index, component, viewAreaRef, slideIndex }) => {
 
             const Component = loadComponent(component);
             const [viewArea, setViewArea] = useState<any>();
 
-            useEffect(()=>{
+            useEffect(() => {
                 // Temporary solution
                 const containerElement = viewAreaRef?.current;
-                setViewArea(containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null);
-                setTimeout(()=>{
-                    setViewArea(containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null);
+                setViewArea(containerElement ? { width: containerElement?.clientWidth, height: containerElement?.clientHeight } : null);
+                setTimeout(() => {
+                    setViewArea(containerElement ? { width: containerElement?.clientWidth, height: containerElement?.clientHeight } : null);
                 }, 1000);
-            },[viewAreaRef])
-            
+            }, [viewAreaRef])
+
             return (
                 <>
                     {

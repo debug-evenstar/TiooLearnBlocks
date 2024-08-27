@@ -23,7 +23,7 @@ export const renderInputsAsOverlay = (inputs : any[], slide : LessonSlideInterfa
         const fieldManager = TextFields([], slide, answers, []);
         inputs.forEach((input, index) => {
             const field = fieldManager.formatTextField(index);
-            console.log(input);
+            // console.log(input);
             const fieldPosition : React.CSSProperties = {
                 position : "absolute",
                 

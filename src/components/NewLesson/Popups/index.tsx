@@ -27,11 +27,11 @@ interface FeedbackPopupProps {
 // now everyone has access
 
 
-const ErrorLayout = ({ title, content }: any) => {
+const ErrorLayout = ({ title, feebackContinue, content }: any) => {
 
   return (
     <div className="pt-5 relative">
-      <img src={wrongTipImg} alt="" className="absolute w-[2rem] -top-3 right-20"/>
+      <img src={wrongTipImg} alt="" className="absolute w-[2rem] -top-3 right-20" />
       <div className="px-16">
         <p className="text-sm font-[500]">{title}</p>
         <p className="text-lg font-[600]">{content}</p>
@@ -41,7 +41,7 @@ const ErrorLayout = ({ title, content }: any) => {
   );
 };
 
-const SuccessLayout = ({ title, content, onContinue }: any) => {
+const SuccessLayout = ({ title, feedbackContinue, content, onContinue }: any) => {
   const mouseEnter = (e: any) => {
     e.target.src = continueActiveImg;
   };
@@ -52,13 +52,13 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
 
   const handleContinueClick = (e: any) => {
     audioManager.playContinue();
-    console.log("moving to next slide ")
+    // console.log("moving to next slide ")
     onContinue(e);
   }
 
   return (
     <div className="h-full flex justify-center flex-col relative">
-      <img src={correctTipImg} alt="" className="absolute w-[2rem] -top-3 right-20"/>
+      <img src={correctTipImg} alt="" className="absolute w-[2rem] -top-3 right-20" />
       <div className="flex items-center space-x-2 relative">
         <img src={penguinImg} alt="" className="max-h-[90px]" />
         <div className="mr-auto">
@@ -66,16 +66,19 @@ const SuccessLayout = ({ title, content, onContinue }: any) => {
           <p className="font-[600]">{content}</p>
         </div>
       </div>
-      <div className="flex justify-end mt-3">
-        <button onClick={handleContinueClick} className="w-[30%] hover:scale-[1.08]">
-          <img
-            src={continueImg}
-            alt=""
-            onMouseEnter={mouseEnter}
-            onMouseLeave={mouseLeave}
-          />
-        </button>
-      </div>
+      {
+        feedbackContinue &&
+        <div className="flex justify-end mt-3">
+          <button onClick={handleContinueClick} className="w-[30%] hover:scale-[1.08]">
+            <img
+              src={continueImg}
+              alt=""
+              onMouseEnter={mouseEnter}
+              onMouseLeave={mouseLeave}
+            />
+          </button>
+        </div>
+      }
     </div>
   );
 };
@@ -90,11 +93,12 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     const [title, setTitle] = useState("");
     const [canProceed, setCanProceed] = useState<boolean>(true);
     const [feedbackState, setFeedbackState] = useState<FeedbackType | null>(null);
-    
+    const [feedbackContinue, setFeedbackContinue] = useState(false)
+
     const isWrong = feedbackState === FeedbackType.WRONG;
-    
+
     const onClose = () => setIsVisible(!isVisible);
-    
+
 
     const setValues = (title: string, content: string, state: FeedbackType, visible = true) => {
       setTitle(title);
@@ -104,7 +108,7 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     };
 
     const handleContinue = () => {
-      if ( canProceed ) {
+      if (canProceed) {
         onContinue && onContinue();
       } else {
         setIsVisible(false);
@@ -112,7 +116,7 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     }
 
     useImperativeHandle(ref, () => ({
-      showFeedback(title: string, content: string, type: FeedbackType, shouldContinue? : boolean) {
+      showFeedback(title: string, content: string, type: FeedbackType, shouldContinue?: boolean) {
         type === FeedbackType.WRONG ?
           audioManager.playWrong()
           :
@@ -122,6 +126,9 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
       },
       hideFeedback() {
         setIsVisible(false);
+      },
+      toggleContinue: (value: boolean) => {
+        setFeedbackContinue(value);
       },
     }));
     ;
@@ -146,9 +153,9 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
             <img src={isWrong ? errorBg : successBg} alt="" />
             <div className="absolute top-0 w-full px-3 h-full">
               {isWrong ? (
-                <ErrorLayout {...{ title, content }} />
+                <ErrorLayout {...{ title, content, feedbackContinue }} />
               ) : (
-                <SuccessLayout {...{ title, content, onContinue }} />
+                <SuccessLayout {...{ title, content, feedbackContinue, onContinue }} />
               )}
             </div>
           </div>

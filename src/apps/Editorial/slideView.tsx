@@ -20,6 +20,7 @@ const EditorialSlideView: FC<Props> = ({
     setActiveSlide,
     handleContinue,
     setCanProceed,
+    
 }) => {
     const hasSlides = () => parsedSlides.length !== 0;
     return (

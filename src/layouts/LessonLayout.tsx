@@ -4,6 +4,7 @@ import LessonFooter from "components/NewLesson/Layout/LesssonFooter";
 import ChatSection from "components/ChatSection/ChatSection";
 import { ReactNode, useEffect, FC, useRef, useState } from "react";
 
+
 import "./LessonLayout.css";
 // import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
@@ -11,7 +12,7 @@ import TransitionButton from "components/NewLesson/Buttons/TransitionButton"
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 import { LessonContext } from "contexts/LessonContext";
-
+import StartScreen from "components/NewLesson/Layout/StartScreen";
 
 
 export interface LessonLayoutProps {
@@ -33,6 +34,7 @@ interface NavigationHandles {
 interface LessonStateActions {
   setActiveSlide: Function;
   setCanProceed: Function;
+  // setFeedbackCanProceed: Function;
 }
 
 export interface LessonSlideProps {
@@ -53,15 +55,19 @@ export default function LessonLayout({
 }: LessonLayoutProps) {
 
 
-  const [currentLesson, setCurrentLesson] = useState(chapters[0]?.lessons[0] ?? null);
+  const isPreview = !!lesson;
+
+  const [currentLesson, setCurrentLesson] = useState<any>(isPreview ? chapters[0]?.lessons[0] : null);
   const [currentChapter, setCurrentChapter] = useState(lesson ? lesson.Chapter : chapters[0]);
   const slideManagerRef = useRef<any>(null);
-  const [canProceed, setCanProceed] = useState(false);
   const [activeSlide, setActiveSlide] = useState(1);
   const [sideBarOpen, setSideBarOpen] = useState(true)
   const [showAI, setShowAI] = useState(false);
 
+  const lessonFooterRef = useRef<any>(null);
+
   const feedbackRef = useRef<any>(null);
+
 
   const getCurrentChapter = (chapter_id: number) => {
     return chapters.find((i: any) => i.id === chapter_id);
@@ -69,22 +75,33 @@ export default function LessonLayout({
 
   const lessonHasSlides = () => Boolean(currentLesson?.lesson_slides && currentLesson.lesson_slides.length);
 
+  const slideHasQuestion = (lesson: any) => {
+    const slides = lesson.lesson_slides;
+    if (slides && slides.length) {
+      const currentSlide = slides.length ? slides[activeSlide - 1] : null;
+      if (currentSlide) {
+        const hasQuestion = currentSlide.slide_data.find((item: any) => item.component == "Questions");
+        return !!hasQuestion;
+      }
+      return false;
+    }
+    return false;
+  }
+
   const handleContinue = () => {
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
-    console.log("really moving on to the next slide now")
     if (currentLesson && (currentSlideIndex === currentLesson.lesson_slides.length - 1)) {
       // back();
     } else {
       slideManagerRef?.current?.navigator(1);
       setActiveSlide(activeSlide + 1);
       feedbackRef?.current.hideFeedback();
-      setCanProceed(false);
     }
   };
 
   const handlePrevious = () => {
     slideManagerRef?.current?.navigator(-1);
-    setCanProceed(false);
+    setActiveSlide(activeSlide - 1);
   };
 
   const handleShowAI = () => {
@@ -102,7 +119,14 @@ export default function LessonLayout({
     navigationHandles: { continue: handleContinue, previous: handlePrevious },
     slides: currentLesson?.lesson_slides ?? [],
     stateActions: {
-      setActiveSlide, setCanProceed
+      setActiveSlide,
+      setCanProceed: (value: boolean, data: any = {}) => {
+        // console.log("data from lesson layout", data)
+        if (!data.hasFeedback) {
+          lessonFooterRef?.current && lessonFooterRef?.current.toggleContinue(value);
+        }
+        feedbackRef?.current && feedbackRef?.current.toggleContinue(value);
+      }
     }
   }
 
@@ -111,6 +135,16 @@ export default function LessonLayout({
       setCurrentChapter(getCurrentChapter(currentLesson?.chapter_id));
     }
   }, [currentLesson]);
+
+  useEffect(() => {
+    if (currentLesson) {
+      if (slideHasQuestion(currentLesson)) {
+        lessonFooterRef?.current.toggleContinue(false);
+      } else {
+        lessonFooterRef?.current.toggleContinue(true);
+      }
+    }
+  }, [activeSlide, currentLesson]);
 
   return (
     <>
@@ -128,41 +162,66 @@ export default function LessonLayout({
           />
         }
         <div className="flex flex-col w-full relative justify-between border-l h-screen">
+
           <LessonHeader
             getChapter={null}
             chapter={currentChapter}
             activeSlide={activeSlide}
             sideBarOpen={sideBarOpen}
-            currentLesson={currentLesson} r
+            currentLesson={currentLesson}
           />
           <div className="flex w-full">
             <div className={`${showAI ? "w-[65%] pointer-events-none" : "w-full"} relative z-[1200]`}>
               {showAI &&
                 <div className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
                   <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-[#7E1593] text-white font-[600] text-[23px]">
-                    close chat
+                    &times; close chat
                   </button>
                 </div>
               }
-              <div className="relative px-28 flex grow flex-col overflow-x-hidden  border-green-500 h-[calc(100vh_-_170px)] overflow-y-auto">
+              <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
                 <ToggleNavBtn isOpen={sideBarOpen} handleClick={() => setSideBarOpen(!sideBarOpen)} />
-                <LessonContext.Provider value={{
-                  lesson,
-                  feedbackRef
-                }}>
-                  {lessonSlides && lessonSlides(
-                    { ...lessonSlidesArgs }
-                  )}
-                  {children}
-                </LessonContext.Provider>
+                {currentLesson ?
+                  <LessonContext.Provider value={{
+                    lesson,
+                    feedbackRef
+                  }}>
+                    {lessonSlides && lessonSlides(
+                      { ...lessonSlidesArgs }
+                    )}
+                    {children}
+                  </LessonContext.Provider>
+
+                  : <StartScreen />
+                }
               </div>
               <div className="relative w-full h-[80px]">
-                { !showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button> }
-                <LessonFooter chatVisible={showAI} previous={handlePrevious} closePreview={closePreview} isPreview={!!lesson} next={handleContinue} />
+                {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
+                {currentLesson &&
+                  <div className="absolute right-10 -top-8">
+                    <TransitionButton
+                      strings={["AI TUTOR", "Explain this screen"]}
+                      handleShowAI={handleShowAI}
+                    />
+                  </div>
+                }
+
+                <LessonFooter
+                  ref={lessonFooterRef}
+                  currentLesson={currentLesson}
+                  hasPrevious={activeSlide > 1}
+                  handleShowAI={handleShowAI}
+                  feedbackRef={feedbackRef}
+                  chatVisible={showAI}
+                  previous={handlePrevious}
+                  closePreview={closePreview}
+                  isPreview={!!lesson}
+                  next={handleContinue}
+                />
               </div>
             </div>
-            <ChatSection visible={showAI} lesson={currentLesson} slide={activeSlide}/>
+            <ChatSection visible={showAI} lesson={currentLesson} slide={activeSlide} />
           </div>
         </div>
       </div>

@@ -36,6 +36,7 @@ const OptionButtonSelection = () => {
 const LessonSlides = ({
   handlePrevious,
   handleContinue,
+  setFeedbackCanProceed,
   slideManagerRef,
   setCanProceed,
   setActiveSlide,
@@ -74,7 +75,8 @@ const LessonSlides = ({
           <SlideManager
             lessonSlides={slides.map((slide : any) => slide.slide_data)}
             ref={slideManagerRef}
-            canProceed={(val: boolean) => setCanProceed(val)}
+            canProceed={setCanProceed}
+            canFeedbackProceed={(val: boolean) => setFeedbackCanProceed(val)}
             handleFeedback={() => false}
             updateActiveSlide={(i: number) => setActiveSlide(i)}
           />
