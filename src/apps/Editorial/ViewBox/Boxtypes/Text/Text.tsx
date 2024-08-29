@@ -47,7 +47,7 @@ const Text: FC<CanvasText> = ({
         initializeParentTag(editableRef, true);
         const editableChildren = editableRef.current?.children;
         const mainElement = editableChildren?.length
-            ? editableChildren[0]
+            ? editableChildren[editableChildren.length-1]
             : null;
         if (mainElement) {
             const input = document.createElement("input");
