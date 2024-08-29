@@ -255,7 +255,6 @@ const ActiveQuestion: FC<Props> = ({
         if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
             updateInputsData();
         }
-        console.log(inputs);
     }, [inputs]);
 
     useEffect(() => {

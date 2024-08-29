@@ -74,10 +74,6 @@ const InputSideModal: FC<Props> = ({ input, setInputs, closeModal}) => {
         if ( input.linkState == InputLinkedStates.Unlinked ) {
             manager.event.emit("unlinkInput", { hash : input.hash });
         }
-        // setInputSizes({
-        //     width : input.layout?.size?.width ?? 100,
-        //     height : input.layout?.size?.height ?? 50
-        // })
     },[input]);
 
     return (
