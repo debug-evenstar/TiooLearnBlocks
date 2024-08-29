@@ -40,7 +40,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
       <h2 className="text-center pt-[35px] text-base text-[#87909E] font-normal">
         {slides.length} Slides
       </h2>
-      <div className="w-full h-full mt-[44px] mb-12">
+      <div className="slides-list-preview w-full h-full mt-[44px] mb-12">
         {slides.map((item: any, index: number) => (
           <div
             className="relative h-[208px] border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100"
