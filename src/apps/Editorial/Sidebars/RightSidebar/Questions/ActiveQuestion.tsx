@@ -222,6 +222,25 @@ const ActiveQuestion: FC<Props> = ({
         });
     };
 
+    const updateInputsData = () => {
+        setQuestions((prev: any) => {
+            const questionIndex = prev.findIndex(
+                (q: QuestionInterface) => question.hash == q.hash
+            );
+            question.inputs = [...inputs];
+            prev[questionIndex] = question;
+            return [...prev];
+        });
+        if (activeInput) {
+            setActiveInput(
+                inputs.filter(
+                    (input: InputInterface) =>
+                        input.hash == activeInput.hash
+                )[0]
+            );
+        }
+    };
+
     useEffect(() => {
         // Temporary solution to prevent multiple update
         if (JSON.stringify(options) !== JSON.stringify(question.options)) {
@@ -233,29 +252,15 @@ const ActiveQuestion: FC<Props> = ({
     }, [options, optionType]);
 
     useEffect(() => {
-        searchTopic(topicSearchValue);
-    }, [linkedTopics]);
+        if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
+            updateInputsData();
+        }
+        console.log(inputs);
+    }, [inputs]);
 
     useEffect(() => {
-        if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
-            setQuestions((prev: any) => {
-                const questionIndex = prev.findIndex(
-                    (q: QuestionInterface) => question.hash == q.hash
-                );
-                question.inputs = [...inputs];
-                prev[questionIndex] = question;
-                return [...prev];
-            });
-            if (activeInput) {
-                setActiveInput(
-                    inputs.filter(
-                        (input: InputInterface) =>
-                            input.hash == activeInput.hash
-                    )[0]
-                );
-            }
-        }
-    }, [inputs]);
+        searchTopic(topicSearchValue);
+    }, [linkedTopics]);
 
     useEffect(() => {
         if (optionType !== question.optionType) {
@@ -271,7 +276,9 @@ const ActiveQuestion: FC<Props> = ({
         question.optionType &&
             optionType !== question.optionType &&
             setOptionType(question.optionType);
-
+        if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
+            question.inputs && setInputs(question.inputs);
+        }
         loadTopics();
     }, [question]); //Possible loop
 

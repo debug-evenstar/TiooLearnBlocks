@@ -31,7 +31,7 @@ const RenderInputs: FC<{
                         )}
                     </LayoutComponent>
                 ) : (
-                    <></>
+                    <div key={inputIndex + input.title}></div>
                 );
             })}
         </>
