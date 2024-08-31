@@ -92,7 +92,9 @@ const ActiveQuestion: FC<Props> = ({
             value: title,
             layout: setComponentLayout(
                 manager.canvasManager.canvas.getCanvasSize(),
-                { size: { width: 100, height: 50 } }
+                { 
+                    size: { width: 100, height: 50 }
+                }
             ),
         };
         return option;

@@ -179,12 +179,20 @@ const Text: FC<CanvasText> = ({
     useEffect(() => {
         manager.event.listen("unlinkInput", (data : any) => {
             try{
-                const inputField = document.querySelector(`input[data-hash=${data.hash}]`);
-                inputField && inputField?.parentElement?.removeChild(inputField);
+                const newEditableNode = editableRef?.current?.cloneNode(true) as HTMLElement;
+                if (newEditableNode){
+                    const inputField = newEditableNode.querySelector(`input[data-hash='${data.hash}']`);
+                    if ( inputField ) {
+                        inputField?.parentElement?.removeChild(inputField);
+                        if(editableRef?.current){
+                            editableRef.current.innerHTML = newEditableNode.innerHTML; 
+                        }
+                        onChange({ target : newEditableNode.innerHTML});
+                    }
+                }
             } catch(error) {console.log(error)}
-
         })
-    },[manager]);
+    }, []);
 
     return (
         <div

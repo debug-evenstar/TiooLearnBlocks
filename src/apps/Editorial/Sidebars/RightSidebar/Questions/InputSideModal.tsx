@@ -45,13 +45,15 @@ const InputSideModal: FC<Props> = ({ input, setInputs, closeModal}) => {
     }
 
     const handleLinkInput = (event : any) => {
-        updateInputData({ linkState : 
-            inputState().isUnlinked ? InputLinkedStates.PendingLink 
-                : inputState().isLinked ? InputLinkedStates.Unlinked : input.linkState 
-        });
+        const newState = inputState().isUnlinked ? InputLinkedStates.PendingLink 
+        : inputState().isLinked ? InputLinkedStates.Unlinked : input.linkState;
+        updateInputData({ linkState : newState});
+        if (newState == InputLinkedStates.Unlinked) {
+            manager.event.emit("unlinkInput", { hash : input.hash });
+        }
         setTimeout(() => {
             closeModal();
-        },200);
+        },300);
     }
 
     // const saveInputSize = (data : {width? : number, height? : number}) => {
@@ -71,9 +73,6 @@ const InputSideModal: FC<Props> = ({ input, setInputs, closeModal}) => {
 
     useEffect(()=>{
         setInputTitle(input.title);
-        if ( input.linkState == InputLinkedStates.Unlinked ) {
-            manager.event.emit("unlinkInput", { hash : input.hash });
-        }
     },[input]);
 
     return (

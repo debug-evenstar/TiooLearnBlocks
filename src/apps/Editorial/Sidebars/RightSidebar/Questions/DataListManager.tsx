@@ -44,7 +44,7 @@ const DataListManager: FC<Props> = ({
     richText = false,
     canToggle = false,
     onToggle = () => {},
-    toggleStates = []
+    toggleStates = [],
 }) => {
     const [isListOpen, setIsListOpen] = useState<boolean>(false);
     const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
@@ -66,7 +66,7 @@ const DataListManager: FC<Props> = ({
 
         // Create question object :: work in progress
         const item = generateItem(title);
-        setIsHidden([...isHidden, false])
+        setIsHidden([...isHidden, false]);
         setData((prev: any) => [...prev, item]);
         setIsAddingItem(false);
     };
@@ -80,10 +80,9 @@ const DataListManager: FC<Props> = ({
 
     const titleIsUrl = (title: string) => title.includes("https://");
 
-    useEffect(()=>{
+    useEffect(() => {
         if (canToggle) {
-            setIsHidden(toggleStates.map((t:boolean) => !t));
-
+            setIsHidden(toggleStates.map((t: boolean) => !t));
         }
     }, [toggleStates]);
 
@@ -102,7 +101,7 @@ const DataListManager: FC<Props> = ({
             </button>
             {isListOpen && (
                 <div className="w-full py-2">
-                    {data.map((item: any, index : number) => (
+                    {data.map((item: any, index: number) => (
                         <div
                             className="w-full px-3 text-[14px] flex items-center justify-between mb-1 hover:bg-[#f1f1f1]"
                             key={item.hash}
@@ -128,38 +127,53 @@ const DataListManager: FC<Props> = ({
                                 </a>
                                 {!titleIsUrl(item.title) &&
                                     (richText ? (
-                                        <div
+                                        <button
                                             dangerouslySetInnerHTML={{
                                                 __html: item.title,
                                             }}
-                                        ></div>
+                                            onClick={() => setActiveItem(item)}
+                                        ></button>
                                     ) : (
                                         item.title
                                     ))}
                                 {titleIsUrl(item.title) && (
-                                    <img
-                                        className="max-h-[35px]"
-                                        src={item.title}
-                                        alt="Item"
-                                    />
+                                    <button onClick={() => setActiveItem(item)}>
+                                        <img
+                                            className="max-h-[35px]"
+                                            src={item.title}
+                                            alt="Item"
+                                        />
+                                    </button>
                                 )}
                             </button>
-                            { canToggle && <>
-                                {isHidden[index] && <FaEye
-                                    className="text-[14px] text-gray-500 justify-self-end mr-1 cursor-pointer"
-                                    onClick={() => {
-                                        onToggle(item, true);
-                                        setIsHidden((prev : any) => { prev[index] = false; return [...prev]});
-                                    }}
-                                />}
-                                {!isHidden[index] && <FaEyeSlash
-                                    className="text-[14px] text-gray-500 justify-self-end mr-1 cursor-pointer"
-                                    onClick={() => {
-                                        onToggle(item, false);
-                                        setIsHidden((prev : any) => { prev[index] = true; return [...prev]});
-                                    }}
-                                />}
-                            </>}
+                            {canToggle && (
+                                <>
+                                    {isHidden[index] && (
+                                        <FaEye
+                                            className="text-[14px] text-gray-500 justify-self-end mr-1 cursor-pointer"
+                                            onClick={() => {
+                                                onToggle(item, true);
+                                                setIsHidden((prev: any) => {
+                                                    prev[index] = false;
+                                                    return [...prev];
+                                                });
+                                            }}
+                                        />
+                                    )}
+                                    {!isHidden[index] && (
+                                        <FaEyeSlash
+                                            className="text-[14px] text-gray-500 justify-self-end mr-1 cursor-pointer"
+                                            onClick={() => {
+                                                onToggle(item, false);
+                                                setIsHidden((prev: any) => {
+                                                    prev[index] = true;
+                                                    return [...prev];
+                                                });
+                                            }}
+                                        />
+                                    )}
+                                </>
+                            )}
                             <FaTrash
                                 className="text-[14px] text-red-500 justify-self-end ml-1 cursor-pointer"
                                 onClick={() => deleteData(item)}
