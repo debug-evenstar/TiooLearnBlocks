@@ -14,7 +14,7 @@ export declare const textComponentData: (content?: string, tips?: string[]) => T
 export declare const wrapTextData: (content: string) => string;
 export declare const getRange: () => Range | undefined;
 export declare const handleTextChange: (event: any, manager: ManagerInterface) => void;
-export declare const initializeParentTag: (editableRef: React.RefObject<HTMLDivElement>) => void;
+export declare const initializeParentTag: (editableRef: React.RefObject<HTMLDivElement>, force?: boolean) => void;
 export declare const resizeBox: (editableRef: React.RefObject<HTMLDivElement>, viewBoxRef: React.MutableRefObject<any>, textareaRowCount: number, setTextareaRowCount: (value: React.SetStateAction<number>) => void, event?: any | null) => void;
 export declare const formatText: (type: TextFormatType, tag: string | HTMLElement, styles?: {
     [key: string]: string;
