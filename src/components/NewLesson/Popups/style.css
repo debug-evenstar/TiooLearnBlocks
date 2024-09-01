@@ -1,9 +1,13 @@
 .popup-bg-error{
-  background: url('../../../img/popup/error-popup-bg.svg')
+  background: url('../../../img/popup/error-popup-bg.svg');
+  background-size: contain;
+  background-color: #FC8B52;
 }
 
 .popup-bg-success{
-  background: url('../../../img/popup/success-popup-bg.svg')
+  background: url('../../../img/popup/success-popup-bg.svg');
+  background-size: cover;
+  background-color: #2D6A4F;
 }
 
 
