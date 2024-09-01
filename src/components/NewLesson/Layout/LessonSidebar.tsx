@@ -4,7 +4,8 @@ import readingImg from "../../../img/reading.svg";
 // import assessmentImg from "img/assessment.svg";
 
 import LeftArrow from "FigmaIcons/LeftArrow";
-import { FC, useState } from "react";
+import { FC, forwardRef, useImperativeHandle, useState } from "react";
+import { SidebarManager } from "apps/Editorial/Base/SidebarManager";
 
 interface LessonProps {
   type: "reading" | "assessment";
@@ -68,26 +69,31 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
   );
 };
 
-const LessonSidebar: FC<any> = ({
+const LessonSidebar: FC<any> = forwardRef(({
   chapters,
-  isOpen,
-  close,
   textbook,
   setCurrentLesson,
-}) => {
+}, ref) => {
+  const [sideBarOpen, setSideBarOpen] = useState(true)
 
+
+  useImperativeHandle(ref,() => ({
+    sideBarOpen, setSideBarOpen,
+    toggleSideBar: () => setSideBarOpen(!sideBarOpen)
+  }))
+
+  const close = () => setSideBarOpen(false);
   const getClassName = () => 
-    isOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-300 transition-all overflow-y-auto max-h-screen h-screen`
+    sideBarOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-300 transition-all overflow-y-auto max-h-screen h-screen`
     : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-300 transition-all overflow-y-auto max-h-screen h-screen`;
-
 
   return (
     // <div className="w-[413px] px-10 py-4 border-r h-[980px] ">
     <div
       className={getClassName()}
     >
-      {isOpen && (
-        <div className="absolute z-[10000] bg-white h-screen sm:w-auto w-screen py-4">
+      {sideBarOpen && (
+        <div className="absolute z-[10000] sm:z-0 bg-white h-screen sm:w-auto w-screen py-4">
           <div className="px-10 flex items-center justify-between">
             <img src={logoImg} alt="" className="" />
             <button className="sm:hidden" onClick={() => close()} >&times;</button>
@@ -116,6 +122,6 @@ const LessonSidebar: FC<any> = ({
       )}  
     </div>
   );
-};
+});
 
 export default LessonSidebar;

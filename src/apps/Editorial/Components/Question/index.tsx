@@ -211,7 +211,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                         )}
                     </MovableResizer>
                 ) : (
-                    <div key={index}></div>
+                    <div key={index + option.title}></div>
                 );
             })}
             {allInputs.map((input: InputInterface, index: number) => {
@@ -247,7 +247,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                             </button> */}
                     </MovableResizer>
                 ) : (
-                    <div key={index}></div>
+                    <div key={index + input.title}></div>
                 );
             })}
         </>

@@ -89,13 +89,14 @@ const setDefaultStyles = (element: HTMLElement) => {
 /* ---------------- WRAP EDITABLE CONTENT IN PARENT TEXT TAG ---------------- */
 
 export const initializeParentTag = (
-    editableRef: React.RefObject<HTMLDivElement>
+    editableRef: React.RefObject<HTMLDivElement>,
+    force : boolean = false
 ) => {
     const editable: any = editableRef.current;
     let parentTag: any = editable.querySelector("p.main");
     if (
         !parentTag &&
-        editable.innerHTML &&
+        (editable.innerHTML || force) &&
         !startsWithHtmlTextTag(editable.innerHTML)
     ) {
         const textNode = document.createTextNode(editable.innerHTML);

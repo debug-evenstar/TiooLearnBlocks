@@ -44,10 +44,10 @@ const Text: FC<CanvasText> = ({
 
     const appendInput = (data: any) => {
         // Initialize editable if not initialized
-        initializeParentTag(editableRef);
+        initializeParentTag(editableRef, true);
         const editableChildren = editableRef.current?.children;
         const mainElement = editableChildren?.length
-            ? editableChildren[0]
+            ? editableChildren[editableChildren.length-1]
             : null;
         if (mainElement) {
             const input = document.createElement("input");
@@ -178,10 +178,21 @@ const Text: FC<CanvasText> = ({
 
     useEffect(() => {
         manager.event.listen("unlinkInput", (data : any) => {
-            const inputField = document.querySelector(`input[data-hash=${data.hash}]`);
-            inputField && inputField?.parentElement?.removeChild(inputField);
+            try{
+                const newEditableNode = editableRef?.current?.cloneNode(true) as HTMLElement;
+                if (newEditableNode){
+                    const inputField = newEditableNode.querySelector(`input[data-hash='${data.hash}']`);
+                    if ( inputField ) {
+                        inputField?.parentElement?.removeChild(inputField);
+                        if(editableRef?.current){
+                            editableRef.current.innerHTML = newEditableNode.innerHTML; 
+                        }
+                        onChange({ target : newEditableNode.innerHTML});
+                    }
+                }
+            } catch(error) {console.log(error)}
         })
-    },[manager]);
+    }, []);
 
     return (
         <div

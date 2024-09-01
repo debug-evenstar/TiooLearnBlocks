@@ -78,13 +78,14 @@ export default function LessonLayout({
   const [currentChapter, setCurrentChapter] = useState(lesson ? lesson.Chapter : chapters[0]);
   const slideManagerRef = useRef<any>(null);
   const [activeSlide, setActiveSlide] = useState(1);
-  const [sideBarOpen, setSideBarOpen] = useState(true)
   const [showAI, setShowAI] = useState(false);
 
   const lessonFooterRef = useRef<any>(null);
-
+  const lessonSidebarRef = useRef<any>(null);
   const feedbackRef = useRef<any>(null);
-
+  
+  const sideBarOpen = lessonSidebarRef?.current?.sideBarOpen;
+  const setSideBarOpen = lessonSidebarRef?.current?.setSideBarOpen;
 
   const getCurrentChapter = (chapter_id: number) => {
     return chapters.find((i: any) => i.id === chapter_id);
@@ -131,6 +132,11 @@ export default function LessonLayout({
     setSideBarOpen(true);
   }
 
+  const toggleSidebar = () => {
+    if(lessonSidebarRef.current){
+      lessonSidebarRef.current.toggleSideBar();
+    }
+  }
   const lessonSlidesArgs: LessonSlideProps = {
     managerRef: slideManagerRef,
     navigationHandles: { continue: handleContinue, previous: handlePrevious },
@@ -171,15 +177,12 @@ export default function LessonLayout({
       />
       <div className="flex bg-white z-[1000] w-full overflow-hidden urbanist">
         {
-          sideBar &&
           <LessonSidebar
-            isOpen={sideBarOpen}
-            close={() => setSideBarOpen(false)}
+            ref={lessonSidebarRef}
             {...{ chapters, textbook, setCurrentLesson }}
           />
         }
         <div className="flex flex-col w-full relative justify-between border-l h-screen">
-
           <LessonHeader
             getChapter={null}
             chapter={currentChapter}
@@ -198,7 +201,7 @@ export default function LessonLayout({
               }
               <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
-                <ToggleNavBtn isOpen={sideBarOpen} handleClick={() => setSideBarOpen(!sideBarOpen)} />
+                <ToggleNavBtn  handleClick={() => toggleSidebar()} />
                 {currentLesson ?
                   <LessonContext.Provider value={{
                     lesson,

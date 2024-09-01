@@ -12,6 +12,7 @@ import { ComponentBaseDataInterface } from "components/interface";
 import PreviewLayout from "./Preview/PreviewLayout";
 import LessonLayout from "layouts/LessonLayout";
 import { height } from "@mui/system";
+import RenderPreview from "./Preview/RenderPreview";
 
 interface Props {
   active: number;
@@ -33,69 +34,6 @@ const ActiveEditSlide: FC<Props> = ({
   const [previewSlide, setPreviewSlide] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
-
-  const RenderPreview : FC<{
-    slide : any,
-    subject : string,
-    title : string
-  }> = ({slide, subject, title}) => {
-
-    const chapters = [
-      {
-        ...data.Chapter,lessons:[
-          {
-            ...data,
-              slides: [
-                slide
-              ]
-          }
-        ]
-      }
-    ];
-    const [calculatedArea, setCalculatedArea] = useState<{width : number, height : number}>({width : 0 , height : 0});
-    const [clientHeight , setClientHeight] = useState<any>(0);
-    const contRef : React.RefObject<any> = createRef();
-
-
-    useEffect(()=>{
-      if (contRef?.current)
-      if ( contRef?.current.clientHeight !== clientHeight ) {
-        setCalculatedArea({
-          width : contRef?.current ? contRef?.current.clientHeight * 1.6 : 0,
-          height : contRef?.current?.clientHeight ?? 0
-        });
-        setClientHeight(contRef?.current.clientHeight ?? 0);
-      }
-    }, [contRef?.current])
-
-    return (
-      <LessonLayout textbook={{}} lesson={data} closePreview={() => setPreviewSlide(false)} sideBar={false} chapters={chapters}  >
-        <div 
-          ref={contRef}
-          className="w-full h-full relative"
-        >
-          <div
-            style={{
-              width : calculatedArea.width,
-            }}
-            className="mx-auto h-full relative bg-[#fafafa]"
-          >
-            {slide.map((component: ComponentBaseDataInterface, index: number) => {
-              const Component = loadComponent(component);
-              const viewArea = { width : calculatedArea.width, height : calculatedArea.height };
-              return component.layout
-                  ? (
-                      <LayoutComponent layout={component.layout}>
-                        <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>
-                      </LayoutComponent>
-                  )
-                  : <Component key={index} data={component} slide={SlideScope} viewArea={viewArea}/>;
-            })}
-          </div>
-        </div>
-      </LessonLayout>
-    );
-  };
 
 
   const saveSlide = () => {
@@ -160,6 +98,9 @@ const ActiveEditSlide: FC<Props> = ({
                   slide={previewSlideData}
                   subject={data.Subject?.naming}
                   title={data.topic}
+                  lesson={data}
+                  setPreviewSlide={setPreviewSlide}
+                  slideScope={SlideScope}
               />
             </div>
           </div>

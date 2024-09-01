@@ -92,7 +92,9 @@ const ActiveQuestion: FC<Props> = ({
             value: title,
             layout: setComponentLayout(
                 manager.canvasManager.canvas.getCanvasSize(),
-                { size: { width: 100, height: 50 } }
+                { 
+                    size: { width: 100, height: 50 }
+                }
             ),
         };
         return option;
@@ -222,6 +224,25 @@ const ActiveQuestion: FC<Props> = ({
         });
     };
 
+    const updateInputsData = () => {
+        setQuestions((prev: any) => {
+            const questionIndex = prev.findIndex(
+                (q: QuestionInterface) => question.hash == q.hash
+            );
+            question.inputs = [...inputs];
+            prev[questionIndex] = question;
+            return [...prev];
+        });
+        if (activeInput) {
+            setActiveInput(
+                inputs.filter(
+                    (input: InputInterface) =>
+                        input.hash == activeInput.hash
+                )[0]
+            );
+        }
+    };
+
     useEffect(() => {
         // Temporary solution to prevent multiple update
         if (JSON.stringify(options) !== JSON.stringify(question.options)) {
@@ -233,29 +254,14 @@ const ActiveQuestion: FC<Props> = ({
     }, [options, optionType]);
 
     useEffect(() => {
-        searchTopic(topicSearchValue);
-    }, [linkedTopics]);
-
-    useEffect(() => {
         if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
-            setQuestions((prev: any) => {
-                const questionIndex = prev.findIndex(
-                    (q: QuestionInterface) => question.hash == q.hash
-                );
-                question.inputs = [...inputs];
-                prev[questionIndex] = question;
-                return [...prev];
-            });
-            if (activeInput) {
-                setActiveInput(
-                    inputs.filter(
-                        (input: InputInterface) =>
-                            input.hash == activeInput.hash
-                    )[0]
-                );
-            }
+            updateInputsData();
         }
     }, [inputs]);
+
+    useEffect(() => {
+        searchTopic(topicSearchValue);
+    }, [linkedTopics]);
 
     useEffect(() => {
         if (optionType !== question.optionType) {
@@ -271,7 +277,9 @@ const ActiveQuestion: FC<Props> = ({
         question.optionType &&
             optionType !== question.optionType &&
             setOptionType(question.optionType);
-
+        if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
+            question.inputs && setInputs(question.inputs);
+        }
         loadTopics();
     }, [question]); //Possible loop
 

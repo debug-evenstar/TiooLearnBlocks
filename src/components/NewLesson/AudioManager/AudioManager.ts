@@ -22,8 +22,8 @@ class AudioManager {
   public playSound(sound: any) {
     const player = new Audio(sound);
     player.volume = 0.7
-    this.sound_on && player.play();
-    // player.play();
+    // this.sound_on && player.play();
+    player.play();
   }
 
   public playCorrect() {

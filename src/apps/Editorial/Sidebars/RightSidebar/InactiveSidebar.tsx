@@ -238,7 +238,7 @@ const InactiveSidebar: FC<Props> = ({
             {showComp && (
                 <>
                     {!activeQuestion && (
-                        <div className="w-full mb-12">
+                        <div className="w-full mb-12 max-h-full overflow-y-scroll">
                             <h3 className="shadow-lg text-[15px] my-2 py-2 text-center text-[#87909E] font-medium">
                                 Components
                             </h3>
