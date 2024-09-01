@@ -53,7 +53,7 @@ const TextComponent: FC<TextComponentProps> = ({
     useEffect(() => {
         slide.on("answerQuestion", (data : any) => {
             // Check if any linked inputs exists and populate them
-            const linkedInput = document.querySelector(`.text-render input[data-question-hash=${data.question.hash}]`);
+            const linkedInput = document.querySelector(`.text-render input[data-question-hash='${data.question.hash}']`);
             if (linkedInput) {
                 const parent = linkedInput.parentElement;
                 const textFill = document.createElement("span");
