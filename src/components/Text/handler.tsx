@@ -196,3 +196,7 @@ export const buildTextData = (data: string, viewArea: any) => {
     });
     return abstractBody.innerHTML;
 };
+
+export const decorateActiveInput = (input : HTMLInputElement) => {
+    input.classList.add("input-is-active");
+}

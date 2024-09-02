@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import {
     TextComponentProps,
     buildTextData,
+    decorateActiveInput,
     formatTextContent,
 } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
@@ -19,6 +20,8 @@ const TextComponent: FC<TextComponentProps> = ({
     const [formatted, setFormatted] = useState<any[]>([]);
 
     const textContainerRef = useRef<any>(null);
+
+    const [activeInputIndex, setActiveInputIndex] = useState<number>(0);
 
     const hideText = () => {
         textContainerRef.current.style.display = "none";
@@ -63,6 +66,18 @@ const TextComponent: FC<TextComponentProps> = ({
             }
         });
     },[slide]);
+
+    // Style active inputs if present
+    useEffect(()=>{
+        const inputIsPresent = !!textContainerRef?.current?.querySelector("input");
+        if ( inputIsPresent ) {
+            const allInputs = Array.from(textContainerRef?.current?.querySelectorAll("input"));
+            if (allInputs.length > activeInputIndex) {
+                decorateActiveInput(allInputs[activeInputIndex] as HTMLInputElement);
+            }
+        }
+    },[activeInputIndex])
+    //-------------------------------
     return (
         <>
             <div className="text-render whitespace-normal" ref={textContainerRef}>

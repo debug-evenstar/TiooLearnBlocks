@@ -73,7 +73,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                         </p>
                         <div className="absolute w-full h-full opacity-0 bg-gray-400 z-10"></div>
                         <div className="text-preview relative z-0 shadow p-2 py-3 h-[198px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
-                            {/* {item.map(
+                            {item.map(
                                 (component: ComponentBaseDataInterface, componentIndex: number) => {
                                   const Component = loadComponent(component);
                                   const containerElement = slideRefs[index]?.current;
@@ -95,8 +95,8 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                                     />
                                   );
                                 }
-                              )} */}
-                            {isLoading && (
+                              )}
+                            {/* {isLoading && (
                                 <div className="w-full h-full flex justify-center items-center">
                                     <Rings
                                         visible={true}
@@ -108,8 +108,8 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                                         wrapperClass=""
                                     />
                                 </div>
-                            )}
-                            <div
+                            )} */}
+                            {/* <div
                                 style={{
                                     transform: `scale(${scalePercent})`,
                                     left: -(1 - parseFloat(scalePercent) + 0.1) * 100,
@@ -124,7 +124,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                                     raw={true}
                                     container={slideRefs[index]}
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 ))}
