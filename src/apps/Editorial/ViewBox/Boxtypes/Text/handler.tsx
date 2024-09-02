@@ -137,16 +137,16 @@ export const resizeBox = (
     const numberOfRows = Math.floor(editableDiv.scrollHeight / lineHeight);
     editableDiv.style.height = "auto";
     editableDiv.style.height = editableDiv.scrollHeight + "px";
-    const viewBox = viewBoxRef.current;
-    if (viewBox) {
-        if (numberOfRows > textareaRowCount) {
-            setTextareaRowCount(numberOfRows);
-            const heightDifference =
-                lineHeight * (numberOfRows - textareaRowCount);
-            const newHeight = viewBox.offsetHeight + heightDifference;
-            viewBox.style.height = newHeight + "px";
-        }
-    }
+    // const viewBox = viewBoxRef.current;
+    // if (viewBox) {
+    //     if (numberOfRows > textareaRowCount) {
+    //         setTextareaRowCount(numberOfRows);
+    //         const heightDifference =
+    //             lineHeight * (numberOfRows - textareaRowCount);
+    //         const newHeight = viewBox.offsetHeight + heightDifference;
+    //         viewBox.style.height = newHeight + "px";
+    //     }
+    // }
 };
 
 /* ----------------------- TEXT PROPERTIES AND ACTIONS ---------------------- */

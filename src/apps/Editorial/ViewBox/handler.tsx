@@ -27,7 +27,7 @@ export const calculateMaxResizableArea = (
   hasHandles: boolean = false
 ) => {
   const maxRight = canvasSize.right - viewBoxPosition.left;
-  const maxBottom = canvasSize.height - viewBoxPosition.top;
+  const maxBottom = canvasSize.bottom - viewBoxPosition.top;
   return {
     maxWidth: hasHandles ? maxRight - 50 : maxRight,
     maxHeight: maxBottom,

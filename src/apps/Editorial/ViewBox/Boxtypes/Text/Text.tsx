@@ -197,7 +197,7 @@ const Text: FC<CanvasText> = ({
     return (
         <div
             id={id}
-            className={`flex flex-col justify-between p-1 h-full w-full relative ${
+            className={`flex flex-col justify-between p-1 h-full w-full relative border-2 border-[#F8F7F7] ${
                 !isEditable && "handle cursor-move"
             }`}
             onDragEnter={(e) => setIsDraggedOver(true)}

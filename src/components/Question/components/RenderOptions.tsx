@@ -13,9 +13,10 @@ const RenderOptions: FC<{
     setAnswered : Function;
     question : QuestionInterface,
     questionIndex: number;
+    totalQuestions : number;
     slideManager : LessonSlideInterface,
     viewArea : any;
-}> = ({ options, answered, setAnswered, question, questionIndex, slideManager, viewArea }) => {
+}> = ({ options, answered, setAnswered, question, questionIndex,totalQuestions, slideManager, viewArea }) => {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [locked, setLocked] = useState<any[]>([]);
     const optionFontSizeFraction = 2;
@@ -60,7 +61,10 @@ const RenderOptions: FC<{
                 setLocked([...locked, option]);
             }, 1500);
         }
-        triggerFeedback(option, lessonContext, (updatedAnsweredList.length == "Length of question".length));
+        setTimeout(() => {
+
+        })
+        triggerFeedback(option, lessonContext, (updatedAnsweredList.length == totalQuestions));
     }
     const showOptionShadow = (questionIndex: number) => {
         return answered.length > questionIndex

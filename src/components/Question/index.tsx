@@ -72,6 +72,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea }
                             viewArea={viewArea}
                             question={question}
                             questionIndex={index}
+                            totalQuestions={questions.length}
                             slideManager={slide}
                         />}
                         <RenderInputs
