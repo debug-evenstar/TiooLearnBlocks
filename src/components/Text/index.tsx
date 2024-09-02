@@ -71,7 +71,8 @@ const TextComponent: FC<TextComponentProps> = ({
     useEffect(()=>{
         const inputIsPresent = !!textContainerRef?.current?.querySelector("input");
         if ( inputIsPresent ) {
-            const allInputs = Array.from(textContainerRef?.current?.querySelectorAll("input"));
+            // const allInputs = Array.from(textContainerRef?.current?.querySelectorAll("input"));
+            const allInputs = Array.from(document.querySelectorAll("active-slide-class input"));
             if (allInputs.length > activeInputIndex) {
                 decorateActiveInput(allInputs[activeInputIndex] as HTMLInputElement);
             }
