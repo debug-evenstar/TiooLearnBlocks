@@ -8,6 +8,7 @@ declare const RenderOptions: FC<{
     setAnswered: Function;
     question: QuestionInterface;
     questionIndex: number;
+    totalQuestions: number;
     slideManager: LessonSlideInterface;
     viewArea: any;
 }>;

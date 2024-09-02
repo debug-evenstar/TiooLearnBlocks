@@ -27,6 +27,7 @@ export interface CanvasManagerInterface {
     setActiveComponent: Function;
     updateActiveSlide: Function;
     updateSlides: Function;
+    updateComponentInSlide: Function;
     getComponentIndex: Function;
     getComponentData: Function;
     activeComponentElement: Function;
@@ -45,6 +46,7 @@ export declare class CanvasManager implements CanvasManagerInterface {
     };
     constructor(manager: ManagerInterface);
     setActiveComponent(id: string): void;
+    updateComponentInSlide(component: ComponentBaseDataInterface): void;
     updateActiveSlide(slideData: ComponentBaseDataInterface[]): void;
     updateSlides(): void;
     getComponentIndex(id: string): number | undefined;

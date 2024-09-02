@@ -18,4 +18,5 @@ export interface TextComponentProps extends ComponentBasePropsInterface {
 export declare const processTextStyles: () => void;
 export declare const formatTextContent: (content: string) => any;
 export declare const buildTextData: (data: string, viewArea: any) => string;
+export declare const decorateActiveInput: (input: HTMLInputElement) => void;
 export {};
