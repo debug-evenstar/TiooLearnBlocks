@@ -24,10 +24,11 @@ export enum FeedbackType {
 }
 
 interface FeedbackPopupProps {
-    ref: any;
-    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    onClose?: Function;
-    onContinue?: Function;
+  ref: any;
+  footerRef: any;
+  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  onClose?: Function;
+  onContinue?: Function;
 }
 
 // now everyone has access
@@ -103,8 +104,9 @@ const SuccessLayout = ({
 };
 
 const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
-    ({ position = "top-right", onContinue }, ref) => {
-        const divRef = useRef<any>(null);
+  ({ position = "top-right", onContinue, footerRef }, ref) => {
+
+    const divRef = useRef<any>(null);
 
         const [isVisible, setIsVisible] = useState(false);
         const [content, setContent] = useState("");
@@ -117,7 +119,12 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
 
         const isWrong = feedbackState === FeedbackType.WRONG;
 
-        const onClose = () => setIsVisible(!isVisible);
+    const onClose = () => {
+      setIsVisible(!isVisible);
+      if (feedbackContinue) {
+        footerRef?.current?.toggleContinue(true);
+      }
+    }
 
         const setValues = (
             title: string,
@@ -139,68 +146,55 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
             }
         };
 
-        useImperativeHandle(ref, () => ({
-            showFeedback(
-                title: string,
-                content: string,
-                type: FeedbackType,
-                shouldContinue?: boolean
-            ) {
-                type === FeedbackType.WRONG
-                    ? audioManager.playWrong()
-                    : audioManager.playCorrect();
-                setValues(title, content, type);
-                setCanProceed(!!shouldContinue);
-            },
-            hideFeedback() {
-                setIsVisible(false);
-            },
-            toggleContinue: (value: boolean) => {
-                setFeedbackContinue(value);
-            },
-        }));
-        return (
-            <div
-                ref={divRef}
-                style={{
-                    top: 0,
-                    right: isVisible ? 0 : "-50%",
-                }}
-                // className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
-                className={`w-full sm:w-[430px] bg-orange-400 h-fit text-white ease-in z-[2000] rounded-lg min-h-[14rem] duration-300 m-10 fixed
-          ${isWrong ? "popup-bg-error" : "popup-bg-success"}
-        `}
-            >
-                <div className="relative">
-                    <button
-                        className="absolute z-[2001] m-5 font-[500] text-xl right-0"
-                        onClick={onClose}
-                    >
-                        <MdClose />
-                    </button>
-                    <div className="w-full flex">
-                        {/* <img src={isWrong ? errorBg : successBg} alt="" /> */}
-                        <div className="w-full pt-8 px-3 pb-4 h-full">
-                            {isWrong ? (
-                                <ErrorLayout
-                                    {...{ title, content, feedbackContinue }}
-                                />
-                            ) : (
-                                <SuccessLayout
-                                    {...{
-                                        title,
-                                        content,
-                                        feedbackContinue,
-                                        onContinue,
-                                    }}
-                                />
-                            )}
-                        </div>
-                    </div>
-                </div>
+    useImperativeHandle(ref, () => ({
+      showFeedback(title: string, content: string, type: FeedbackType, shouldContinue?: boolean) {
+        setFeedbackContinue(!!shouldContinue);
+        type === FeedbackType.WRONG ?
+          audioManager.playWrong()
+          :
+          audioManager.playCorrect();
+        setValues(title, content, type);
+        setCanProceed(!!shouldContinue);
+      },
+      hideFeedback() {
+        setIsVisible(false);
+      },
+      toggleContinue: (value: boolean) => {
+        setFeedbackContinue(value);
+      },
+    }));
+    ;
+    return (
+      <div
+        ref={divRef}
+        style={{
+          top: 0,
+          right: isVisible ? 0 : "-50%"
+        }}
+        // className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
+        className={`w-full sm:w-[430px] h-fit text-white ease-in z-[2000] duration-300 m-10 fixed`}
+      >
+        <div className="relative">
+          <button
+            className="absolute z-[2001] m-5 font-[500] text-xl right-0"
+            onClick={onClose}
+          >
+            <MdClose />
+          </button>
+          <div className="relative">
+            <img src={isWrong ? errorBg : successBg} alt="" />
+            <div className="absolute top-0 w-full px-3 h-full">
+              {isWrong ? (
+                <ErrorLayout {...{ title, content, feedbackContinue }} />
+              ) : (
+                <SuccessLayout {...{ title, content, feedbackContinue, onContinue }} />
+              )}
             </div>
-        );
-    }
+          </div>
+        </div>
+      </div>
+    );
+  }
 );
 
 export default FeedbackPopup;
