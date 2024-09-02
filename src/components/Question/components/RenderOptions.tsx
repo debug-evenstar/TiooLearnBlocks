@@ -62,9 +62,8 @@ const RenderOptions: FC<{
             }, 1500);
         }
         setTimeout(() => {
-
-        })
-        triggerFeedback(option, lessonContext, (updatedAnsweredList.length == totalQuestions));
+            triggerFeedback(option, lessonContext, (updatedAnsweredList.length == totalQuestions));
+        },800)
     }
     const showOptionShadow = (questionIndex: number) => {
         return answered.length > questionIndex
