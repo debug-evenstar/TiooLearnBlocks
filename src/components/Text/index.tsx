@@ -31,7 +31,6 @@ const TextComponent: FC<TextComponentProps> = ({
         textContainerRef.current.style.display = "block";
     };
 
-
     useEffect(() => {
         // Handle initial text formatting
         setFormatted(formatTextContent(data.content));
@@ -54,41 +53,52 @@ const TextComponent: FC<TextComponentProps> = ({
 
     // Can be optimized
     useEffect(() => {
-        slide.on("answerQuestion", (data : any) => {
+        slide.on("answerQuestion", (data: any) => {
             // Check if any linked inputs exists and populate them
-            const linkedInput = document.querySelector(`.text-render input[data-question-hash='${data.question.hash}']`);
+            const linkedInput = document.querySelector(
+                `.text-render input[data-question-hash='${data.question.hash}']`
+            );
             if (linkedInput) {
                 const parent = linkedInput.parentElement;
                 const textFill = document.createElement("span");
-                textFill.className = "font-bold text-[#409972] text-[20px] mx-[3px]";
+                textFill.className =
+                    "font-bold text-[#409972] text-[20px] mx-[3px]";
                 textFill.innerHTML = ` ${data.option.title} `;
                 parent?.replaceChild(textFill, linkedInput);
             }
+            setActiveInputIndex(activeInputIndex + 1);
         });
-    },[slide]);
+    }, [slide]);
 
     // Style active inputs if present
-    useEffect(()=>{
-        const inputIsPresent = !!textContainerRef?.current?.querySelector("input");
-        if ( inputIsPresent ) {
+    useEffect(() => {
+        const input = textContainerRef?.current?.querySelector("input");
+        if (!!input) {
             // const allInputs = Array.from(textContainerRef?.current?.querySelectorAll("input"));
-            const allInputs = Array.from(document.querySelectorAll("active-slide-class input"));
-            if (allInputs.length > activeInputIndex) {
-                decorateActiveInput(allInputs[activeInputIndex] as HTMLInputElement);
+            const allInputs = Array.from(
+                document.querySelectorAll(".active-slide input")
+            );
+            if (
+                allInputs.length > activeInputIndex &&
+                allInputs[activeInputIndex].getAttribute("data-hash") == input.getAttribute("data-hash")
+            ) {
+                decorateActiveInput(
+                    allInputs[activeInputIndex] as HTMLInputElement
+                );
             }
         }
-    },[activeInputIndex])
+    }, [activeInputIndex]);
     //-------------------------------
     return (
         <>
-            <div className="text-render whitespace-normal" ref={textContainerRef}>
+            <div
+                className="text-render whitespace-normal"
+                ref={textContainerRef}
+            >
                 {data.canvas ? (
                     <div
                         dangerouslySetInnerHTML={{
-                            __html: ` ${buildTextData(
-                                data.content,
-                                viewArea
-                            )}`,
+                            __html: ` ${buildTextData(data.content, viewArea)}`,
                         }}
                     />
                 ) : (
