@@ -22,6 +22,7 @@ export interface TextData extends ComponentBaseDataInterface {
 export interface TextComponentProps extends ComponentBasePropsInterface {
     styles?: TextStyles;
     data: TextData;
+    activeSlideIndex : number;
     altHeaderStyle: string;
 }
 

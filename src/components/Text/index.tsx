@@ -13,6 +13,7 @@ const TextComponent: FC<TextComponentProps> = ({
     data,
     slide,
     altHeaderStyle,
+    activeSlideIndex,
     viewArea,
 }) => {
     const [processed, setProcessed] = useState<any[]>([]);
@@ -75,20 +76,26 @@ const TextComponent: FC<TextComponentProps> = ({
         const input = textContainerRef?.current?.querySelector("input");
         if (!!input) {
             // const allInputs = Array.from(textContainerRef?.current?.querySelectorAll("input"));
-            const allInputs = Array.from(
-                document.querySelectorAll(".active-slide input")
+            const allInputs = () => Array.from(
+                document.querySelectorAll(".active-slide .text-render input")
             );
             if (
-                allInputs.length > activeInputIndex &&
-                allInputs[activeInputIndex].getAttribute("data-hash") == input.getAttribute("data-hash")
+                allInputs().length > activeInputIndex
             ) {
-                decorateActiveInput(
-                    allInputs[activeInputIndex] as HTMLInputElement
-                );
+                setTimeout(()=>{
+                    decorateActiveInput(
+                        allInputs()[activeInputIndex] as HTMLInputElement
+                    );
+                }, 1000);
             }
         }
     }, [activeInputIndex]);
     //-------------------------------
+
+    useEffect(() => {
+        setActiveInputIndex(0);
+    }, [activeSlideIndex]);
+
     return (
         <>
             <div
