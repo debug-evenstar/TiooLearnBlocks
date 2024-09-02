@@ -1,6 +1,7 @@
 import zIndex from "@mui/material/styles/zIndex";
 import { _getManager } from "apps/Editorial/Base/Manager";
 import { calculateMaxResizableArea } from "apps/Editorial/ViewBox/handler";
+import { ComponentLayoutInterface } from "components/interface";
 import {
     FC,
     ReactElement,
@@ -15,13 +16,15 @@ import { transform } from "typescript";
 
 interface MovableResizerProps {
     draggableAxis: "both" | "x" | "y" | "none";
-    position: ControlPosition;
-    onMove: Function;
-    size: { width: number; height: number };
-    onResize: Function;
+    position?: ControlPosition;
+    onMove?: Function;
+    size?: { width: number; height: number };
+    onResize?: Function;
+    layout?: ComponentLayoutInterface;
+    updateLayout?: Function;
     style?: React.CSSProperties;
-    identifier? : string;
-    isDraggable? : boolean;
+    identifier?: string;
+    isDraggable?: boolean;
     children: ReactElement;
 }
 
@@ -31,6 +34,8 @@ const MovableResizer: FC<MovableResizerProps> = ({
     onMove,
     size,
     onResize,
+    layout,
+    updateLayout,
     style,
     children,
     identifier,
@@ -41,13 +46,17 @@ const MovableResizer: FC<MovableResizerProps> = ({
     const [dimensions, setDimensions] = useState<{
         width: number;
         height: number;
-    }>(size);
+    }>(size ?? layout?.size ?? ({} as any));
     const [draggablePosition, setDraggablePosition] = useState<ControlPosition>(
-        { x: position?.x ?? 0, y: position?.y ?? 0 }
+        {
+            x: position?.x ?? layout?.position?.xAxis.offset ?? 0,
+            y: position?.y ?? layout?.position?.yAxis.offset ?? 0,
+        }
     );
-    const [shadowPosition, setShadowPosition] = useState<ControlPosition>(
-        { x: position?.x ?? 0, y: position?.y ?? 0 }
-    );
+    const [shadowPosition, setShadowPosition] = useState<ControlPosition>({
+        x: position?.x ?? layout?.position?.xAxis.offset ?? 0,
+        y: position?.y ?? layout?.position?.yAxis.offset ?? 0,
+    });
     const [hasHandles, setHasHandles] = useState<boolean>(false);
 
     const simulateOrigin = (offsetX: number, offsetY: number) => {
@@ -86,7 +95,9 @@ const MovableResizer: FC<MovableResizerProps> = ({
                     }
                 }
                 setDimensions({ width, height });
-                onResize({ width, height, position: offsetDrag });
+                onResize && onResize({ width, height, position: offsetDrag });
+                updateLayout &&
+                    updateLayout({ width, height, position: offsetDrag });
             }
         };
     };
@@ -95,34 +106,41 @@ const MovableResizer: FC<MovableResizerProps> = ({
         if (data.x !== 0 || data.y !== 0) {
             const moveData: any = { x: data.x, y: data.y };
             setDraggablePosition(moveData);
-            onMove({ position: moveData });
+            onMove && onMove({ position: moveData });
+            updateLayout && updateLayout({ position: moveData });
         }
     };
 
-    const handleDrag = (event: any, { x, y}: any) => {
-        setShadowPosition({ x , y});
-    }
+    const handleDrag = (event: any, { x, y }: any) => {
+        setShadowPosition({ x, y });
+    };
 
-    const handleDragStart  = (e:any) => {
+    const handleDragStart = (e: any) => {
         e.dataTransfer.setData("text/plain", identifier);
-    }
+    };
 
     const shadowStyle = () => {
         return {
-            width : dimensions.width, 
-            height : dimensions.height,
+            width: dimensions.width,
+            height: dimensions.height,
             transform: `translate(${shadowPosition.x}px, ${shadowPosition.y}px)`,
-            ...(isDraggable ? { zIndex : 99 } : {})
+            ...(isDraggable ? { zIndex: 99 } : {}),
         };
-    }
+    };
 
-    const toggleActiveClass = (event : any) => {
+    const toggleActiveClass = (event: any) => {
         shadowRef.current.classList.toggle("shadow-active");
-    }
+    };
 
     useEffect(() => {
-        setDimensions(size);
-    }, [size.width, size.height]);
+        size && setDimensions(size);
+        layout &&
+            layout.size &&
+            setDimensions({
+                width: layout.size.width,
+                height: layout.size.height,
+            });
+    }, [size?.width, size?.height, layout?.size?.width, layout?.size?.height]);
 
     useEffect(() => {
         if (position) {
@@ -132,7 +150,13 @@ const MovableResizer: FC<MovableResizerProps> = ({
 
     return (
         <>
-            <div ref={shadowRef} draggable={true} onDragStart={handleDragStart} style={shadowStyle()} className="absolute"></div>
+            <div
+                ref={shadowRef}
+                draggable={true}
+                onDragStart={handleDragStart}
+                style={shadowStyle()}
+                className="absolute"
+            ></div>
             <Draggable
                 axis={draggableAxis}
                 nodeRef={nodeRef}
@@ -164,8 +188,8 @@ const MovableResizer: FC<MovableResizerProps> = ({
                         }
                         ref={nodeRef}
                         onDoubleClick={() => setHasHandles(!hasHandles)}
-                        onMouseEnter={toggleActiveClass} 
-                        onMouseLeave={toggleActiveClass} 
+                        onMouseEnter={toggleActiveClass}
+                        onMouseLeave={toggleActiveClass}
                     >
                         {children}
                     </div>

@@ -2,16 +2,16 @@ import { ComponentBaseDataInterface } from "components/interface";
 import { DataGroupInterface, ManagerInterface } from "./Manager";
 import { textComponentData } from "../ViewBox/Boxtypes/Text/handler";
 import {
-  flashcardComponentData,
-  gridComponentData,
-  newImageComponentData,
-  sliderComponentData,
-  videoComponentData,
+    flashcardComponentData,
+    gridComponentData,
+    newImageComponentData,
+    sliderComponentData,
+    videoComponentData,
 } from "../ViewBox/dataHandler";
 
 const DataGroup: DataGroupInterface = {
-  data: {},
-  functions: {},
+    data: {},
+    functions: {},
 };
 
 /* -------------------------------------------------------------------------- */
@@ -19,109 +19,110 @@ const DataGroup: DataGroupInterface = {
 /* -------------------------------------------------------------------------- */
 
 interface CanvasInterface {
-  manager: CanvasManagerInterface;
-  components: ComponentBaseDataInterface[];
-  getCanvasSize: Function;
-  getComponentData: Function;
-  parseSlideToCanvas: Function;
-  updateActiveComponentData: Function;
-  saveActiveComponentData: Function;
-  history: ComponentBaseDataInterface[][];
-  data: { [key: string]: any }; // For backward compatibility
-  functions: { [key: string]: Function }; // For backward compatibility
+    manager: CanvasManagerInterface;
+    components: ComponentBaseDataInterface[];
+    getCanvasSize: Function;
+    getComponentData: Function;
+    parseSlideToCanvas: Function;
+    updateActiveComponentData: Function;
+    saveActiveComponentData: Function;
+    history: ComponentBaseDataInterface[][];
+    data: { [key: string]: any }; // For backward compatibility
+    functions: { [key: string]: Function }; // For backward compatibility
 }
 
-export type CanvasStates = {[key : string] : any};
+export type CanvasStates = { [key: string]: any };
 
 class Canvas implements CanvasInterface {
-  manager: CanvasManagerInterface;
-  components: ComponentBaseDataInterface[] = [];
-  history: ComponentBaseDataInterface[][] = [];
-  data: { [key: string]: any } = {};
-  functions: { [key: string]: Function } = {};
+    manager: CanvasManagerInterface;
+    components: ComponentBaseDataInterface[] = [];
+    history: ComponentBaseDataInterface[][] = [];
+    data: { [key: string]: any } = {};
+    functions: { [key: string]: Function } = {};
 
-  constructor(manager: CanvasManagerInterface) {
-    this.manager = manager;
-    // Set functions
-    this.setFunctions();
-    this.setData();
-  }
-
-  setData() {
-    this.data.components = this.components;
-  }
-
-  setFunctions() {
-    const object: any = this;
-    const functions = [
-      ...Object.getOwnPropertyNames(Object.getPrototypeOf(object)),
-    ];
-    const methods = functions.sort().filter((e, i, arr) => {
-      if (e !== arr[i + 1] && typeof object[e] == "function") return true;
-    });
-    methods.forEach((methodName: string, index: number) => {
-      if (methodName !== "constructor") {
-        object.functions[methodName] = (...args: any) => {
-          return object[methodName](...args);
-        };
-      }
-    });
-  }
-
-  getCanvasSize() {
-    const canvas = document.getElementById("editorial-canvas");
-    return { width: canvas?.offsetWidth, height: canvas?.offsetHeight };
-  }
-
-  getComponentData(id: string) {
-    const slideComponent = this.components?.filter(
-      (component: any) => component.id === id
-    );
-    return slideComponent.length ? slideComponent[0] : {};
-  }
-
-  parseSlideToCanvas(slide: any[]) {
-    const parsed = slide.map((item, index) => {
-      const itemId = item.component + "-" + Date.now() + index;
-      return {
-        ...item,
-        id: item.id ?? itemId,
-      };
-    });
-    this.components = parsed;
-    this.manager.activeSlide = parsed;
-    return parsed;
-  }
-
-  updateActiveComponentData(data: any) {
-    if (this.manager.activeComponent.data) {
-      this.manager.activeComponent.data = {
-        ...this.manager.activeComponent.data,
-        ...data,
-      };
+    constructor(manager: CanvasManagerInterface) {
+        this.manager = manager;
+        // Set functions
+        this.setFunctions();
+        this.setData();
     }
-    // Set history
-    // this.history.push(this.manager.manager.slideManager.slides);
-    this.saveActiveComponentData();
-  }
 
-  // Remember to set canvas data compontents here
-  saveActiveComponentData() {
-    const slides: any[] = this.manager.manager.slideManager.slides;
-    const activeSlide = slides[this.manager.manager.slideManager.activeSlide];
-    const activeComponent = this.manager.activeComponent;
-    if (activeComponent) {
-      activeSlide[activeComponent.data.index] = {
-        canvas: true, // Indicate data is from canvas version
-        ...activeSlide[activeComponent.data.index],
-        ...activeComponent.data,
-      };
-      // Updating active slide on the slide level as well as the canvas level
-      slides[this.manager.manager.slideManager.activeSlide] = activeSlide;
-      this.manager.activeSlide = activeSlide;
-      this.manager.manager.slideManager.handleSlidesUpdate(slides);
+    setData() {
+        this.data.components = this.components;
     }
-  }
+
+    setFunctions() {
+        const object: any = this;
+        const functions = [
+            ...Object.getOwnPropertyNames(Object.getPrototypeOf(object)),
+        ];
+        const methods = functions.sort().filter((e, i, arr) => {
+            if (e !== arr[i + 1] && typeof object[e] == "function") return true;
+        });
+        methods.forEach((methodName: string, index: number) => {
+            if (methodName !== "constructor") {
+                object.functions[methodName] = (...args: any) => {
+                    return object[methodName](...args);
+                };
+            }
+        });
+    }
+
+    getCanvasSize() {
+        const canvas = document.getElementById("editorial-canvas");
+        return { width: canvas?.offsetWidth, height: canvas?.offsetHeight };
+    }
+
+    getComponentData(id: string) {
+        const slideComponent = this.components?.filter(
+            (component: any) => component.id === id
+        );
+        return slideComponent.length ? slideComponent[0] : {};
+    }
+
+    parseSlideToCanvas(slide: any[]) {
+        const parsed = slide.map((item, index) => {
+            const itemId = item.component + "-" + Date.now() + index;
+            return {
+                ...item,
+                id: item.id ?? itemId,
+            };
+        });
+        this.components = parsed;
+        this.manager.activeSlide = parsed;
+        return parsed;
+    }
+
+    updateActiveComponentData(data: any) {
+        if (this.manager.activeComponent.data) {
+            this.manager.activeComponent.data = {
+                ...this.manager.activeComponent.data,
+                ...data,
+            };
+        }
+        // Set history
+        // this.history.push(this.manager.manager.slideManager.slides);
+        this.saveActiveComponentData();
+    }
+
+    // Remember to set canvas data compontents here
+    saveActiveComponentData() {
+        const slides: any[] = this.manager.manager.slideManager.slides;
+        const activeSlide =
+            slides[this.manager.manager.slideManager.activeSlide];
+        const activeComponent = this.manager.activeComponent;
+        if (activeComponent) {
+            activeSlide[activeComponent.data.index] = {
+                canvas: true, // Indicate data is from canvas version
+                ...activeSlide[activeComponent.data.index],
+                ...activeComponent.data,
+            };
+            // Updating active slide on the slide level as well as the canvas level
+            slides[this.manager.manager.slideManager.activeSlide] = activeSlide;
+            this.manager.activeSlide = activeSlide;
+            this.manager.manager.slideManager.handleSlidesUpdate(slides);
+        }
+    }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -129,98 +130,121 @@ class Canvas implements CanvasInterface {
 /* -------------------------------------------------------------------------- */
 
 export interface CanvasManagerInterface {
-  manager: ManagerInterface;
-  canvas: CanvasInterface;
-  activeComponent: DataGroupInterface;
-  activeSlide?: ComponentBaseDataInterface[];
-  setActiveComponent: Function;
-  updateActiveSlide: Function;
-  updateSlides : Function;
-  getComponentIndex: Function;
-  getComponentData: Function;
-  activeComponentElement: Function;
-  componentDataHandlers: { [key: string]: Function };
-  createComponent: Function;
+    manager: ManagerInterface;
+    canvas: CanvasInterface;
+    activeComponent: DataGroupInterface;
+    activeSlide?: ComponentBaseDataInterface[];
+    setActiveComponent: Function;
+    updateActiveSlide: Function;
+    updateSlides: Function;
+    updateComponentInSlide: Function;
+    getComponentIndex: Function;
+    getComponentData: Function;
+    activeComponentElement: Function;
+    componentDataHandlers: { [key: string]: Function };
+    createComponent: Function;
 }
 
 // More improvements coming
 export class CanvasManager implements CanvasManagerInterface {
-  manager: ManagerInterface;
-  canvas: CanvasInterface;
-  activeComponent: DataGroupInterface = DataGroup;
-  activeSlide?: ComponentBaseDataInterface[];
-  componentDataHandlers: { [key: string]: Function } = {};
+    manager: ManagerInterface;
+    canvas: CanvasInterface;
+    activeComponent: DataGroupInterface = DataGroup;
+    activeSlide?: ComponentBaseDataInterface[];
+    componentDataHandlers: { [key: string]: Function } = {};
 
-  constructor(manager: ManagerInterface) {
-    this.manager = manager;
-    this.canvas = new Canvas(this);
-    this.registerComponentDataHandlers();
-  }
-
-  setActiveComponent(id: string) {
-    if (this.activeSlide) {
-      // Set active component index whenever the component is selected or marked active
-      const componentIndexInSlide: number = this.activeSlide.findIndex(
-        (data: any) => data.id === id
-      );
-      if (componentIndexInSlide == -1) {
-        return;
-      } 
-      this.activeComponent.data = componentIndexInSlide !== this.activeComponent.data.index 
-        ? {} : this.activeComponent.data;
-      this.activeComponent.data.index = componentIndexInSlide;
+    constructor(manager: ManagerInterface) {
+        this.manager = manager;
+        this.canvas = new Canvas(this);
+        this.registerComponentDataHandlers();
     }
-  }
 
-  updateActiveSlide(slideData: ComponentBaseDataInterface[]) {
-    this.activeSlide = slideData;
-  }
-
-  updateSlides() {
-    const slides: any[] = this.manager.slideManager.slides;
-    slides[this.manager.slideManager.activeSlide] = this.activeSlide;
-    this.manager.slideManager.slides = slides;
-    this.manager.slideManager.handleSlidesUpdate(slides);
-  }
-
-  getComponentIndex(id: string) {
-    return this.activeSlide?.findIndex((data: any) => data.id === id);
-  }
-
-  getComponentData(id: string) {
-    const slideComponent = this.activeSlide?.filter(
-      (component: any) => component.id === id
-    );
-    return slideComponent && slideComponent.length ? slideComponent[0] : {};
-  }
-
-  activeComponentElement() {
-    if (this.activeSlide) {
-      const activeComponent = this.activeSlide[this.activeComponent.data.index];
-      if (activeComponent.id) {
-        return document.getElementById(activeComponent.id) as HTMLDivElement;
-      }
+    setActiveComponent(id: string) {
+        if (this.activeSlide) {
+            // Set active component index whenever the component is selected or marked active
+            const componentIndexInSlide: number = this.activeSlide.findIndex(
+                (data: any) => data.id === id
+            );
+            if (componentIndexInSlide == -1) {
+                return;
+            }
+            this.activeComponent.data =
+                componentIndexInSlide !== this.activeComponent.data.index
+                    ? {}
+                    : this.activeComponent.data;
+            this.activeComponent.data.index = componentIndexInSlide;
+        }
     }
-  }
 
-  registerComponentDataHandlers() {
-    this.componentDataHandlers = {
-      Text: textComponentData,
-      Image: newImageComponentData,
-      Video: videoComponentData,
-      Grid: gridComponentData,
-      // "Multi Choice",
-      Flashcards: flashcardComponentData,
-      // "Dual Choice",
-      Slider: sliderComponentData,
-      // "Sequence",
-    };
-  }
+    updateComponentInSlide(component: ComponentBaseDataInterface) {
+        if (this.activeSlide && this.activeSlide.length) {
+            const updated = this.activeSlide;
+            const existingComponentIndex = this.activeSlide.findIndex(
+                (item: any) => item.id == component.id
+            );
+            if (existingComponentIndex >= 0) {
+                updated[existingComponentIndex] = {
+                    ...updated[existingComponentIndex],
+                    ...component,
+                };
+                this.updateActiveSlide(updated);
+                this.updateSlides();
+            }
+        }
+    }
 
-  createComponent(componentName: string, id: string) {
-    return {
-      ...this.componentDataHandlers[componentName](),
-      ...{ id },
-    };
-  }
+    updateActiveSlide(slideData: ComponentBaseDataInterface[]) {
+        this.activeSlide = slideData;
+    }
+
+    updateSlides() {
+        const slides: any[] = this.manager.slideManager.slides;
+        slides[this.manager.slideManager.activeSlide] = this.activeSlide;
+        this.manager.slideManager.slides = slides;
+        this.manager.slideManager.handleSlidesUpdate(slides);
+    }
+
+    getComponentIndex(id: string) {
+        return this.activeSlide?.findIndex((data: any) => data.id === id);
+    }
+
+    getComponentData(id: string) {
+        const slideComponent = this.activeSlide?.filter(
+            (component: any) => component.id === id
+        );
+        return slideComponent && slideComponent.length ? slideComponent[0] : {};
+    }
+
+    activeComponentElement() {
+        if (this.activeSlide) {
+            const activeComponent =
+                this.activeSlide[this.activeComponent.data.index];
+            if (activeComponent.id) {
+                return document.getElementById(
+                    activeComponent.id
+                ) as HTMLDivElement;
+            }
+        }
+    }
+
+    registerComponentDataHandlers() {
+        this.componentDataHandlers = {
+            Text: textComponentData,
+            Image: newImageComponentData,
+            Video: videoComponentData,
+            Grid: gridComponentData,
+            // "Multi Choice",
+            Flashcards: flashcardComponentData,
+            // "Dual Choice",
+            Slider: sliderComponentData,
+            // "Sequence",
+        };
+    }
+
+    createComponent(componentName: string, id: string) {
+        return {
+            ...this.componentDataHandlers[componentName](),
+            ...{ id },
+        };
+    }
 }
