@@ -1,17 +1,17 @@
 import React, {
-    FC,
-    useState,
-    forwardRef,
-    useImperativeHandle,
-    useRef,
+  FC,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
 } from "react";
 import "./style.css";
 import catImg from "../../../img/popup/cat.gif";
 import penguinImg from "../../../img/popup/penguin.gif";
 import continueImg from "../../../img/popup/continue-white.svg";
 import continueActiveImg from "../../../img/popup/continue-main.svg";
-import successBg from "../../../img/popup/success-popup-bg.svg";
-import errorBg from "../../../img/popup/error-popup-bg.svg";
+// import successBg from "../../../img/popup/success-popup-bg.svg";
+// import errorBg from "../../../img/popup/error-popup-bg.svg";
 import { MdClose } from "react-icons/md";
 import { audioManager } from "components/NewLesson/AudioManager/AudioManager";
 import correctTipImg from "../../../img/popup/correct-tip.svg";
@@ -19,8 +19,8 @@ import wrongTipImg from "../../../img/popup/wrong-tip.svg";
 // import { StringLiteralLike } from "typescript";
 
 export enum FeedbackType {
-    CORRECT,
-    WRONG,
+  CORRECT,
+  WRONG,
 }
 
 interface FeedbackPopupProps {
@@ -34,73 +34,63 @@ interface FeedbackPopupProps {
 // now everyone has access
 
 const ErrorLayout = ({ title, feebackContinue, content }: any) => {
-    return (
-        <div className="pt-5 relative">
-            <img
-                src={wrongTipImg}
-                alt=""
-                className="absolute w-[2rem] -top-12 right-20"
-            />
-            <div className="px-16">
-                <p className="text-sm font-[500]">{title}</p>
-                <p className="text-lg font-[600]">{content}</p>
-            </div>
-            <img src={catImg} alt="" className="py-2 h-full mx-auto w-[26%]" />
-        </div>
-    );
+  return (
+    <div className="pt-5 relative">
+      <div className="px-16">
+        <p className="text-sm font-[500]">{title}</p>
+        <p className="text-lg font-[600]">{content}</p>
+      </div>
+      <img src={catImg} alt="" className="py-2 h-full mx-auto w-[26%]" />
+    </div>
+  );
 };
 
 const SuccessLayout = ({
-    title,
-    feedbackContinue,
-    content,
-    onContinue,
+  title,
+  feedbackContinue,
+  content,
+  onContinue,
 }: any) => {
-    const mouseEnter = (e: any) => {
-        e.target.src = continueActiveImg;
-    };
+  const mouseEnter = (e: any) => {
+    e.target.src = continueActiveImg;
+  };
 
-    const mouseLeave = (e: any) => {
-        e.target.src = continueImg;
-    };
+  const mouseLeave = (e: any) => {
+    e.target.src = continueImg;
+  };
 
-    const handleContinueClick = (e: any) => {
-        audioManager.playContinue();
-        // console.log("moving to next slide ")
-        onContinue(e);
-    };
+  const handleContinueClick = (e: any) => {
+    audioManager.playContinue();
+    // console.log("moving to next slide ")
+    onContinue(e);
+  };
 
-    return (
-        <div className="h-full flex justify-center flex-col relative">
-            <img
-                src={correctTipImg}
-                alt=""
-                className="absolute w-[2rem] -top-12 right-20"
-            />
-            <div className="flex items-center space-x-2 relative">
-                <img src={penguinImg} alt="" className="max-h-[90px]" />
-                <div className="mr-auto">
-                    <p className="text-sm">{title}</p>
-                    <p className="font-[600]">{content}</p>
-                </div>
-            </div>
-            {feedbackContinue && (
-                <div className="flex justify-end mt-3">
-                    <button
-                        onClick={handleContinueClick}
-                        className="w-[30%] hover:scale-[1.08]"
-                    >
-                        <img
-                            src={continueImg}
-                            alt=""
-                            onMouseEnter={mouseEnter}
-                            onMouseLeave={mouseLeave}
-                        />
-                    </button>
-                </div>
-            )}
+  return (
+    <div className="h-full flex justify-center flex-col relative">
+      <div className="flex items-center space-x-2 relative">
+        <img src={penguinImg} alt="" className="max-h-[90px]" />
+        <div className="mr-auto">
+          <p className="text-sm">{title}</p>
+          <p className="font-[600]">{content}</p>
         </div>
-    );
+      </div>
+      {feedbackContinue && (
+        <div className="flex justify-end mt-3">
+          <button
+            onClick={handleContinueClick}
+            className="w-[30%] hover:scale-[1.08]"
+          >
+            <img
+              src={continueImg}
+              alt=""
+              onMouseEnter={mouseEnter}
+              onMouseLeave={mouseLeave}
+            />
+          </button>
+        </div>
+      )}
+    </div>
+  );
 };
 
 const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
@@ -108,43 +98,43 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
 
     const divRef = useRef<any>(null);
 
-        const [isVisible, setIsVisible] = useState(false);
-        const [content, setContent] = useState("");
-        const [title, setTitle] = useState("");
-        const [canProceed, setCanProceed] = useState<boolean>(true);
-        const [feedbackState, setFeedbackState] = useState<FeedbackType | null>(
-            null
-        );
-        const [feedbackContinue, setFeedbackContinue] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    const [content, setContent] = useState("");
+    const [title, setTitle] = useState("");
+    const [canProceed, setCanProceed] = useState<boolean>(true);
+    const [feedbackState, setFeedbackState] = useState<FeedbackType | null>(
+      null
+    );
+    const [feedbackContinue, setFeedbackContinue] = useState(false);
 
-        const isWrong = feedbackState === FeedbackType.WRONG;
+    const isWrong = feedbackState === FeedbackType.WRONG;
 
     const onClose = () => {
       setIsVisible(!isVisible);
-      if (feedbackContinue) {
+      if (feedbackContinue && !isWrong) {
         footerRef?.current?.toggleContinue(true);
       }
     }
 
-        const setValues = (
-            title: string,
-            content: string,
-            state: FeedbackType,
-            visible = true
-        ) => {
-            setTitle(title);
-            setFeedbackState(state);
-            setContent(content);
-            setIsVisible(visible);
-        };
+    const setValues = (
+      title: string,
+      content: string,
+      state: FeedbackType,
+      visible = true
+    ) => {
+      setTitle(title);
+      setFeedbackState(state);
+      setContent(content);
+      setIsVisible(visible);
+    };
 
-        const handleContinue = () => {
-            if (canProceed) {
-                onContinue && onContinue();
-            } else {
-                setIsVisible(false);
-            }
-        };
+    const handleContinue = () => {
+      if (canProceed) {
+        onContinue && onContinue();
+      } else {
+        setIsVisible(false);
+      }
+    };
 
     useImperativeHandle(ref, () => ({
       showFeedback(title: string, content: string, type: FeedbackType, shouldContinue?: boolean) {
@@ -163,27 +153,30 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
         setFeedbackContinue(value);
       },
     }));
-    ;
+
     return (
       <div
         ref={divRef}
         style={{
           top: 0,
-          right: isVisible ? 0 : "-50%"
+          right: isVisible ? 0 : "-50%",
+          animationTimingFunction: "ease-in-out"
         }}
         // className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
-        className={`w-full sm:w-[430px] h-fit text-white ease-in z-[2000] duration-300 m-10 fixed`}
+        className={`w-full sm:w-[430px] min-h-[12rem] text-white py-4 z-[2000] flex items-center rounded-xl duration-300 m-10 fixed
+           ${isWrong ? "popup-bg-error" : "popup-bg-success"}`}
       >
-        <div className="relative">
-          <button
-            className="absolute z-[2001] m-5 font-[500] text-xl right-0"
-            onClick={onClose}
-          >
-            <MdClose />
-          </button>
+        <button className="absolute z-[2001] top-0 m-5 font-[500] text-xl right-0" onClick={onClose}>
+          <MdClose />
+        </button>
+        <img alt=""
+          src={isWrong ? wrongTipImg : correctTipImg}
+          className="absolute w-[2rem] -top-4 right-20"
+        />
+        <div className="relative w-full">
           <div className="relative">
-            <img src={isWrong ? errorBg : successBg} alt="" />
-            <div className="absolute top-0 w-full px-3 h-full">
+            {/* <img src={isWrong ? errorBg : successBg} alt="" /> */}
+            <div className="w-full px-3 h-full">
               {isWrong ? (
                 <ErrorLayout {...{ title, content, feedbackContinue }} />
               ) : (
