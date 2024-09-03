@@ -6,6 +6,7 @@ export declare enum FeedbackType {
 }
 interface FeedbackPopupProps {
     ref: any;
+    footerRef: any;
     position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
     onClose?: Function;
     onContinue?: Function;

@@ -140,6 +140,7 @@ interface TextData extends ComponentBaseDataInterface {
 interface TextComponentProps extends ComponentBasePropsInterface {
     styles?: TextStyles;
     data: TextData;
+    activeSlideIndex: number;
     altHeaderStyle: string;
 }
 
