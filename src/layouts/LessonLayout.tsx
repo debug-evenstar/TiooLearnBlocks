@@ -2,7 +2,7 @@ import LessonHeader from "components/NewLesson/Layout/LessonHeader";
 import LessonSidebar from "components/NewLesson/Layout/LessonSidebar";
 import LessonFooter from "components/NewLesson/Layout/LesssonFooter";
 import ChatSection from "components/ChatSection/ChatSection";
-import { ReactNode, useEffect, FC, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 
 import "./LessonLayout.css";
@@ -13,9 +13,7 @@ import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 import { LessonContext } from "contexts/LessonContext";
 import { GoRocket } from "react-icons/go";
-import catImg from "../img/popup/cat.webp"
-
-
+import catImg from "../img/popup/cat.webp";
 
 
 function StartScreen() {
@@ -91,7 +89,7 @@ export default function LessonLayout({
     return chapters.find((i: any) => i.id === chapter_id);
   };
 
-  const lessonHasSlides = () => Boolean(currentLesson?.lesson_slides && currentLesson.lesson_slides.length);
+  // const lessonHasSlides = () => Boolean(currentLesson?.lesson_slides && currentLesson.lesson_slides.length);
 
   const slideHasQuestion = (lesson: any) => {
     const slides = lesson.lesson_slides;
@@ -173,6 +171,8 @@ export default function LessonLayout({
     <>
       <FeedbackPopup
         ref={feedbackRef}
+        footerRef={lessonFooterRef}
+
         onContinue={handleContinue}
       />
       <div className="flex bg-white z-[1000] w-full overflow-hidden urbanist">

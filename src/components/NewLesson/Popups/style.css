@@ -1,6 +1,6 @@
 .popup-bg-error{
   background: url('../../../img/popup/error-popup-bg.svg');
-  background-size: contain;
+  background-size: cover;
   background-color: #FC8B52;
 }
 
