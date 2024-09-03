@@ -4,7 +4,6 @@ import {
     ComponentBaseDataInterface,
     ComponentBasePropsInterface,
 } from "components/interface";
-import { LessonSlideInterface } from "../SlideManager/handler";
 
 interface TextStyles {
     color?: string;
@@ -197,7 +196,3 @@ export const buildTextData = (data: string, viewArea: any) => {
     });
     return abstractBody.innerHTML;
 };
-
-export const decorateActiveInput = (input : HTMLInputElement) => {
-    input.classList.add("input-is-active");
-}

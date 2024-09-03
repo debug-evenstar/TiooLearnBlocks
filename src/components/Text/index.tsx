@@ -2,7 +2,6 @@ import { FC, useEffect, useRef, useState } from "react";
 import {
     TextComponentProps,
     buildTextData,
-    decorateActiveInput,
     formatTextContent,
 } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
@@ -21,8 +20,6 @@ const TextComponent: FC<TextComponentProps> = ({
     const [formatted, setFormatted] = useState<any[]>([]);
 
     const textContainerRef = useRef<any>(null);
-
-    const [activeInputIndex, setActiveInputIndex] = useState<number>(0);
 
     const hideText = () => {
         textContainerRef.current.style.display = "none";
@@ -63,38 +60,12 @@ const TextComponent: FC<TextComponentProps> = ({
                 const parent = linkedInput.parentElement;
                 const textFill = document.createElement("span");
                 textFill.className =
-                    "font-bold text-[#409972] text-[20px] mx-[3px]";
+                    "relative font-bold text-[#409972] text-[20px] mx-[3px] -bottom-[0.5px]";
                 textFill.innerHTML = ` ${data.option.title} `;
                 parent?.replaceChild(textFill, linkedInput);
             }
-            setActiveInputIndex(activeInputIndex + 1);
         });
     }, [slide]);
-
-    // Style active inputs if present
-    useEffect(() => {
-        const input = textContainerRef?.current?.querySelector("input");
-        if (!!input) {
-            // const allInputs = Array.from(textContainerRef?.current?.querySelectorAll("input"));
-            const allInputs = () => Array.from(
-                document.querySelectorAll(".active-slide .text-render input")
-            );
-            if (
-                allInputs().length > activeInputIndex
-            ) {
-                setTimeout(()=>{
-                    decorateActiveInput(
-                        allInputs()[activeInputIndex] as HTMLInputElement
-                    );
-                }, 1000);
-            }
-        }
-    }, [activeInputIndex]);
-    //-------------------------------
-
-    useEffect(() => {
-        setActiveInputIndex(0);
-    }, [activeSlideIndex]);
 
     return (
         <>

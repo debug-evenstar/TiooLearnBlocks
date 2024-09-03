@@ -12,3 +12,7 @@ export const triggerFeedback = (option : OptionInterface, lessonContext : any, s
         );
     }
 }
+
+export const decorateActiveInput = (input : HTMLInputElement) => {
+    input.classList.add("input-is-active");
+}
