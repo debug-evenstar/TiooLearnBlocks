@@ -1,20 +1,14 @@
-import { _getManager } from "apps/Editorial/Base/Manager";
 import { QuestionInterface } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 import {
-  InputInterface,
-  OptionInterface,
-  OptionTypes,
+    InputInterface,
+    OptionInterface,
 } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
-import LayoutComponent from "components/LayoutBox";
-import { useLessonContext } from "contexts/LessonContext";
-import { FC, createRef, useEffect, useState } from "react";
-import { triggerFeedback } from "./handler";
+import { FC, useEffect, useState } from "react";
+import { decorateActiveInput} from "./handler";
 import RenderOptions from "./components/RenderOptions";
 import RenderInputs from "./components/RenderInputs";
-import {
-  LessonSlideInterface,
-  LessonSlideScope,
-} from "components/SlideManager/handler";
+import { LessonSlideInterface } from "components/SlideManager/handler";
+
 
 interface QuestionComponentProps {
   data: any;
@@ -22,14 +16,15 @@ interface QuestionComponentProps {
   viewArea: any;
 }
 
-const QuestionComponent: FC<QuestionComponentProps> = ({
-  data,
-  slide,
-  viewArea,
-}) => {
-  const [questions, setQuestions] = useState<any>(data?.data ?? []);
-  const [answered, setAnswered] = useState<OptionInterface[]>([]);
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
+const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea}) => {
+    const [questions, setQuestions] = useState<any>(data?.data ?? []);
+    const [answered, setAnswered] = useState<OptionInterface[]>([]);
+    const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
+    // const [slideScope] = useState<LessonSlideInterface>(LessonSlideScope());
+
+    const allInputs = () => Array.from(
+        document.querySelectorAll(".active-slide .text-render input")
+    );
 
   useEffect(() => {
     if (questions.length == answered.length && questions.length !== 0) {
@@ -65,33 +60,53 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
     }
   }, [answered]);
 
-  return (
-    <>
-      {questions.map((question: QuestionInterface, index: number) => {
-        return (
-          <>
-            {viewArea && activeQuestionIndex == index && (
-              <RenderOptions
-                options={question.options ?? []}
-                answered={answered}
-                setAnswered={setAnswered}
-                viewArea={viewArea}
-                question={question}
-                questionIndex={index}
-                totalQuestions={questions.length}
-                slideManager={slide}
-              />
-            )}
-            <RenderInputs
-              inputs={question.inputs ?? []}
-              answered={answered}
-              questionIndex={index}
-            />
-          </>
-        );
-      })}
-    </>
-  );
+    useEffect(() => {
+        if (answered.length !== questions.length) {
+            setTimeout(() => {
+                setActiveQuestionIndex(answered.length);
+            }, 1500);
+        }
+        if (questions.length == answered.length && questions.length !== 0) {
+            slide.dispatch('showContinue', {
+                hasFeedback: !!answered[answered.length - 1].feedback
+            });
+        }
+        const input = document.querySelector(".active-slide .text-render input")
+        if (!!input) {
+            setTimeout(()=>{
+                decorateActiveInput(
+                    allInputs()[0] as HTMLInputElement
+                );
+            }, 200);
+        }
+    }, [answered]);
+
+
+    return (
+        <>
+            {questions.map((question: QuestionInterface, index: number) => {
+                return (
+                    <>
+                        {viewArea && activeQuestionIndex == index && <RenderOptions
+                            options={question.options ?? []}
+                            answered={answered}
+                            setAnswered={setAnswered}
+                            viewArea={viewArea}
+                            question={question}
+                            questionIndex={index}
+                            totalQuestions={questions.length}
+                            slideManager={slide}
+                        />}
+                        <RenderInputs
+                            inputs={question.inputs ?? []}
+                            answered={answered}
+                            questionIndex={index}
+                        />
+                    </>
+                );
+            })}
+        </>
+    );
 };
 
 export default QuestionComponent;

@@ -2,7 +2,6 @@ import { FC, useEffect, useRef, useState } from "react";
 import {
     TextComponentProps,
     buildTextData,
-    decorateActiveInput,
     formatTextContent,
 } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
@@ -13,6 +12,7 @@ const TextComponent: FC<TextComponentProps> = ({
     data,
     slide,
     altHeaderStyle,
+    activeSlideIndex,
     viewArea,
 }) => {
     const [processed, setProcessed] = useState<any[]>([]);
@@ -21,8 +21,6 @@ const TextComponent: FC<TextComponentProps> = ({
 
     const textContainerRef = useRef<any>(null);
 
-    const [activeInputIndex, setActiveInputIndex] = useState<number>(0);
-
     const hideText = () => {
         textContainerRef.current.style.display = "none";
     };
@@ -30,7 +28,6 @@ const TextComponent: FC<TextComponentProps> = ({
     const showText = () => {
         textContainerRef.current.style.display = "block";
     };
-
 
     useEffect(() => {
         // Handle initial text formatting
@@ -54,41 +51,32 @@ const TextComponent: FC<TextComponentProps> = ({
 
     // Can be optimized
     useEffect(() => {
-        slide.on("answerQuestion", (data : any) => {
+        slide.on("answerQuestion", (data: any) => {
             // Check if any linked inputs exists and populate them
-            const linkedInput = document.querySelector(`.text-render input[data-question-hash='${data.question.hash}']`);
+            const linkedInput = document.querySelector(
+                `.text-render input[data-question-hash='${data.question.hash}']`
+            );
             if (linkedInput) {
                 const parent = linkedInput.parentElement;
                 const textFill = document.createElement("span");
-                textFill.className = "font-bold text-[#409972] text-[20px] mx-[3px]";
+                textFill.className =
+                    "relative font-bold text-[#409972] text-[20px] mx-[3px] -bottom-[0.5px]";
                 textFill.innerHTML = ` ${data.option.title} `;
                 parent?.replaceChild(textFill, linkedInput);
             }
         });
-    },[slide]);
+    }, [slide]);
 
-    // Style active inputs if present
-    useEffect(()=>{
-        const inputIsPresent = !!textContainerRef?.current?.querySelector("input");
-        if ( inputIsPresent ) {
-            // const allInputs = Array.from(textContainerRef?.current?.querySelectorAll("input"));
-            const allInputs = Array.from(document.querySelectorAll("active-slide-class input"));
-            if (allInputs.length > activeInputIndex) {
-                decorateActiveInput(allInputs[activeInputIndex] as HTMLInputElement);
-            }
-        }
-    },[activeInputIndex])
-    //-------------------------------
     return (
         <>
-            <div className="text-render whitespace-normal" ref={textContainerRef}>
+            <div
+                className="text-render whitespace-normal"
+                ref={textContainerRef}
+            >
                 {data.canvas ? (
                     <div
                         dangerouslySetInnerHTML={{
-                            __html: ` ${buildTextData(
-                                data.content,
-                                viewArea
-                            )}`,
+                            __html: ` ${buildTextData(data.content, viewArea)}`,
                         }}
                     />
                 ) : (
