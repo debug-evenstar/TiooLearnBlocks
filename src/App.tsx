@@ -17,9 +17,7 @@ import {
   getTextbookChapters,
   getChapterLessons,
 } from "./constants/library";
-
 import { ConfigureLibrary } from "setup";
-import Test from "pages/Test";
 
 function App() {
   const datas = {
@@ -141,9 +139,7 @@ function App() {
 
   useEffect(() => {
     ConfigureLibrary.save({
-      baseUrl: "http://localhost:8085",
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyZGF0YSI6eyJpZCI6NCwiZW1haWwiOiJwcmFpc2Vpa2UxMjNAZ21haWwuY29tIiwiYWNjb3VudF90eXBlIjoic2Nob29sIn0sImlhdCI6MTcyNTQxNDgzNywiZXhwIjoxNzMzMTkwODM3fQ.XhoKL5q30UfFGMJsOkO0uozGDzciRLQOSEiZv8-QiNQ",
-      authType: "student"
+      baseUrl: "http://localhost:8085"
     });
   }, []);
 
@@ -168,7 +164,6 @@ function App() {
               />
             }
           />
-          <Route path="/test" element={<Test/>}/>
           <Route
             path="/comp"
             element={

@@ -12,8 +12,8 @@ import { refreshActiveViewbox } from "provider/activeViewboxSlice";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { ComponentBaseDataInterface } from "components/interface";
 import LayoutComponent from "components/LayoutBox";
-// import RenderPreview from "./Preview/RenderPreview";
-// import { MutatingDots, Rings } from "react-loader-spinner";
+import RenderPreview from "./Preview/RenderPreview";
+import { MutatingDots, Rings } from "react-loader-spinner";
 
 interface Props {
     slides: any;

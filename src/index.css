@@ -15,33 +15,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 
 
-
-.popover>.triangle, .popover>.triangle:after {
-    position: absolute;
-    display: block;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 20px;
-    border-top-width: 0;
-    border-color: transparent;
-}
-
-.popover>.triangle {
-    top: -10px;
-    border-bottom-color: blue;
-}
-
-.popover>.triangle:after{
-    z-index:120;
-    top: 0px;
-    margin: -20px;
-    border-width: 20px;
-    content: " ";
-    border-bottom-color: #fff;
-}
-
-
 .lilita-one {
   font-family: "Lilita One", sans-serif;
   font-weight: 400;
