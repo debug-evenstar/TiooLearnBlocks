@@ -1,37 +1,43 @@
+import Configuration from "setup/configure";
 import { baseApiHost } from "utilities/url";
 
 const Request = async (
-    method: string,
-    url: string,
-    body?: FormData | { [key: string]: string },
-    callback?: Function
+  method: string,
+  url: string,
+  body?: FormData | { [key: string]: string },
+  callback?: Function
 ) => {
-    const fullUrl = `${baseApiHost()}/${url}`;
-    const response = await fetch(fullUrl, {
-        method: method,
-        headers: {
-            ...(body instanceof FormData
-                ? {}
-                : { "Content-Type": "application/json" }),
-        },
-        body: body instanceof FormData ? body : JSON.stringify(body),
-    });
-    if (!response.ok) {
-        callback && callback();
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
+  const fullUrl = `${baseApiHost()}/${url}`;
+  const lbConfig = Configuration.load();
+  const options: any = {
+    method: method,
+    headers: {
+      ...(body instanceof FormData
+        ? {}
+        : { "Content-Type": "application/json" }),
+    },
+    body: body instanceof FormData ? body : JSON.stringify(body),
+  };
+  if(lbConfig){
+    options.headers.Authorization = `Bearer ${lbConfig.token}`
+  }
+  const response = await fetch(fullUrl, options);
+  if (!response.ok) {
     callback && callback();
-    return response.json();
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  callback && callback();
+  return response.json();
 };
 
 export class Api {
-    static async get(url: string) {
-        return Request("GET", url);
-    }
-    static async post(url: string, data: any) {
-        return Request("POST", url, data);
-    }
-    static async put(url: string, data: any) {
-        return Request("PUT", url, data);
-    }
+  static async get(url: string) {
+    return Request("GET", url);
+  }
+  static async post(url: string, data: any) {
+    return Request("POST", url, data);
+  }
+  static async put(url: string, data: any) {
+    return Request("PUT", url, data);
+  }
 }

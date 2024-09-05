@@ -4,17 +4,16 @@ import LessonFooter from "components/NewLesson/Layout/LesssonFooter";
 import ChatSection from "components/ChatSection/ChatSection";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
-
 import "./LessonLayout.css";
 // import LessonSlides from "components/NewLesson/LessonSlides";
 import AudioButton from "components/NewLesson/Buttons/audioBtn";
-import TransitionButton from "components/NewLesson/Buttons/TransitionButton"
+import TransitionButton from "components/NewLesson/Buttons/TransitionButton";
 import ToggleNavBtn from "components/NewLesson/Buttons/toggleNavigation";
 import FeedbackPopup, { FeedbackType } from "components/NewLesson/Popups";
 import { LessonContext } from "contexts/LessonContext";
 import { GoRocket } from "react-icons/go";
 import catImg from "../img/popup/cat.webp";
-
+import GlobalResource from "services/api/resources/GlobalResource";
 
 function StartScreen() {
   return (
@@ -28,7 +27,6 @@ function StartScreen() {
     </div>
   );
 }
-
 
 export interface LessonLayoutProps {
   textbook: any;
@@ -56,7 +54,7 @@ export interface LessonSlideProps {
   managerRef: React.RefObject<any>;
   navigationHandles: NavigationHandles;
   slides: any[];
-  stateActions: LessonStateActions
+  stateActions: LessonStateActions;
 }
 
 export default function LessonLayout({
@@ -66,24 +64,42 @@ export default function LessonLayout({
   lesson,
   sideBar = true,
   closePreview,
-  lessonSlides
+  lessonSlides,
 }: LessonLayoutProps) {
-
-
   const isPreview = !!lesson;
 
-  const [currentLesson, setCurrentLesson] = useState<any>(isPreview ? chapters[0]?.lessons[0] : null);
-  const [currentChapter, setCurrentChapter] = useState(lesson ? lesson.Chapter : chapters[0]);
+  const [currentLesson, setCurrentLesson] = useState<any>(
+    isPreview ? chapters[0]?.lessons[0] : null
+  );
+  const [currentChapter, setCurrentChapter] = useState(
+    lesson ? lesson.Chapter : chapters[0]
+  );
   const slideManagerRef = useRef<any>(null);
-  const [activeSlide, setActiveSlide] = useState(1);
+  const [activeSlide, setActiveSlide] = useState(0);
   const [showAI, setShowAI] = useState(false);
 
   const lessonFooterRef = useRef<any>(null);
   const lessonSidebarRef = useRef<any>(null);
+  const lessonHeaderRef = useRef<any>(null);
   const feedbackRef = useRef<any>(null);
-  
+
   const sideBarOpen = lessonSidebarRef?.current?.sideBarOpen;
   const setSideBarOpen = lessonSidebarRef?.current?.setSideBarOpen;
+
+
+
+  console.log(activeSlide);
+
+  useEffect(() => {
+    if (currentLesson && textbook) {
+      GlobalResource.getOrCreateLessonProgress(
+        textbook.id,
+        currentLesson.id
+      ).then((response) => {
+          lessonHeaderRef?.current?.updateLessonProgress(response.data);
+      });
+    }
+  }, [currentLesson]);
 
   const getCurrentChapter = (chapter_id: number) => {
     return chapters.find((i: any) => i.id === chapter_id);
@@ -94,47 +110,75 @@ export default function LessonLayout({
   const slideHasQuestion = (lesson: any) => {
     const slides = lesson.lesson_slides;
     if (slides && slides.length) {
-      const currentSlide = slides.length ? slides[activeSlide - 1] : null;
+      const currentSlide = slides.length ? slides[activeSlide] : null;
       if (currentSlide) {
-        const hasQuestion = currentSlide.slide_data.find((item: any) => item.component == "Questions");
+        const hasQuestion = currentSlide.slide_data.find(
+          (item: any) => item.component == "Questions"
+        );
         return !!hasQuestion;
       }
       return false;
     }
     return false;
-  }
+  };
+
+  const handleUpdateProgress = () => {
+    const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
+    const currentSlide = slideManagerRef?.current?.activeSlide();
+
+    const payload = {
+      textbooks_id: textbook.id,
+      lesson_id: currentLesson?.id,
+      slide_index: activeSlide,
+      slide_id: currentSlide.id,
+    };
+
+    GlobalResource.updateLessonProgress(payload)
+      .then((response) => {
+        //console.log("Updated lesson progress",response.data);
+        lessonHeaderRef?.current?.updateLessonProgress(response.data);
+      })
+      .catch((error) => {
+        //console.log(error);
+      });
+  };
 
   const handleContinue = () => {
+    //console.log("clicking next")
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
-    if (currentLesson && (currentSlideIndex === currentLesson.lesson_slides.length - 1)) {
-      // back();
+    if (
+      currentLesson &&
+      currentSlideIndex === currentLesson.lesson_slides.length - 1
+    ) {
     } else {
       slideManagerRef?.current?.navigator(1);
       setActiveSlide(activeSlide + 1);
       feedbackRef?.current.hideFeedback();
     }
+    handleUpdateProgress();
   };
 
   const handlePrevious = () => {
     slideManagerRef?.current?.navigator(-1);
-    setActiveSlide(activeSlide - 1);
+    if (activeSlide > 1) setActiveSlide(activeSlide - 1);
   };
 
   const handleShowAI = () => {
     setShowAI(true);
     setSideBarOpen(false);
-  }
+  };
 
   const handlecloseAI = () => {
     setShowAI(false);
     setSideBarOpen(true);
-  }
+  };
 
   const toggleSidebar = () => {
-    if(lessonSidebarRef.current){
+    if (lessonSidebarRef.current) {
       lessonSidebarRef.current.toggleSideBar();
     }
-  }
+  };
+
   const lessonSlidesArgs: LessonSlideProps = {
     managerRef: slideManagerRef,
     navigationHandles: { continue: handleContinue, previous: handlePrevious },
@@ -142,14 +186,15 @@ export default function LessonLayout({
     stateActions: {
       setActiveSlide,
       setCanProceed: (value: boolean, data: any = {}) => {
-        // console.log("data from lesson layout", data)
+        // //console.log("data from lesson layout", data)
         if (!data.hasFeedback) {
-          lessonFooterRef?.current && lessonFooterRef?.current.toggleContinue(value);
+          lessonFooterRef?.current &&
+            lessonFooterRef?.current.toggleContinue(value);
         }
         feedbackRef?.current && feedbackRef?.current.toggleContinue(value);
-      }
-    }
-  }
+      },
+    },
+  };
 
   useEffect(() => {
     if (currentLesson) {
@@ -172,7 +217,6 @@ export default function LessonLayout({
       <FeedbackPopup
         ref={feedbackRef}
         footerRef={lessonFooterRef}
-
         onContinue={handleContinue}
       />
       <div className="flex bg-white z-[1000] w-full overflow-hidden urbanist">
@@ -184,53 +228,62 @@ export default function LessonLayout({
         }
         <div className="flex flex-col w-full relative justify-between border-l h-screen">
           <LessonHeader
-            getChapter={null}
-            chapter={currentChapter}
+            ref={lessonHeaderRef}
+            onSlideSelect={() => null}
+            isChatOpen={showAI}
             activeSlide={activeSlide}
             sideBarOpen={sideBarOpen}
+            manager={slideManagerRef}
             currentLesson={currentLesson}
           />
           <div className="flex w-full">
-            <div className={`${showAI ? "w-[65%] pointer-events-none" : "w-full"} relative z-[1200]`}>
-              {showAI &&
+            <div
+              className={`${
+                showAI ? "w-[65%] pointer-events-none" : "w-full"
+              } relative z-[1200]`}
+            >
+              {showAI && (
                 <div className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
-                  <button onClick={handlecloseAI} className="px-4 h-14 relative bottom-40 rounded-full bg-[#7E1593] text-white font-[600] text-[23px]">
+                  <button
+                    onClick={handlecloseAI}
+                    className="px-4 h-14 relative bottom-40 rounded-full bg-[#7E1593] text-white font-[600] text-[23px]"
+                  >
                     &times; close chat
                   </button>
                 </div>
-              }
+              )}
               <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
-                <ToggleNavBtn  handleClick={() => toggleSidebar()} />
-                {currentLesson ?
-                  <LessonContext.Provider value={{
-                    lesson,
-                    feedbackRef
-                  }}>
-                    {lessonSlides && lessonSlides(
-                      { ...lessonSlidesArgs }
-                    )}
+                <ToggleNavBtn handleClick={() => toggleSidebar()} />
+                {currentLesson ? (
+                  <LessonContext.Provider
+                    value={{
+                      lesson,
+                      feedbackRef,
+                    }}
+                  >
+                    {lessonSlides && lessonSlides({ ...lessonSlidesArgs })}
                     {children}
                   </LessonContext.Provider>
-
-                  : <StartScreen />
-                }
+                ) : (
+                  <StartScreen />
+                )}
               </div>
               <div className="relative w-full h-[80px]">
                 {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
-                {currentLesson &&
+                {currentLesson && (
                   <div className="absolute right-10 -top-8">
                     <TransitionButton
                       strings={["AI TUTOR", "Explain this screen"]}
                       handleShowAI={handleShowAI}
                     />
                   </div>
-                }
+                )}
 
                 <LessonFooter
                   ref={lessonFooterRef}
                   currentLesson={currentLesson}
-                  hasPrevious={activeSlide > 1}
+                  hasPrevious={activeSlide > 0}
                   handleShowAI={handleShowAI}
                   feedbackRef={feedbackRef}
                   chatVisible={showAI}
@@ -241,13 +294,14 @@ export default function LessonLayout({
                 />
               </div>
             </div>
-            <ChatSection visible={showAI} lesson={currentLesson} slide={activeSlide} />
+            <ChatSection
+              visible={showAI}
+              lesson={currentLesson}
+              slide={activeSlide}
+            />
           </div>
         </div>
       </div>
     </>
   );
 }
-
-
-
