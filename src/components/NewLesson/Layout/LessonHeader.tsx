@@ -52,7 +52,7 @@ const SlideList: React.FC<SlideListProps> = ({
                   onClick={() => handleClick(index, passed)}
                   className={`${
                     passed
-                      ? "bg-main text-white"
+                      ? "bg-[#7E1593] text-white"
                       : "bg-neutral-100 text-gray-700"
                   } rounded-full h-5 transition-colors text-sm shadow-lg duration-200 ease-in-out transform hover:scale-105`}
                 >
@@ -133,7 +133,7 @@ const LessonHeader = forwardRef(
                       } flex items-center justify-end`}
                     >
                       <div className="h-[5px] w-[5px] rounded-full bg-gray-300 relative">
-                        {isCurrentColumn && isMenuOpen && (
+                        {isCurrentColumn && isMenuOpen && lessonProgress && !isChatOpen && (
                           <div
                             className="absolute -bottom-full z-[1307] -left-[18px] top-[11px] popover"
                           >
