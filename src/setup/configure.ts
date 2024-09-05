@@ -1,6 +1,8 @@
 
 interface ConfigurationOptions {
     baseUrl : string;
+    token: string;
+    authType: string;
 }
 
 const Configuration = {

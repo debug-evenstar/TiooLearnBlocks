@@ -2,8 +2,6 @@ import LessonSlides from "components/NewLesson/LessonSlides";
 import LessonLayout, { LessonSlideProps } from "layouts/LessonLayout";
 import React, { FC } from "react";
 
-import { slides } from "dump/can";
-
 interface LessonPageProps {
   textbook: any;
   chapters: any;
@@ -16,6 +14,8 @@ const LessonPage: FC<LessonPageProps> = ({
   lessons,
   back,
 }) => {
+
+
   return <LessonLayout {...{ 
     back, 
     textbook, 
