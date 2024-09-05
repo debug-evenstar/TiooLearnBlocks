@@ -133,7 +133,7 @@ const LessonHeader = forwardRef(
                       } flex items-center justify-end`}
                     >
                       <div className="h-[5px] w-[5px] rounded-full bg-gray-300 relative">
-                        {isCurrentColumn && isMenuOpen && (
+                        {isCurrentColumn && isMenuOpen && !isChatOpen && (
                           <div
                             className="absolute -bottom-full z-[1307] -left-[18px] top-[11px] popover"
                           >
