@@ -5,7 +5,6 @@ import readingImg from "../../../img/reading.svg";
 
 import LeftArrow from "FigmaIcons/LeftArrow";
 import { FC, forwardRef, useImperativeHandle, useState } from "react";
-import { SidebarManager } from "apps/Editorial/Base/SidebarManager";
 
 interface LessonProps {
   type: "reading" | "assessment";
@@ -16,17 +15,19 @@ interface ChapterDropdownProps {
   title: string;
   lessons: LessonProps[];
   setCurrentLesson: Function;
+  closeSidebar: Function;
 }
 
 const ChapterDropdown: FC<ChapterDropdownProps> = ({
   title,
   lessons,
   setCurrentLesson,
+  closeSidebar,
 }) => {
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(false);
 
   return (
-    <div className="w-full transition-all duration-300">
+    <div className="w-full transition-all duration-1000">
       <div
         onClick={() => setIsActive(!isActive)}
         className="cursor-pointer flex items-center justify-between border-gray-200 border-b"
@@ -36,7 +37,7 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
           <img
             src={downCarret}
             alt=""
-            className={`duration-300 w-[20px] ${isActive && "rotate-[180deg]"}`}
+            className={`duration-1000 w-[20px] ${isActive && "rotate-[180deg]"}`}
           />
         </button>
       </div>
@@ -48,7 +49,10 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
         {lessons.map((lesson: any, index: number) => (
           <li
             key={index}
-            onClick={() => setCurrentLesson(lesson)}
+            onClick={() => {
+              setCurrentLesson(lesson);
+              closeSidebar();
+            }}
             className="flex items-center mb-5 space-x-2 cursor-pointer hover:bg-gray-100 px-2 rounded py-1"
           >
             <img
@@ -59,7 +63,9 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
             />
             <p className="text-start">
               {/* <span className="capitalize font-[600]">{type}: </span> */}
-              <span className="text-[14px] capitalize font-[600]">Reading: </span>
+              <span className="text-[14px] capitalize font-[600]">
+                Reading:{" "}
+              </span>
               <span className="text-[14px] text-nowrap">{lesson.topic}</span>
             </p>
           </li>
@@ -69,59 +75,59 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
   );
 };
 
-const LessonSidebar: FC<any> = forwardRef(({
-  chapters,
-  textbook,
-  setCurrentLesson,
-}, ref) => {
-  const [sideBarOpen, setSideBarOpen] = useState(true)
+const LessonSidebar: FC<any> = forwardRef(
+  ({ chapters, textbook, extToggle, setCurrentLesson }, ref) => {
+    const [sideBarOpen, setSideBarOpen] = useState(true);
 
+    useImperativeHandle(ref, () => ({
+      sideBarOpen,
+      setSideBarOpen,
+      toggleSideBar: () => setSideBarOpen(!sideBarOpen),
+    }));
 
-  useImperativeHandle(ref,() => ({
-    sideBarOpen, setSideBarOpen,
-    toggleSideBar: () => setSideBarOpen(!sideBarOpen)
-  }))
+    const close = () => setSideBarOpen(false);
+    const getClassName = () =>
+      sideBarOpen
+        ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`
+        : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`;
 
-  const close = () => setSideBarOpen(false);
-  const getClassName = () => 
-    sideBarOpen ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-300 transition-all overflow-y-auto max-h-screen h-screen`
-    : `sm:-translate-x-full sm:w-0 fixed sm:relative ease-in-out relative duration-300 transition-all overflow-y-auto max-h-screen h-screen`;
-
-  return (
-    // <div className="w-[413px] px-10 py-4 border-r h-[980px] ">
-    <div
-      className={getClassName()}
-    >
-      {sideBarOpen && (
-        <div className="absolute z-[10000] sm:z-0 bg-white h-screen sm:w-auto w-screen py-4">
-          <div className="px-10 flex items-center justify-between">
-            <img src={logoImg} alt="" className="" />
-            <button className="sm:hidden" onClick={() => close()} >&times;</button>
-          </div>
-          <div className="mt-12 px-4">
-            <button onClick={() => window.history.back()}>
-              <LeftArrow fill="#000000" className="w-[14px]" />
-              {/* <img src={leftArrow} className="w-[18px] text-black" /> */}
-            </button>
-            <div className="text-dark mt-2">
-              <p className="quicksand font-[700]">{textbook.name}</p>
-              {/* <p className="text-sm">By David Ogunshola</p> */}
+    return (
+      // <div className="w-[413px] px-10 py-4 border-r h-[980px] ">
+      <div className={getClassName()}>
+        {sideBarOpen && (
+          <div className="absolute z-[10000] sm:z-0 bg-white h-screen sm:w-auto w-screen py-4">
+            <div className="px-10 flex items-center justify-between">
+              <img src={logoImg} alt="" className="" />
+              <button className="sm:hidden" onClick={() => close()}>
+                &times;
+              </button>
             </div>
-            <div className="text-sm mt-4">
-              {chapters.map((chapter: any, index: number) => (
-                <ChapterDropdown
-                  key={index}
-                  title={chapter.name}
-                  setCurrentLesson={setCurrentLesson}
-                  lessons={chapter.lessons}
-                />
-              ))}
+            <div className="mt-12 px-4">
+              <button onClick={() => window.history.back()}>
+                <LeftArrow fill="#000000" className="w-[14px]" />
+                {/* <img src={leftArrow} className="w-[18px] text-black" /> */}
+              </button>
+              <div className="text-dark mt-2">
+                <p className="quicksand font-[700]">{textbook.name}</p>
+                {/* <p className="text-sm">By David Ogunshola</p> */}
+              </div>
+              <div className="text-sm mt-4">
+                {chapters.map((chapter: any, index: number) => (
+                  <ChapterDropdown
+                    key={index}
+                    title={chapter.name}
+                    setCurrentLesson={setCurrentLesson}
+                    lessons={chapter.lessons}
+                    closeSidebar={() => extToggle()}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      )}  
-    </div>
-  );
-});
+        )}
+      </div>
+    );
+  }
+);
 
 export default LessonSidebar;

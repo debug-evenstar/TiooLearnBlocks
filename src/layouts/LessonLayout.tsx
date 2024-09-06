@@ -86,17 +86,15 @@ export default function LessonLayout({
   const sideBarOpen = lessonSidebarRef?.current?.sideBarOpen;
   const setSideBarOpen = lessonSidebarRef?.current?.setSideBarOpen;
 
-
-
-  console.log(activeSlide);
-
   useEffect(() => {
     if (currentLesson && textbook) {
       GlobalResource.getOrCreateLessonProgress(
         textbook.id,
         currentLesson.id
       ).then((response) => {
-          lessonHeaderRef?.current?.updateLessonProgress(response.data);
+        setActiveSlide(response.data.slide_index);
+        slideManagerRef?.current?.navigator(0, response.data.slide_index);
+        lessonHeaderRef?.current?.updateLessonProgress(response.data);
       });
     }
   }, [currentLesson]);
@@ -123,7 +121,6 @@ export default function LessonLayout({
   };
 
   const handleUpdateProgress = () => {
-    const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
     const currentSlide = slideManagerRef?.current?.activeSlide();
 
     const payload = {
@@ -176,6 +173,7 @@ export default function LessonLayout({
   const toggleSidebar = () => {
     if (lessonSidebarRef.current) {
       lessonSidebarRef.current.toggleSideBar();
+      return lessonSidebarRef?.current?.sideBarOpen;
     }
   };
 
@@ -222,6 +220,7 @@ export default function LessonLayout({
       <div className="flex bg-white z-[1000] w-full overflow-hidden urbanist">
         {
           <LessonSidebar
+            extToggle={() => toggleSidebar()}
             ref={lessonSidebarRef}
             {...{ chapters, textbook, setCurrentLesson }}
           />
@@ -254,7 +253,7 @@ export default function LessonLayout({
               )}
               <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
-                <ToggleNavBtn handleClick={() => toggleSidebar()} />
+                <ToggleNavBtn sideBarRef={lessonSidebarRef} handleClick={() => toggleSidebar()} />
                 {currentLesson ? (
                   <LessonContext.Provider
                     value={{

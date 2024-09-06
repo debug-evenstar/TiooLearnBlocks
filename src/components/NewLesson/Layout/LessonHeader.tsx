@@ -45,7 +45,7 @@ const SlideList: React.FC<SlideListProps> = ({
           {Array(slideCount)
             .fill(null)
             .map((_, index) => {
-              const passed = index <= currentSlideIndex;
+              const passed = index <= currentSlideIndex+1;
               return (
                 <button
                   key={index}
