@@ -92,8 +92,11 @@ export default function LessonLayout({
         textbook.id,
         currentLesson.id
       ).then((response) => {
-        setActiveSlide(response.data.slide_index);
-        slideManagerRef?.current?.navigator(0, response.data.slide_index);
+        const savedIndex = response.data.slide_index;
+        if (savedIndex > 1) {
+          setActiveSlide(savedIndex + 1);
+          slideManagerRef?.current?.navigator(0, savedIndex + 1);
+        }
         lessonHeaderRef?.current?.updateLessonProgress(response.data);
       });
     }
@@ -253,7 +256,10 @@ export default function LessonLayout({
               )}
               <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
-                <ToggleNavBtn sideBarRef={lessonSidebarRef} handleClick={() => toggleSidebar()} />
+                <ToggleNavBtn
+                  sideBarRef={lessonSidebarRef}
+                  handleClick={() => toggleSidebar()}
+                />
                 {currentLesson ? (
                   <LessonContext.Provider
                     value={{
@@ -271,7 +277,7 @@ export default function LessonLayout({
               <div className="relative w-full h-[80px]">
                 {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
                 {currentLesson && (
-                  <div className="absolute right-10 -top-8">
+                  <div className="absolute left-10 -top-8">
                     <TransitionButton
                       strings={["AI TUTOR", "Explain this screen"]}
                       handleShowAI={handleShowAI}
