@@ -27,6 +27,12 @@ const SlideList: React.FC<SlideListProps> = ({
     if (passed) onItemClick(index + 1);
   };
 
+  const canViewSlide = (index: number) => {
+    if(index)
+    if(currentSlideIndex == 0 && index == 0) return true;
+    return  index <= currentSlideIndex + 1;
+  }
+
   return (
     <div
       className={`absolute top-[100%] mt-3 border w-full sm:w-60 rounded-lg -left-6 z-[1300] duration-300
@@ -45,14 +51,17 @@ const SlideList: React.FC<SlideListProps> = ({
           {Array(slideCount)
             .fill(null)
             .map((_, index) => {
-              const passed = index <= currentSlideIndex;
+              const passed = canViewSlide(index);
+
               return (
                 <button
                   key={index}
                   onClick={() => handleClick(index, passed)}
                   className={`${
                     passed
-                      ? "bg-[#7E1593] text-white"
+                      ? activeIndex == index
+                        ? "bg-[#be43d7] text-white"
+                        : "bg-[#7E1593] text-white"
                       : "bg-neutral-100 text-gray-700"
                   } rounded-full h-5 transition-colors text-sm shadow-lg duration-200 ease-in-out transform hover:scale-105`}
                 >
@@ -126,20 +135,21 @@ const LessonHeader = forwardRef(
                     <div
                       onClick={handleIndicatorClick}
                       key={index}
-                      className={`w-10 h-[10px] cursor-pointer px-1 relative ${index==0? 'rounded-l-full':''} ${
-                        active ? "bg-[#7E1593]" : ""
-                      } ${
+                      className={`w-10 h-[10px] cursor-pointer px-1 relative ${
+                        index == 0 ? "rounded-l-full" : ""
+                      } ${active ? "bg-[#7E1593]" : ""} ${
                         isCurrentColumn && "rounded-r-full"
                       } flex items-center justify-end`}
                     >
                       <div className="h-[5px] w-[5px] rounded-full bg-gray-300 relative">
-                        {isCurrentColumn && isMenuOpen && lessonProgress && !isChatOpen && (
-                          <div
-                            className="absolute -bottom-full z-[1307] -left-[18px] top-[11px] popover"
-                          >
-                            <ProgressTip />
-                          </div>
-                        )}
+                        {isCurrentColumn &&
+                          isMenuOpen &&
+                          lessonProgress &&
+                          !isChatOpen && (
+                            <div className="absolute -bottom-full z-[1307] -left-[18px] top-[11px] popover">
+                              <ProgressTip />
+                            </div>
+                          )}
                       </div>
                       {/* { isCurrentColumn && <div className="absolute right-0 w-8 h-8 rotate-90 border bg-white -bottom-[100%]"></div> } */}
                     </div>
@@ -155,7 +165,7 @@ const LessonHeader = forwardRef(
             <SlideList
               isOpen={isMenuOpen}
               currentSlideIndex={lessonProgress?.slide_index}
-              activeIndex={lessonProgress?.slide_index}
+              activeIndex={activeSlide}
               slideCount={slide_count}
               onItemClick={handleSetSlide}
               onClose={() => setIsMenuOpen(false)}

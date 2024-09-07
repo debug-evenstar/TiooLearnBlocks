@@ -158,7 +158,7 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
       <div
         ref={divRef}
         style={{
-          top: 0,
+          bottom: 0,
           right: isVisible ? 0 : "-50%",
           animationTimingFunction: "ease-in-out"
         }}

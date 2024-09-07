@@ -86,17 +86,18 @@ export default function LessonLayout({
   const sideBarOpen = lessonSidebarRef?.current?.sideBarOpen;
   const setSideBarOpen = lessonSidebarRef?.current?.setSideBarOpen;
 
-
-
-  console.log(activeSlide);
-
   useEffect(() => {
     if (currentLesson && textbook) {
       GlobalResource.getOrCreateLessonProgress(
         textbook.id,
         currentLesson.id
       ).then((response) => {
-          lessonHeaderRef?.current?.updateLessonProgress(response.data);
+        const savedIndex = response.data.slide_index;
+        if (savedIndex > 1) {
+          setActiveSlide(savedIndex + 1);
+          slideManagerRef?.current?.navigator(0, savedIndex + 1);
+        }
+        lessonHeaderRef?.current?.updateLessonProgress(response.data);
       });
     }
   }, [currentLesson]);
@@ -123,7 +124,6 @@ export default function LessonLayout({
   };
 
   const handleUpdateProgress = () => {
-    const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
     const currentSlide = slideManagerRef?.current?.activeSlide();
 
     const payload = {
@@ -176,6 +176,7 @@ export default function LessonLayout({
   const toggleSidebar = () => {
     if (lessonSidebarRef.current) {
       lessonSidebarRef.current.toggleSideBar();
+      return lessonSidebarRef?.current?.sideBarOpen;
     }
   };
 
@@ -222,6 +223,7 @@ export default function LessonLayout({
       <div className="flex bg-white z-[1000] w-full overflow-hidden urbanist">
         {
           <LessonSidebar
+            extToggle={() => toggleSidebar()}
             ref={lessonSidebarRef}
             {...{ chapters, textbook, setCurrentLesson }}
           />
@@ -254,7 +256,10 @@ export default function LessonLayout({
               )}
               <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
-                <ToggleNavBtn handleClick={() => toggleSidebar()} />
+                <ToggleNavBtn
+                  sideBarRef={lessonSidebarRef}
+                  handleClick={() => toggleSidebar()}
+                />
                 {currentLesson ? (
                   <LessonContext.Provider
                     value={{
@@ -272,7 +277,7 @@ export default function LessonLayout({
               <div className="relative w-full h-[80px]">
                 {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
                 {currentLesson && (
-                  <div className="absolute right-10 -top-8">
+                  <div className="absolute left-10 -top-8">
                     <TransitionButton
                       strings={["AI TUTOR", "Explain this screen"]}
                       handleShowAI={handleShowAI}
