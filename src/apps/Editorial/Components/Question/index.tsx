@@ -7,12 +7,13 @@ import {
     OptionInterface,
 } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import { calculateMaxResizableArea } from "apps/Editorial/ViewBox/handler";
-import { FC, createRef, useEffect, useState } from "react";
+import { FC, ReactElement, createRef, useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import { updateQuestionInSlide, updateQuestionData } from "./handler";
 import MovableResizer from "../MovableResizer";
 import zIndex from "@mui/material/styles/zIndex";
+import LayoutBox from "./LayoutBox";
 
 interface QuestionComponentProps {
     data: any;
@@ -28,8 +29,6 @@ interface Config {
 
 const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
     const [questions, setQuestions] = useState<any>(data?.data ?? []);
-    const [allOptions, setAllOptions] = useState<OptionInterface[]>([]);
-    const [allInputs, setAllInputs] = useState<InputInterface[]>([]);
     const [optionsConfigurations, setOptionsConfigurations] = useState<{
         [key: string]: Config;
     }>({});
@@ -105,12 +104,13 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                 },
             }
         );
-        updateQuestionData(
-            config.sourceIndex,
-            config.questionHash,
-            { layout },
-            dataKey
-        );
+        config.questionHash &&
+            updateQuestionData(
+                config.sourceIndex,
+                config.questionHash,
+                { layout },
+                dataKey
+            );
     };
 
     useEffect(() => {
@@ -125,8 +125,6 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
         questions.forEach((question: any) => {
             const questionOptions = question.options ?? [];
             const questionInputs = question.inputs ?? [];
-            options = [...options, ...questionOptions];
-            inputs = [...inputs, ...questionInputs];
             [questionOptions, questionInputs].forEach(
                 (list: any[], listIndex: number) => {
                     const dataConfigs =
@@ -153,9 +151,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                 }
             );
         });
-        setAllOptions(() => options);
         setOptionsConfigurations(optionConfigs);
-        setAllInputs(() => inputs);
         setInputConfigurations(inputConfigs);
     }, [questions]);
 
@@ -172,84 +168,124 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
         }
     }, [manager.states]);
 
+    const RenderOptions = (question: QuestionInterface) =>
+        question.options?.map((option: OptionInterface, index: number) => {
+            const config = optionConfig(option.hash);
+            return questionToggleState[config.questionHash] ? (
+                <MovableResizer
+                    key={index + option.title}
+                    draggableAxis={question.useOptionLayout ? "none" : "both"}
+                    resizable={!question.useOptionLayout}
+                    onMove={(data: any) => {
+                        updateLayout(data, option.hash, "options");
+                    }}
+                    size={{
+                        width: optionConfig(option.hash).width,
+                        height: optionConfig(option.hash).height,
+                    }}
+                    onResize={(data: any) => {
+                        updateLayout(data, option.hash, "options");
+                    }}
+                    position={optionConfig(option.hash).position}
+                >
+                    {valueIsUrl(option.title) ? (
+                        <button className="relative text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow overflow-hidden flex justify-center align-center">
+                            <img
+                                className="h-full"
+                                src={option.title}
+                                alt="Option"
+                                draggable={false}
+                            />
+                        </button>
+                    ) : (
+                        <button
+                            className="relative text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow"
+                            dangerouslySetInnerHTML={{
+                                __html: option.title,
+                            }}
+                        ></button>
+                    )}
+                </MovableResizer>
+            ) : (
+                <div key={index + option.title}></div>
+            );
+        });
+
     return (
         <>
-            {allOptions.map((option: OptionInterface, index: number) => {
-                const config = optionConfig(option.hash);
-                return questionToggleState[config.questionHash] ? (
-                    <MovableResizer
-                        key={index + option.title}
-                        draggableAxis="both"
-                        onMove={(data: any) =>
-                            updateLayout(data, option.hash, "options")
-                        }
-                        size={{
-                            width: optionConfig(option.hash).width,
-                            height: optionConfig(option.hash).height,
-                        }}
-                        onResize={(data: any) =>
-                            updateLayout(data, option.hash, "options")
-                        }
-                        position={optionConfig(option.hash).position}
-                    >
-                        {valueIsUrl(option.title) ? (
-                            <button className="relative text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow overflow-hidden flex justify-center align-center">
-                                <img
-                                    className="h-full"
-                                    src={option.title}
-                                    alt="Option"
-                                    draggable={false}
-                                />
-                            </button>
-                        ) : (
-                            <button
-                                className="relative text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow"
-                                dangerouslySetInnerHTML={{
-                                    __html: option.title,
+            {questions.map((question: QuestionInterface, index: number) => (
+                <>
+                    {question.useOptionLayout ? (
+                        <>
+                            <LayoutBox
+                                id={question.hash}
+                                initialItemSize={{ width: 120, height: 50 }}
+                                items={
+                                    question?.options
+                                        ? question.options.map((o, i) =>
+                                              optionConfig(o.hash)
+                                          )
+                                        : []
+                                }
+                                updateLayout={(layouts: any[]) => {
+                                    question.options &&
+                                        question.options.forEach((o, i) =>
+                                            updateLayout(
+                                                layouts[i],
+                                                o.hash,
+                                                "options"
+                                            )
+                                        );
                                 }}
-                            ></button>
-                        )}
-                    </MovableResizer>
-                ) : (
-                    <div key={index + option.title}></div>
-                );
-            })}
-            {allInputs.map((input: InputInterface, index: number) => {
-                const config = inputConfig(input.hash);
-                return questionToggleState[config.questionHash] &&
-                    !(input.linkState == InputLinkedStates.Linked) ? (
-                    <MovableResizer
-                        key={index + input.title}
-                        draggableAxis="both"
-                        onMove={(data: any) =>
-                            updateLayout(data, input.hash, "inputs")
-                        }
-                        size={{
-                            width: inputConfig(input.hash).width,
-                            height: inputConfig(input.hash).height,
-                        }}
-                        onResize={(data: any) =>
-                            updateLayout(data, input.hash, "inputs")
-                        }
-                        position={inputConfig(input.hash).position}
-                        style={{ zIndex: 10 }}
-                        identifier={`Questions.${config.questionHash}.input.${input.hash}`}
-                        isDraggable={
-                            input.linkState == InputLinkedStates.PendingLink
-                        }
-                        // data={`JSON.stringify(More structured data)`} // Switch to this format later
-                    >
-                        <input className="relative bg-white text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md" />
-                        {/* <button
+                            />
+                            {RenderOptions(question)}
+                        </>
+                    ) : (
+                        <>{RenderOptions(question)}</>
+                    )}
+                    {(question?.inputs ?? []).map(
+                        (input: InputInterface, index: number) => {
+                            const config = inputConfig(input.hash);
+                            return questionToggleState[config.questionHash] &&
+                                !(
+                                    input.linkState == InputLinkedStates.Linked
+                                ) ? (
+                                <MovableResizer
+                                    key={index + input.title}
+                                    draggableAxis="both"
+                                    onMove={(data: any) =>
+                                        updateLayout(data, input.hash, "inputs")
+                                    }
+                                    size={{
+                                        width: inputConfig(input.hash).width,
+                                        height: inputConfig(input.hash).height,
+                                    }}
+                                    onResize={(data: any) =>
+                                        updateLayout(data, input.hash, "inputs")
+                                    }
+                                    position={inputConfig(input.hash).position}
+                                    style={{ zIndex: 10 }}
+                                    identifier={`Questions.${config.questionHash}.input.${input.hash}`}
+                                    isDraggable={
+                                        input.linkState ==
+                                        InputLinkedStates.PendingLink
+                                    }
+                                    // data={`JSON.stringify(More structured data)`} // Switch to this format later
+                                >
+                                    <input className="relative bg-white text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md" />
+                                    {/* <button
                                 className="relative text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow"
                             >
                                 {option.title}
                             </button> */}
-                    </MovableResizer>
-                ) : (
-                    <div key={index + input.title}></div>
-                );
-            })}
+                                </MovableResizer>
+                            ) : (
+                                <div key={index + input.title}></div>
+                            );
+                        }
+                    )}
+                </>
+            ))}
         </>
     );
 };
