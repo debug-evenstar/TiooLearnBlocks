@@ -37,7 +37,8 @@ export interface QuestionInterface {
     options?: OptionInterface[];
     inputs?: InputInterface[];
     topics?: any[];
-    useOptionLayout? : boolean
+    useOptionLayout? : boolean;
+    layoutBoxConfig? : any;
 }
 
 const InactiveSidebar: FC<Props> = ({

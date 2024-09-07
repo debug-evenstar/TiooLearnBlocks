@@ -5,11 +5,14 @@ import { _getManager } from "apps/Editorial/Base/Manager";
 // Use of 10 and 20 constants for allowance in sizing and positioning
 const LayoutBox: FC<{
     id: string;
+    isInitialized: boolean;
     initialItemSize: { width: number; height: number };
+    initialLayoutBox? : any;
     items: any[];
     updateLayout: Function;
+    saveLayoutBox : Function;
     children?: any;
-}> = ({ id, initialItemSize, items, updateLayout, children }) => {
+}> = ({ id, isInitialized, initialItemSize, initialLayoutBox, items, updateLayout, saveLayoutBox, children }) => {
     const [initialized, setInitialized] = useState<boolean>(false);
     const [layoutData, setLayoutData] = useState<any>(null);
     const handleLayoutUpdate = () => {};
@@ -19,7 +22,7 @@ const LayoutBox: FC<{
     const layoutRef = useRef<any>(layoutData);
 
     const computeInitialPosition = () => {
-        if (!initialized) {
+        if (!initialized && !isInitialized) {
             const canvasSize = manager.canvasManager.canvas.getCanvasSize();
             const initialLayoutWidth = 0.8 * canvasSize.width;
             const remainingXSpace = canvasSize.width - initialLayoutWidth;
@@ -31,15 +34,20 @@ const LayoutBox: FC<{
                 spacing: { x: 20, y: 10 },
             };
             setLayoutData(calcLayout);
+            saveLayoutBox(calcLayout);
             initialItemSize && setItemSizes({ ...initialItemSize });
             setTimeout(() => organizeLayoutItems(calcLayout, true), 300);
             setInitialized(true);
+        }
+        if(isInitialized){
+            initialLayoutBox && setLayoutData(initialLayoutBox);
         }
     };
 
     const handleMove = ({ position: { x, y } }: any) => {
         const calcLayout = { ...layoutData, position: { x, y } };
         setLayoutData(calcLayout);
+        saveLayoutBox(calcLayout);
         organizeLayoutItems(calcLayout);
     };
 
@@ -52,6 +60,7 @@ const LayoutBox: FC<{
                 position: position ?? layoutData.position,
             };
             setLayoutData(calcLayout);
+            saveLayoutBox(calcLayout);
             organizeLayoutItems(calcLayout, false, axis);
         }
     };
@@ -73,6 +82,7 @@ const LayoutBox: FC<{
             position: { ...layout.position, x: positionX },
         };
         setLayoutData(updatedLayout);
+        saveLayoutBox(updatedLayout);
         return updatedLayout;
     };
 
@@ -91,6 +101,7 @@ const LayoutBox: FC<{
             position: { ...layout.position, y: positionY },
         };
         setLayoutData(updatedLayout);
+        saveLayoutBox(updatedLayout);
         return modifiedPostion ? updatedLayout : false;
     };
 
@@ -198,6 +209,10 @@ const LayoutBox: FC<{
     const verifyMinimumWidth = (itemSize: any) => {
         if (layoutRef.current.size.width < itemSize.width) {
             setLayoutData({
+                ...layoutData,
+                size: { ...layoutRef.current.size, width: itemSize.width },
+            });
+            saveLayoutBox({
                 ...layoutData,
                 size: { ...layoutRef.current.size, width: itemSize.width },
             });

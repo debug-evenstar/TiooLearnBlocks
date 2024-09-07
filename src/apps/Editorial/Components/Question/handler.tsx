@@ -1,4 +1,4 @@
-import { _getManager } from "apps/Editorial/Base/Manager";
+import { _getManager, ManagerInterface } from "apps/Editorial/Base/Manager";
 import { QuestionInterface } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 
 export {};
@@ -55,4 +55,13 @@ export const updateQuestionInSlide = (questionData : QuestionInterface) => {
     }
     manager.canvasManager.updateActiveSlide(updated);
     manager.canvasManager.updateSlides();
+}
+
+export const questionLayoutInitialized = (question : QuestionInterface) => {
+    const manager = _getManager();
+    const slides = manager.lesson.lesson_slides;
+    const activeSlide = slides[manager.slideManager.activeSlide];
+    const questionsComponent = activeSlide.slide_data.find((c:any) => c.component == "Questions")
+    const getQuestion = questionsComponent.data.find((q:any) => q.hash == question.hash);
+    return !!getQuestion.useOptionLayout && !!question.useOptionLayout;
 }
