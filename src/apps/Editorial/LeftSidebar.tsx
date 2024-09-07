@@ -1,4 +1,3 @@
-
 import React, { FC, useEffect, useMemo, useState } from "react";
 import {
     LessonSlideInterface,
@@ -13,7 +12,8 @@ import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { ComponentBaseDataInterface } from "components/interface";
 import LayoutComponent from "components/LayoutBox";
 import RenderPreview from "./Preview/RenderPreview";
-import { MutatingDots, Rings } from "react-loader-spinner";
+import { createRoot } from "react-dom/client";
+
 
 interface Props {
     slides: any;
@@ -24,37 +24,65 @@ interface Props {
 const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
     const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
     const [slideRefs, setSlideRefs] = useState<React.RefObject<any>[]>([]);
-    const [scalePercent, setScalePercent] = useState<any>(1);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [slidePreviews, setSlidePreviews] = useState<string[]>([]);
+    const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
 
     const handleChangeSlide = (index: number) => {
         changeTo(index);
+        setActiveSlideIndex(index);
         manager.setState("rightSidebarState", false);
         manager.setState("activeViewBox", "");
+    };
+
+    const generateSlidePreview = (slideIndex: number) => {
+        const div = document.createElement("div");
+        div.style.setProperty("width", `80vw`);
+        div.style.setProperty("height", `90vh`);
+        div.style.setProperty("position", "relative");
+        div.classList.add(`slide-${slideIndex}-preview`);
+
+        if (slides.length) {
+            const previewBox = () => (
+                <RenderPreview
+                    slide={slides[slideIndex]}
+                    lesson={data}
+                    slideScope={SlideScope}
+                    container={{ current: div }}
+                    raw={true}
+                />
+            );
+            const createDivRoot = createRoot(div);
+            createDivRoot.render(previewBox());
+            document.body.appendChild(div);
+            let boxElement = () => document.querySelector(`.slide-${slideIndex}-preview-box`) as HTMLElement;
+            if ( boxElement() )  {
+                const scaleFraction = boxElement().clientWidth / div.clientWidth;
+                div.style.setProperty("transform", `scale(${scaleFraction})`)
+                boxElement().innerHTML = "";
+                boxElement().appendChild(div);
+            }
+        }
     };
 
     useEffect(() => {
         if (slides.length !== slideRefs.length) {
             setSlideRefs(() => slides.map((slide: any) => React.createRef()));
         }
+        setTimeout(() => {
+            slides.forEach((slide : any, index : number) => generateSlidePreview(index));
+        },1000)
+        // Regenerate previews when no of slides changes
+        // if (slidePreviews.length !== slides.length) {
+        //     setSlidePreviews(
+        //         slides.map((slide: any, index: number) => {
+        //             generateSlidePreview(index);
+        //             return slidePreviews.length > index
+        //                 ? slidePreviews[index]
+        //                 : "";
+        //         })
+        //     );
+        // }
     }, [slides]);
-
-    useEffect(() => {
-        setIsLoading(true);
-        if (slides.length) {
-            const box = document.querySelector(".slide-preview-box");
-            setTimeout(() => {
-                const width = box?.clientWidth;
-                if (width) {
-                    const previewArea = slideRefs[0].current.clientWidth;
-                    const scaler = (previewArea / width).toFixed(2);
-                    setScalePercent(scaler.replace("0", ""));
-                    box.classList.add("w-full");
-                    setIsLoading(false);
-                }
-            }, 1000);
-        }
-    }, [slideRefs]);
 
     return (
         <div className="bg-white shadow relative w-full max-w-[20%] overflow-auto mb-20  pl-[33px] pr-[20px] overflow-y-auto  scrollbar">
@@ -74,30 +102,12 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                         </p>
                         <div className="absolute w-full h-full opacity-0 bg-gray-400 z-10"></div>
                         <div className="text-preview relative z-0 shadow p-2 py-3 h-[198px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
-                            {item.map(
-                                (component: ComponentBaseDataInterface, componentIndex: number) => {
-                                  const Component = loadComponent(component);
-                                  const containerElement = slideRefs[index]?.current;
-                                  const viewArea = containerElement ? { width : containerElement?.clientWidth, height : containerElement?.clientHeight } : null;
-                                  return component.layout ? (
-                                    <LayoutComponent layout={component.layout} key={componentIndex+component.component}>
-                                      <Component
-                                        data={component}
-                                        slide={SlideScope}
-                                        viewArea={viewArea}
-                                      />
-                                    </LayoutComponent>
-                                  ) : (
-                                    <Component
-                                      key={componentIndex+ component.component}
-                                      data={component}
-                                      slide={SlideScope}
-                                      viewArea={viewArea}
-                                    />
-                                  );
-                                }
-                              )}
-                            {/* {isLoading && (
+                                <div
+                                    className={`slide-${index}-preview-box w-full h-full flex justify-center items-center`}
+                                >
+                                </div>
+                            {/* {(!slidePreviews.length ||
+                                !slidePreviews[index]) && (
                                 <div className="w-full h-full flex justify-center items-center">
                                     <Rings
                                         visible={true}
@@ -110,22 +120,47 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                                     />
                                 </div>
                             )} */}
-                            {/* <div
-                                style={{
-                                    transform: `scale(${scalePercent})`,
-                                    left: -(1 - parseFloat(scalePercent) + 0.1) * 100,
-                                }}
-                                className={`slide-preview-box h-full absolute ${
-                                    isLoading ? "opacity-0" : ""
-                                }`}
-                            >
-                                <RenderPreview
-                                    slide={item}
-                                    slideScope={SlideScope}
-                                    raw={true}
-                                    container={slideRefs[index]}
-                                />
-                            </div> */}
+                            {/* {item.map(
+                                (
+                                    component: ComponentBaseDataInterface,
+                                    componentIndex: number
+                                ) => {
+                                    const Component = loadComponent(component);
+                                    const containerElement =
+                                        slideRefs[index]?.current;
+                                    const viewArea = containerElement
+                                        ? {
+                                              width: containerElement?.clientWidth,
+                                              height: containerElement?.clientHeight,
+                                          }
+                                        : null;
+                                    return component.layout ? (
+                                        <LayoutComponent
+                                            layout={component.layout}
+                                            key={
+                                                componentIndex +
+                                                component.component
+                                            }
+                                        >
+                                            <Component
+                                                data={component}
+                                                slide={SlideScope}
+                                                viewArea={viewArea}
+                                            />
+                                        </LayoutComponent>
+                                    ) : (
+                                        <Component
+                                            key={
+                                                componentIndex +
+                                                component.component
+                                            }
+                                            data={component}
+                                            slide={SlideScope}
+                                            viewArea={viewArea}
+                                        />
+                                    );
+                                }
+                            )} */}
                         </div>
                     </div>
                 ))}

@@ -37,6 +37,7 @@ export interface QuestionInterface {
     options?: OptionInterface[];
     inputs?: InputInterface[];
     topics?: any[];
+    useOptionLayout? : boolean
 }
 
 const InactiveSidebar: FC<Props> = ({
@@ -148,6 +149,7 @@ const InactiveSidebar: FC<Props> = ({
                 abstract: true,
                 data: typeof data == "function" ? data(questions) : data,
             } as any;
+
             if (existing.length) {
                 const questionIndex = updated.indexOf(existing[0]);
                 updated[questionIndex] = questionsData;
