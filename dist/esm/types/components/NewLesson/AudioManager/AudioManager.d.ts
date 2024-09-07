@@ -1,8 +1,10 @@
 declare class AudioManager {
     sound_on: boolean;
+    sound_store: any;
     constructor();
     toggleSound(): void;
-    playSound(sound: any): void;
+    loadSound(key: string, url: string): void;
+    playSound(key: string): void;
     playCorrect(): void;
     playContinue(): void;
     playWrong(): void;

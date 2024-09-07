@@ -5,11 +5,17 @@ interface MovableResizerProps {
     draggableAxis: "both" | "x" | "y" | "none";
     position?: ControlPosition;
     onMove?: Function;
+    onDrag?: Function;
     size?: {
         width: number;
         height: number;
     };
     onResize?: Function;
+    resizable?: boolean;
+    minimumSize?: {
+        width: number;
+        height: number;
+    };
     layout?: ComponentLayoutInterface;
     updateLayout?: Function;
     style?: React.CSSProperties;

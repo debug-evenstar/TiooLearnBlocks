@@ -16,6 +16,7 @@ export interface QuestionInterface {
     options?: OptionInterface[];
     inputs?: InputInterface[];
     topics?: any[];
+    useOptionLayout?: boolean;
 }
 declare const InactiveSidebar: FC<Props>;
 export default InactiveSidebar;
