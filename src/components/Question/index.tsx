@@ -11,9 +11,9 @@ import { LessonSlideInterface } from "components/SlideManager/handler";
 
 
 interface QuestionComponentProps {
-    data: any;
-    slide: LessonSlideInterface;
-    viewArea: any;
+  data: any;
+  slide: LessonSlideInterface;
+  viewArea: any;
 }
 
 const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea}) => {
@@ -26,24 +26,39 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea})
         document.querySelectorAll(".active-slide .text-render input")
     );
 
-    useEffect(() => {
-        setQuestions([
-            ...(data?.data
-                ? data.data.map((q: QuestionInterface, index: number) => ({
-                    ...q,
-                    index,
-                }))
-                : []),
-        ]);
-        let inputs: InputInterface[] = [];
-        data?.data.forEach((question: QuestionInterface) => {
-            question?.inputs &&
-                question.inputs.forEach((input: InputInterface) => {
-                    inputs.push(input);
-                });
-        });
-    }, [data, data.data]);
+  useEffect(() => {
+    if (questions.length == answered.length && questions.length !== 0) {
+      slide.dispatch("showContinue", {
+        hasFeedback: !!answered[answered.length - 1].feedback,
+      });
+    }
+  }, [answered]);
 
+  useEffect(() => {
+    setQuestions([
+      ...(data?.data
+        ? data.data.map((q: QuestionInterface, index: number) => ({
+            ...q,
+            index,
+          }))
+        : []),
+    ]);
+    let inputs: InputInterface[] = [];
+    data?.data.forEach((question: QuestionInterface) => {
+      question?.inputs &&
+        question.inputs.forEach((input: InputInterface) => {
+          inputs.push(input);
+        });
+    });
+  }, [data, data.data]);
+
+  useEffect(() => {
+    if (answered.length !== questions.length) {
+      setTimeout(() => {
+        setActiveQuestionIndex(answered.length);
+      }, 1500);
+    }
+  }, [answered]);
 
     useEffect(() => {
         if (answered.length !== questions.length) {

@@ -12,10 +12,8 @@ import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { ComponentBaseDataInterface } from "components/interface";
 import LayoutComponent from "components/LayoutBox";
 import RenderPreview from "./Preview/RenderPreview";
-import { MutatingDots, Rings } from "react-loader-spinner";
 import { createRoot } from "react-dom/client";
-import * as htmlToImage from "html-to-image";
-import { current } from "@reduxjs/toolkit";
+
 
 interface Props {
     slides: any;

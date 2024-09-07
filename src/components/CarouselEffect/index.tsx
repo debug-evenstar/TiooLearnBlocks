@@ -31,7 +31,6 @@ const CarouselEffect : FC<CarouselEffectProps> = (props : any) => {
                     setActiveIndex(() => index);
                 },1100);
             }
-
         }
     }
 
@@ -54,7 +53,7 @@ const CarouselEffect : FC<CarouselEffectProps> = (props : any) => {
                             key={index}
                             style={internalStyles.slideBox}
                             className={`inline-block relative box-border left-0 no-scrollbar
-                                ${activeIndex === index ? "slide-transition slide-box w-full h-full opacity-100 px-[10px]" : "slide-box-clip opacity-0 w-0 h-0"}
+                                ${activeIndex === index ? "slide-transition slide-box w-full h-full opacity-100 px-[10px]" : "slide-box-clip opacity-0"}
                             `}
                         >
                             {child}
