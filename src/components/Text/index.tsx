@@ -60,11 +60,17 @@ const TextComponent: FC<TextComponentProps> = ({
                 const parent = linkedInput.parentElement;
                 const textFill = document.createElement("span");
                 textFill.className =
-                    "relative font-bold text-[#409972] text-[20px] mx-[3px] -bottom-[0.5px]";
+                    "relative font-bold text-[#089c28] text-[20px] mx-[3px] -bottom-[0.5px]";
                 textFill.innerHTML = ` ${data.option.title} `;
                 parent?.replaceChild(textFill, linkedInput);
             }
         });
+        // Disable already added text inputs... Can be removed later
+        if ( textContainerRef?.current ) {
+            Array.from(textContainerRef.current.querySelectorAll("input")).forEach((element) => {
+                (element as HTMLElement).setAttribute("disabled", "");
+            });
+        }
     }, [slide]);
 
     return (

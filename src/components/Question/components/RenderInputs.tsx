@@ -21,6 +21,7 @@ const RenderInputs: FC<{
                     >
                         {answered.length <= questionIndex && (
                             <input
+                                disabled={true}
                                 className={`w-full h-full relative bg-white text-[14px] border-[0.5px] border-[#E5E5E5] rounded-[8px] p-[3px] shadow-md z-[50] shadow-[inset_0_0_6px_2px_rgba(155,41,178,0.6)]
                                     ${answered.length == questionIndex ? ' input-is-active' : ''}
                                 `}
