@@ -57,7 +57,7 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
     }
 
     const feedbackCanSave = () =>
-        optionFeedback.current.title !== "" && optionFeedback.current.content !== "" &&
+        optionFeedback.current.content !== "" &&
         (optionFeedback.current.title !== optionFeedback.previous.title ||
          optionFeedback.current.content !== optionFeedback.previous.content);
 
