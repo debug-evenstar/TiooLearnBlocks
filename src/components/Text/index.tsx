@@ -31,12 +31,12 @@ const TextComponent: FC<TextComponentProps> = ({
 
     const animate = (element : HTMLElement) => {
         if ( element ) {
-            element.style.setProperty("transform", "scale(1.5)");
+            element.style.setProperty("transform", "scale(1.3)");
             element.style.setProperty("text-shadow", "0px 0px 15px #ffb870");
             setTimeout(() => { 
                 element && element.style.setProperty("transform", "scale(1)");
                 element && element.style.setProperty("text-shadow", "0px 0px 0px #fff");
-            }, 600)
+            }, 400)
         }
     };
 
@@ -71,25 +71,30 @@ const TextComponent: FC<TextComponentProps> = ({
                 const parent = linkedInput.parentElement;
                 const textFill = document.createElement("span");
                 textFill.className =
-                    "relative font-bold text-[#089c28] text-[20px] mx-[3px] -bottom-[0.5px]";
+                    "relative inline-block font-bold text-[#089c28] text-[20px] mx-[3px] -bottom-[0.5px]";
                 textFill.innerHTML = ` ${data.option.title} `;
-                textFill.style.setProperty("transition", "transform 0.6s, text-shadow 0.6s");
+                textFill.style.setProperty("transition", "transform 0.4s, text-shadow 0.4s");
                 textFill.style.setProperty("transition-timing-function", "linear");
                 textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
                 parent?.replaceChild(textFill, linkedInput);
-                // setTimeout(() => {
-                //     console.log(textFill);
-                //     animate(textFill);
-                // },2000);
+                setTimeout(() => {
+                    animate(textFill);
+                },300);
             }
         });
-        // Disable already added text inputs... Can be removed later
-        if ( textContainerRef?.current ) {
-            Array.from(textContainerRef.current.querySelectorAll("input")).forEach((element) => {
-                (element as HTMLElement).setAttribute("disabled", "");
-            });
-        }
     }, [slide]);
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            // Disable already added text inputs... Can be removed later
+            if ( textContainerRef?.current ) {
+                Array.from(textContainerRef.current.querySelectorAll("input")).forEach((element) => {
+                    (element as HTMLElement).setAttribute("disabled", "");
+                });
+            }
+        },800)
+    }, [slide, data])
 
     return (
         <>
