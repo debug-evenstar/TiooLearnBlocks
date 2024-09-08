@@ -13,7 +13,7 @@ const RenderInputs: FC<{
 }> = ({ inputs, answered, questionIndex }) => {
     const textFillRef = useRef<HTMLParagraphElement>(null);
     const animationStyle: CSSProperties = {
-        transition: "transform 0.6s, text-shadow 0.6s",
+        transition: "transform 0.4s, text-shadow 0.4s",
         transitionTimingFunction: "linear",
         textShadow : "0px 0px 0px #fff"
     };
@@ -24,7 +24,7 @@ const RenderInputs: FC<{
             setTimeout(() => { 
                 textFillRef?.current && textFillRef?.current.style.setProperty("transform", "scale(1)");
                 textFillRef?.current && textFillRef?.current.style.setProperty("text-shadow", "0px 0px 0px #fff");
-            }, 600)
+            }, 400)
         }
     };
 
