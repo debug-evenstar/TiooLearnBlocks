@@ -24,8 +24,9 @@ const ChatMessage: FC<MessageProps> = ({ content, role }) => {
             className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6`}
         >
             <p
-                className={`px-3 py-2  urbanist w-[65%]  rounded-[10px] break-words ${!isUser ? "text-gray-500 border" : "text-white bg-[#7E1593]"
-                    } `}
+                className={`px-3 py-2  urbanist w-[65%]  rounded-[10px] break-words ${
+                    !isUser ? "text-gray-500 border" : "text-white bg-[#7E1593]"
+                } `}
                 dangerouslySetInnerHTML={{ __html: content }}
             ></p>
         </div>
@@ -43,7 +44,7 @@ const ChatSection: FC<ChatSectionProps> = ({
 
     const chatRef = useRef<any>();
 
-    const handleRecordAudio = () => { };
+    const handleRecordAudio = () => {};
 
     const [messages, setMessages] = useState<MessageProps[]>([]);
 
@@ -67,7 +68,6 @@ const ChatSection: FC<ChatSectionProps> = ({
                 }, 500);
             }
         }
-
         const url = `${baseApiHost()}/open/lesson/asktutor`;
         fetch(url, {
             method: "POST",
@@ -76,7 +76,7 @@ const ChatSection: FC<ChatSectionProps> = ({
             },
             body: JSON.stringify({
                 lesson_id: lesson.id,
-                slide_id: lesson?.lesson_slides[slide - 1]?.id,
+                slide_id: lesson?.lesson_slides[slide]?.id,
                 conversation: updatedConversation.map((convo) => convo.content),
             }),
         })
@@ -87,8 +87,26 @@ const ChatSection: FC<ChatSectionProps> = ({
                 const result = await response.json();
                 setMessages([
                     ...updatedConversation,
-                    { role: "assistant", content: result.data },
+                    { role: "assistant", content: "" },
                 ]);
+                let charIndex = 0;
+                let resultString = "";
+                const typist = setInterval(() => {
+                    if (result.data.length > charIndex) {
+                        resultString += result.data[charIndex];
+                        charIndex++;
+                        setMessages([
+                            ...messages.slice(0, -1),
+                            { role: "assistant", content: resultString },
+                        ]);
+                        chatRef.current.scroll({
+                            top: chatRef.current.scrollHeight,
+                            behavior: "smooth",
+                        });
+                    } else {
+                        clearInterval(typist);
+                    }
+                }, 20);
                 setIsLoading(false);
                 if (chatRef.current) {
                     setTimeout(() => {
@@ -110,10 +128,15 @@ const ChatSection: FC<ChatSectionProps> = ({
         }
     }, [visible]);
 
+    useEffect(() => {
+        setMessages([]);
+    }, [slide]);
+
     return (
         <div
-            className={`${visible ? "w-[35%]" : "w-0"
-                } overflow-hidden relative border-l h-full flex flex-col justify-between z-[1500]`}
+            className={`${
+                visible ? "w-[35%]" : "w-0"
+            } overflow-hidden relative border-l h-full flex flex-col justify-between z-[1500]`}
         >
             {visible && (
                 <div
