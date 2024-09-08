@@ -10,7 +10,7 @@ import { calculateMaxResizableArea } from "apps/Editorial/ViewBox/handler";
 import { FC, ReactElement, createRef, useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
-import { updateQuestionInSlide, updateQuestionData } from "./handler";
+import { updateQuestionInSlide, updateQuestionData, questionLayoutInitialized } from "./handler";
 import MovableResizer from "../MovableResizer";
 import zIndex from "@mui/material/styles/zIndex";
 import LayoutBox from "./LayoutBox";
@@ -112,6 +112,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                 dataKey
             );
     };
+
 
     useEffect(() => {
         setQuestions([...(data?.data ?? [])]);
@@ -219,6 +220,8 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                         <>
                             <LayoutBox
                                 id={question.hash}
+                                isInitialized={questionLayoutInitialized(question)}
+                                initialLayoutBox={question.layoutBoxConfig}
                                 initialItemSize={{ width: 120, height: 50 }}
                                 items={
                                     question?.options
@@ -236,6 +239,12 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                                                 "options"
                                             )
                                         );
+                                }}
+                                saveLayoutBox={(config:any) => {
+                                    updateQuestionInSlide({
+                                        ...question,
+                                        layoutBoxConfig : config
+                                    })
                                 }}
                             />
                             {RenderOptions(question)}

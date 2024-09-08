@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { CSSProperties, FC, useEffect, useRef, useState } from "react";
 import {
     TextComponentProps,
     buildTextData,
@@ -27,6 +27,17 @@ const TextComponent: FC<TextComponentProps> = ({
 
     const showText = () => {
         textContainerRef.current.style.display = "block";
+    };
+
+    const animate = (element : HTMLElement) => {
+        if ( element ) {
+            element.style.setProperty("transform", "scale(1.3)");
+            element.style.setProperty("text-shadow", "0px 0px 15px #ffb870");
+            setTimeout(() => { 
+                element && element.style.setProperty("transform", "scale(1)");
+                element && element.style.setProperty("text-shadow", "0px 0px 0px #fff");
+            }, 400)
+        }
     };
 
     useEffect(() => {
@@ -60,12 +71,30 @@ const TextComponent: FC<TextComponentProps> = ({
                 const parent = linkedInput.parentElement;
                 const textFill = document.createElement("span");
                 textFill.className =
-                    "relative font-bold text-[#409972] text-[20px] mx-[3px] -bottom-[0.5px]";
+                    "relative inline-block font-bold text-[#089c28] text-[20px] mx-[3px] -bottom-[0.5px]";
                 textFill.innerHTML = ` ${data.option.title} `;
+                textFill.style.setProperty("transition", "transform 0.4s, text-shadow 0.4s");
+                textFill.style.setProperty("transition-timing-function", "linear");
+                textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
                 parent?.replaceChild(textFill, linkedInput);
+                setTimeout(() => {
+                    animate(textFill);
+                },300);
             }
         });
     }, [slide]);
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            // Disable already added text inputs... Can be removed later
+            if ( textContainerRef?.current ) {
+                Array.from(textContainerRef.current.querySelectorAll("input")).forEach((element) => {
+                    (element as HTMLElement).setAttribute("disabled", "");
+                });
+            }
+        },800)
+    }, [slide, data])
 
     return (
         <>

@@ -54,6 +54,7 @@ const Text: FC<CanvasText> = ({
             input.setAttribute("data-link", "Questions");
             input.setAttribute("data-hash", data.hash);
             input.setAttribute("data-question-hash", data.questionHash);
+            input.setAttribute("disabled", "");
             input.className =
                 `w-[90px] relative left-[5px] mr-[10px]
                  bg-white text-[14px] border-[2px] border-[#E5E5E5] 
