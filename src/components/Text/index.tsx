@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { CSSProperties, FC, useEffect, useRef, useState } from "react";
 import {
     TextComponentProps,
     buildTextData,
@@ -27,6 +27,17 @@ const TextComponent: FC<TextComponentProps> = ({
 
     const showText = () => {
         textContainerRef.current.style.display = "block";
+    };
+
+    const animate = (element : HTMLElement) => {
+        if ( element ) {
+            element.style.setProperty("transform", "scale(1.5)");
+            element.style.setProperty("text-shadow", "0px 0px 15px #ffb870");
+            setTimeout(() => { 
+                element && element.style.setProperty("transform", "scale(1)");
+                element && element.style.setProperty("text-shadow", "0px 0px 0px #fff");
+            }, 600)
+        }
     };
 
     useEffect(() => {
@@ -62,7 +73,14 @@ const TextComponent: FC<TextComponentProps> = ({
                 textFill.className =
                     "relative font-bold text-[#089c28] text-[20px] mx-[3px] -bottom-[0.5px]";
                 textFill.innerHTML = ` ${data.option.title} `;
+                textFill.style.setProperty("transition", "transform 0.6s, text-shadow 0.6s");
+                textFill.style.setProperty("transition-timing-function", "linear");
+                textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
                 parent?.replaceChild(textFill, linkedInput);
+                // setTimeout(() => {
+                //     console.log(textFill);
+                //     animate(textFill);
+                // },2000);
             }
         });
         // Disable already added text inputs... Can be removed later
