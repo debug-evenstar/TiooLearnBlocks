@@ -4,3 +4,4 @@ export declare const getQuestionsComponent: () => false | import("../../../../co
 export declare const getQuestionIndex: (hash: string) => any;
 export declare const updateQuestionData: (dataIndex: number, questionHash: string, data: any, dataKey: string) => void;
 export declare const updateQuestionInSlide: (questionData: QuestionInterface) => void;
+export declare const questionLayoutInitialized: (question: QuestionInterface) => boolean;
