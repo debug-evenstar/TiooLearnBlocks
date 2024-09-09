@@ -85,7 +85,7 @@ const RenderOptions: FC<{
                 lessonContext,
                 updatedAnsweredList.length == totalQuestions
             );
-        }, 800);
+        }, 500);
     };
     const showOptionShadow = (questionIndex: number) => {
         return answered.length > questionIndex
