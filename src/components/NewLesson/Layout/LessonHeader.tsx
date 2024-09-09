@@ -94,7 +94,7 @@ const LessonHeader = forwardRef(
       updateLessonProgress: (data: any) => setLessonProgress(data),
     }));
 
-    const slide_count = currentLesson?.lesson_slides?.length || 0;
+    const slide_count: number =  currentLesson?.lesson_slides?.length || 0;
     const duration = currentLesson?.duration
       ?.toLowerCase()
       .replace("minute", "min");
@@ -123,10 +123,10 @@ const LessonHeader = forwardRef(
           <div>
             <p className="text-gray-500 text-sm">Your progress</p>
             <p className="text-[#7E1593] font-[700]">
-              {slide_count} Slide{slide_count !== 1 && "s"} in this lesson
+              {slide_count} Slide{(slide_count != 1) && "s"} in this lesson
             </p>
-            <div className="flex items-center w-fit bg-gray-50 rounded-full">
-              {Array(5)
+            <div className="flex items-center w-52 bg-gray-50 rounded-full">
+              {Array(slide_count <= 5 ? slide_count: 5)
                 .fill(null)
                 .map((_, index) => {
                   const active = position >= index;
@@ -135,7 +135,7 @@ const LessonHeader = forwardRef(
                     <div
                       onClick={handleIndicatorClick}
                       key={index}
-                      className={`w-10 h-[10px] cursor-pointer px-1 relative ${
+                      className={`w-full h-[10px] cursor-pointer px-1 relative ${
                         index == 0 ? "rounded-l-full" : ""
                       } ${active ? "bg-[#7E1593]" : ""} ${
                         isCurrentColumn && "rounded-r-full"
