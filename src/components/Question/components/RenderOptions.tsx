@@ -1,36 +1,51 @@
 import { _getManager } from "apps/Editorial/Base/Manager";
-import { OptionInterface, OptionTypes } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
+import {
+    OptionInterface,
+    OptionTypes,
+} from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import LayoutComponent from "components/LayoutBox";
 import { useLessonContext } from "contexts/LessonContext";
 import { FC, useState } from "react";
 import { triggerFeedback } from "../handler";
 import { QuestionInterface } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 import { LessonSlideInterface } from "components/SlideManager/handler";
+import { audioManager } from "components/NewLesson/AudioManager/AudioManager";
 
 const RenderOptions: FC<{
     options: OptionInterface[];
     answered: any[];
-    setAnswered : Function;
-    question : QuestionInterface,
+    setAnswered: Function;
+    question: QuestionInterface;
     questionIndex: number;
-    totalQuestions : number;
-    slideManager : LessonSlideInterface,
-    viewArea : any;
-}> = ({ options, answered, setAnswered, question, questionIndex,totalQuestions, slideManager, viewArea }) => {
+    totalQuestions: number;
+    slideManager: LessonSlideInterface;
+    viewArea: any;
+}> = ({
+    options,
+    answered,
+    setAnswered,
+    question,
+    questionIndex,
+    totalQuestions,
+    slideManager,
+    viewArea,
+}) => {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [locked, setLocked] = useState<any[]>([]);
     const optionFontSizeFraction = 2;
     const lessonContext = useLessonContext();
-    const optionColor = (option: OptionInterface, questionIndex : number) => {
+    const optionColor = (option: OptionInterface, questionIndex: number) => {
         if (selectedOptions.includes(option.hash)) {
             if (
                 locked.map((o: OptionInterface) => o.hash).includes(option.hash)
             )
                 return "bg-[#2D6A4F] text-white cursor-pointer";
-            if (option.isAnswer) return "bg-[#2C7721] text-white cursor-pointer";
+            if (option.isAnswer)
+                return "bg-[#2C7721] text-white cursor-pointer";
             return "bg-[#FC8B52] text-white cursor-pointer";
         }
-        if (answered.length > questionIndex) return "bg-gray-100 text-gray-300 cursor-not-allowed";
+        if (answered.length > questionIndex)
+            return "bg-gray-100 text-gray-300 cursor-not-allowed";
         return "cursor-pointer";
     };
     const selectOption = (
@@ -52,19 +67,26 @@ const RenderOptions: FC<{
         }
     };
 
-    const processAnswered = (option:OptionInterface) => {
+    const processAnswered = (option: OptionInterface) => {
         const updatedAnsweredList = [...answered, option];
-        if ( option.isAnswer ) {
+        if (option.isAnswer) {
+            audioManager.playCorrect();
             setAnswered(updatedAnsweredList);
-            slideManager.dispatch("answerQuestion", {question, option})
+            slideManager.dispatch("answerQuestion", { question, option });
             setTimeout(() => {
                 setLocked([...locked, option]);
             }, 1500);
+        } else {
+            audioManager.playWrong();
         }
         setTimeout(() => {
-            triggerFeedback(option, lessonContext, (updatedAnsweredList.length == totalQuestions));
-        },800)
-    }
+            triggerFeedback(
+                option,
+                lessonContext,
+                updatedAnsweredList.length == totalQuestions
+            );
+        }, 800);
+    };
     const showOptionShadow = (questionIndex: number) => {
         return answered.length > questionIndex
             ? ""
@@ -73,39 +95,36 @@ const RenderOptions: FC<{
     const valueIsUrl = (value: string) => value.includes("https://");
     return (
         <>
-            {options?.map(
-                (option: OptionInterface, optionIndex: number) => {
-                    return (
-                        <LayoutComponent
-                            key={questionIndex + option.title}
-                            layout={option.layout ?? {}}
-                        >
-                            <button
-                                style={{
-                                    fontSize: `${
-                                        (optionFontSizeFraction *
-                                            viewArea.width) /
-                                        100
-                                    }px`,
-                                }}
-                                className={
-                                    `w-full h-full absolute border-[2px] inherit-font overflow-hidden
+            {options?.map((option: OptionInterface, optionIndex: number) => {
+                return (
+                    <LayoutComponent
+                        key={questionIndex + option.title}
+                        layout={option.layout ?? {}}
+                    >
+                        <button
+                            style={{
+                                fontSize: `${
+                                    (optionFontSizeFraction * viewArea.width) /
+                                    100
+                                }px`,
+                            }}
+                            className={
+                                `w-full h-full absolute border-[2px] inherit-font overflow-hidden
                                                 border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow ` +
-                                    optionColor(option, questionIndex) +
-                                    ` ` +
-                                    showOptionShadow(questionIndex)
-                                }
-                                onClick={() => selectOption(option, question)}
-                                dangerouslySetInnerHTML={{
-                                    __html: valueIsUrl(option.title)
-                                        ? `<img className='h-full' src="${option.title}" alt="Option" draggable="false"/>`
-                                        : option.title,
-                                }}
-                            ></button>
-                        </LayoutComponent>
-                    );
-                }
-            )}
+                                optionColor(option, questionIndex) +
+                                ` ` +
+                                showOptionShadow(questionIndex)
+                            }
+                            onClick={() => selectOption(option, question)}
+                            dangerouslySetInnerHTML={{
+                                __html: valueIsUrl(option.title)
+                                    ? `<img className='h-full' src="${option.title}" alt="Option" draggable="false"/>`
+                                    : option.title,
+                            }}
+                        ></button>
+                    </LayoutComponent>
+                );
+            })}
         </>
     );
 };
