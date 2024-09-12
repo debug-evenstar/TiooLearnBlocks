@@ -48,7 +48,7 @@ const RenderPreview: FC<{
             }}
             className={`mx-auto h-full relative ${raw ? "" : "bg-[#fafafa]"}`}
         >
-            {slide.map(
+            {slide && slide.map(
                 (component: ComponentBaseDataInterface, index: number) => {
                     const Component = loadComponent(component);
                     const viewArea = {
@@ -56,9 +56,8 @@ const RenderPreview: FC<{
                         height: calculatedArea.height,
                     };
                     return component.layout ? (
-                        <LayoutComponent layout={component.layout}>
+                        <LayoutComponent key={index} layout={component.layout}>
                             <Component
-                                key={index}
                                 data={component}
                                 slide={slideScope}
                                 viewArea={viewArea}

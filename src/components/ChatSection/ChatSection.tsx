@@ -3,6 +3,7 @@ import { FC, useState, useRef, useEffect } from "react";
 import { FaMicrophone } from "react-icons/fa";
 import { PiPaperPlaneRightFill } from "react-icons/pi";
 import { ThreeDots } from "react-loader-spinner";
+import Configuration from "setup/configure";
 import { baseApiHost } from "utilities/url";
 
 interface MessageProps {
@@ -24,8 +25,10 @@ const ChatMessage: FC<MessageProps> = ({ content, role }) => {
             className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6`}
         >
             <p
-                className={`px-3 py-2  urbanist w-[65%]  rounded-[10px] break-words ${
-                    !isUser ? "text-gray-500 border" : "text-white bg-[#7E1593]"
+                className={`px-3 py-2  urbanist w-[65%]  rounded-[10px] break-words text-[18px] ${
+                    !isUser
+                        ? "text-[#545454] border"
+                        : "text-white bg-[#7E1593]"
                 } `}
                 dangerouslySetInnerHTML={{ __html: content }}
             ></p>
@@ -68,11 +71,12 @@ const ChatSection: FC<ChatSectionProps> = ({
                 }, 500);
             }
         }
-        const url = `${baseApiHost()}/open/lesson/asktutor`;
+        const url = `${baseApiHost()}/lesson/asktutor`;
         fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${Configuration.load()?.token}`
             },
             body: JSON.stringify({
                 lesson_id: lesson.id,
@@ -85,28 +89,12 @@ const ChatSection: FC<ChatSectionProps> = ({
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const result = await response.json();
-                setMessages([
+                const updatedMessages: MessageProps[] = [
                     ...updatedConversation,
                     { role: "assistant", content: "" },
-                ]);
-                let charIndex = 0;
-                let resultString = "";
-                const typist = setInterval(() => {
-                    if (result.data.length > charIndex) {
-                        resultString += result.data[charIndex];
-                        charIndex++;
-                        setMessages([
-                            ...messages.slice(0, -1),
-                            { role: "assistant", content: resultString },
-                        ]);
-                        chatRef.current.scroll({
-                            top: chatRef.current.scrollHeight,
-                            behavior: "smooth",
-                        });
-                    } else {
-                        clearInterval(typist);
-                    }
-                }, 20);
+                ];
+                setMessages(updatedMessages);
+                typingAction(result, updatedMessages);
                 setIsLoading(false);
                 if (chatRef.current) {
                     setTimeout(() => {
@@ -122,6 +110,29 @@ const ChatSection: FC<ChatSectionProps> = ({
             });
     };
 
+    const typingAction = (result: any, messageList: MessageProps[]) => {
+        let charIndex = 0;
+        let resultString = "";
+        const typist = setInterval(() => {
+            if (result.data.length > charIndex) {
+                resultString += result.data[charIndex];
+                charIndex++;
+                const typedMessage: any = {
+                    role: "assistant",
+                    content: resultString,
+                };
+                messageList[messageList.length - 1] = typedMessage;
+                setMessages([...messageList]);
+                chatRef.current.scroll({
+                    top: chatRef.current.scrollHeight,
+                    behavior: "smooth",
+                });
+            } else {
+                clearInterval(typist);
+            }
+        }, 20);
+    };
+
     useEffect(() => {
         if (!messages.length && visible) {
             handleSendMessage();
@@ -135,35 +146,37 @@ const ChatSection: FC<ChatSectionProps> = ({
     return (
         <div
             className={`${
-                visible ? "w-[35%]" : "w-0"
-            } overflow-hidden relative border-l h-full flex flex-col justify-between z-[1500]`}
+                visible ? "w-[50%]" : "w-0"
+            } overflow-hidden relative border-l flex flex-col z-[1500]`}
         >
             {visible && (
                 <div
                     id="chat-box"
-                    className="grow px-4 max-h-[calc(70vh)] transition-none overflow-y-auto pt-5"
+                    className="px-4 grow transition-none overflow-y-auto min-h-0"
                     ref={chatRef}
                 >
-                    {messages?.map((item) => (
-                        <ChatMessage {...item} />
-                    ))}
-                    {isLoading && (
-                        <div className="w-[30%] border-[1px] rounded-[10px] flex justify-center">
-                            <ThreeDots
-                                visible={true}
-                                height="45"
-                                width="45"
-                                color="rgba(126,21,147,1)"
-                                radius="9"
-                                ariaLabel="three-dots-loading"
-                                wrapperStyle={{}}
-                                wrapperClass=""
-                            />
-                        </div>
-                    )}
+                    <div className="min-h-[100%] pt-4 pb-2 flex flex-col justify-end">
+                        {messages?.map((item) => (
+                            <ChatMessage {...item} />
+                        ))}
+                        {isLoading && (
+                            <div className="w-[30%] border-[1px] rounded-[10px] flex justify-center">
+                                <ThreeDots
+                                    visible={true}
+                                    height="45"
+                                    width="45"
+                                    color="rgba(126,21,147,1)"
+                                    radius="9"
+                                    ariaLabel="three-dots-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClass=""
+                                />
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
-            <div className="border-t transition-none h-[80px] flex items-center px-4 w-full px-">
+            <div className="border-t transition-none h-[80px] min-h-[80px] flex items-center px-4 w-full">
                 <div className="flex transition-none items-center h-[45px] w-full gap-x-5 justify-between">
                     <div className="border rounded-[5px] h-full w-full flex items-center gap-x-3 px-3">
                         <span>
@@ -200,8 +213,11 @@ const ChatSection: FC<ChatSectionProps> = ({
                         <input
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
+                            onKeyDown={(e) =>
+                                e.key == "Enter" && handleSendMessage()
+                            }
                             type="text"
-                            placeholder="Ask a question"
+                            placeholder="Send a message"
                             className="text outline-none w-full"
                         />
                     </div>
