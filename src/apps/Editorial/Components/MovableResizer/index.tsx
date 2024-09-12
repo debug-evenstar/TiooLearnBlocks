@@ -157,6 +157,7 @@ const MovableResizer: FC<MovableResizerProps> = ({
     useEffect(() => {
         if (position) {
             setDraggablePosition(position);
+            setShadowPosition(position);
         }
     }, [position]);
 

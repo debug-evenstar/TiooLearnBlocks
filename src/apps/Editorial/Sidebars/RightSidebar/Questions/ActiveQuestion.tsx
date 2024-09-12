@@ -62,7 +62,8 @@ interface OptionLayoutInterface {
     width: number;
     height: number;
     spacing: { x: number; y: number };
-    direction: string;
+    direction?: string;
+    alignment: "left" | "center";
 }
 
 const ActiveQuestion: FC<Props> = ({
@@ -92,6 +93,7 @@ const ActiveQuestion: FC<Props> = ({
             height: 50,
             spacing: { x: 20, y: 10 },
             direction: "horizontal",
+            alignment: "left",
         });
     const manager = _getManager();
 
@@ -306,6 +308,26 @@ const ActiveQuestion: FC<Props> = ({
     }, [question]); //Possible loop
 
     useEffect(() => {
+        let optionSizes = {};
+        if (question?.options?.length) {
+            optionSizes = {
+                width: question.options[0].layout?.size?.width ?? 120,
+                height: question.options[0].layout?.size?.height ?? 50,
+            };
+        }
+        let spacing =
+            question?.layoutBoxConfig?.spacing ?? optionLayoutSettings.spacing;
+        let alignment =
+            question?.layoutBoxConfig?.alignment ??
+            optionLayoutSettings.alignment;
+        setOptionLayoutSettings({
+            ...optionLayoutSettings,
+            ...optionSizes,
+            ...{ spacing, alignment },
+        });
+    }, [question.options]);
+
+    useEffect(() => {
         setQuestions((prev: any) => {
             const questionIndex = prev.findIndex(
                 (q: QuestionInterface) => q.hash == question.hash
@@ -471,7 +493,10 @@ const ActiveQuestion: FC<Props> = ({
                                             max={400}
                                             onChange={({ target }) =>
                                                 updateOptionLayoutSetting({
-                                                    width: Math.min( parseInt(target.value), 400),
+                                                    width: Math.min(
+                                                        parseInt(target.value),
+                                                        400
+                                                    ),
                                                 })
                                             }
                                         />
@@ -489,7 +514,10 @@ const ActiveQuestion: FC<Props> = ({
                                             max={150}
                                             onChange={({ target }) =>
                                                 updateOptionLayoutSetting({
-                                                    height: Math.min( parseInt(target.value), 150),
+                                                    height: Math.min(
+                                                        parseInt(target.value),
+                                                        150
+                                                    ),
                                                 })
                                             }
                                         />
@@ -527,7 +555,9 @@ const ActiveQuestion: FC<Props> = ({
                                             type="text"
                                             inputMode="numeric"
                                             pattern="[0-9\s]{13,19}"
-                                            value={optionLayoutSettings.spacing.y}
+                                            value={
+                                                optionLayoutSettings.spacing.y
+                                            }
                                             onChange={({ target }) =>
                                                 updateOptionLayoutSetting({
                                                     spacing: {
@@ -538,6 +568,41 @@ const ActiveQuestion: FC<Props> = ({
                                             }
                                         />
                                     </div>
+                                </div>
+                                <div className="ml-1">
+                                    <input
+                                        className="relative top-[1px] mr-[4px]"
+                                        type="checkbox"
+                                        name="use-layout"
+                                        checked={
+                                            optionLayoutSettings.alignment ==
+                                            "center"
+                                        }
+                                        onChange={() =>
+                                            updateOptionLayoutSetting({
+                                                alignment:
+                                                    optionLayoutSettings.alignment ==
+                                                    "left"
+                                                        ? "center"
+                                                        : "left",
+                                            })
+                                        }
+                                    />
+                                    <label
+                                        className="text-[14px] cursor-pointer font-semibold"
+                                        onClick={() =>
+                                            setOptionLayoutSettings({
+                                                ...optionLayoutSettings,
+                                                alignment:
+                                                    optionLayoutSettings.alignment ==
+                                                    "left"
+                                                        ? "center"
+                                                        : "left",
+                                            })
+                                        }
+                                    >
+                                        Center Align
+                                    </label>
                                 </div>
                             </>
                         )}

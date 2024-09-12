@@ -139,10 +139,6 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     useImperativeHandle(ref, () => ({
       showFeedback(title: string, content: string, type: FeedbackType, shouldContinue?: boolean) {
         setFeedbackContinue(!!shouldContinue);
-        type === FeedbackType.WRONG ?
-          audioManager.playWrong()
-          :
-          audioManager.playCorrect();
         setValues(title, content, type);
         setCanProceed(!!shouldContinue);
       },

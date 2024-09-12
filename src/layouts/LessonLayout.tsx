@@ -238,10 +238,10 @@ export default function LessonLayout({
             manager={slideManagerRef}
             currentLesson={currentLesson}
           />
-          <div className="flex w-full">
+          <div className="flex w-full min-h-0">
             <div
               className={`${
-                showAI ? "w-[65%] pointer-events-none" : "w-full"
+                showAI ? "w-[50%] pointer-events-none" : "w-full"
               } relative z-[1200]`}
             >
               {showAI && (

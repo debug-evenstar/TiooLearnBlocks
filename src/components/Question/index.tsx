@@ -88,6 +88,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea})
                 return (
                     <>
                         {viewArea && activeQuestionIndex == index && <RenderOptions
+                            key={index}
                             options={question.options ?? []}
                             answered={answered}
                             setAnswered={setAnswered}
@@ -98,6 +99,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea})
                             slideManager={slide}
                         />}
                         <RenderInputs
+                            key={'input'+index}
                             inputs={question.inputs ?? []}
                             answered={answered}
                             questionIndex={index}

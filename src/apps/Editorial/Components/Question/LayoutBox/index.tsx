@@ -1,18 +1,28 @@
 import { createRef, FC, useEffect, useRef, useState } from "react";
 import MovableResizer from "../../MovableResizer";
 import { _getManager } from "apps/Editorial/Base/Manager";
+import { objectsAreEqual } from "utilities/object";
 
 // Use of 10 and 20 constants for allowance in sizing and positioning
 const LayoutBox: FC<{
     id: string;
     isInitialized: boolean;
     initialItemSize: { width: number; height: number };
-    initialLayoutBox? : any;
+    initialLayoutBox?: any;
     items: any[];
     updateLayout: Function;
-    saveLayoutBox : Function;
+    saveLayoutBox: Function;
     children?: any;
-}> = ({ id, isInitialized, initialItemSize, initialLayoutBox, items, updateLayout, saveLayoutBox, children }) => {
+}> = ({
+    id,
+    isInitialized,
+    initialItemSize,
+    initialLayoutBox,
+    items,
+    updateLayout,
+    saveLayoutBox,
+    children,
+}) => {
     const [initialized, setInitialized] = useState<boolean>(false);
     const [layoutData, setLayoutData] = useState<any>(null);
     const handleLayoutUpdate = () => {};
@@ -20,6 +30,9 @@ const LayoutBox: FC<{
     const [itemConfig, setItemConfig] = useState<any>(null);
     const itemPropRef = useRef<any>(itemConfig);
     const layoutRef = useRef<any>(layoutData);
+
+    const isLayoutReady = () =>
+        layoutData && layoutData?.size && layoutData.position;
 
     const computeInitialPosition = () => {
         if (!initialized && !isInitialized) {
@@ -32,6 +45,7 @@ const LayoutBox: FC<{
                 size: { width: initialLayoutWidth, height: 120 },
                 position: { x: initialXOffset, y: initialYOffset },
                 spacing: { x: 20, y: 10 },
+                alignment: "left",
             };
             setLayoutData(calcLayout);
             saveLayoutBox(calcLayout);
@@ -39,7 +53,7 @@ const LayoutBox: FC<{
             setTimeout(() => organizeLayoutItems(calcLayout, true), 300);
             setInitialized(true);
         }
-        if(isInitialized){
+        if (isInitialized) {
             initialLayoutBox && setLayoutData(initialLayoutBox);
         }
     };
@@ -68,10 +82,15 @@ const LayoutBox: FC<{
         updateLayout(items.map(() => ({ width, height })));
     };
 
-    const recalculateLayoutWidth = (layout: any, itemWidth: number) => {
+    const recalculateLayoutWidth = (
+        layout: any,
+        itemWidth: number,
+        useExact: boolean = false
+    ) => {
         const canvasSize = manager.canvasManager.canvas.getCanvasSize();
-        const updatedWidth =
-            layout.size.width + layout.spacing.x + itemWidth + 10;
+        const updatedWidth = useExact
+            ? itemWidth
+            : layout.size.width + layout.spacing.x + itemWidth + 10;
         let positionX = layout.position.x;
         if (layout.position.x + updatedWidth > canvasSize.width - 20) {
             positionX = canvasSize.width - updatedWidth - 20;
@@ -114,15 +133,18 @@ const LayoutBox: FC<{
         const unwrapX = Math.floor(
             layout.size.width / (layout.spacing.x + itemSize.width + 10)
         );
-        if (layouts.length && unwrapX < layouts.length) {
+        if (layouts.length && unwrapX < layouts.length && unwrapX >= 1) {
             const toWrap: any[] = layouts.slice(unwrapX);
             const wrapped = toWrap.map((item, index) => {
+                const wrapCount = toWrap.length;
+                const totalRowWidth = (itemSize.width * unwrapX) + (layout.spacing.x * (unwrapX+1));
+                const levelSpacingX = (layout.alignment == "center" && wrapCount < unwrapX) ? ((totalRowWidth - (itemSize.width * wrapCount))/(wrapCount + 1))  : layout.spacing.x;
                 const position = {
                     position: {
                         x:
                             layout.position.x +
                             itemSize.width * index +
-                            layout.spacing.x * (index + 1),
+                            levelSpacingX * (index + 1),
                         y:
                             layout.position.y +
                             level * (itemSize.height + layout.spacing.y) +
@@ -136,7 +158,9 @@ const LayoutBox: FC<{
                 (level + 1) * (itemSize.height + 20)
             );
             if (calc) {
-                return wrapItems(calc, layouts, itemSize, level);
+                // return wrapItems(calc, layouts, itemSize, level);
+                organizeLayoutItems(calc);
+                return;
             }
             return layouts
                 .slice(0, unwrapX)
@@ -207,15 +231,14 @@ const LayoutBox: FC<{
     };
 
     const verifyMinimumWidth = (itemSize: any) => {
-        if (layoutRef.current.size.width < itemSize.width) {
-            setLayoutData({
-                ...layoutData,
-                size: { ...layoutRef.current.size, width: itemSize.width },
-            });
-            saveLayoutBox({
-                ...layoutData,
-                size: { ...layoutRef.current.size, width: itemSize.width },
-            });
+        const spacingX = layoutRef.current.spacing.x;
+        const spacingWithAllowance = itemSize.width + spacingX * 2;
+        if (layoutRef.current.size.width < spacingWithAllowance) {
+            recalculateLayoutWidth(
+                layoutRef.current,
+                spacingWithAllowance,
+                true
+            );
         }
     };
 
@@ -233,14 +256,19 @@ const LayoutBox: FC<{
 
     useEffect(() => {
         manager.event.listen(`layout.${id}`, (data: any) => {
-            if (data.spacing) {
-                let spacing = data.spacing;
+            if (data.spacing || data.alignment) {
+                let { spacing, alignment } = data;
                 setLayoutData({
                     ...layoutRef.current,
                     ...{
+                        alignment: alignment ?? layoutRef.current.alignment,
                         spacing: {
-                            x: spacing.x ? parseInt(spacing.x) : layoutRef.current.spacing.x,
-                            y: spacing.y ? parseInt(spacing.y) : layoutRef.current.spacing.y,
+                            x: spacing?.x
+                                ? parseInt(spacing.x)
+                                : layoutRef.current.spacing.x,
+                            y: spacing?.y
+                                ? parseInt(spacing.y)
+                                : layoutRef.current.spacing.y,
                         },
                     },
                 });
@@ -258,12 +286,12 @@ const LayoutBox: FC<{
             }
             setTimeout(() => {
                 organizeLayoutItems(layoutRef.current);
-            }, 500);
+            }, 300);
         });
     }, [manager]);
     return (
         <>
-            {layoutData && (
+            {isLayoutReady() && (
                 <MovableResizer
                     draggableAxis="both"
                     onMove={handleMove}

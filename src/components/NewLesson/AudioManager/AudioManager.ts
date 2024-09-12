@@ -11,8 +11,8 @@ class AudioManager {
     // }
     this.loadSound("correct","https://res.cloudinary.com/dbgorivob/video/upload/v1724531976/onxko3tgciatas5tzfqc.mp3");
     this.loadSound("continue","https://res.cloudinary.com/dbgorivob/video/upload/v1724531976/dnatog5ulj3gk9gdljn2.mp3");
-    this.loadSound("wrong","https://res.cloudinary.com/dbgorivob/video/upload/v1724531977/akqquxh60ycfqzd1gpra.mp3");
-    this.loadSound("save","https://res.cloudinary.com/dbgorivob/video/upload/v1724531976/ifqdu3wszmmcctnme41t.mp3");
+    this.loadSound("save","https://res.cloudinary.com/dbgorivob/video/upload/v1724531977/akqquxh60ycfqzd1gpra.mp3");
+    this.loadSound("wrong","https://res.cloudinary.com/dbgorivob/video/upload/v1724531976/ifqdu3wszmmcctnme41t.mp3");
     
   }
 
