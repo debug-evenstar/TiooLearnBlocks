@@ -65,6 +65,9 @@ export const questionLayoutInitialized = (question : QuestionInterface) => {
         return false;
     }
     const questionsComponent = activeSlide.slide_data.find((c:any) => c.component == "Questions")
+    if ( !questionsComponent ) {
+        return false;
+    }
     const getQuestion = questionsComponent.data.find((q:any) => q.hash == question.hash);
-    return !!getQuestion.useOptionLayout && !!question.useOptionLayout;
+    return !!getQuestion?.useOptionLayout && !!question.useOptionLayout;
 }
