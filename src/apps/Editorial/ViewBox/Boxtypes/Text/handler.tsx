@@ -8,6 +8,7 @@ import { RefObject } from "react";
 import ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 import { objectsAreIdentical } from "utilities/object";
+import Tooltip from "./Tooltip";
 
 /* -------------------------------------------------------------------------- */
 /*                             INTERFACE FOR TEXT                             */
@@ -238,6 +239,8 @@ const formatTextStyle = (element: HTMLElement, styles: CSSStyleDeclaration) => {
     return element;
 };
 
+
+
 const createElementWithStyles = (
     tagName: string,
     styles: CSSStyleDeclaration
@@ -249,6 +252,21 @@ const createElementWithStyles = (
     });
     return element;
 };
+
+export const handleAddTip = (tip : string) => {
+    const range = getRange();
+    if (range && range.toString()) {
+        const value = range.toString();
+        range.deleteContents();
+        const tipComponent = (
+            <Tooltip text={value} tip={tip} />
+        );
+        var span = document.createElement("span");
+        range.surroundContents(span);
+        const root = createRoot(span);
+        root.render(tipComponent);
+    }
+}
 
 // Function to check for existing text format and deactivate
 

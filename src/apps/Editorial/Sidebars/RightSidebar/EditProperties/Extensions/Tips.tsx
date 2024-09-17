@@ -2,8 +2,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { ManagerInterface } from "apps/Editorial/Base/Manager";
 import EmojiTextArea from "apps/Editorial/ViewBox/Boxtypes/Text/EmojiTextArea";
+import { handleAddTip } from "apps/Editorial/ViewBox/Boxtypes/Text/handler";
 import React, { FC, useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
+
 
 interface Props {
   manager: ManagerInterface;
@@ -16,7 +18,7 @@ const Tips: FC<Props> = ({ manager }) => {
   const addTooltip = manager.canvasManager.canvas.functions?.addTooltip;
 
   const handleAddToolTip = (input: string) => {
-    addTooltip(input);
+    handleAddTip(input);
     setInput("");
     setIsActive(false);
   };
