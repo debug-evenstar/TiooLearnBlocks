@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
-import { calculateMaxResizableArea, getOriginalName } from "../../handler";
+import { calculateMaxResizableArea, getOriginalName } from "../../ViewBox/handler";
 import { OptionsDataState } from "apps/Editorial/Base/StateInterface";
 
 const Flashcard: FC<any> = ({ id, manager, image, index }) => {

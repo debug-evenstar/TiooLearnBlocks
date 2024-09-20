@@ -18,17 +18,15 @@ const Text: FC<CanvasText> = ({
     id,
     viewBoxRef,
     manager,
-    isEditable,
-    setIsEditable,
+    active
 }) => {
-    const activeId = manager.states.activeViewBox;
 
-    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const editableRef = useRef<HTMLDivElement>(null);
 
     const [textareaRowCount, setTextareaRowCount] = useState(1);
     const [textValue, setTextValue] = useState("");
     const [isDraggedOver, setIsDraggedOver] = useState<boolean>(false);
+    const [isEditable, setIsEditable] = useState<boolean>(active)
 
     const onChange = (event: any) => {
         handleTextChange(event, manager);
@@ -78,25 +76,6 @@ const Text: FC<CanvasText> = ({
     };
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            const viewBox = viewBoxRef.current;
-            const textArea = textareaRef.current;
-            if (
-                viewBox &&
-                !viewBox.contains(event.target as Node) &&
-                textArea
-            ) {
-                setIsEditable(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEditable, viewBoxRef, textareaRef]);
-
-    useEffect(() => {
         const textComponentData =
             manager.canvasManager.canvas.getComponentData(id);
         textComponentData &&
@@ -118,14 +97,6 @@ const Text: FC<CanvasText> = ({
         textValue,
         editableRef.current?.innerHTML,
     ]);
-
-    useEffect(() => {
-        if (id === activeId) {
-            setIsEditable(true);
-            setState("editableTextRef", editableRef);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeId]);
 
     useEffect(() => {
         const handleSelectionChange = () => {
@@ -199,7 +170,7 @@ const Text: FC<CanvasText> = ({
         <div
             id={id}
             className={`flex flex-col justify-between p-1 h-full w-full relative border-2 border-[#F8F7F7] ${
-                !isEditable && "handle cursor-move"
+                (!isEditable || !active) && "handle cursor-move"
             }`}
             onDragEnter={(e) => setIsDraggedOver(true)}
             onDragOver={(e) => setIsDraggedOver(true)}
@@ -210,9 +181,9 @@ const Text: FC<CanvasText> = ({
             <div
                 ref={editableRef}
                 className={`w-full h-full outline-none resize-none no-scrollbar ${
-                    !isEditable && "cursor-move"
+                    (!isEditable || !active) && "cursor-move"
                 }`}
-                contentEditable={isEditable}
+                contentEditable={isEditable && active}
                 onInput={(e) => onChange(e)}
                 onChange={(e) => onChange(e)}
                 dangerouslySetInnerHTML={{ __html: textValue }}

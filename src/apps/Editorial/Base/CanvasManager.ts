@@ -1,6 +1,6 @@
 import { ComponentBaseDataInterface } from "components/interface";
 import { DataGroupInterface, ManagerInterface } from "./Manager";
-import { textComponentData } from "../ViewBox/Boxtypes/Text/handler";
+import { textComponentData } from "../Components/Text/handler";
 import {
     flashcardComponentData,
     gridComponentData,
@@ -173,6 +173,7 @@ export class CanvasManager implements CanvasManagerInterface {
                     ? {}
                     : this.activeComponent.data;
             this.activeComponent.data.index = componentIndexInSlide;
+            this.activeComponent.data.id = id;
         }
     }
 

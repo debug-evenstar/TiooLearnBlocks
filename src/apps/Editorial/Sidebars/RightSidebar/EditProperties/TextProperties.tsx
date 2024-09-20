@@ -23,9 +23,9 @@ import {
   RiUnderline,
 } from "react-icons/ri";
 import { ColorResult, SketchPicker } from "react-color";
-import { toggleWrapperStyle } from "apps/Editorial/ViewBox/Boxtypes/Text/handlers/stylesHandler";
+import { toggleWrapperStyle } from "apps/Editorial/Components/Text/handlers/stylesHandler";
 import { CurrentStylesState } from "apps/Editorial/Base/StateInterface";
-import { TextFormatType, formatText, getRange, textComponentData, toggleList, verifySelectionProperty } from "apps/Editorial/ViewBox/Boxtypes/Text/handler";
+import { TextFormatType, formatText, getRange, textComponentData, toggleList, verifySelectionProperty } from "apps/Editorial/Components/Text/handler";
 import { getParseTreeNode } from "typescript";
 
 interface Props {

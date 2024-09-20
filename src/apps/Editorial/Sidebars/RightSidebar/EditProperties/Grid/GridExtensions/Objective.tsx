@@ -9,7 +9,7 @@ import {
   OptionsDataState,
 } from "apps/Editorial/Base/StateInterface";
 import ImageIcon, { GridOptionImageIcon } from "FigmaIcons/ImageIcon";
-import { uploadFile } from "apps/Editorial/ViewBox/Boxtypes/Image/handler";
+import { uploadFile } from "apps/Editorial/Components/Image/handler";
 
 interface Props {
   manager: ManagerInterface;

@@ -19,10 +19,11 @@ interface MovableResizerProps {
     position?: ControlPosition;
     onMove?: Function;
     onDrag?: Function;
+    onMouseDown?: Function;
     size?: { width: number; height: number };
     onResize?: Function;
-    resizable? : boolean;
-    minimumSize? : {width : number, height : number}
+    resizable?: boolean;
+    minimumSize?: { width: number; height: number };
     layout?: ComponentLayoutInterface;
     updateLayout?: Function;
     style?: React.CSSProperties;
@@ -36,9 +37,10 @@ const MovableResizer: FC<MovableResizerProps> = ({
     position,
     onMove,
     onDrag,
+    onMouseDown,
     size,
     onResize,
-    resizable=true,
+    resizable = true,
     minimumSize,
     layout,
     updateLayout,
@@ -74,7 +76,8 @@ const MovableResizer: FC<MovableResizerProps> = ({
         return { x, y };
     };
 
-    const getResizeAxis = (handle : string) => (handle=="w"||handle=="e") ? "x" : "y";
+    const getResizeAxis = (handle: string) =>
+        handle == "w" || handle == "e" ? "x" : "y";
 
     const handleResize = (previousSize: any, ref: React.RefObject<any>) => {
         if (!resizable) {
@@ -89,8 +92,14 @@ const MovableResizer: FC<MovableResizerProps> = ({
                 elementPosition,
                 canvasSize
             );
-            const width = Math.max( Math.min(size.width, maxArea.maxWidth), (minimumSize?.width ?? 0) );
-            const height = Math.max(Math.min(size.height, maxArea.maxHeight), (minimumSize?.height ?? 0));
+            const width = Math.max(
+                Math.min(size.width, maxArea.maxWidth),
+                minimumSize?.width ?? 0
+            );
+            const height = Math.max(
+                Math.min(size.height, maxArea.maxHeight),
+                minimumSize?.height ?? 0
+            );
             if (
                 width !== previousSize.width ||
                 height !== previousSize.height
@@ -106,7 +115,13 @@ const MovableResizer: FC<MovableResizerProps> = ({
                     }
                 }
                 setDimensions({ width, height });
-                onResize && onResize({ width, height, position: offsetDrag, axis : getResizeAxis(handle)});
+                onResize &&
+                    onResize({
+                        width,
+                        height,
+                        position: offsetDrag,
+                        axis: getResizeAxis(handle),
+                    });
                 updateLayout &&
                     updateLayout({ width, height, position: offsetDrag });
             }
@@ -114,7 +129,7 @@ const MovableResizer: FC<MovableResizerProps> = ({
     };
 
     const handleMove = (event: any, data: any) => {
-        if ((data.x !== 0 || data.y !== 0) && (draggableAxis !== "none")) {
+        if ((data.x !== 0 || data.y !== 0) && draggableAxis !== "none") {
             const moveData: any = { x: data.x, y: data.y };
             setDraggablePosition(moveData);
             onMove && onMove({ position: moveData });
@@ -180,6 +195,9 @@ const MovableResizer: FC<MovableResizerProps> = ({
                 position={draggablePosition} //Experimental
                 bounds="parent"
                 disabled={hasHandles}
+                onMouseDown={() => {
+                    onMouseDown && onMouseDown();
+                }}
             >
                 <Resizable
                     width={dimensions.width}
@@ -203,6 +221,9 @@ const MovableResizer: FC<MovableResizerProps> = ({
                         onDoubleClick={() => setHasHandles(!hasHandles)}
                         onMouseEnter={toggleActiveClass}
                         onMouseLeave={toggleActiveClass}
+                        onMouseDown={() => {
+                            onMouseDown && onMouseDown();
+                        }}
                     >
                         {children}
                     </div>

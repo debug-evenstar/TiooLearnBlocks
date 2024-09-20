@@ -1,6 +1,6 @@
 import QuestionEditorialComponent from "../Components/Question";
-import Image from "../ViewBox/Boxtypes/Image/Image";
-import Text from "../ViewBox/Boxtypes/Text/Text";
+import Image from "../Components/Image/Image";
+import Text from "../Components/Text/Text";
 
 const keyToComponentMapper: { [key: string]: any } = {
     Text : Text,

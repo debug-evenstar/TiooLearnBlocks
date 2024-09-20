@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import "../../../../../ViewBox/Boxtypes/Text/EmojiTextArea.css";
+import "../../../../../Components/Text/EmojiTextArea.css";
 
 interface EmojiTextAreaProps {
   value: string;

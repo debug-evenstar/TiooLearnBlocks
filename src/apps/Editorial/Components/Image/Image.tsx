@@ -7,7 +7,7 @@ import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { OptionsDataState } from "apps/Editorial/Base/StateInterface";
-import {percentValue} from "../../../../../utilities/maths";
+import {percentValue} from "../../../../utilities/maths";
 
 const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
   const activeId = manager.states.activeViewBox;

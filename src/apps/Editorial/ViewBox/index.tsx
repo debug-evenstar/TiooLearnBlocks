@@ -4,7 +4,7 @@ import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ViewBoxContent, calculateMaxResizableArea } from "./handler";
 import { ManagerInterface, setComponentLayout } from "../Base/Manager";
-import { toggleWrapperStyle } from "./Boxtypes/Text/handlers/stylesHandler";
+import { toggleWrapperStyle } from "../Components/Text/handlers/stylesHandler";
 import { ComponentBaseDataInterface } from "components/interface";
 import { useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
