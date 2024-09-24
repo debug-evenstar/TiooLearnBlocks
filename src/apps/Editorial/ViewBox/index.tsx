@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 //import { CanvasComponentViewBox } from "../interfaces";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css";
-import { ViewBoxContent, calculateMaxResizableArea } from "./handler";
+import { calculateMaxResizableArea } from "./handler";
 import { ManagerInterface, setComponentLayout } from "../Base/Manager";
 import { toggleWrapperStyle } from "../Components/Text/handlers/stylesHandler";
 import { ComponentBaseDataInterface } from "components/interface";
@@ -123,14 +123,14 @@ const ViewBox: FC<Props> = ({ id, manager, handleDelete }) => {
             height: viewBoxSize.height + "px",
           }}
         >
-          {ViewBoxContent(
+          {/* {ViewBoxContent(
             id,
             manager,
             viewBoxRef,
             isEditable,
             setIsEditable,
             viewBoxSize
-          )}
+          )} */}
         </div>
       </Resizable>
     </>

@@ -1,14 +1,11 @@
 import { CanvasStates } from "apps/Editorial/Base/CanvasManager";
-import {
-    ManagerInterface,
-    _getManager,
-} from "apps/Editorial/Base/Manager";
+import { ManagerInterface, _getManager } from "apps/Editorial/Base/Manager";
 import { ComponentBaseDataInterface } from "components/interface";
 import { RefObject } from "react";
 import ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 import { objectsAreIdentical } from "utilities/object";
-import Tooltip from "./Tooltip";
+import Tooltip, { TipManager } from "./Tooltip";
 
 /* -------------------------------------------------------------------------- */
 /*                             INTERFACE FOR TEXT                             */
@@ -91,7 +88,7 @@ const setDefaultStyles = (element: HTMLElement) => {
 
 export const initializeParentTag = (
     editableRef: React.RefObject<HTMLDivElement>,
-    force : boolean = false
+    force: boolean = false
 ) => {
     const editable: any = editableRef.current;
     let parentTag: any = editable.querySelector("p.main");
@@ -239,8 +236,6 @@ const formatTextStyle = (element: HTMLElement, styles: CSSStyleDeclaration) => {
     return element;
 };
 
-
-
 const createElementWithStyles = (
     tagName: string,
     styles: CSSStyleDeclaration
@@ -253,20 +248,32 @@ const createElementWithStyles = (
     return element;
 };
 
-export const handleAddTip = (tip : string) => {
+export const handleAddTip = (tip: string) => {
     const range = getRange();
+    const manager = _getManager();
     if (range && range.toString()) {
         const value = range.toString();
         range.deleteContents();
-        const tipComponent = (
-            <Tooltip text={value} tip={tip} />
-        );
+        const tipComponent = <Tooltip text={value} tip={tip} />;
         var span = document.createElement("span");
         range.surroundContents(span);
         const root = createRoot(span);
         root.render(tipComponent);
+        const textElement = manager.canvasManager.activeComponentElement();
+        const editableArea = textElement.querySelector(
+            "div[contenteditable=true]"
+        );
+        clearSelection();
+        if (editableArea) {
+            setTimeout(() => {
+                manager.canvasManager.canvas.updateActiveComponentData(
+                    textComponentData(editableArea.innerHTML)
+                );
+                configureTipManager(editableArea);
+            }, 1000);
+        }
     }
-}
+};
 
 // Function to check for existing text format and deactivate
 
@@ -376,6 +383,59 @@ export const verifySelectionProperty = () => {
     }
 };
 
+export const configureTipManager = (element: any) => {
+    const handleEnterEvent = (event: any) => {
+        const tipText = event.target.querySelector(".tip-text");
+        if (tipText) {
+            const root = createRoot(tipText);
+            root.render(
+                <>
+                    {tipText.innerText}
+                    <TipManager element={tipText} />
+                </>
+            );
+        }
+    };
+    const handleLeaveEvent = (event: any) => {
+        const tipText = event.target.querySelector(".tip-text");
+        if (tipText) {
+            tipText.setAttribute("contenteditable", false);
+            tipText.querySelector("button") &&
+                tipText.removeChild(tipText.querySelector("button"));
+            if (tipText.innerText == "" || tipText.innerText == " ") {
+                tipText.innerHTML = "....";
+            }
+        }
+    };
+    
+    /* -------------------- REGISTER TOOLTIP MANAGER LISTENER ------------------- */
+    if (element) {
+        element.querySelectorAll(".tooltip").forEach((node: any) => {
+            node.addEventListener("mouseenter", handleEnterEvent);
+            node.addEventListener("mouseleave", handleLeaveEvent);
+        });
+    }
+    return () => {
+        if (element) {
+            element.querySelectorAll(".tooltip").forEach((node: any) => {
+                node.removeEventListener("mouseenter", handleEnterEvent);
+                node.removeEventListener("mouseleave", handleLeaveEvent);
+            });
+        }
+    };
+};
+
+export const focusOnTipEditable = (element: HTMLElement) => {
+    const position = element.innerText.length;
+    let range = document.createRange();
+    let sel = window.getSelection();
+    range.setStart(element.childNodes[0], position);
+    range.collapse(true);
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+    element.focus();
+};
+
 /* ---------------------------- HELPER FUNCTIONS ---------------------------- */
 
 export function removePx(value: string): string {
@@ -423,6 +483,21 @@ const nullifyStyles = (styles: any) => {
         modified[styleName] = null;
     });
     return modified;
+};
+
+const clearSelection = () => {
+    if (window.getSelection) {
+        if (window.getSelection()?.empty) {
+            // Chrome
+            window.getSelection()?.empty();
+        } else if (window.getSelection()?.removeAllRanges) {
+            // Firefox
+            window.getSelection()?.removeAllRanges();
+        }
+    } else if ((document as any).selection) {
+        // IE?
+        (document as any).selection.empty();
+    }
 };
 
 const startsWithHtmlTextTag = (text: string) => {

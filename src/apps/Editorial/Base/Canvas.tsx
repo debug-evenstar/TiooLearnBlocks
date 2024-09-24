@@ -96,6 +96,9 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
                 },
             }
         );
+        manager.canvasManager.canvas.updateActiveComponentData({
+            layout,
+        });
     };
 
     useEffect(() => {

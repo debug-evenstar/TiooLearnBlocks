@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Header from "../components/Header";
 import RightSidebar from "../apps/Editorial/Sidebars/RightSidebar/RightSidebar";
-import LeftSidebar from "../apps/Editorial/LeftSidebar";
+import LeftSidebar from "../apps/Editorial/Sidebars/LeftSidebar";
 import { ManagerInterface } from "apps/Editorial/Base/Manager";
 
 interface MainLayoutProps {

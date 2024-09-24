@@ -23,6 +23,7 @@ interface CanvasInterface {
     components: ComponentBaseDataInterface[];
     getCanvasSize: Function;
     getComponentData: Function;
+    getOriginalName : Function;
     parseSlideToCanvas: Function;
     updateActiveComponentData: Function;
     saveActiveComponentData: Function;
@@ -71,6 +72,22 @@ class Canvas implements CanvasInterface {
     getCanvasSize() {
         const canvas = document.getElementById("editorial-canvas");
         return { width: canvas?.offsetWidth, height: canvas?.offsetHeight };
+    }
+
+    // for extracting the name of the component
+    getOriginalName(str: string): string {
+        const nameSplit = str.split("-");
+        if (nameSplit.length > 1) {
+            if (nameSplit[0] === "Flash Card") {
+                return "FlashCard";
+            }
+            if (nameSplit[0] === "GridSteps") {
+                return "Grid";
+            }
+            return nameSplit[0];
+        } else {
+            return str;
+        }
     }
 
     getComponentData(id: string) {

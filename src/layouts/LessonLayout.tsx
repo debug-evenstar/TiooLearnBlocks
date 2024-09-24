@@ -254,7 +254,7 @@ export default function LessonLayout({
                   </button>
                 </div>
               )}
-              <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
+              <div className="relative px-28 flex grow flex-col h-[calc(100vh_-_170px)]">
                 <AudioButton />
                 <ToggleNavBtn
                   sideBarRef={lessonSidebarRef}

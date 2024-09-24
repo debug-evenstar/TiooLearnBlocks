@@ -5,14 +5,12 @@ import {
     handleTextChange,
     resizeBox,
     removePx,
-    setState,
     initializeParentTag,
+    configureTipManager,
 } from "./handler";
 import {
     CurrentStylesState,
-    OptionsDataState,
 } from "apps/Editorial/Base/StateInterface";
-import { text } from "stream/consumers";
 
 const Text: FC<CanvasText> = ({
     id,
@@ -165,6 +163,10 @@ const Text: FC<CanvasText> = ({
             } catch(error) {console.log(error)}
         })
     }, []);
+
+    useEffect(() => {
+        configureTipManager(editableRef?.current);
+    },[id]);
 
     return (
         <div
