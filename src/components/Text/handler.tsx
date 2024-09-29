@@ -21,7 +21,7 @@ export interface TextData extends ComponentBaseDataInterface {
 export interface TextComponentProps extends ComponentBasePropsInterface {
     styles?: TextStyles;
     data: TextData;
-    activeSlideIndex : number;
+    activeSlideIndex: number;
     altHeaderStyle: string;
 }
 
@@ -158,6 +158,42 @@ const handleFormatting = (content: string) => {
     return collect.list;
 };
 
+const animate = (element: HTMLElement) => {
+    if (element) {
+        element.style.setProperty("transform", "scale(1.3)");
+        element.style.setProperty("text-shadow", "0px 0px 15px #ffb870");
+        setTimeout(() => {
+            element && element.style.setProperty("transform", "scale(1)");
+            element &&
+                element.style.setProperty("text-shadow", "0px 0px 0px #fff");
+        }, 400);
+    }
+};
+
+export const handleAnswerQuestion = (data: any) => {
+    // Check if any linked inputs exists and populate them
+    const linkedInput = document.querySelector(
+        `.text-render input[data-question-hash='${data.question.hash}']`
+    );
+    if (linkedInput) {
+        const parent = linkedInput.parentElement;
+        const textFill = document.createElement("span");
+        textFill.className =
+            "relative inline-block font-bold text-[#089c28] text-[20px] mx-[3px] -bottom-[0.5px]";
+        textFill.innerHTML = ` ${data.option?.title ?? data.answer } `;
+        textFill.style.setProperty(
+            "transition",
+            "transform 0.4s, text-shadow 0.4s"
+        );
+        textFill.style.setProperty("transition-timing-function", "linear");
+        textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
+        parent?.replaceChild(textFill, linkedInput);
+        setTimeout(() => {
+            animate(textFill);
+        }, 300);
+    }
+};
+
 export const processTextStyles = () => {
     // Some Data Here
 };
@@ -175,9 +211,13 @@ export const buildTextData = (data: string, viewArea: any) => {
     const textNodeList = abstractBody.querySelectorAll("*[data-type=text]");
     textNodeList.forEach((node: Element | any) => {
         // For parsing pixel dependent styles
-        pixelDependentStyles.forEach((styleName : string) => {
-            if (node && node.hasAttribute("data-container-pixel") && node.style[styleName]) {
-                const style : string = node.style[styleName];
+        pixelDependentStyles.forEach((styleName: string) => {
+            if (
+                node &&
+                node.hasAttribute("data-container-pixel") &&
+                node.style[styleName]
+            ) {
+                const style: string = node.style[styleName];
                 // Some work left here
                 const parseFontSize: number = Number.parseInt(
                     style.replace("px", "")
@@ -187,12 +227,12 @@ export const buildTextData = (data: string, viewArea: any) => {
                 ) as number;
                 if (viewArea) {
                     node.style[styleName] = `${
-                        (parseFontSize / relativeContainerPixel) * viewArea.width
+                        (parseFontSize / relativeContainerPixel) *
+                        viewArea.width
                     }px`;
                 }
             }
         });
-
     });
     return abstractBody.innerHTML;
 };

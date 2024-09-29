@@ -110,7 +110,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
   }
 
   const handleActiveStyles = (propertyName : string, value : any = true) => 
-    (propertiesActiveState[propertyName] == value ? "text-white bg-[#E6E6FA]" : "");
+    (propertiesActiveState[propertyName] === value ? "text-white bg-[#E6E6FA]" : "");
 
 
   useEffect(() => {

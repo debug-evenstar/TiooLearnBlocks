@@ -58,7 +58,7 @@ class Canvas implements CanvasInterface {
             ...Object.getOwnPropertyNames(Object.getPrototypeOf(object)),
         ];
         const methods = functions.sort().filter((e, i, arr) => {
-            if (e !== arr[i + 1] && typeof object[e] == "function") return true;
+            if (e !== arr[i + 1] && typeof object[e] === "function") return true;
         });
         methods.forEach((methodName: string, index: number) => {
             if (methodName !== "constructor") {
@@ -182,7 +182,7 @@ export class CanvasManager implements CanvasManagerInterface {
             const componentIndexInSlide: number = this.activeSlide.findIndex(
                 (data: any) => data.id === id
             );
-            if (componentIndexInSlide == -1) {
+            if (componentIndexInSlide === -1) {
                 return;
             }
             this.activeComponent.data =
@@ -198,7 +198,7 @@ export class CanvasManager implements CanvasManagerInterface {
         if (this.activeSlide && this.activeSlide.length) {
             const updated = this.activeSlide;
             const existingComponentIndex = this.activeSlide.findIndex(
-                (item: any) => item.id == component.id
+                (item: any) => item.id === component.id
             );
             if (existingComponentIndex >= 0) {
                 updated[existingComponentIndex] = {

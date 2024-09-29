@@ -28,17 +28,24 @@ interface Props {
     lessonlist: any;
 }
 
+export enum QuestionTypes {
+    "Multichoice" = "multichoice",
+    "Subjective" = "subjective",
+}
+
 export interface QuestionInterface {
     hash: string;
     title: string;
     query: string;
     media: any[];
+    type: QuestionTypes;
     optionType: OptionTypes;
     options?: OptionInterface[];
     inputs?: InputInterface[];
+    answer? : string;
     topics?: any[];
-    useOptionLayout? : boolean;
-    layoutBoxConfig? : any;
+    useOptionLayout?: boolean;
+    layoutBoxConfig?: any;
 }
 
 const InactiveSidebar: FC<Props> = ({
@@ -74,7 +81,7 @@ const InactiveSidebar: FC<Props> = ({
     const loadQuestions = () => {
         if (activeSlideData) {
             const slideQuestions: any = activeSlideData.filter(
-                (item: any) => item.component == "Questions"
+                (item: any) => item.component === "Questions"
             );
             if (slideQuestions.length) {
                 return [...slideQuestions[0].data];
@@ -111,6 +118,7 @@ const InactiveSidebar: FC<Props> = ({
         const question: QuestionInterface = {
             hash: randomString(10),
             title: title,
+            type: QuestionTypes.Multichoice,
             query: "",
             media: [],
             optionType: OptionTypes.Single,
@@ -135,22 +143,18 @@ const InactiveSidebar: FC<Props> = ({
 
     const updateSlideQuestions = (data: any) => {
         const manager = _getManager();
-        if (
-            manager.canvasManager.activeSlide &&
-            manager.canvasManager.activeSlide.length
-        ) {
+        if (manager.canvasManager.activeSlide) {
             const updated = manager.canvasManager.activeSlide;
-            const existing = manager.canvasManager.activeSlide.filter(
-                (item: any) => item.component == "Questions"
+            const existing = (manager.canvasManager.activeSlide ?? []).filter(
+                (item: any) => item.component === "Questions"
             );
             const questionsData = {
                 component: "Questions",
                 theme: null,
                 canvas: true,
                 abstract: true,
-                data: typeof data == "function" ? data(questions) : data,
+                data: typeof data === "function" ? data(questions) : data,
             } as any;
-
             if (existing.length) {
                 const questionIndex = updated.indexOf(existing[0]);
                 updated[questionIndex] = questionsData;
@@ -168,7 +172,7 @@ const InactiveSidebar: FC<Props> = ({
         if (activeQuestion) {
             let previousActive = questions.find(
                 (question: QuestionInterface) =>
-                    question.hash == activeQuestion.hash
+                    question.hash === activeQuestion.hash
             );
             setActiveQuestion(previousActive ? { ...previousActive } : null);
         }
@@ -176,17 +180,18 @@ const InactiveSidebar: FC<Props> = ({
 
     useEffect(() => {
         setQuestionToggleStates([
-            ...questions.map((q:QuestionInterface) => {
-                const questionToggle = manager.states.canvasStates?.questionToggle ?? {};
+            ...questions.map((q: QuestionInterface) => {
+                const questionToggle =
+                    manager.states.canvasStates?.questionToggle ?? {};
                 return questionToggle[q.hash] ?? true;
-            })
+            }),
         ]);
     }, [questions, manager.states]);
 
     const Item = () => {
         const [isOpen, setIsOpen] = useState(true);
         const [isActive, setIsActive] = useState(1);
-        return <div></div>
+        return <div></div>;
         // return (
         //     <div className="w-full my-5 p-4">
         //         <h3 className="text-[12px] text-[#87909E] font-medium">

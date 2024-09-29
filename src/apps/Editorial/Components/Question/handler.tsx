@@ -5,7 +5,7 @@ export {};
 
 export const getQuestionsComponent = () => {
     const manager = _getManager();
-    const questions = manager.canvasManager.activeSlide?.filter((item : any) => item.component == "Questions");
+    const questions = manager.canvasManager.activeSlide?.filter((item : any) => item.component === "Questions");
     if (questions && questions.length) {
         return questions[0];
     }
@@ -14,7 +14,7 @@ export const getQuestionsComponent = () => {
 
 export const getQuestionIndex = (hash : string) => {
     const questions : any = getQuestionsComponent();
-    const questionIndex = questions.data.findIndex((q:QuestionInterface) => q.hash == hash);
+    const questionIndex = questions.data.findIndex((q:QuestionInterface) => q.hash === hash);
     return questionIndex;
 }
 
@@ -64,10 +64,10 @@ export const questionLayoutInitialized = (question : QuestionInterface) => {
     if ( !activeSlide ) {
         return false;
     }
-    const questionsComponent = activeSlide.slide_data.find((c:any) => c.component == "Questions")
+    const questionsComponent = activeSlide.slide_data.find((c:any) => c.component === "Questions")
     if ( !questionsComponent ) {
         return false;
     }
-    const getQuestion = questionsComponent.data.find((q:any) => q.hash == question.hash);
+    const getQuestion = questionsComponent.data.find((q:any) => q.hash === question.hash);
     return !!getQuestion?.useOptionLayout && !!question.useOptionLayout;
 }

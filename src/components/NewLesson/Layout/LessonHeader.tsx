@@ -29,7 +29,7 @@ const SlideList: React.FC<SlideListProps> = ({
 
   const canViewSlide = (index: number) => {
     if(index)
-    if(currentSlideIndex == 0 && index == 0) return true;
+    if(currentSlideIndex === 0 && index === 0) return true;
     return  index <= currentSlideIndex + 1;
   }
 
@@ -59,7 +59,7 @@ const SlideList: React.FC<SlideListProps> = ({
                   onClick={() => handleClick(index, passed)}
                   className={`${
                     passed
-                      ? activeIndex == index
+                      ? activeIndex === index
                         ? "bg-[#be43d7] text-white"
                         : "bg-[#7E1593] text-white"
                       : "bg-neutral-100 text-gray-700"
@@ -136,7 +136,7 @@ const LessonHeader = forwardRef(
                       onClick={handleIndicatorClick}
                       key={index}
                       className={`w-full h-[10px] cursor-pointer px-1 relative ${
-                        index == 0 ? "rounded-l-full" : ""
+                        index === 0 ? "rounded-l-full" : ""
                       } ${active ? "bg-[#7E1593]" : ""} ${
                         isCurrentColumn && "rounded-r-full"
                       } flex items-center justify-end`}

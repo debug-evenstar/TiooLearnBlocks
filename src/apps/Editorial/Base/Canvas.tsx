@@ -23,6 +23,11 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
                 componentName,
                 itemId
             );
+            const initialLayout = setComponentLayout(
+                manager.canvasManager.canvas.functions?.getCanvasSize(),
+                { size: { width: 300, height : 70 } }
+            );
+            initializeComponent.layout = initialLayout;
             const updated = [...slideComponents, initializeComponent];
 
             updateSlideComponents(updated);
@@ -119,27 +124,6 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
             {slideComponents.map((item, index) => {
                 const nodeRef: any = createRef();
                 let Component = loadEditorialComponent(item);
-                const handleStop = (event: any, data: any) => {
-                    manager.canvasManager.setActiveComponent(item.id);
-                    // Offset behaviour changed at some point
-                    const layout = setComponentLayout(
-                        manager.canvasManager.canvas.functions?.getCanvasSize(),
-                        {
-                            ...manager.canvasManager.getComponentData(item.id)
-                                .layout,
-                            position: {
-                                xAxis: { offset: data.x },
-                                yAxis: { offset: data.y },
-                            },
-                        }
-                    );
-                    // Only update if position has changed
-                    if (data.x !== 0 || data.y !== 0) {
-                        manager.canvasManager.canvas.updateActiveComponentData({
-                            layout,
-                        });
-                    }
-                };
                 if (item.abstract) {
                     Component = loadEditorialComponent(item);
                     return <Component data={item} key={item.id} />;
@@ -154,7 +138,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
                         position={loadPosition(item)}
                         onMouseDown={() => setComponentAsActive(item.id)}
                     >
-                      <Component id={item.id} manager={manager} active={item.id == activeComponentId}/>
+                      <Component id={item.id} manager={manager} active={item.id === activeComponentId}/>
                     </MovableResizer>
                 );
             })}

@@ -214,7 +214,7 @@ const ChatSection: FC<ChatSectionProps> = ({
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyDown={(e) =>
-                                e.key == "Enter" && handleSendMessage()
+                                e.key === "Enter" && handleSendMessage()
                             }
                             type="text"
                             placeholder="Send a message"

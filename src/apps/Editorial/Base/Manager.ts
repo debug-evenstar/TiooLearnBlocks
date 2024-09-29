@@ -141,7 +141,7 @@ class Manager implements ManagerInterface {
 
   setState(key: string, setter: any | Function) {
     const newState: any = {};
-    if (typeof setter == "function") {
+    if (typeof setter === "function") {
       const state = this.states as { [stateKey: string]: any };
       newState[key] = setter(state[key]);
     } else {

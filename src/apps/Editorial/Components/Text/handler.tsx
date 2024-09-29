@@ -128,7 +128,9 @@ export const resizeBox = (
         event && event.target
             ? (event.target as HTMLElement)
             : editableRef.current;
+
     if (!editableDiv) return;
+
     const lineHeight = parseFloat(
         window.getComputedStyle(editableDiv).lineHeight
     );
@@ -189,9 +191,9 @@ const formatTextWithWrapper = (
         // If bounding element is formatted wrapper
         if (
             boundingElement &&
-            boundingElement.className == "ft" &&
-            type == TextFormatType.STYLE &&
-            range.toString() == boundingElement.innerText
+            boundingElement.className === "ft" &&
+            type === TextFormatType.STYLE &&
+            range.toString() === boundingElement.innerText
         ) {
             const element = formatTextStyle(boundingElement, styles);
             setState("lastRangeSelection", { element, range, styles });
@@ -202,8 +204,8 @@ const formatTextWithWrapper = (
         if (
             lastSelection &&
             isLastRange(range, lastSelection) &&
-            lastSelection.element.className == "ft" &&
-            type == TextFormatType.STYLE
+            lastSelection.element.className === "ft" &&
+            type === TextFormatType.STYLE
         ) {
             const element = formatTextStyle(lastSelection.element, styles);
             return element;
@@ -241,7 +243,7 @@ const createElementWithStyles = (
     styles: CSSStyleDeclaration
 ) => {
     const element = document.createElement(tagName) as HTMLElement;
-    element.className = tagName == "span" ? "ft" : ""; // Mark formatting elements as ft
+    element.className = tagName === "span" ? "ft" : ""; // Mark formatting elements as ft
     Object.keys(styles).forEach((styleName: any) => {
         element.style[styleName] = styles[styleName];
     });
@@ -291,8 +293,8 @@ const undoRangeFormat = (
         .parentElement as HTMLElement;
     if (
         tagName &&
-        tagName.toLowerCase() == boundingElement.tagName.toLowerCase() &&
-        type == TextFormatType.STYLE &&
+        tagName.toLowerCase() === boundingElement.tagName.toLowerCase() &&
+        type === TextFormatType.STYLE &&
         elementHasStyles(boundingElement, styles)
     ) {
         formatTextStyle(boundingElement, nullifyStyles(styles));
@@ -306,17 +308,17 @@ const undoRangeFormat = (
     if (
         lastSelection &&
         tagName &&
-        tagName.toLowerCase() == lastSelection.element.tagName.toLowerCase() &&
+        tagName.toLowerCase() === lastSelection.element.tagName.toLowerCase() &&
         isLastRange(currentRange, lastSelection)
     ) {
         if (
             elementHasStyles(lastSelection.element, styles) &&
-            type == TextFormatType.STYLE
+            type === TextFormatType.STYLE
         ) {
             formatTextStyle(lastSelection.element, nullifyStyles(styles));
             undone = true;
         }
-        // if( type == TextFormatType.WRAP) {
+        // if( type === TextFormatType.WRAP) {
         //   // const element = lastSelection.element.
         //   // currentRange.surroundContents(element);
         // }
@@ -356,7 +358,7 @@ export const verifySelectionProperty = () => {
                     const elementStyle = boundingElement.style[styleName];
                     if (
                         elementStyle &&
-                        elementStyle == supportedStyles[style][styleName]
+                        elementStyle === supportedStyles[style][styleName]
                     ) {
                         manager.canvasManager.canvas.functions.toggleTextEditPropertyActiveState(
                             style,
@@ -402,7 +404,7 @@ export const configureTipManager = (element: any) => {
             tipText.setAttribute("contenteditable", false);
             tipText.querySelector("button") &&
                 tipText.removeChild(tipText.querySelector("button"));
-            if (tipText.innerText == "" || tipText.innerText == " ") {
+            if (tipText.innerText === "" || tipText.innerText === " ") {
                 tipText.innerHTML = "....";
             }
         }
@@ -462,7 +464,7 @@ export function setState(key: string, data: any) {
 export function cleanEmptyNodes(parent: HTMLElement) {
     const nodes = parent.querySelectorAll("*");
     nodes.forEach((node: Element | any) => {
-        if (!node.innerHTML || node.innerHTML == "") {
+        if (!node.innerHTML || node.innerHTML === "") {
             node.remove();
         }
     });

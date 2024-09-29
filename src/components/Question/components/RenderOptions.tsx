@@ -53,10 +53,10 @@ const RenderOptions: FC<{
         question: QuestionInterface
     ) => {
         // Only select if question has not been answered
-        if ((question as any).index == answered.length) {
-            question.optionType == OptionTypes.Single &&
+        if ((question as any).index === answered.length) {
+            question.optionType === OptionTypes.Single &&
                 setSelectedOptions([option.hash]);
-            question.optionType == OptionTypes.Multiple &&
+            question.optionType === OptionTypes.Multiple &&
                 setSelectedOptions((prev: string[]) => {
                     return [
                         ...(prev.includes(option.hash) ? [] : [option.hash]),
@@ -83,7 +83,7 @@ const RenderOptions: FC<{
             triggerFeedback(
                 option,
                 lessonContext,
-                updatedAnsweredList.length == totalQuestions
+                updatedAnsweredList.length === totalQuestions
             );
         }, 500);
     };

@@ -8,23 +8,20 @@ import {
     initializeParentTag,
     configureTipManager,
 } from "./handler";
+import { CurrentStylesState } from "apps/Editorial/Base/StateInterface";
+import { InputInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import {
-    CurrentStylesState,
-} from "apps/Editorial/Base/StateInterface";
+    QuestionInterface,
+    QuestionTypes,
+} from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 
-const Text: FC<CanvasText> = ({
-    id,
-    viewBoxRef,
-    manager,
-    active
-}) => {
-
+const Text: FC<CanvasText> = ({ id, viewBoxRef, manager, active }) => {
     const editableRef = useRef<HTMLDivElement>(null);
 
     const [textareaRowCount, setTextareaRowCount] = useState(1);
     const [textValue, setTextValue] = useState("");
     const [isDraggedOver, setIsDraggedOver] = useState<boolean>(false);
-    const [isEditable, setIsEditable] = useState<boolean>(active)
+    const [isEditable, setIsEditable] = useState<boolean>(false);
 
     const onChange = (event: any) => {
         handleTextChange(event, manager);
@@ -38,36 +35,39 @@ const Text: FC<CanvasText> = ({
         initializeParentTag(editableRef);
     };
 
-    const appendInput = (data: any) => {
+    const appendInput = (data: {
+        input: InputInterface;
+        question: QuestionInterface;
+    }) => {
         // Initialize editable if not initialized
         initializeParentTag(editableRef, true);
         const editableChildren = editableRef.current?.children;
         const mainElement = editableChildren?.length
-            ? editableChildren[editableChildren.length-1]
+            ? editableChildren[editableChildren.length - 1]
             : null;
         if (mainElement) {
             const input = document.createElement("input");
             input.setAttribute("data-link", "Questions");
-            input.setAttribute("data-hash", data.hash);
-            input.setAttribute("data-question-hash", data.questionHash);
-            input.setAttribute("disabled", "");
-            input.className =
-                `w-[90px] relative left-[5px] mr-[10px]
-                 bg-white text-[14px] border-[2px] border-[#E5E5E5] 
-                 rounded-[10px] p-[5px] shadow-md`;
+            input.setAttribute("data-hash", data.input.hash);
+            input.setAttribute("data-question-hash", data.question.hash);
+            if (data.question.type === QuestionTypes.Multichoice) {
+                input.setAttribute("disabled", "");
+            }
+            input.className = `w-[90px] relative left-[5px] mr-[10px]
+                 bg-white text-[16px] border-[0.5px] border-[#E5E5E5] 
+                 rounded-[8px] p-[5px] shadow-md shadow-[inset_0_0_6px_2px_rgba(155,41,178,0.6)]`;
             mainElement.appendChild(input);
-            handleTextChange({ target : editableRef.current }, manager);
+            handleTextChange({ target: editableRef.current }, manager);
         }
     };
 
     const handleDrop = (e: any) => {
-        const data = e.dataTransfer.getData("text/plain");
-        const parseData = data.split(".");
-        if (parseData[0] == "Questions" && parseData[2] == "input") {
-            appendInput({ hash: parseData[3], questionHash: parseData[1] });
+        const data = JSON.parse(e.dataTransfer.getData("text/plain"));
+        if (data.type === "question.input") {
+            appendInput({ input: data.input, question: data.question });
             manager.event.emit("linkQuestionInput", {
-                questionHash :  parseData[1],
-                hash : parseData[3]
+                questionHash: data.question.hash,
+                hash: data.input.hash,
             });
         }
         setIsDraggedOver(false);
@@ -82,12 +82,14 @@ const Text: FC<CanvasText> = ({
     }, [id]);
 
     useEffect(() => {
-        resizeBox(
-            editableRef,
-            viewBoxRef,
-            textareaRowCount,
-            setTextareaRowCount
-        );
+        if (isEditable) {
+            resizeBox(
+                editableRef,
+                viewBoxRef,
+                textareaRowCount,
+                setTextareaRowCount
+            );
+        }
     }, [
         textareaRowCount,
         viewBoxRef,
@@ -147,26 +149,37 @@ const Text: FC<CanvasText> = ({
     }, [textValue]);
 
     useEffect(() => {
-        manager.event.listen("unlinkInput", (data : any) => {
-            try{
-                const newEditableNode = editableRef?.current?.cloneNode(true) as HTMLElement;
-                if (newEditableNode){
-                    const inputField = newEditableNode.querySelector(`input[data-hash='${data.hash}']`);
-                    if ( inputField ) {
+        manager.event.listen("unlinkInput", (data: any) => {
+            try {
+                const newEditableNode = editableRef?.current?.cloneNode(
+                    true
+                ) as HTMLElement;
+                if (newEditableNode) {
+                    const inputField = newEditableNode.querySelector(
+                        `input[data-hash='${data.hash}']`
+                    );
+                    if (inputField) {
                         inputField?.parentElement?.removeChild(inputField);
-                        if(editableRef?.current){
-                            editableRef.current.innerHTML = newEditableNode.innerHTML; 
+                        if (editableRef?.current) {
+                            editableRef.current.innerHTML =
+                                newEditableNode.innerHTML;
                         }
-                        onChange({ target : newEditableNode.innerHTML});
+                        onChange({ target: newEditableNode.innerHTML });
                     }
                 }
-            } catch(error) {console.log(error)}
-        })
+            } catch (error) {
+                console.log(error);
+            }
+        });
     }, []);
 
     useEffect(() => {
         configureTipManager(editableRef?.current);
-    },[id]);
+    }, [id]);
+
+    useEffect(() => {
+        !active && setIsEditable(false);
+    }, [active]);
 
     return (
         <div

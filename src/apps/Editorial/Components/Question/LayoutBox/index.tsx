@@ -138,7 +138,7 @@ const LayoutBox: FC<{
             const wrapped = toWrap.map((item, index) => {
                 const wrapCount = toWrap.length;
                 const totalRowWidth = (itemSize.width * unwrapX) + (layout.spacing.x * (unwrapX+1));
-                const levelSpacingX = (layout.alignment == "center" && wrapCount < unwrapX) ? ((totalRowWidth - (itemSize.width * wrapCount))/(wrapCount + 1))  : layout.spacing.x;
+                const levelSpacingX = (layout.alignment === "center" && wrapCount < unwrapX) ? ((totalRowWidth - (itemSize.width * wrapCount))/(wrapCount + 1))  : layout.spacing.x;
                 const position = {
                     position: {
                         x:
@@ -220,7 +220,7 @@ const LayoutBox: FC<{
         if (initial) {
             layouts = wrapItems(layout, layouts, itemSize);
         } else {
-            if (axis == "y" && unwrapItems(layout, layouts, itemSize)) {
+            if (axis === "y" && unwrapItems(layout, layouts, itemSize)) {
                 layout = unwrapItems(layout, layouts, itemSize);
             }
             layouts = wrapItems(layout, layouts, itemSize);

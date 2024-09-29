@@ -9,7 +9,7 @@ interface TooltipProps {
 }
 
 export const TipManager: React.FC<any> = ({ element }) => {
-    const isEditable = () => !(element || element.getAttribute("contenteditable") == false);
+    const isEditable = () => !(element || element.getAttribute("contenteditable") === false);
     const setEditable = (value : boolean) => {
       element.setAttribute("contenteditable", value ?? null);
       if ( value ) {

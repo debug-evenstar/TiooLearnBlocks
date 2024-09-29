@@ -237,7 +237,7 @@ const subjects = [
 ];
 
 export const getSubject = (id: number) => {
-  return subjects.filter((s) => s.id == id);
+  return subjects.filter((s) => s.id === id);
 };
 
 
@@ -246,5 +246,5 @@ export const getTextbookChapters = () => {
 };
 
 export const getChapterLessons = (id: number) => {
-  return lessons.filter((lesson: any) => lesson.chapter_id == id);
+  return lessons.filter((lesson: any) => lesson.chapter_id === id);
 };

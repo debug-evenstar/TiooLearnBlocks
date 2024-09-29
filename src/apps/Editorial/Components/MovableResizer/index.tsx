@@ -27,7 +27,7 @@ interface MovableResizerProps {
     layout?: ComponentLayoutInterface;
     updateLayout?: Function;
     style?: React.CSSProperties;
-    identifier?: string;
+    dropData?: any;
     isDraggable?: boolean;
     children: ReactElement;
 }
@@ -46,7 +46,7 @@ const MovableResizer: FC<MovableResizerProps> = ({
     updateLayout,
     style,
     children,
-    identifier,
+    dropData,
     isDraggable,
 }) => {
     const nodeRef: any = createRef();
@@ -77,7 +77,7 @@ const MovableResizer: FC<MovableResizerProps> = ({
     };
 
     const getResizeAxis = (handle: string) =>
-        handle == "w" || handle == "e" ? "x" : "y";
+        handle === "w" || handle === "e" ? "x" : "y";
 
     const handleResize = (previousSize: any, ref: React.RefObject<any>) => {
         if (!resizable) {
@@ -105,7 +105,7 @@ const MovableResizer: FC<MovableResizerProps> = ({
                 height !== previousSize.height
             ) {
                 let offsetDrag;
-                if (handle == "w" || handle == "n") {
+                if (handle === "w" || handle === "n") {
                     offsetDrag = simulateOrigin(
                         width - previousSize.width,
                         height - previousSize.height
@@ -143,7 +143,7 @@ const MovableResizer: FC<MovableResizerProps> = ({
     };
 
     const handleDragStart = (e: any) => {
-        e.dataTransfer.setData("text/plain", identifier);
+        e.dataTransfer.setData("text/plain", JSON.stringify(dropData));
     };
 
     const shadowStyle = () => {
