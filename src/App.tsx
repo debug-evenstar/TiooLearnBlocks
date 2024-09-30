@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import RenderComponent from "pages/renderComp";
 import { Editorial } from "components";
-// import { LessonPage } from "pages";
 // import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-// import { useDispatch } from "react-redux";
 // import { refreshToggleShowOptionBox } from "provider/showOptionsBoxSlice";
 import LessonPage from "pages/LessonPage";
 // import { LessonPage } from '@Praxeum-ai/LearnBlocks';
-
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-import { slides } from "dump/can";
 
 import {
   textbook,
@@ -89,6 +83,7 @@ function App() {
 
       if (!data.error) {
         setBookData(data.data);
+        console.log(data.data);
       } else {
         // console.log(data);
       }
@@ -100,6 +95,7 @@ function App() {
   useEffect(() => {
     fetchLess();
     fetchTextbook();
+    console.log(bookData?.chapters);
   }, []);
 
   const layout = {
@@ -118,21 +114,7 @@ function App() {
     },
   };
 
-  const lessons: any[] = [];
-  let chapters: any[] = getTextbookChapters().map((chapter) => ({
-    ...chapter,
-    lessons: getChapterLessons(chapter.id).map(
-      (lesson: any) => ({
-        ...lesson,
-        slides: slides.map((slide: any) => [
-          ...slide.map((comp: any) => ({
-            ...comp,
-            layout: layout,
-          })),
-        ]),
-      })
-    ),
-  }));
+
 
   const handleBack = () => {
     // navigate('/')
@@ -168,24 +150,14 @@ function App() {
             }
           />
           <Route path="/test" element={<Test/>}/>
-          <Route
-            path="/comp"
-            element={
-              <LessonPage
-                textbook={textbook}
-                chapters={chapters}
-                lessons={lessons}
-                back={() => console.log("back")}
-              />
-            }
-          />
+
           <Route
             path="/study"
             element={
               bookData ? <LessonPage
                 textbook={bookData}
                 chapters={bookData.chapters}
-                lessons={[]}
+                lesson={bookData.chapters[0]?.lessons[1]}
                 back={() => console.log("back")}
               /> : <></>
             }

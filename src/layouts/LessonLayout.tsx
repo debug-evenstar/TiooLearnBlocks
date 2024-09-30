@@ -14,6 +14,7 @@ import { LessonContext } from "contexts/LessonContext";
 import { GoRocket } from "react-icons/go";
 import catImg from "../img/popup/cat.webp";
 import GlobalResource from "services/api/resources/GlobalResource";
+import { PulseLoader } from "react-spinners";
 
 function StartScreen() {
   return (
@@ -66,14 +67,20 @@ export default function LessonLayout({
   closePreview,
   lessonSlides,
 }: LessonLayoutProps) {
-  const isPreview = !!lesson;
+  
 
-  const [currentLesson, setCurrentLesson] = useState<any>(
-    isPreview ? chapters[0]?.lessons[0] : null
-  );
-  const [currentChapter, setCurrentChapter] = useState(
-    lesson ? lesson.Chapter : chapters[0]
-  );
+  const [currentLesson, setCurrentLesson] = useState<any>(lesson);
+  
+  const isPreview = !lesson; 
+
+  useEffect(() => {
+    setCurrentLesson(lesson);
+  },[lesson]);
+
+
+  // const [currentChapter, setCurrentChapter] = useState(
+  //   lesson ? lesson.Chapter : chapters[0]
+  // );
   const slideManagerRef = useRef<any>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [showAI, setShowAI] = useState(false);
@@ -102,12 +109,7 @@ export default function LessonLayout({
     }
   }, [currentLesson]);
 
-  const getCurrentChapter = (chapter_id: number) => {
-    return chapters.find((i: any) => i.id === chapter_id);
-  };
-
-  // const lessonHasSlides = () => Boolean(currentLesson?.lesson_slides && currentLesson.lesson_slides.length);
-
+ 
   const slideHasQuestion = (lesson: any) => {
     const slides = lesson.lesson_slides;
     if (slides && slides.length) {
@@ -165,19 +167,10 @@ export default function LessonLayout({
 
   const handleShowAI = () => {
     setShowAI(true);
-    setSideBarOpen(false);
   };
 
   const handlecloseAI = () => {
     setShowAI(false);
-    setSideBarOpen(true);
-  };
-
-  const toggleSidebar = () => {
-    if (lessonSidebarRef.current) {
-      lessonSidebarRef.current.toggleSideBar();
-      return lessonSidebarRef?.current?.sideBarOpen;
-    }
   };
 
   const lessonSlidesArgs: LessonSlideProps = {
@@ -199,12 +192,6 @@ export default function LessonLayout({
 
   useEffect(() => {
     if (currentLesson) {
-      setCurrentChapter(getCurrentChapter(currentLesson?.chapter_id));
-    }
-  }, [currentLesson]);
-
-  useEffect(() => {
-    if (currentLesson) {
       if (slideHasQuestion(currentLesson)) {
         lessonFooterRef?.current.toggleContinue(false);
       } else {
@@ -213,21 +200,25 @@ export default function LessonLayout({
     }
   }, [activeSlide, currentLesson]);
 
+
   return (
     <>
+      <div className={`${!lesson ? "opactity-100" :"opactity-0 pointer-events-none translate-x-full"} flex duration-1000 items-center justify-center fixed z-[1000000000] w-screen h-screen inset-0 bg-white`}>
+        { !lesson && <PulseLoader/> }
+      </div>
       <FeedbackPopup
         ref={feedbackRef}
         footerRef={lessonFooterRef}
         onContinue={handleContinue}
       />
       <div className="flex bg-white z-[1000] w-full overflow-hidden urbanist">
-        {
+        {/* {
           <LessonSidebar
             extToggle={() => toggleSidebar()}
             ref={lessonSidebarRef}
             {...{ chapters, textbook, setCurrentLesson }}
           />
-        }
+        } */}
         <div className="flex flex-col w-full relative justify-between border-l h-screen">
           <LessonHeader
             ref={lessonHeaderRef}
@@ -256,10 +247,10 @@ export default function LessonLayout({
               )}
               <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
                 <AudioButton />
-                <ToggleNavBtn
+                {/* <ToggleNavBtn
                   sideBarRef={lessonSidebarRef}
                   handleClick={() => toggleSidebar()}
-                />
+                /> */}
                 {currentLesson ? (
                   <LessonContext.Provider
                     value={{
@@ -294,7 +285,7 @@ export default function LessonLayout({
                   chatVisible={showAI}
                   previous={handlePrevious}
                   closePreview={closePreview}
-                  isPreview={!!lesson}
+                  isPreview={isPreview}
                   next={handleContinue}
                 />
               </div>
