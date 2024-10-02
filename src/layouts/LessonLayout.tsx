@@ -35,7 +35,7 @@ export interface LessonLayoutProps {
   lesson?: any;
   sideBar?: boolean;
   children?: ReactNode;
-  ratake?: boolean;
+  retake?: boolean;
   back?: Function;
   lessonSlides?: Function;
   closePreview?: Function;
@@ -101,7 +101,14 @@ export default function LessonLayout({
         textbook.id,
         currentLesson.id
       ).then((response) => {
-        const savedIndex = response.data.slide_index;
+        let savedIndex = response.data.slide_index;
+
+        // force the first slide if it's a retake
+        // it's a retake if the slide_index
+        if(retake ==  true){
+          savedIndex = 0;
+        }
+
         if (savedIndex > 1) {
           setActiveSlide(savedIndex + 1);
           slideManagerRef?.current?.navigator(0, savedIndex + 1);
