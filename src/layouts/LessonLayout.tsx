@@ -35,6 +35,7 @@ export interface LessonLayoutProps {
   lesson?: any;
   sideBar?: boolean;
   children?: ReactNode;
+  ratake?: boolean;
   back?: Function;
   lessonSlides?: Function;
   closePreview?: Function;
@@ -61,6 +62,7 @@ export interface LessonSlideProps {
 export default function LessonLayout({
   textbook,
   chapters,
+  retake,
   children,
   lesson,
   sideBar = true,

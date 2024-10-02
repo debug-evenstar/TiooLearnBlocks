@@ -5,12 +5,14 @@ import React, { FC } from "react";
 interface LessonPageProps {
   textbook: any;
   chapters: any;
+  retake?: boolean;
   lesson?: any;
   back?: Function;
 }
 const LessonPage: FC<LessonPageProps> = ({
   textbook,
   chapters,
+  retake,
   lesson,
   back,
 }) => {
@@ -20,6 +22,7 @@ const LessonPage: FC<LessonPageProps> = ({
     back, 
     textbook, 
     chapters, 
+    retake,
     lesson,
     lessonSlides : (slideProps : LessonSlideProps) => (
       <LessonSlides

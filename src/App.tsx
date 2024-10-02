@@ -158,6 +158,7 @@ function App() {
                 textbook={bookData}
                 chapters={bookData.chapters}
                 lesson={bookData.chapters[0]?.lessons[1]}
+                retake={false}
                 back={() => console.log("back")}
               /> : <></>
             }
