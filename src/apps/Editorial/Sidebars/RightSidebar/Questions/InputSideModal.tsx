@@ -22,7 +22,7 @@ const InputSideModal: FC<Props> = ({ input, setInputs, closeModal}) => {
 
     const updateInputData = (data : any) => {
         setInputs((prev : InputInterface[]) => prev.map((item:InputInterface) => {
-            return item.hash == input.hash 
+            return item.hash === input.hash 
                 ? { ...input, ...data}
                 : item;
         }));
@@ -32,9 +32,9 @@ const InputSideModal: FC<Props> = ({ input, setInputs, closeModal}) => {
     };
 
     const inputState = () => ({
-        isLinked :  input.linkState == InputLinkedStates.Linked,
-        pendingLink : input.linkState == InputLinkedStates.PendingLink,
-        isUnlinked : !input.linkState || input.linkState == InputLinkedStates.Unlinked
+        isLinked :  input.linkState === InputLinkedStates.Linked,
+        pendingLink : input.linkState === InputLinkedStates.PendingLink,
+        isUnlinked : !input.linkState || input.linkState === InputLinkedStates.Unlinked
     });
 
     const linkButtonStyle = () => {
@@ -48,7 +48,7 @@ const InputSideModal: FC<Props> = ({ input, setInputs, closeModal}) => {
         const newState = inputState().isUnlinked ? InputLinkedStates.PendingLink 
         : inputState().isLinked ? InputLinkedStates.Unlinked : input.linkState;
         updateInputData({ linkState : newState});
-        if (newState == InputLinkedStates.Unlinked) {
+        if (newState === InputLinkedStates.Unlinked) {
             manager.event.emit("unlinkInput", { hash : input.hash });
         }
         setTimeout(() => {
@@ -65,7 +65,7 @@ const InputSideModal: FC<Props> = ({ input, setInputs, closeModal}) => {
     //         }, }
     //     );
     //     setInputs((prev : InputInterface[]) => [...prev.map((item:InputInterface) => {
-    //         return item.hash == input.hash 
+    //         return item.hash === input.hash 
     //             ? { ...input, layout }
     //             : item;
     //     })])

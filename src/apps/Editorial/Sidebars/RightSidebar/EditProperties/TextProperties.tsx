@@ -23,10 +23,11 @@ import {
   RiUnderline,
 } from "react-icons/ri";
 import { ColorResult, SketchPicker } from "react-color";
-import { toggleWrapperStyle } from "apps/Editorial/ViewBox/Boxtypes/Text/handlers/stylesHandler";
+import { toggleWrapperStyle } from "apps/Editorial/Components/Text/handlers/stylesHandler";
 import { CurrentStylesState } from "apps/Editorial/Base/StateInterface";
-import { TextFormatType, formatText, getRange, textComponentData, toggleList, verifySelectionProperty } from "apps/Editorial/ViewBox/Boxtypes/Text/handler";
+import { TextFormatType, formatText, getRange, handleAddTip, textComponentData, toggleList, verifySelectionProperty } from "apps/Editorial/Components/Text/handler";
 import { getParseTreeNode } from "typescript";
+import { FaCommentAlt } from "react-icons/fa";
 
 interface Props {
   manager: ManagerInterface;
@@ -109,7 +110,7 @@ const TextProperties: FC<Props> = ({ manager }) => {
   }
 
   const handleActiveStyles = (propertyName : string, value : any = true) => 
-    (propertiesActiveState[propertyName] == value ? "text-white bg-[#E6E6FA]" : "");
+    (propertiesActiveState[propertyName] === value ? "text-white bg-[#E6E6FA]" : "");
 
 
   useEffect(() => {
@@ -454,6 +455,14 @@ const TextEditProperties: FC<Props> = ({ manager,propertiesActiveState, toggleTe
       <div className="border p-2 cursor-pointer">
         <a href="javascript:void(0)" onClick={() => unLink()}>
           <RiLinkUnlink />
+        </a>
+      </div>
+
+      <div className="border p-2 cursor-pointer">
+        <a href="javascript:void(0)" onClick={() => {
+          handleAddTip("....")
+        }}>
+          <FaCommentAlt fill="#7a7a7a" />
         </a>
       </div>
     </>

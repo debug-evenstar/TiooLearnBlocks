@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { createRef, FC, useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import DataListManager from "./DataListManager";
 import { randomString } from "utilities/string";
@@ -7,6 +7,8 @@ import {
     FaArrowsAltH,
     FaArrowsAltV,
     FaBriefcase,
+    FaCheckCircle,
+    FaEdit,
     FaFill,
     FaStar,
     FaStickyNote,
@@ -14,10 +16,11 @@ import {
 import { ComponentLayoutInterface } from "components/interface";
 import OptionSideModal from "./OptionSideModal";
 import { _getManager, setComponentLayout } from "apps/Editorial/Base/Manager";
-import { QuestionInterface } from "../InactiveSidebar";
+import { QuestionInterface, QuestionTypes } from "../InactiveSidebar";
 import { Feedback } from "apps/Editorial/interfaces";
 import QuestionsResource from "services/api/resources/QuestionsResource";
 import InputSideModal from "./InputSideModal";
+import ContentInput from "components/ContentInput";
 
 interface Props {
     question: QuestionInterface;
@@ -74,6 +77,9 @@ const ActiveQuestion: FC<Props> = ({
     const [options, setOptions] = useState<any>(question.options ?? []);
     const [activeOption, setActiveOption] = useState<any>(null);
     const [activeInput, setActiveInput] = useState<any>(null);
+    const [questionType, setQuestionType] = useState<QuestionTypes>(
+        question.type ?? QuestionTypes.Multichoice
+    );
     const [optionType, setOptionType] = useState<OptionTypes>(
         question.optionType ?? OptionTypes.Single
     );
@@ -87,6 +93,9 @@ const ActiveQuestion: FC<Props> = ({
     const [linkedTopics, setLinkedTopics] = useState<any>([]);
     const [subjectTopics, setSubjectTopics] = useState<any[]>([]);
     const [isUsingLayout, setIsUsingLayout] = useState<boolean>(false);
+    const [isEditingAnswer, setIsEditingAnswer] = useState<boolean>(false);
+    const [answer, setAnswer] = useState<string>("");
+    const answerInputRef: React.RefObject<any> = createRef();
     const [optionLayoutSettings, setOptionLayoutSettings] =
         useState<OptionLayoutInterface>({
             width: 120,
@@ -140,6 +149,9 @@ const ActiveQuestion: FC<Props> = ({
             })
         );
     };
+    const saveAnswer = () => {
+        updateQuestion(question, { answer: answerInputRef.current?.value });
+    };
 
     const setOptionAsAnswer = (item: OptionInterface) => {
         const updated = options.map((option: OptionInterface) => {
@@ -147,14 +159,14 @@ const ActiveQuestion: FC<Props> = ({
                 ? {
                       ...option,
                       isAnswer:
-                          question.optionType == OptionTypes.Single
+                          question.optionType === OptionTypes.Single
                               ? true
                               : !option.isAnswer,
                   }
                 : {
                       ...option,
                       isAnswer:
-                          question.optionType == OptionTypes.Single
+                          question.optionType === OptionTypes.Single
                               ? false
                               : option.isAnswer,
                   };
@@ -213,74 +225,35 @@ const ActiveQuestion: FC<Props> = ({
         }
     };
 
-    const updateOptionsData = () => {
+    const updateQuestion = (question: QuestionInterface, data: any) => {
         setQuestions((prev: any) => {
             const questionIndex = prev.findIndex(
-                (q: QuestionInterface) => question.hash == q.hash
+                (q: QuestionInterface) => question.hash === q.hash
             );
-            question.options = [...options];
-            prev[questionIndex] = question;
-            return [...prev];
-        });
-        if (activeOption) {
-            setActiveOption(
-                options.filter(
-                    (option: OptionInterface) =>
-                        option.hash == activeOption.hash
-                )[0]
-            );
-        }
-    };
-
-    const updateOptionType = () => {
-        setQuestions((prev: any) => {
-            const questionIndex = prev.findIndex(
-                (q: QuestionInterface) => question.hash == q.hash
-            );
-            question.optionType = optionType;
+            question = {
+                ...question,
+                ...data,
+            };
             prev[questionIndex] = question;
             return [...prev];
         });
     };
+    const updateOptionsData = (options: OptionInterface[]) => {
+        updateQuestion(question, { options });
+    };
 
-    const updateInputsData = () => {
-        setQuestions((prev: any) => {
-            const questionIndex = prev.findIndex(
-                (q: QuestionInterface) => question.hash == q.hash
-            );
-            question.inputs = [...inputs];
-            prev[questionIndex] = question;
-            return [...prev];
-        });
-        if (activeInput) {
-            setActiveInput(
-                inputs.filter(
-                    (input: InputInterface) => input.hash == activeInput.hash
-                )[0]
-            );
-        }
+    const updateOptionType = (optionType: OptionTypes) => {
+        updateQuestion(question, { optionType });
+    };
+
+    const updateInputsData = (inputs: InputInterface[]) => {
+        updateQuestion(question, { inputs });
     };
 
     const updateOptionLayoutSetting = (data: any) => {
         manager.event.emit(`layout.${question.hash}`, { ...data });
         setOptionLayoutSettings({ ...optionLayoutSettings, ...data });
     };
-
-    useEffect(() => {
-        // Temporary solution to prevent multiple update
-        if (JSON.stringify(options) !== JSON.stringify(question.options)) {
-            updateOptionsData();
-        }
-        if (optionType !== question.optionType) {
-            updateOptionType();
-        }
-    }, [options, optionType]);
-
-    useEffect(() => {
-        if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
-            updateInputsData();
-        }
-    }, [inputs]);
 
     useEffect(() => {
         searchTopic(topicSearchValue);
@@ -293,15 +266,25 @@ const ActiveQuestion: FC<Props> = ({
     }, [optionType]);
 
     useEffect(() => {
-        // Temporary solution to loop, Only update when different
-        if (JSON.stringify(options) !== JSON.stringify(question.options)) {
-            question.options && setOptions(question.options);
+        question.options && setOptions(question.options);
+        question.optionType && setOptionType(question.optionType);
+        question.inputs && setInputs(question.inputs);
+        question.type && setQuestionType(question.type);
+        question.answer && setAnswer(question.answer);
+        if (activeOption) {
+            setActiveOption(
+                question.options?.filter(
+                    (option: OptionInterface) =>
+                        option.hash === activeOption.hash
+                )[0]
+            );
         }
-        question.optionType &&
-            optionType !== question.optionType &&
-            setOptionType(question.optionType);
-        if (JSON.stringify(inputs) !== JSON.stringify(question.inputs)) {
-            question.inputs && setInputs(question.inputs);
+        if (activeInput) {
+            setActiveInput(
+                question.inputs?.filter(
+                    (input: InputInterface) => input.hash === activeInput.hash
+                )[0]
+            );
         }
         question.useOptionLayout && setIsUsingLayout(true);
         loadTopics();
@@ -330,7 +313,7 @@ const ActiveQuestion: FC<Props> = ({
     useEffect(() => {
         setQuestions((prev: any) => {
             const questionIndex = prev.findIndex(
-                (q: QuestionInterface) => q.hash == question.hash
+                (q: QuestionInterface) => q.hash === question.hash
             );
             // question.topics = [...linkedTopics.map((topic: any) => topic.id)];
             question.query = questionQuery.previous;
@@ -342,16 +325,14 @@ const ActiveQuestion: FC<Props> = ({
 
     useEffect(() => {
         manager.event.listen("linkQuestionInput", (data: any) => {
-            if (question.hash == data.questionHash) {
-                setInputs((prev: InputInterface[]) => {
-                    return [
-                        ...prev.map((i: InputInterface) => {
-                            return i.hash == data.hash
-                                ? { ...i, linkState: InputLinkedStates.Linked }
-                                : i;
-                        }),
-                    ];
-                });
+            if (question.hash === data.questionHash) {
+                updateInputsData([
+                    ...inputs.map((i: InputInterface) => {
+                        return i.hash === data.hash
+                            ? { ...i, linkState: InputLinkedStates.Linked }
+                            : i;
+                    }),
+                ])
             }
         });
     }, [manager]);
@@ -361,13 +342,25 @@ const ActiveQuestion: FC<Props> = ({
             {activeOption && (
                 <OptionSideModal
                     option={activeOption}
-                    setOptions={setOptions}
+                    setOptions={(clbk: any) => {
+                        updateOptionsData(
+                            typeof clbk === "function"
+                                ? clbk(question.options)
+                                : clbk
+                        );
+                    }}
                 />
             )}
             {activeInput && (
                 <InputSideModal
                     input={activeInput}
-                    setInputs={setInputs}
+                    setInputs={(clbk: any) => {
+                        updateInputsData(
+                            typeof clbk === "function"
+                                ? clbk(question.inputs)
+                                : clbk
+                        );
+                    }}
                     closeModal={() => setActiveInput(null)}
                 />
             )}
@@ -386,259 +379,311 @@ const ActiveQuestion: FC<Props> = ({
             <div className="grow overflow-y-scroll pb-4">
                 <div className="px-2 mt-[15px]">
                     <p className="text-[14px]">Question Type</p>
-                    <select className="w-full border-[2px] border-[#f2f2f2] rounded-[5px] py-1 px-1 text-[14px] mt-[5px] outline-none">
-                        <option value="multichoice">Multichoice</option>
-                    </select>
-                </div>
-                <div className="px-2 mt-[15px]">
-                    <p className="text-[14px] font-bold mb-2">Manage options</p>
-                    <p className="text-[14px]">Options Type</p>
                     <select
                         className="w-full border-[2px] border-[#f2f2f2] rounded-[5px] py-1 px-1 text-[14px] mt-[5px] outline-none"
                         onChange={(e) =>
-                            setOptionType(e.target.value as OptionTypes)
+                            updateQuestion(question, { type: e.target.value })
                         }
+                        value={questionType}
                     >
-                        <option value="single">Single selection</option>
-                        <option value="multi">Multi selection</option>
-                        <option value="button">Button</option>
+                        <option value={QuestionTypes.Multichoice}>
+                            Multichoice
+                        </option>
+                        <option value={QuestionTypes.Subjective}>
+                            Subjective
+                        </option>
                     </select>
+                </div>
+                {question.type === QuestionTypes.Multichoice && (
+                    <div className="px-2 mt-[15px]">
+                        <p className="text-[14px] font-bold mb-2">
+                            Manage options
+                        </p>
+                        <p className="text-[14px]">Options Type</p>
+                        <select
+                            className="w-full border-[2px] border-[#f2f2f2] rounded-[5px] py-1 px-1 text-[14px] mt-[5px] outline-none"
+                            onChange={(e) =>
+                                updateOptionType(e.target.value as OptionTypes)
+                            }
+                        >
+                            <option value="single">Single selection</option>
+                            <option value="multi">Multi selection</option>
+                            <option value="button">Button</option>
+                        </select>
 
-                    <div className="my-2 border-[#f2f2f2] border-[1px] py-[3px]">
-                        <div className="ml-1">
-                            <input
-                                className="relative top-[1px] mr-[4px]"
-                                type="checkbox"
-                                name="use-layout"
-                                checked={isUsingLayout}
-                                onChange={() =>
-                                    setIsUsingLayout(!isUsingLayout)
-                                }
-                            />
-                            <label
-                                className="text-[14px] cursor-pointer font-semibold"
-                                onClick={() => setIsUsingLayout(!isUsingLayout)}
-                            >
-                                Use option layout
-                            </label>
-                        </div>
-                        {isUsingLayout && (
-                            <>
-                                <div className="hidden ml-1 mt-1 flex border-t-[1px] py-2">
-                                    <label className="text-[13px] font-semibold">
-                                        Layout direction
-                                    </label>
-                                    <div className="ml-4 flex">
-                                        <button
-                                            className={`text-[13px] px-3 border-[1px] rounded-[5px] mx-1  
+                        <div className="my-2 border-[#f2f2f2] border-[1px] py-[3px]">
+                            <div className="ml-1">
+                                <input
+                                    className="relative top-[1px] mr-[4px]"
+                                    type="checkbox"
+                                    name="use-layout"
+                                    checked={isUsingLayout}
+                                    onChange={() =>
+                                        setIsUsingLayout(!isUsingLayout)
+                                    }
+                                />
+                                <label
+                                    className="text-[14px] cursor-pointer font-semibold"
+                                    onClick={() =>
+                                        setIsUsingLayout(!isUsingLayout)
+                                    }
+                                >
+                                    Use option layout
+                                </label>
+                            </div>
+                            {isUsingLayout && (
+                                <>
+                                    <div className="hidden ml-1 mt-1 flex border-t-[1px] py-2">
+                                        <label className="text-[13px] font-semibold">
+                                            Layout direction
+                                        </label>
+                                        <div className="ml-4 flex">
+                                            <button
+                                                className={`text-[13px] px-3 border-[1px] rounded-[5px] mx-1  
                                             ${
                                                 optionLayoutSettings.direction ==
                                                 "horizontal"
                                                     ? "bg-blue-500"
                                                     : "bg-white hover:bg-gray-100"
                                             }`}
-                                            onClick={() =>
-                                                setOptionLayoutSettings({
-                                                    ...optionLayoutSettings,
-                                                    direction: "horizontal",
-                                                })
-                                            }
-                                        >
-                                            <FaArrowsAltH
-                                                color={
-                                                    optionLayoutSettings.direction ==
-                                                    "horizontal"
-                                                        ? "white"
-                                                        : "blue"
+                                                onClick={() =>
+                                                    setOptionLayoutSettings({
+                                                        ...optionLayoutSettings,
+                                                        direction: "horizontal",
+                                                    })
                                                 }
-                                            />
-                                        </button>
-                                        <button
-                                            className={`text-[13px] px-3 border-[1px] rounded-[5px] mx-1 
+                                            >
+                                                <FaArrowsAltH
+                                                    color={
+                                                        optionLayoutSettings.direction ==
+                                                        "horizontal"
+                                                            ? "white"
+                                                            : "blue"
+                                                    }
+                                                />
+                                            </button>
+                                            <button
+                                                className={`text-[13px] px-3 border-[1px] rounded-[5px] mx-1 
                                             ${
                                                 optionLayoutSettings.direction ==
                                                 "vertical"
                                                     ? "bg-blue-500"
                                                     : "bg-white hover:bg-gray-100"
                                             }`}
+                                                onClick={() =>
+                                                    setOptionLayoutSettings({
+                                                        ...optionLayoutSettings,
+                                                        direction: "vertical",
+                                                    })
+                                                }
+                                            >
+                                                <FaArrowsAltV
+                                                    color={
+                                                        optionLayoutSettings.direction ==
+                                                        "vertical"
+                                                            ? "white"
+                                                            : "blue"
+                                                    }
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="ml-1 mt-1 flex justify-between">
+                                        <div className="flex flex-col w-[45%]">
+                                            <label className="text-[13px] font-semibold">
+                                                Option width
+                                            </label>
+                                            <input
+                                                className="w-full text-center text-[14px] border-[1px] rounded-[5px]"
+                                                type="number"
+                                                inputMode="numeric"
+                                                pattern="[0-9\s]{13,19}"
+                                                value={
+                                                    optionLayoutSettings.width
+                                                }
+                                                max={400}
+                                                onChange={({ target }) =>
+                                                    updateOptionLayoutSetting({
+                                                        width: Math.min(
+                                                            parseInt(
+                                                                target.value
+                                                            ),
+                                                            400
+                                                        ),
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                        <div className="flex flex-col w-[45%]">
+                                            <label className="text-[13px] font-semibold">
+                                                Option height
+                                            </label>
+                                            <input
+                                                className="w-full text-center text-[14px] border-[1px] rounded-[5px]"
+                                                type="number"
+                                                inputMode="numeric"
+                                                pattern="[0-9\s]{13,19}"
+                                                value={
+                                                    optionLayoutSettings.height
+                                                }
+                                                max={150}
+                                                onChange={({ target }) =>
+                                                    updateOptionLayoutSetting({
+                                                        height: Math.min(
+                                                            parseInt(
+                                                                target.value
+                                                            ),
+                                                            150
+                                                        ),
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="ml-1 mt-2 flex justify-between">
+                                        <div className="flex flex-col w-[45%]">
+                                            <label className="text-[13px] font-semibold">
+                                                Horizontal gap
+                                            </label>
+                                            <input
+                                                className="w-full text-center text-[14px] border-[1px] rounded-[5px]"
+                                                type="number"
+                                                inputMode="numeric"
+                                                pattern="[0-9\s]{13,19}"
+                                                value={
+                                                    optionLayoutSettings.spacing
+                                                        .x
+                                                }
+                                                onChange={({ target }) =>
+                                                    updateOptionLayoutSetting({
+                                                        spacing: {
+                                                            ...optionLayoutSettings.spacing,
+                                                            x: target.value,
+                                                        },
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                        <div className="flex flex-col w-[45%]">
+                                            <label className="text-[13px] font-semibold">
+                                                Vertical gap
+                                            </label>
+                                            <input
+                                                className="w-full text-center text-[14px] border-[1px] rounded-[5px]"
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="[0-9\s]{13,19}"
+                                                value={
+                                                    optionLayoutSettings.spacing
+                                                        .y
+                                                }
+                                                onChange={({ target }) =>
+                                                    updateOptionLayoutSetting({
+                                                        spacing: {
+                                                            ...optionLayoutSettings.spacing,
+                                                            y: target.value,
+                                                        },
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="ml-1">
+                                        <input
+                                            className="relative top-[1px] mr-[4px]"
+                                            type="checkbox"
+                                            name="use-layout"
+                                            checked={
+                                                optionLayoutSettings.alignment ==
+                                                "center"
+                                            }
+                                            onChange={() =>
+                                                updateOptionLayoutSetting({
+                                                    alignment:
+                                                        optionLayoutSettings.alignment ==
+                                                        "left"
+                                                            ? "center"
+                                                            : "left",
+                                                })
+                                            }
+                                        />
+                                        <label
+                                            className="text-[14px] cursor-pointer font-semibold"
                                             onClick={() =>
                                                 setOptionLayoutSettings({
                                                     ...optionLayoutSettings,
-                                                    direction: "vertical",
+                                                    alignment:
+                                                        optionLayoutSettings.alignment ==
+                                                        "left"
+                                                            ? "center"
+                                                            : "left",
                                                 })
                                             }
                                         >
-                                            <FaArrowsAltV
-                                                color={
-                                                    optionLayoutSettings.direction ==
-                                                    "vertical"
-                                                        ? "white"
-                                                        : "blue"
-                                                }
-                                            />
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="ml-1 mt-1 flex justify-between">
-                                    <div className="flex flex-col w-[45%]">
-                                        <label className="text-[13px] font-semibold">
-                                            Option width
+                                            Center Align
                                         </label>
-                                        <input
-                                            className="w-full text-center text-[14px] border-[1px] rounded-[5px]"
-                                            type="number"
-                                            inputMode="numeric"
-                                            pattern="[0-9\s]{13,19}"
-                                            value={optionLayoutSettings.width}
-                                            max={400}
-                                            onChange={({ target }) =>
-                                                updateOptionLayoutSetting({
-                                                    width: Math.min(
-                                                        parseInt(target.value),
-                                                        400
-                                                    ),
-                                                })
-                                            }
-                                        />
                                     </div>
-                                    <div className="flex flex-col w-[45%]">
-                                        <label className="text-[13px] font-semibold">
-                                            Option height
-                                        </label>
-                                        <input
-                                            className="w-full text-center text-[14px] border-[1px] rounded-[5px]"
-                                            type="number"
-                                            inputMode="numeric"
-                                            pattern="[0-9\s]{13,19}"
-                                            value={optionLayoutSettings.height}
-                                            max={150}
-                                            onChange={({ target }) =>
-                                                updateOptionLayoutSetting({
-                                                    height: Math.min(
-                                                        parseInt(target.value),
-                                                        150
-                                                    ),
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="ml-1 mt-2 flex justify-between">
-                                    <div className="flex flex-col w-[45%]">
-                                        <label className="text-[13px] font-semibold">
-                                            Horizontal gap
-                                        </label>
-                                        <input
-                                            className="w-full text-center text-[14px] border-[1px] rounded-[5px]"
-                                            type="number"
-                                            inputMode="numeric"
-                                            pattern="[0-9\s]{13,19}"
-                                            value={
-                                                optionLayoutSettings.spacing.x
-                                            }
-                                            onChange={({ target }) =>
-                                                updateOptionLayoutSetting({
-                                                    spacing: {
-                                                        ...optionLayoutSettings.spacing,
-                                                        x: target.value,
-                                                    },
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                    <div className="flex flex-col w-[45%]">
-                                        <label className="text-[13px] font-semibold">
-                                            Vertical gap
-                                        </label>
-                                        <input
-                                            className="w-full text-center text-[14px] border-[1px] rounded-[5px]"
-                                            type="text"
-                                            inputMode="numeric"
-                                            pattern="[0-9\s]{13,19}"
-                                            value={
-                                                optionLayoutSettings.spacing.y
-                                            }
-                                            onChange={({ target }) =>
-                                                updateOptionLayoutSetting({
-                                                    spacing: {
-                                                        ...optionLayoutSettings.spacing,
-                                                        y: target.value,
-                                                    },
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="ml-1">
-                                    <input
-                                        className="relative top-[1px] mr-[4px]"
-                                        type="checkbox"
-                                        name="use-layout"
-                                        checked={
-                                            optionLayoutSettings.alignment ==
-                                            "center"
-                                        }
-                                        onChange={() =>
-                                            updateOptionLayoutSetting({
-                                                alignment:
-                                                    optionLayoutSettings.alignment ==
-                                                    "left"
-                                                        ? "center"
-                                                        : "left",
-                                            })
-                                        }
-                                    />
-                                    <label
-                                        className="text-[14px] cursor-pointer font-semibold"
-                                        onClick={() =>
-                                            setOptionLayoutSettings({
-                                                ...optionLayoutSettings,
-                                                alignment:
-                                                    optionLayoutSettings.alignment ==
-                                                    "left"
-                                                        ? "center"
-                                                        : "left",
-                                            })
-                                        }
-                                    >
-                                        Center Align
-                                    </label>
-                                </div>
-                            </>
-                        )}
+                                </>
+                            )}
+                        </div>
+                        <div>
+                            <DataListManager
+                                title="Options"
+                                data={options}
+                                setData={updateOptionsData}
+                                setActiveItem={(option: OptionInterface) =>
+                                    setActiveOption(
+                                        option.hash === activeOption?.hash
+                                            ? null
+                                            : option
+                                    )
+                                }
+                                generateItem={generateOption}
+                                bulletIcon={optionBulletIcon}
+                                bulletAction={(item: OptionInterface) =>
+                                    setOptionAsAnswer(item)
+                                }
+                                richText={true}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <DataListManager
-                            title="Options"
-                            data={options}
-                            setData={setOptions}
-                            setActiveItem={(option: OptionInterface) =>
-                                setActiveOption(
-                                    option.hash == activeOption?.hash
-                                        ? null
-                                        : option
-                                )
-                            }
-                            generateItem={generateOption}
-                            bulletIcon={optionBulletIcon}
-                            bulletAction={(item: OptionInterface) =>
-                                setOptionAsAnswer(item)
-                            }
-                            richText={true}
+                )}
+                <div className="px-2 mt-[15px]">
+                    <p className="text-[14px] font-bold mb-2">Set Answer</p>
+                    <div className="flex border-[#e5e5e5] border-[2px] rounded-[5px]">
+                        <ContentInput
+                            className="w-full h-[32px] outline-none text-[14px] px-[5px] py-[2px]"
+                            placeholder="Question Answer"
+                            disabled={!isEditingAnswer}
+                            content={answer}
+                            ref={answerInputRef}
                         />
+                        <button
+                            className="w-[25%] cursor-pointer flex justify-center items-center border-[#e5e5e5] border-l-[2px]"
+                            onClick={() => {
+                                isEditingAnswer && saveAnswer();
+                                setIsEditingAnswer(!isEditingAnswer);
+                            }}
+                        >
+                            {!isEditingAnswer && (
+                                <FaEdit className="text-blue-500 text-[16px]" />
+                            )}
+                            {isEditingAnswer && (
+                                <FaCheckCircle className="text-green-500 text-[16px]" />
+                            )}
+                        </button>
                     </div>
                 </div>
-
                 <div className="px-2 mt-[15px]">
                     <p className="text-[14px] font-bold mb-2">Manage inputs</p>
                     <div>
                         <DataListManager
                             title="Inputs"
                             data={inputs}
-                            setData={setInputs}
+                            setData={updateInputsData}
                             setActiveItem={(input: InputInterface) =>
                                 setActiveInput(
-                                    input.hash == activeInput?.hash
+                                    input.hash === activeInput?.hash
                                         ? null
                                         : input
                                 )

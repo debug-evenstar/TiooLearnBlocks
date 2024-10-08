@@ -10,12 +10,13 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { handleSetObjectiveIndex } from "provider/optionsDataSlice";
-import { calculateMaxResizableArea, getOriginalName } from "../../handler";
+import { calculateMaxResizableArea } from "../../ViewBox/handler";
 import { OptionsDataState } from "apps/Editorial/Base/StateInterface";
 
 const Flashcard: FC<any> = ({ id, manager, image, index }) => {
   const activeId = manager.states.activeViewBox;
   const showOptionsBox = manager.states.showOptionsBox;
+  const canvas = manager.canvasManager.canvas;
 
   const [viewBoxSize, setViewBoxSize] = useState({
     width: 300,
@@ -107,7 +108,7 @@ const Flashcard: FC<any> = ({ id, manager, image, index }) => {
   const trigger = manager.states.trigger;
   const cardsIndex = manager.canvasManager.activeComponent.data.index;
   const cardData =
-    getOriginalName(id) === "Flash Card"
+    canvas.getOriginalName(id) === "Flash Card"
       ? manager.canvasManager.activeComponent.data.components[cardsIndex]
           ?.cards[index]
       : {

@@ -297,7 +297,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                         {slides.map((slide: any, slideIndex: number) => (
                             <div
                                 key={slideIndex}
-                                className={`w-auto h-auto grid gap-y-4 my-5 ${activeSlideIndex == slideIndex ? 'active-slide': ''}`}
+                                className={`w-auto h-auto grid gap-y-4 my-5 ${activeSlideIndex === slideIndex ? 'active-slide': ''}`}
                             >
                                 {slide.map((component: any, index: number) => {
                                     return <RenderComponent

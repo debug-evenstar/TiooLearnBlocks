@@ -56,7 +56,7 @@ const ChapterDropdown: FC<ChapterDropdownProps> = ({
             className="flex items-center mb-5 space-x-2 cursor-pointer hover:bg-gray-100 px-2 rounded py-1"
           >
             <img
-              // src={type == "reading" ? readingImg : assessmentImg}
+              // src={type === "reading" ? readingImg : assessmentImg}
               src={readingImg}
               alt=""
               className="w-[17px]"

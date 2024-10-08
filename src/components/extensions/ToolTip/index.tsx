@@ -56,7 +56,7 @@ class ToolTipsHandler{
             let activeTipable : string[] = [];
             this.data.splice(0,this.data.length)
             textContent.forEach((item : any, index : number)=>{
-                    if(typeof item == "string" && (item.includes(start) || withinTip || item.includes(end))){
+                    if(typeof item === "string" && (item.includes(start) || withinTip || item.includes(end))){
                         if( item.includes(start) ) {
                             withinTip = true;
                             currentTipIndex = index;

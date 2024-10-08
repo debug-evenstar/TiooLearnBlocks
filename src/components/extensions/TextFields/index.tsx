@@ -140,7 +140,7 @@ class TextFieldsHandler implements TextFieldsInterface{
         const textContent = this.data;
         let answerIndex : number = 0;
         textContent.forEach((item : any, index : number)=>{
-            if(typeof item == "string"){
+            if(typeof item === "string"){
                 if( item === identifier ){
                     const field = this.answers.length 
                         ? this.formatTextField(answerIndex)
@@ -159,7 +159,7 @@ class TextFieldsHandler implements TextFieldsInterface{
     }
 
     inputAnswerMatch(input : string, answer : string|string[] ){
-        if( typeof answer == "string" ){
+        if( typeof answer === "string" ){
             return answer.substring(0, input.length).toLowerCase() === input.toLowerCase();
         }else{
             let state = false;

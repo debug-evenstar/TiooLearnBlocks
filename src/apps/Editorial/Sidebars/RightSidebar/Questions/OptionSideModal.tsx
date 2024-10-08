@@ -33,7 +33,7 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
     const saveOptionName = () => {
         setOptions((prev: OptionInterface[]) =>
             prev.map((item: OptionInterface) => {
-                return item.hash == option.hash
+                return item.hash === option.hash
                     ? {
                           ...option,
                           title: nameInputRef.current.value ?? option.title,
@@ -46,7 +46,7 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
     const saveOptionFeedback = () => {
         setOptions((prev: OptionInterface[]) =>
             prev.map((item: OptionInterface) => {
-                return item.hash == option.hash
+                return item.hash === option.hash
                     ? {
                           ...option,
                           feedback: optionFeedback.current ?? option.feedback,
@@ -68,7 +68,7 @@ const OptionSideModal: FC<Props> = ({ option, setOptions }) => {
         );
         setOptions((prev: OptionInterface[]) => [
             ...prev.map((item: OptionInterface) => {
-                return item.hash == option.hash ? { ...option, layout } : item;
+                return item.hash === option.hash ? { ...option, layout } : item;
             }),
         ]);
     };

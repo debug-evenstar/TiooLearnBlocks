@@ -4,14 +4,14 @@ import ViewBox from "../ViewBox";
 import Draggable from "react-draggable";
 import { setComponentLayout } from "./Manager";
 import { ComponentBaseDataInterface } from "components/interface";
-import { OverlayActiveState, RightSidebarState } from "./StateInterface";
+import { RightSidebarState } from "./StateInterface";
 import { loadComponent } from "components/SlideManager/handler";
 import { loadEditorialComponent } from "../Helpers/Loader";
 import MovableResizer from "../Components/MovableResizer";
 
 const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
     const [slideComponents, setSlideComponents] = useState<any[]>([]);
-    const activeId = manager.states.activeViewBox;
+    const activeComponentId = manager.canvasManager.activeComponent.data.id;
 
     // Come back here later
     const onDrop = (componentName: string) => {
@@ -23,6 +23,11 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
                 componentName,
                 itemId
             );
+            const initialLayout = setComponentLayout(
+                manager.canvasManager.canvas.functions?.getCanvasSize(),
+                { size: { width: 300, height : 70 } }
+            );
+            initializeComponent.layout = initialLayout;
             const updated = [...slideComponents, initializeComponent];
 
             updateSlideComponents(updated);
@@ -52,12 +57,9 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
         });
     };
 
-    const handleClickedViewbox = (id: string) => {
+    const setComponentAsActive = (id: string) => {
         manager.canvasManager.setActiveComponent(id);
-        manager.setState("activeViewBox", id);
-        // manager.canvasManager.canvas.functions.saveActiveComponentData();
         manager.setState("rightSidebarState", true);
-        id !== activeId && manager.setState("overlayActive", false);
     };
 
     const updateSlideComponents = (components: any[]) => {
@@ -99,6 +101,9 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
                 },
             }
         );
+        manager.canvasManager.canvas.updateActiveComponentData({
+            layout,
+        });
     };
 
     useEffect(() => {
@@ -108,13 +113,6 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
         manager.canvasManager.updateActiveSlide(parsedSlides);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [slideData]);
-
-    useEffect(() => {
-        // console.log(manager.canvasManager.getComponentData(activeId));
-        // manager.canvasManager.canvas.updateActiveComponentData(
-        //   manager.canvasManager.getComponentData(activeId)
-        // );
-    }, [activeId]);
 
     return (
         <div
@@ -126,65 +124,22 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
             {slideComponents.map((item, index) => {
                 const nodeRef: any = createRef();
                 let Component = loadEditorialComponent(item);
-                const handleStop = (event: any, data: any) => {
-                    manager.canvasManager.setActiveComponent(item.id);
-                    // Offset behaviour changed at some point
-                    const layout = setComponentLayout(
-                        manager.canvasManager.canvas.functions?.getCanvasSize(),
-                        {
-                            ...manager.canvasManager.getComponentData(item.id)
-                                .layout,
-                            position: {
-                                xAxis: { offset: data.x },
-                                yAxis: { offset: data.y },
-                            },
-                        }
-                    );
-                    // Only update if position has changed
-                    if (data.x !== 0 || data.y !== 0) {
-                        manager.canvasManager.canvas.updateActiveComponentData({
-                            layout,
-                        });
-                    }
-                };
                 if (item.abstract) {
                     Component = loadEditorialComponent(item);
                     return <Component data={item} key={item.id} />;
                 }
 
                 return (
-                    // <MovableResizer
-                    //     key={index + item.component}
-                    //     draggableAxis="both"
-                    //     layout={item.layout}
-                    //     updateLayout={(data : any) => updateLayout(data, item)}
-                    // >
-                    //   <Component id={item.id} manager={manager}/>
-                    // </MovableResizer>
-                    <Draggable
-                      key={item.id}
-                      axis="both"
-                      nodeRef={nodeRef}
-                      onStop={handleStop}
-                      handle=".handle"
-                      defaultClassName="w-fit"
-                      //positionOffset={loadPosition(item)}
-                      bounds="parent"
-                      defaultPosition={loadPosition(item)}
+                    <MovableResizer
+                        key={index + item.component}
+                        draggableAxis="both"
+                        layout={item.layout}
+                        updateLayout={(data : any) => updateLayout(data, item)}
+                        position={loadPosition(item)}
+                        onMouseDown={() => setComponentAsActive(item.id)}
                     >
-                      <div
-                        key={item.id}
-                        ref={nodeRef}
-                        onClick={() => handleClickedViewbox(item.id)}
-                        className="absolute"
-                      >
-                          <ViewBox
-                            id={item.id}
-                            manager={manager}
-                            handleDelete={handleDelete}
-                          />
-                      </div>
-                    </Draggable>
+                      <Component id={item.id} manager={manager} active={item.id === activeComponentId}/>
+                    </MovableResizer>
                 );
             })}
         </div>

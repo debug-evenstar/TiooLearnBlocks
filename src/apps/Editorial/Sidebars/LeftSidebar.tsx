@@ -5,13 +5,13 @@ import {
     loadComponent,
 } from "components/SlideManager/handler";
 import { FaPlus } from "react-icons/fa";
-import { ManagerInterface } from "./Base/Manager";
+import { ManagerInterface } from "../Base/Manager";
 import { useDispatch } from "react-redux";
 import { refreshActiveViewbox } from "provider/activeViewboxSlice";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
 import { ComponentBaseDataInterface } from "components/interface";
 import LayoutComponent from "components/LayoutBox";
-import RenderPreview from "./Preview/RenderPreview";
+import RenderPreview from "../Preview/RenderPreview";
 import { createRoot } from "react-dom/client";
 
 

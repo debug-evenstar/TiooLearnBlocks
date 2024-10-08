@@ -42,6 +42,7 @@ export type SlideData = (
   | PostfaceData
 )[];
 export interface LessonSlideInterface {
+  slide : any,
   options?: any[];
   answers?: any[];
   feedbacks?: any[];
@@ -74,6 +75,7 @@ export interface LessonSlideInterface {
 }
 
 class LessonSlide implements LessonSlideInterface {
+  slide : any;
   options?: any[];
   answers?: string[];
   feedbacks?: any[];
@@ -178,7 +180,7 @@ class LessonSlide implements LessonSlideInterface {
     callback?: Function
   ) {
     if (
-      typeof answer == "string" &&
+      typeof answer === "string" &&
       input.toLowerCase() === answer.toLowerCase()
     ) {
       callback && callback(true, answer);
@@ -187,7 +189,7 @@ class LessonSlide implements LessonSlideInterface {
       //Focus on next TextField
       this.activateNextField();
       this.callComponentFunctions(answer);
-    } else if (typeof answer == "object") {
+    } else if (typeof answer === "object") {
       answer.forEach((ans) => {
         if (ans.toLowerCase() === input.toLowerCase()) {
           callback && callback(true, ans);
@@ -328,7 +330,7 @@ class LessonSlide implements LessonSlideInterface {
 
   registerSlideData(slide: any) {
     this.resetData();
-
+    this.slide = slide;
     slide.forEach((component: any) => {
       this.answers = [...(this.answers ?? []), ...(component.answers ?? [])];
       this.options = [...(this.options ?? []), ...(component.options ?? [])];

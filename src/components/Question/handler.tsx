@@ -1,7 +1,11 @@
 import { OptionInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import { FeedbackType } from "components/NewLesson/Popups";
 
-export const triggerFeedback = (option : OptionInterface, lessonContext : any, shouldContinue = true) => {
+export const triggerFeedback = (
+    option: OptionInterface,
+    lessonContext: any,
+    shouldContinue = true
+) => {
     if (option.feedback && lessonContext) {
         const feedback = option.feedback;
         lessonContext.feedbackRef.current.showFeedback(
@@ -11,8 +15,49 @@ export const triggerFeedback = (option : OptionInterface, lessonContext : any, s
             shouldContinue
         );
     }
-}
+};
 
-export const decorateActiveInput = (input : HTMLInputElement) => {
+export const getQuestionsComponent = (slide: any, hash: string) => {
+    const questions = slide.filter(
+        (item: any) => item.component === "Questions"
+    );
+    if (questions && questions.length) {
+        const question = questions[0].data.filter((q: any) => q.hash == hash);
+        return question.length ? question[0] : false;
+    }
+    return false;
+};
+
+export const attachTextInputHandler = (
+    element: HTMLElement,
+    slide: any,
+    onAnswer: Function
+) => {
+    if (element) {
+        element
+            .querySelectorAll("input[data-link=Questions]")
+            .forEach((input: any) => {
+                const questionHash = input.getAttribute("data-question-hash");
+                input.addEventListener("input", (e: any) => {
+                    const val = e.target.value;
+                    const question = getQuestionsComponent(slide, questionHash);
+                    if (question && question.answer && val) {
+                        if (question.answer.substring(0, val.length) === val) {
+                            input.classList.add("text-green-500");
+                            input.classList.remove("text-red-500");
+                            if (question.answer?.length === val.length) {
+                                onAnswer({ question, answer: question.answer });
+                            }
+                        } else {
+                            input.classList.add("text-red-500");
+                            input.classList.remove("text-green-500");
+                        }
+                    }
+                });
+            });
+    }
+};
+
+export const decorateActiveInput = (input: HTMLInputElement) => {
     input.classList.add("input-is-active");
-}
+};

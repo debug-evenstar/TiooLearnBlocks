@@ -26,8 +26,9 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea})
         document.querySelectorAll(".active-slide .text-render input")
     );
 
+    
   useEffect(() => {
-    if (questions.length == answered.length && questions.length !== 0) {
+    if (questions.length === answered.length && questions.length !== 0) {
       slide.dispatch("showContinue", {
         hasFeedback: !!answered[answered.length - 1].feedback,
       });
@@ -66,7 +67,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea})
                 setActiveQuestionIndex(answered.length);
             }, 1500);
         }
-        if (questions.length == answered.length && questions.length !== 0) {
+        if (questions.length === answered.length && questions.length !== 0) {
             slide.dispatch('showContinue', {
                 hasFeedback: !!answered[answered.length - 1].feedback
             });
@@ -87,8 +88,8 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea})
             {questions.map((question: QuestionInterface, index: number) => {
                 return (
                     <>
-                        {viewArea && activeQuestionIndex == index && <RenderOptions
-                            key={index}
+                        {viewArea && activeQuestionIndex === index && <RenderOptions
+                            key={"option"+index}
                             options={question.options ?? []}
                             answered={answered}
                             setAnswered={setAnswered}
@@ -103,6 +104,8 @@ const QuestionComponent: FC<QuestionComponentProps> = ({ data, slide, viewArea})
                             inputs={question.inputs ?? []}
                             answered={answered}
                             questionIndex={index}
+                            question={question}
+                            setAnswered={setAnswered}
                         />
                     </>
                 );

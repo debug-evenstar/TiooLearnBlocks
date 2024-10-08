@@ -1,6 +1,6 @@
 import { ComponentBaseDataInterface } from "components/interface";
 import { DataGroupInterface, ManagerInterface } from "./Manager";
-import { textComponentData } from "../ViewBox/Boxtypes/Text/handler";
+import { textComponentData } from "../Components/Text/handler";
 import {
     flashcardComponentData,
     gridComponentData,
@@ -23,6 +23,7 @@ interface CanvasInterface {
     components: ComponentBaseDataInterface[];
     getCanvasSize: Function;
     getComponentData: Function;
+    getOriginalName : Function;
     parseSlideToCanvas: Function;
     updateActiveComponentData: Function;
     saveActiveComponentData: Function;
@@ -57,7 +58,7 @@ class Canvas implements CanvasInterface {
             ...Object.getOwnPropertyNames(Object.getPrototypeOf(object)),
         ];
         const methods = functions.sort().filter((e, i, arr) => {
-            if (e !== arr[i + 1] && typeof object[e] == "function") return true;
+            if (e !== arr[i + 1] && typeof object[e] === "function") return true;
         });
         methods.forEach((methodName: string, index: number) => {
             if (methodName !== "constructor") {
@@ -71,6 +72,22 @@ class Canvas implements CanvasInterface {
     getCanvasSize() {
         const canvas = document.getElementById("editorial-canvas");
         return { width: canvas?.offsetWidth, height: canvas?.offsetHeight };
+    }
+
+    // for extracting the name of the component
+    getOriginalName(str: string): string {
+        const nameSplit = str.split("-");
+        if (nameSplit.length > 1) {
+            if (nameSplit[0] === "Flash Card") {
+                return "FlashCard";
+            }
+            if (nameSplit[0] === "GridSteps") {
+                return "Grid";
+            }
+            return nameSplit[0];
+        } else {
+            return str;
+        }
     }
 
     getComponentData(id: string) {
@@ -165,7 +182,7 @@ export class CanvasManager implements CanvasManagerInterface {
             const componentIndexInSlide: number = this.activeSlide.findIndex(
                 (data: any) => data.id === id
             );
-            if (componentIndexInSlide == -1) {
+            if (componentIndexInSlide === -1) {
                 return;
             }
             this.activeComponent.data =
@@ -173,6 +190,7 @@ export class CanvasManager implements CanvasManagerInterface {
                     ? {}
                     : this.activeComponent.data;
             this.activeComponent.data.index = componentIndexInSlide;
+            this.activeComponent.data.id = id;
         }
     }
 
@@ -180,7 +198,7 @@ export class CanvasManager implements CanvasManagerInterface {
         if (this.activeSlide && this.activeSlide.length) {
             const updated = this.activeSlide;
             const existingComponentIndex = this.activeSlide.findIndex(
-                (item: any) => item.id == component.id
+                (item: any) => item.id === component.id
             );
             if (existingComponentIndex >= 0) {
                 updated[existingComponentIndex] = {

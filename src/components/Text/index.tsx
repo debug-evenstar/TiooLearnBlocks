@@ -3,9 +3,11 @@ import {
     TextComponentProps,
     buildTextData,
     formatTextContent,
+    handleAnswerQuestion,
 } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
 import { TextFields } from "../extensions/TextFields";
+import { attachTextInputHandler } from "components/Question/handler";
 
 const TextComponent: FC<TextComponentProps> = ({
     styles,
@@ -29,23 +31,13 @@ const TextComponent: FC<TextComponentProps> = ({
         textContainerRef.current.style.display = "block";
     };
 
-    const animate = (element : HTMLElement) => {
-        if ( element ) {
-            element.style.setProperty("transform", "scale(1.3)");
-            element.style.setProperty("text-shadow", "0px 0px 15px #ffb870");
-            setTimeout(() => { 
-                element && element.style.setProperty("transform", "scale(1)");
-                element && element.style.setProperty("text-shadow", "0px 0px 0px #fff");
-            }, 400)
-        }
-    };
+    // useEffect(() => {
+    //     // Handle initial text formatting
+    //     setFormatted(formatTextContent(data.content));
+    //     slide.setFunction("hideText", hideText);
+    //     slide.setFunction("showText", showText);
 
-    useEffect(() => {
-        // Handle initial text formatting
-        setFormatted(formatTextContent(data.content));
-        slide.setFunction("hideText", hideText);
-        slide.setFunction("showText", showText);
-    }, [data.content, slide]);
+    // }, [data.content, slide]);
 
     useEffect(() => {
         let processText: any[] = formatted;
@@ -58,43 +50,20 @@ const TextComponent: FC<TextComponentProps> = ({
             ).data;
         }
         setProcessed(() => processText);
+        setTimeout(() => {
+            attachTextInputHandler(textContainerRef.current, slide.slide, (data:any)=>{
+                handleAnswerQuestion(data);
+            });  
+        }, 1000);
     }, [formatted, data.content, slide]);
 
     // Can be optimized
     useEffect(() => {
         slide.on("answerQuestion", (data: any) => {
-            // Check if any linked inputs exists and populate them
-            const linkedInput = document.querySelector(
-                `.text-render input[data-question-hash='${data.question.hash}']`
-            );
-            if (linkedInput) {
-                const parent = linkedInput.parentElement;
-                const textFill = document.createElement("span");
-                textFill.className =
-                    "relative inline-block font-bold text-[#089c28] text-[20px] mx-[3px] -bottom-[0.5px]";
-                textFill.innerHTML = ` ${data.option.title} `;
-                textFill.style.setProperty("transition", "transform 0.4s, text-shadow 0.4s");
-                textFill.style.setProperty("transition-timing-function", "linear");
-                textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
-                parent?.replaceChild(textFill, linkedInput);
-                setTimeout(() => {
-                    animate(textFill);
-                },300);
-            }
+            handleAnswerQuestion(data);
         });
     }, [slide]);
 
-
-    useEffect(() => {
-        setTimeout(() => {
-            // Disable already added text inputs... Can be removed later
-            if ( textContainerRef?.current ) {
-                Array.from(textContainerRef.current.querySelectorAll("input")).forEach((element) => {
-                    (element as HTMLElement).setAttribute("disabled", "");
-                });
-            }
-        },800)
-    }, [slide, data])
 
     return (
         <>
@@ -110,7 +79,7 @@ const TextComponent: FC<TextComponentProps> = ({
                     />
                 ) : (
                     processed.map((item, index) =>
-                        typeof item == "string" ? (
+                        typeof item === "string" ? (
                             <span
                                 className="text-font"
                                 key={index}

@@ -4,8 +4,8 @@ import { MdRedo, MdUndo } from "react-icons/md";
 import { RiArrowDropDownFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToggleSidebarState } from "provider/rightSidebarSlice";
-import { EditProperties, getOriginalName } from "../../ViewBox/handler";
 import { ManagerInterface } from "apps/Editorial/Base/Manager";
+import { EditProperties } from "./EditProperties/handler";
 
 interface Props {
   manager: ManagerInterface;
@@ -13,7 +13,8 @@ interface Props {
 
 const ActiveSidebar: FC<Props> = ({ manager }) => {
   
-  const id = manager.states.activeViewBox;
+  const id = manager.canvasManager.activeComponent.data.id;
+  const canvas = manager.canvasManager.canvas;
 
   const popHistory = () => {
     const history = manager.canvasManager.canvas.history;
@@ -40,8 +41,8 @@ const ActiveSidebar: FC<Props> = ({ manager }) => {
         </div>
         <div>
           <b className="text-[12px] mt-2 text-[#4F46E5]">
-            {getOriginalName(id) !== "FlashCards"
-              ? getOriginalName(id)
+            {canvas.getOriginalName(id) !== "FlashCards"
+              ? canvas.getOriginalName(id)
               : "Flash Card"}
           </b>
         </div>

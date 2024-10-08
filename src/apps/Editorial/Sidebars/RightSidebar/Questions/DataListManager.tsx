@@ -55,7 +55,7 @@ const DataListManager: FC<Props> = ({
 
     const addNewItem = async () => {
         let title;
-        if (itemType == DataType.TEXT) {
+        if (itemType === DataType.TEXT) {
             title = newItemRef.current.value;
         } else {
             const formData = new FormData();
@@ -67,14 +67,14 @@ const DataListManager: FC<Props> = ({
         // Create question object :: work in progress
         const item = generateItem(title);
         setIsHidden([...isHidden, false]);
-        setData((prev: any) => [...prev, item]);
+        setData([...data, item]);
         setIsAddingItem(false);
     };
 
     const deleteData = (item: any) => {
         setIsHidden(isHidden.slice(0, -1));
-        setData((prev: any) => [
-            ...prev.filter((d: any, i: number) => d.hash != item.hash),
+        setData([
+            ...data.filter((d: any, i: number) => d.hash != item.hash)
         ]);
     };
 
@@ -120,9 +120,9 @@ const DataListManager: FC<Props> = ({
                                 }}
                             >
                                 <a onClick={() => bulletAction(item)}>
-                                    {typeof bulletIcon == "object" &&
+                                    {typeof bulletIcon === "object" &&
                                         bulletIcon}
-                                    {typeof bulletIcon == "function" &&
+                                    {typeof bulletIcon === "function" &&
                                         bulletIcon(item)}
                                 </a>
                                 {!titleIsUrl(item.title) &&
@@ -189,7 +189,7 @@ const DataListManager: FC<Props> = ({
                                             key={type + index}
                                             className={
                                                 "w-1/2 border-[1px] border-[#f2f2f2] capitalize text-[14px] text-[#3c3e42] " +
-                                                (itemType == type
+                                                (itemType === type
                                                     ? "bg-[#f2f2f2]"
                                                     : "")
                                             }
@@ -200,7 +200,7 @@ const DataListManager: FC<Props> = ({
                                     )
                                 )}
                             </div>
-                            {itemType == DataType.TEXT &&
+                            {itemType === DataType.TEXT &&
                                 (!richText ? (
                                     <input
                                         className="w-full h-[32px] border-[1px] border-[#f2f2f2] mr-1 text-[14px] outline-none px-1"
@@ -215,7 +215,7 @@ const DataListManager: FC<Props> = ({
                                         ref={newItemRef}
                                     />
                                 ))}
-                            {itemType == DataType.IMAGE && (
+                            {itemType === DataType.IMAGE && (
                                 <input
                                     className="w-full h-[32px] border-[1px] border-[#f2f2f2] mr-1 text-[14px] outline-none px-1"
                                     ref={newItemRef}

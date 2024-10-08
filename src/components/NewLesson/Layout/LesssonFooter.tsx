@@ -84,6 +84,8 @@ const LessonFooter = forwardRef(
             feedbackRef.current?.hideFeedback();
         };
 
+
+        console.log("is preview: ",isPreview);
         const renderPreviousButton = () => {
             if (isPreview) return <p></p>;
 

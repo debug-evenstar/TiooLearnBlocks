@@ -86,7 +86,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
 
     const updateLayout = (data: any, hash: string, dataKey: string) => {
         const config =
-            dataKey == "options" ? optionConfig(hash) : inputConfig(hash);
+            dataKey === "options" ? optionConfig(hash) : inputConfig(hash);
         const layout = setComponentLayout(
             manager.canvasManager.canvas.getCanvasSize(),
             {
@@ -123,13 +123,14 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
         let inputs: any[] = [];
         let optionConfigs: any = optionsConfigurations;
         let inputConfigs: any = inputConfigurations;
+        console.log("Changed", questions);
         questions.forEach((question: any) => {
             const questionOptions = question.options ?? [];
             const questionInputs = question.inputs ?? [];
             [questionOptions, questionInputs].forEach(
                 (list: any[], listIndex: number) => {
                     const dataConfigs =
-                        listIndex == 0 ? optionConfigs : inputConfigs;
+                        listIndex === 0 ? optionConfigs : inputConfigs;
                     list.forEach(
                         (
                             data: OptionInterface | InputInterface,
@@ -257,7 +258,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                             const config = inputConfig(input.hash);
                             return questionToggleState[config.questionHash] &&
                                 !(
-                                    input.linkState == InputLinkedStates.Linked
+                                    input.linkState === InputLinkedStates.Linked
                                 ) ? (
                                 <MovableResizer
                                     key={index + input.title}
@@ -274,7 +275,11 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                                     }
                                     position={inputConfig(input.hash).position}
                                     style={{ zIndex: 10 }}
-                                    identifier={`Questions.${config.questionHash}.input.${input.hash}`}
+                                    dropData={{
+                                        type : "question.input",
+                                        question : question,
+                                        input : input
+                                    }}
                                     isDraggable={
                                         input.linkState ==
                                         InputLinkedStates.PendingLink

@@ -1,6 +1,6 @@
 import { ManagerInterface } from "apps/Editorial/Base/Manager";
-import { setFlashCardComponentData } from "apps/Editorial/ViewBox/Boxtypes/Flashcard/handlers/dataHandler";
-import { uploadFile } from "apps/Editorial/ViewBox/Boxtypes/Image/handler";
+import { setFlashCardComponentData } from "apps/Editorial/Components/Flashcard/handlers/dataHandler";
+import { uploadFile } from "apps/Editorial/Components/Image/handler";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { RiAddCircleLine } from "react-icons/ri";

@@ -23,7 +23,7 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
     ) => {
         const [value, setValue] = useState<string>("");
         const [isEditing, setIsEditing] = useState<boolean>(false);
-        const valueIsEmpty = () => value == "";
+        const valueIsEmpty = () => value === "";
         const defaultContainerStyle: any = {
             display: "flex",
             flexDirection: "column",
@@ -47,7 +47,7 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
                 do {
                     const elementClass: string = parent?.className ?? "";
                     if (
-                        typeof elementClass == "string" &&
+                        typeof elementClass === "string" &&
                         elementClass.includes("content-input")
                     ) {
                         isInput = true;
@@ -77,6 +77,12 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
             value,
         }));
 
+        useEffect(() => {
+            if (!disabled) {
+                setIsEditing(true);
+            }
+        },[disabled])
+
         return (
             <div className={className + `${disabled && ' bg-gray-100 cursor-default'}`} style={defaultContainerStyle}>
                 <div
@@ -88,7 +94,9 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
                     dangerouslySetInnerHTML={{ __html : content ?? ""}}
                 ></div>
                 {placeholder && !isEditing && valueIsEmpty() && (
-                    <p className="h-fit mt-auto mb-auto text-[#a9a9a9] absolute left-1">
+                    <p 
+                        className="h-fit mt-auto mb-auto text-[#a9a9a9] absolute left-1 cursor-text"
+                    >
                         {placeholder}
                     </p>
                 )}
