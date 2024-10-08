@@ -5,6 +5,7 @@ interface CanvasInterface {
     components: ComponentBaseDataInterface[];
     getCanvasSize: Function;
     getComponentData: Function;
+    getOriginalName: Function;
     parseSlideToCanvas: Function;
     updateActiveComponentData: Function;
     saveActiveComponentData: Function;

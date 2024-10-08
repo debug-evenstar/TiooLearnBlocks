@@ -15,6 +15,7 @@ declare global {
 }
 export type SlideData = (TextData | ButtonGroupData | SliderData | ImageData | FlashCardData | VideoData | WordMatchData | OptionData | GridStepsData | PrefaceData | PostfaceData)[];
 export interface LessonSlideInterface {
+    slide: any;
     options?: any[];
     answers?: any[];
     feedbacks?: any[];
@@ -50,6 +51,7 @@ export interface LessonSlideInterface {
     checkSlideCanProceed: Function;
 }
 declare class LessonSlide implements LessonSlideInterface {
+    slide: any;
     options?: any[];
     answers?: string[];
     feedbacks?: any[];

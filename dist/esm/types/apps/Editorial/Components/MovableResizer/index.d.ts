@@ -6,6 +6,7 @@ interface MovableResizerProps {
     position?: ControlPosition;
     onMove?: Function;
     onDrag?: Function;
+    onMouseDown?: Function;
     size?: {
         width: number;
         height: number;
@@ -19,7 +20,7 @@ interface MovableResizerProps {
     layout?: ComponentLayoutInterface;
     updateLayout?: Function;
     style?: React.CSSProperties;
-    identifier?: string;
+    dropData?: any;
     isDraggable?: boolean;
     children: ReactElement;
 }

@@ -7,14 +7,20 @@ interface Props {
     slides: any;
     lessonlist: any;
 }
+export declare enum QuestionTypes {
+    "Multichoice" = "multichoice",
+    "Subjective" = "subjective"
+}
 export interface QuestionInterface {
     hash: string;
     title: string;
     query: string;
     media: any[];
+    type: QuestionTypes;
     optionType: OptionTypes;
     options?: OptionInterface[];
     inputs?: InputInterface[];
+    answer?: string;
     topics?: any[];
     useOptionLayout?: boolean;
     layoutBoxConfig?: any;

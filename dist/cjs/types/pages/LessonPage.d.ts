@@ -2,7 +2,8 @@ import { FC } from "react";
 interface LessonPageProps {
     textbook: any;
     chapters: any;
-    lessons: any;
+    retake?: boolean;
+    lesson?: any;
     back?: Function;
 }
 declare const LessonPage: FC<LessonPageProps>;

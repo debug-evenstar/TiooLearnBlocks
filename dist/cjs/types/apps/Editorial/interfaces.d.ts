@@ -25,10 +25,9 @@ export interface CanvasText {
     id: string;
     manager: ManagerInterface;
     viewBoxRef: React.MutableRefObject<any>;
-    isEditable: boolean;
-    setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
     data?: any;
     currIndex?: number;
+    active: boolean;
 }
 export interface Feedback {
     title: string;

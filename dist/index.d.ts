@@ -20,6 +20,7 @@ declare global {
 }
 type SlideData = (TextData$1 | ButtonGroupData$1 | SliderData$1 | ImageData | FlashCardData$1 | VideoData$1 | WordMatchData$1 | OptionData$1 | GridStepsData$1 | PrefaceData$1 | PostfaceData$1)[];
 interface LessonSlideInterface {
+    slide: any;
     options?: any[];
     answers?: any[];
     feedbacks?: any[];
@@ -240,7 +241,8 @@ declare const PostfaceComponent: FC<PostfaceComponentProps>;
 interface LessonPageProps {
     textbook: any;
     chapters: any;
-    lessons: any;
+    retake?: boolean;
+    lesson?: any;
     back?: Function;
 }
 declare const LessonPage: FC<LessonPageProps>;

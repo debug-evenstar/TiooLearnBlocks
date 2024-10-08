@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../../../ViewBox/Boxtypes/Text/EmojiTextArea.css";
+import "../../../../../Components/Text/EmojiTextArea.css";
 interface EmojiTextAreaProps {
     value: string;
     defaultValue: string;

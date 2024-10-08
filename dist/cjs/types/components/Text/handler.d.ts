@@ -16,6 +16,7 @@ export interface TextComponentProps extends ComponentBasePropsInterface {
     activeSlideIndex: number;
     altHeaderStyle: string;
 }
+export declare const handleAnswerQuestion: (data: any) => void;
 export declare const processTextStyles: () => void;
 export declare const formatTextContent: (content: string) => any;
 export declare const buildTextData: (data: string, viewArea: any) => string;
