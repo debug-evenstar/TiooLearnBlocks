@@ -20,6 +20,7 @@ export declare const formatText: (type: TextFormatType, tag: string | HTMLElemen
     [key: string]: string;
 } | undefined) => HTMLElement | undefined;
 export declare const handleAddTip: (tip: string) => void;
+export declare const handleInsertMath: (mathHtml: string) => void;
 export declare const toggleList: (listType: string) => void;
 export declare const verifySelectionProperty: () => void;
 export declare const configureTipManager: (element: any) => () => void;
