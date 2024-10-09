@@ -14,8 +14,9 @@ import {
     QuestionInterface,
     QuestionTypes,
 } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
+import MathInput from "components/MathInput";
 
-const Text: FC<CanvasText> = ({ id, viewBoxRef, manager, active }) => {
+const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     const editableRef = useRef<HTMLDivElement>(null);
 
     const [textareaRowCount, setTextareaRowCount] = useState(1);
@@ -25,12 +26,12 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager, active }) => {
 
     const onChange = (event: any) => {
         handleTextChange(event, manager);
-        resizeBox(
-            editableRef,
-            viewBoxRef,
-            textareaRowCount,
-            setTextareaRowCount /*event*/
-        );
+        // resizeBox(
+        //     editableRef,
+        //     viewBoxRef,
+        //     textareaRowCount,
+        //     setTextareaRowCount /*event*/
+        // );
         // Wrap in parent paragraph if not present
         initializeParentTag(editableRef);
     };
@@ -79,20 +80,19 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager, active }) => {
         textComponentData &&
             textComponentData.content &&
             setTextValue(textComponentData.content);
-    }, [id]);
+    }, [id, data.content]);
 
     useEffect(() => {
         if (isEditable) {
-            resizeBox(
-                editableRef,
-                viewBoxRef,
-                textareaRowCount,
-                setTextareaRowCount
-            );
+            // resizeBox(
+            //     editableRef,
+            //     viewBoxRef,
+            //     textareaRowCount,
+            //     setTextareaRowCount
+            // );
         }
     }, [
         textareaRowCount,
-        viewBoxRef,
         id,
         textValue,
         editableRef.current?.innerHTML,
@@ -181,37 +181,40 @@ const Text: FC<CanvasText> = ({ id, viewBoxRef, manager, active }) => {
         !active && setIsEditable(false);
     }, [active]);
 
+
     return (
-        <div
-            id={id}
-            className={`flex flex-col justify-between p-1 h-full w-full relative border-2 border-[#F8F7F7] ${
-                (!isEditable || !active) && "handle cursor-move"
-            }`}
-            onDragEnter={(e) => setIsDraggedOver(true)}
-            onDragOver={(e) => setIsDraggedOver(true)}
-            onDragLeave={(e) => setIsDraggedOver(false)}
-            onDrop={handleDrop}
-            onDoubleClick={() => setIsEditable(!isEditable)}
-        >
+        <>
             <div
-                ref={editableRef}
-                className={`w-full h-full outline-none resize-none no-scrollbar ${
-                    (!isEditable || !active) && "cursor-move"
+                id={id}
+                className={`flex flex-col justify-between p-1 h-full w-full relative border-2 border-[#F8F7F7] ${
+                    (!isEditable || !active) && "handle cursor-move"
                 }`}
-                contentEditable={isEditable && active}
-                onInput={(e) => onChange(e)}
-                onChange={(e) => onChange(e)}
-                dangerouslySetInnerHTML={{ __html: textValue }}
-            />
-            {isDraggedOver && (
-                <div className="w-full h-full border-[1px] border-gray-400 absolute z-10 -top-[0.5px] -left-[0.5px] rounded-[5px] flex justify-center items-center">
-                    <div className="bg-gray-100 opacity-[95%] w-full h-full rounded-[5px] absolute"></div>
-                    <div className="text-[13px] text-gray-500 bg-gray-300 relative p-[5px] border-[1px] border-gray-200">
-                        Link to Text
+                onDragEnter={(e) => setIsDraggedOver(true)}
+                onDragOver={(e) => setIsDraggedOver(true)}
+                onDragLeave={(e) => setIsDraggedOver(false)}
+                onDrop={handleDrop}
+                onDoubleClick={() => setIsEditable(!isEditable)}
+            >
+                <div
+                    ref={editableRef}
+                    className={`editable-text w-full h-full outline-none resize-none no-scrollbar ${
+                        (!isEditable || !active) && "cursor-move"
+                    }`}
+                    contentEditable={isEditable && active}
+                    onInput={(e) => onChange(e)}
+                    onChange={(e) => onChange(e)}
+                    dangerouslySetInnerHTML={{ __html: textValue }}
+                />
+                {isDraggedOver && (
+                    <div className="w-full h-full border-[1px] border-gray-400 absolute z-10 -top-[0.5px] -left-[0.5px] rounded-[5px] flex justify-center items-center">
+                        <div className="bg-gray-100 opacity-[95%] w-full h-full rounded-[5px] absolute"></div>
+                        <div className="text-[13px] text-gray-500 bg-gray-300 relative p-[5px] border-[1px] border-gray-200">
+                            Link to Text
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     );
 };
 

@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import store, { persistor } from "provider/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import "katex/dist/katex.min.css"
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
