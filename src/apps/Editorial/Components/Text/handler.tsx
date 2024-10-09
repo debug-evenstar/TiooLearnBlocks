@@ -277,6 +277,31 @@ export const handleAddTip = (tip: string) => {
     }
 };
 
+
+export const handleInsertMath = (mathHtml : string) => {
+    const manager = _getManager();
+    const textElement = manager.canvasManager.activeComponentElement();
+    const editableArea = textElement.querySelector(
+        "div.editable-text"
+    );
+    let updatedHtml;
+    // Assume existing text ends in closing </p> tag, insert into existing
+    let closing = editableArea.innerHTML.slice(-4);
+    console.log(closing);
+    if ( closing === "</p>" ) {
+        updatedHtml = editableArea.innerHTML.slice(0,-4) + mathHtml + "</p>"
+    } else {
+        const parentTag = document.createElement("p");
+        setDefaultStyles(parentTag);
+        parentTag.innerHTML = mathHtml;
+        updatedHtml = editableArea.innerHTML + parentTag.outerHTML;
+    }
+    manager.canvasManager.canvas.updateActiveComponentData(
+        textComponentData(updatedHtml)
+    );
+};
+
+
 // Function to check for existing text format and deactivate
 
 const undoRangeFormat = (
