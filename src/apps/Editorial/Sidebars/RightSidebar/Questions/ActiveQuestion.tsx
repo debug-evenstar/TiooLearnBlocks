@@ -394,7 +394,7 @@ const ActiveQuestion: FC<Props> = ({
                         </option>
                     </select>
                 </div>
-                {question.type === QuestionTypes.Multichoice && (
+                {questionType === QuestionTypes.Multichoice && (
                     <div className="px-2 mt-[15px]">
                         <p className="text-[14px] font-bold mb-2">
                             Manage options

@@ -138,7 +138,7 @@ const Canvas: FC<CanvasInterface> = ({ slideData, manager }) => {
                         position={loadPosition(item)}
                         onMouseDown={() => setComponentAsActive(item.id)}
                     >
-                      <Component id={item.id} manager={manager} active={item.id === activeComponentId}/>
+                      <Component id={item.id} manager={manager} active={item.id === activeComponentId} data={item}/>
                     </MovableResizer>
                 );
             })}

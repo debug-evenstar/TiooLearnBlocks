@@ -1,21 +1,24 @@
-export const hasIdenticalIndex = (a : any[], b : any[]) => {
+export const hasIdenticalIndex = (a: any[], b: any[]) => {
     let identical = false;
     a.forEach((item, index) => {
-        if(item === b[index]) {
+        if (item === b[index]) {
             identical = true;
         }
     });
     return identical;
-}
+};
 
-export const functionsWithDelay = (dataList : any[], action : Function, delay : number) => {
-
-    const runner = setInterval(()=>{
+export const functionsWithDelay = (
+    dataList: any[],
+    action: Function,
+    delay: number
+) => {
+    const runner = setInterval(() => {
         if (dataList.length > 0) {
             action(dataList[0]);
-            if(dataList.length > 1){
-                dataList = dataList.slice(1)
-            }else{
+            if (dataList.length > 1) {
+                dataList = dataList.slice(1);
+            } else {
                 clearInterval(runner);
             }
         } else {
@@ -23,7 +26,13 @@ export const functionsWithDelay = (dataList : any[], action : Function, delay : 
         }
     }, delay);
 
-    return () => {clearInterval(runner)};
-}
+    return () => {
+        clearInterval(runner);
+    };
+};
 
-export const deepClone = (data : any[]) => JSON.parse(JSON.stringify(data));
+export const deepClone = (data: any[]) => JSON.parse(JSON.stringify(data));
+
+export function range(length: number) {
+    return Array.from({ length }, (_, i) => i + 1);
+}

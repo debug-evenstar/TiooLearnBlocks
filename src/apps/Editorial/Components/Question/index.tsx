@@ -123,7 +123,6 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
         let inputs: any[] = [];
         let optionConfigs: any = optionsConfigurations;
         let inputConfigs: any = inputConfigurations;
-        console.log("Changed", questions);
         questions.forEach((question: any) => {
             const questionOptions = question.options ?? [];
             const questionInputs = question.inputs ?? [];
