@@ -155,23 +155,17 @@ const ActiveQuestion: FC<Props> = ({
 
     const setOptionAsAnswer = (item: OptionInterface) => {
         const updated = options.map((option: OptionInterface) => {
-            return option.hash === item.hash
-                ? {
-                      ...option,
-                      isAnswer:
-                          question.optionType === OptionTypes.Single
-                              ? true
-                              : !option.isAnswer,
-                  }
-                : {
-                      ...option,
-                      isAnswer:
-                          question.optionType === OptionTypes.Single
-                              ? false
-                              : option.isAnswer,
-                  };
+            return {
+                ...option,
+                isAnswer:
+                    question.optionType === OptionTypes.Single
+                        ? option.hash === item.hash
+                        : option.hash === item.hash
+                        ? !option.isAnswer
+                        : option.isAnswer,
+            };
         });
-        setOptions([...updated]);
+        updateQuestion(question, { options: updated });
     };
 
     const queryCanSave = () =>
@@ -332,7 +326,7 @@ const ActiveQuestion: FC<Props> = ({
                             ? { ...i, linkState: InputLinkedStates.Linked }
                             : i;
                     }),
-                ])
+                ]);
             }
         });
     }, [manager]);
@@ -648,32 +642,34 @@ const ActiveQuestion: FC<Props> = ({
                         </div>
                     </div>
                 )}
-                <div className="px-2 mt-[15px]">
-                    <p className="text-[14px] font-bold mb-2">Set Answer</p>
-                    <div className="flex border-[#e5e5e5] border-[2px] rounded-[5px]">
-                        <ContentInput
-                            className="w-full h-[32px] outline-none text-[14px] px-[5px] py-[2px]"
-                            placeholder="Question Answer"
-                            disabled={!isEditingAnswer}
-                            content={answer}
-                            ref={answerInputRef}
-                        />
-                        <button
-                            className="w-[25%] cursor-pointer flex justify-center items-center border-[#e5e5e5] border-l-[2px]"
-                            onClick={() => {
-                                isEditingAnswer && saveAnswer();
-                                setIsEditingAnswer(!isEditingAnswer);
-                            }}
-                        >
-                            {!isEditingAnswer && (
-                                <FaEdit className="text-blue-500 text-[16px]" />
-                            )}
-                            {isEditingAnswer && (
-                                <FaCheckCircle className="text-green-500 text-[16px]" />
-                            )}
-                        </button>
+                {questionType === QuestionTypes.Subjective && (
+                    <div className="px-2 mt-[15px]">
+                        <p className="text-[14px] font-bold mb-2">Set Answer</p>
+                        <div className="flex border-[#e5e5e5] border-[2px] rounded-[5px]">
+                            <ContentInput
+                                className="w-full h-[32px] outline-none text-[14px] px-[5px] py-[2px]"
+                                placeholder="Question Answer"
+                                disabled={!isEditingAnswer}
+                                content={answer}
+                                ref={answerInputRef}
+                            />
+                            <button
+                                className="w-[25%] cursor-pointer flex justify-center items-center border-[#e5e5e5] border-l-[2px]"
+                                onClick={() => {
+                                    isEditingAnswer && saveAnswer();
+                                    setIsEditingAnswer(!isEditingAnswer);
+                                }}
+                            >
+                                {!isEditingAnswer && (
+                                    <FaEdit className="text-blue-500 text-[16px]" />
+                                )}
+                                {isEditingAnswer && (
+                                    <FaCheckCircle className="text-green-500 text-[16px]" />
+                                )}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className="px-2 mt-[15px]">
                     <p className="text-[14px] font-bold mb-2">Manage inputs</p>
                     <div>

@@ -54,7 +54,7 @@ const generateInput = (
     input.className =
         `math-input w-[16px] h-[16px] relative z-[10]
         bg-white text-[14px] text-center text-black mx-auto 
-        my-[1px] border-[0.5px] !border-gray-100 hover:!border-gray-400 focus:!border-gray-500`;
+        my-[1px] border-[0.5px] !border-gray-500`;
     input.id = id;
     input.setAttribute("data-input-index", inputIndex.toString());
     input.setAttribute("data-latex-index", dataIndex.toString());
