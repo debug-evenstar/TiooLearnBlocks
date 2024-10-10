@@ -287,7 +287,6 @@ export const handleInsertMath = (mathHtml : string) => {
     let updatedHtml;
     // Assume existing text ends in closing </p> tag, insert into existing
     let closing = editableArea.innerHTML.slice(-4);
-    console.log(closing);
     if ( closing === "</p>" ) {
         updatedHtml = editableArea.innerHTML.slice(0,-4) + mathHtml + "</p>"
     } else {
@@ -296,6 +295,10 @@ export const handleInsertMath = (mathHtml : string) => {
         parentTag.innerHTML = mathHtml;
         updatedHtml = editableArea.innerHTML + parentTag.outerHTML;
     }
+
+    // Send event to text component
+    manager.event.emit("insertMath", updatedHtml);
+    // Update in slide data
     manager.canvasManager.canvas.updateActiveComponentData(
         textComponentData(updatedHtml)
     );
