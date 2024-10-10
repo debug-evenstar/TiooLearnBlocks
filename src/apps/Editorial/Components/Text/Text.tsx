@@ -80,7 +80,7 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         textComponentData &&
             textComponentData.content &&
             setTextValue(textComponentData.content);
-    }, [id, data.content]);
+    }, [id]);
 
     useEffect(() => {
         if (isEditable) {
@@ -91,12 +91,7 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
             //     setTextareaRowCount
             // );
         }
-    }, [
-        textareaRowCount,
-        id,
-        textValue,
-        editableRef.current?.innerHTML,
-    ]);
+    }, [textareaRowCount, id, textValue, editableRef.current?.innerHTML]);
 
     useEffect(() => {
         const handleSelectionChange = () => {
@@ -129,6 +124,13 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         };
 
         document.addEventListener("selectionchange", handleSelectionChange);
+
+        // Receive math input data
+        manager.event.listen("insertMath", (data: string) => {
+            if (editableRef?.current) {
+                editableRef.current.innerHTML = data;
+            }
+        });
 
         return () => {
             document.removeEventListener(
@@ -180,7 +182,6 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     useEffect(() => {
         !active && setIsEditable(false);
     }, [active]);
-
 
     return (
         <>
