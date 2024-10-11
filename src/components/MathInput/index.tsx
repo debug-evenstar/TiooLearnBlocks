@@ -5,6 +5,7 @@ import {
     processInputCharacter,
     processMathValue,
 } from "./handler";
+import { NthRootImage, SquareRootImage } from "./MathAssets/MathSVG";
 
 const MathInput: FC<{ close: Function; callback: Function }> = ({
     close,
@@ -74,7 +75,7 @@ const MathInput: FC<{ close: Function; callback: Function }> = ({
             </div>
             <div className="w-[96%] absolute bottom-0">
                 <div className="bg-gray-400 shadow-lg rounded-lg p-4 w-full">
-                    <div className="grid grid-cols-9 gap-2">
+                    <div className="grid grid-cols-10 gap-2">
                         <button
                             onClick={() => handleKeyboardButton("1")}
                             className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
@@ -110,6 +111,12 @@ const MathInput: FC<{ close: Function; callback: Function }> = ({
                             className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
                         >
                             tan
+                        </button>
+                        <button
+                            onClick={() => handleKeyboardButton("\\bigcap_1^{@0} p")}
+                            className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
+                        >
+                            ⋂
                         </button>
                         <button
                             onClick={() => handleKeyboardButton("+")}
@@ -169,6 +176,12 @@ const MathInput: FC<{ close: Function; callback: Function }> = ({
                             atan
                         </button>
                         <button
+                            onClick={() => handleKeyboardButton("\\bigcup_1^{k} p")}
+                            className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
+                        >
+                            ⋃
+                        </button>
+                        <button
                             onClick={() => handleKeyboardButton("\\div")}
                             className="bg-black hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
                         >
@@ -225,6 +238,12 @@ const MathInput: FC<{ close: Function; callback: Function }> = ({
                         </button>
 
                         <button
+                            onClick={() => handleKeyboardButton("\\sqrt{@0}")}
+                            className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
+                        >
+                            <SquareRootImage/>
+                        </button>
+                        <button
                             onClick={() => handleKeyboardButton("-")}
                             className="bg-black hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
                         >
@@ -275,10 +294,16 @@ const MathInput: FC<{ close: Function; callback: Function }> = ({
                             x<sup>y</sup>
                         </button>
                         <button
-                            onClick={() => handleKeyboardButton("{@0}!")}
+                            onClick={() => handleKeyboardButton("x_{@0}")}
                             className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
                         >
-                            x!
+                            x<sub>y</sub>
+                        </button>
+                        <button
+                            onClick={() => handleKeyboardButton("\\sqrt[{@0}]{@1}")}
+                            className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
+                        >
+                            <NthRootImage/>
                         </button>
                         <button
                             onClick={() => handleKeyboardButton("\\times")}
@@ -341,6 +366,12 @@ const MathInput: FC<{ close: Function; callback: Function }> = ({
                             className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
                         >
                             Σ
+                        </button>
+                        <button
+                            onClick={() => handleKeyboardButton("{@0}!")}
+                            className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
+                        >
+                            x!
                         </button>
                         <button
                             onClick={() =>

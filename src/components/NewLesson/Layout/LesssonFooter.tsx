@@ -85,7 +85,6 @@ const LessonFooter = forwardRef(
         };
 
 
-        console.log("is preview: ",isPreview);
         const renderPreviousButton = () => {
             if (isPreview) return <p></p>;
 
