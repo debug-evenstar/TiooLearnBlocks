@@ -100,16 +100,16 @@ export class SlideManager implements SlideManagerInterface {
                 () => {}
             );
         }
-        let slideId;
-        slideId =
+        let slide;
+        slide =
             this.manager.lesson.lesson_slides.length > slideIndex
                 ? this.manager.lesson.lesson_slides[slideIndex]
                 : null;
-        if (!slideId) {
+        if (!slide) {
             this.handleSlidesUpdate(this.slides.slice(0, -1));
             return;
         }
-        const url: string = `${baseApiHost()}/${DELETE_SLIDE_URL(slideId)}`;
+        const url: string = `${baseApiHost()}/${DELETE_SLIDE_URL(slide.id)}`;
         return fetch(url, {
             method: "DELETE",
         })
