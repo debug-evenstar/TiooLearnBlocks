@@ -31,9 +31,7 @@ const EditorialComp: FC<Props> = ({
     const [showEdit, setShowEdit] = useState(false);
     const [overlay, setOverlay] = useState(false);
     const [manager, setManager] = useState(
-        CreateManager(
-            lessonSlides?.map((slide: any) => slide?.slide_data)
-        )
+        CreateManager(lessonSlides?.map((slide: any) => slide?.slide_data))
     );
 
     const handleContinue = () => {
@@ -56,6 +54,7 @@ const EditorialComp: FC<Props> = ({
         setOverlay(false);
         setTimeout(() => {
             slideManagerRef?.current?.navigator(1, index);
+            manager.slideManager.setActiveSlide(index);
         }, 400);
     };
 
@@ -77,8 +76,7 @@ const EditorialComp: FC<Props> = ({
     }, [lessonSlides]);
 
     useEffect(() => {
-        if (data)
-            setLessonSlides(data.lesson_slides);
+        if (data) setLessonSlides(data.lesson_slides);
         manager.lesson = data;
     }, [data]);
 
@@ -89,20 +87,26 @@ const EditorialComp: FC<Props> = ({
         manager.slideManager.updateLessonSlides = (generator: Function) => {
             const updatedLessonSlides = generator(lessonSlides);
             setLessonSlides([...updatedLessonSlides]);
+            manager.lesson = {
+                ...data,
+                lessonSlides: updatedLessonSlides,
+            };
         };
-        manager.lesson = data;
     }, [manager, manager.slideManager]);
 
     useEffect(() => {
         manager.slideManager.slides = parseSlides;
-    }, [parseSlides])
+    }, [parseSlides]);
 
     if (!data) {
-
         return (
             <div className="w-full h-screen grid place-content-center">
                 <span>
-                    <ScaleLoader height={30} speedMultiplier={1.3} color=" #9c29b2" />
+                    <ScaleLoader
+                        height={30}
+                        speedMultiplier={1.3}
+                        color=" #9c29b2"
+                    />
                 </span>
             </div>
         );
@@ -140,11 +144,13 @@ const EditorialComp: FC<Props> = ({
                                 <ActiveEditSlide
                                     active={activeSlide}
                                     slides={parseSlides}
-                                    data={{ ...data, lesson_slides: lessonSlides }}
+                                    data={{
+                                        ...data,
+                                        lesson_slides: lessonSlides,
+                                    }}
                                     isBusy={isBusy}
                                     manager={manager}
                                 />
-
                             )}
                             {/* {
               overlay && <><CreateOverlaySlide isBusy={isBusy} createOverlay={createOverlay} slideLength={parseSlides.length}/></>
@@ -163,7 +169,6 @@ const EditorialComp: FC<Props> = ({
                                 <div className="pb-16"></div>
                             </div>
                         )}
-
                     </div>
                 </MainLayout>
             )}
