@@ -53,6 +53,7 @@ const TextComponent: FC<TextComponentProps> = ({
         setTimeout(() => {
             attachTextInputHandler(textContainerRef.current, slide.slide, (data:any)=>{
                 handleAnswerQuestion(data);
+                slide.dispatch("answerQuestion", data);
             });  
         }, 1000);
     }, [formatted, data.content, slide]);
