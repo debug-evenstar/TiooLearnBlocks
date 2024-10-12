@@ -8,6 +8,7 @@ import { SliderData } from "components/Slider/handler";
 import { TextData } from "components/Text/handler";
 import { VideoData } from "components/Video/handler";
 import { WordMatchData } from "components/WordMatch/handler";
+import { EventManagerInterface } from "utilities/event";
 declare global {
     interface Window {
         SlideEventListener: any;
@@ -49,6 +50,7 @@ export interface LessonSlideInterface {
     verifySubjectiveAnswer: Function;
     registerSlideData: Function;
     checkSlideCanProceed: Function;
+    eventManager: EventManagerInterface;
 }
 declare class LessonSlide implements LessonSlideInterface {
     slide: any;
@@ -71,6 +73,7 @@ declare class LessonSlide implements LessonSlideInterface {
     FAILURE_FEEDBACK: string;
     eventsStorage: any;
     parent: any;
+    eventManager: EventManagerInterface;
     constructor(parent?: any);
     setOptions(options: string[]): void;
     setAnswers(answers: string[]): void;
@@ -91,11 +94,7 @@ declare class LessonSlide implements LessonSlideInterface {
     triggerFeedback(feedbackType: string, index?: number): void;
     registerSlideData(slide: any): void;
     resetData(): void;
-    eventManager(): {
-        on: (eventName: string, callback: any) => void;
-        trigger: (eventName: string, data: any) => void;
-    };
-    on(eventName: string, callback: any): void;
+    on(eventName: string, callback: any): any;
     dispatch(eventName: string, data?: any): void;
     checkSlideCanProceed: (slide: any, strict?: boolean) => boolean;
 }

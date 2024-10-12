@@ -9,6 +9,7 @@ import { SliderData as SliderData$1 } from 'components/Slider/handler';
 import { TextData as TextData$1 } from 'components/Text/handler';
 import { VideoData as VideoData$1 } from 'components/Video/handler';
 import { WordMatchData as WordMatchData$1 } from 'components/WordMatch/handler';
+import { EventManagerInterface } from 'utilities/event';
 import { ImageData as ImageData$2 } from 'components/Image/handler';
 import { ComponentBasePropsInterface, ComponentBaseDataInterface } from 'components/interface';
 import { LessonSlideInterface as LessonSlideInterface$1 } from 'components/SlideManager/handler';
@@ -54,6 +55,7 @@ interface LessonSlideInterface {
     verifySubjectiveAnswer: Function;
     registerSlideData: Function;
     checkSlideCanProceed: Function;
+    eventManager: EventManagerInterface;
 }
 
 interface SlideManagerProps {
