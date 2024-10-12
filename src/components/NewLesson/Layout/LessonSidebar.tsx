@@ -1,7 +1,6 @@
 import logoImg from "../../../img/logo.png";
 import downCarret from "../../../img/carret-down.svg";
 import readingImg from "../../../img/reading.svg";
-// import assessmentImg from "img/assessment.svg";
 
 import LeftArrow from "FigmaIcons/LeftArrow";
 import { FC, forwardRef, useImperativeHandle, useState } from "react";

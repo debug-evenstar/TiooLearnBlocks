@@ -2,13 +2,10 @@ import React, { FC, useEffect, useState } from "react";
 import { RiAddCircleLine, RiDeleteBinLine } from "react-icons/ri";
 import { ManagerInterface } from "apps/Editorial/Base/Manager";
 import { OptionInterface, QuestionInterface } from "components/interface";
-import FeedbackIcon from "FigmaIcons/FeedbackIcon";
-import ChatIcon from "FigmaIcons/ChatIcon";
 import {
   FeedbackState,
   OptionsDataState,
 } from "apps/Editorial/Base/StateInterface";
-import ImageIcon, { GridOptionImageIcon } from "FigmaIcons/ImageIcon";
 import { uploadFile } from "apps/Editorial/Components/Image/handler";
 
 interface Props {

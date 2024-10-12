@@ -6,11 +6,6 @@ import { Editorial } from "components";
 import LessonPage from "pages/LessonPage";
 // import { LessonPage } from '@Praxeum-ai/LearnBlocks';
 
-import {
-  textbook,
-  getTextbookChapters,
-  getChapterLessons,
-} from "./constants/library";
 import { ConfigureLibrary } from "setup";
 import Test from "pages/Test";
 
