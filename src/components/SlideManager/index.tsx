@@ -78,6 +78,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         const navigateSlide = (direction: number, slideIndex: any = null) => {
             if (
                 slideIndex !== null &&
+                slideIndex !== undefined &&
                 slides.length > slideIndex &&
                 slideIndex >= 0
             ) {
