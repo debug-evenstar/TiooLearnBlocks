@@ -329,7 +329,7 @@ const ActiveQuestion: FC<Props> = ({
                 ]);
             }
         });
-    }, [manager]);
+    }, [manager, inputs]);
 
     return (
         <div className="w-full h-full mb-12 relative flex flex-col">
