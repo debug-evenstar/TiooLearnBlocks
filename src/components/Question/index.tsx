@@ -71,7 +71,9 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
 
     useEffect(() => {
       slide.on("answerQuestion" ,(data : any) => {
-        setAnswered((prev:any) => [...prev, data.answer])
+        if ( data.answer ) {
+          setAnswered((prev:any) => [...prev, data.answer])
+        }
       });
     },[slide]);
 
