@@ -247,7 +247,7 @@ export default function LessonLayout({
                         manager={slideManagerRef}
                         currentLesson={currentLesson}
                     />
-                    <div className="flex w-full">
+                    <div className="flex min-h-0 w-full">
                         <div
                             className={`${
                                 showAI

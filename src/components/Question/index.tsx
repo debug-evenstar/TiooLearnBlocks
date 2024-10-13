@@ -23,7 +23,6 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
     const [questions, setQuestions] = useState<any>(data?.data ?? []);
     const [answered, setAnswered] = useState<OptionInterface[]>([]);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
-    // const [slideScope] = useState<LessonSlideInterface>(LessonSlideScope());
 
     const allInputs = () =>
         Array.from(
@@ -71,7 +70,9 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
 
     useEffect(() => {
       slide.on("answerQuestion" ,(data : any) => {
-        setAnswered((prev:any) => [...prev, data.answer])
+        if ( data.answer ) {
+          setAnswered((prev:any) => [...prev, data.answer])
+        }
       });
     },[slide]);
 
