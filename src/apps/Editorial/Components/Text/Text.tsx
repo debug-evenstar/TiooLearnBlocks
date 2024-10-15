@@ -62,6 +62,16 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         }
     };
 
+    const handleDragOver = (event: any, status: boolean) => {
+        const element = event.target;
+        const isDragAreaElement = () => element.getAttribute("id") == id;
+        if (isDragAreaElement()) {
+            status && element.classList.add("no-pointer");
+            !status && element.classList.remove("no-pointer");
+        }
+        setIsDraggedOver(status);
+    };
+
     const handleDrop = (e: any) => {
         const data = JSON.parse(e.dataTransfer.getData("text/plain"));
         if (data.type === "question.input") {
@@ -190,9 +200,8 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                 className={`flex flex-col justify-between p-1 h-full w-full relative border-2 border-[#F8F7F7] ${
                     (!isEditable || !active) && "handle cursor-move"
                 }`}
-                onDragEnter={(e) => setIsDraggedOver(true)}
-                onDragOver={(e) => setIsDraggedOver(true)}
-                onDragLeave={(e) => setIsDraggedOver(false)}
+                onDragEnter={(e) => handleDragOver(e, true)}
+                onDragLeave={(e) => handleDragOver(e, false)}
                 onDrop={handleDrop}
                 onDoubleClick={() => setIsEditable(!isEditable)}
             >
@@ -207,7 +216,9 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                     dangerouslySetInnerHTML={{ __html: textValue }}
                 />
                 {isDraggedOver && (
-                    <div className="w-full h-full border-[1px] border-gray-400 absolute z-10 -top-[0.5px] -left-[0.5px] rounded-[5px] flex justify-center items-center">
+                    <div
+                        className="w-full h-full border-[1px] border-gray-400 absolute z-10 -top-[0.5px] -left-[0.5px] rounded-[5px] flex justify-center items-center"
+                    >
                         <div className="bg-gray-100 opacity-[95%] w-full h-full rounded-[5px] absolute"></div>
                         <div className="text-[13px] text-gray-500 bg-gray-300 relative p-[5px] border-[1px] border-gray-200">
                             Link to Text

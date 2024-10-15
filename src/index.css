@@ -1027,3 +1027,7 @@ input[type="file"] {
   box-shadow:  0 0 0 2px rgba(155,41,178,0.6),inset 0 0 12px 0 rgba(155,41,178,0.6);
   border-width: 0px;
 }
+
+.no-pointer * {
+  pointer-events: none;
+}
