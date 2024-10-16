@@ -34,6 +34,7 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         // );
         // Wrap in parent paragraph if not present
         initializeParentTag(editableRef);
+        resizeTipBoxes();
     };
 
     const appendInput = (data: {
@@ -83,6 +84,17 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         }
         setIsDraggedOver(false);
     };
+
+    const resizeTipBoxes = () => {
+        if (editableRef?.current){
+            editableRef.current.querySelectorAll(".tip-text").forEach((node : any) => {
+                const text = node.innerText;
+                const width = (text.length < 10 ? 100 : (text.length * 7) + 15);
+                node.style.width = `${Math.min(width, 300)}px`;
+                node.nextSibling.style.width = `${Math.min(width, 300)}px`;
+            });
+        }
+    }
 
     useEffect(() => {
         const textComponentData =

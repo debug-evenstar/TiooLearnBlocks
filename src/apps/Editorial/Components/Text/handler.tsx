@@ -5,7 +5,7 @@ import { RefObject } from "react";
 import ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 import { objectsAreIdentical } from "utilities/object";
-import Tooltip, { TipManager } from "./Tooltip";
+import Tooltip from "./Tooltip";
 
 /* -------------------------------------------------------------------------- */
 /*                             INTERFACE FOR TEXT                             */
@@ -277,18 +277,15 @@ export const handleAddTip = (tip: string) => {
     }
 };
 
-
-export const handleInsertMath = (mathHtml : string) => {
+export const handleInsertMath = (mathHtml: string) => {
     const manager = _getManager();
     const textElement = manager.canvasManager.activeComponentElement();
-    const editableArea = textElement.querySelector(
-        "div.editable-text"
-    );
+    const editableArea = textElement.querySelector("div.editable-text");
     let updatedHtml;
     // Assume existing text ends in closing </p> tag, insert into existing
     let closing = editableArea.innerHTML.slice(-4);
-    if ( closing === "</p>" ) {
-        updatedHtml = editableArea.innerHTML.slice(0,-4) + mathHtml + "</p>"
+    if (closing === "</p>") {
+        updatedHtml = editableArea.innerHTML.slice(0, -4) + mathHtml + "</p>";
     } else {
         const parentTag = document.createElement("p");
         setDefaultStyles(parentTag);
@@ -303,7 +300,6 @@ export const handleInsertMath = (mathHtml : string) => {
         textComponentData(updatedHtml)
     );
 };
-
 
 // Function to check for existing text format and deactivate
 
@@ -417,27 +413,28 @@ export const configureTipManager = (element: any) => {
     const handleEnterEvent = (event: any) => {
         const tipText = event.target.querySelector(".tip-text");
         if (tipText) {
-            const root = createRoot(tipText);
-            root.render(
-                <>
-                    {tipText.innerText}
-                    <TipManager element={tipText} />
-                </>
-            );
+            const previousContent = tipText.innerText;
+            const span = document.createElement("span");
+            span.className = "tip-editable";
+            span.innerHTML = previousContent || "....";
+            tipText.innerHTML = "";
+            tipText.appendChild(span);
+            const editableSpan = tipText.querySelector(".tip-editable");
+            editableSpan && editableSpan.setAttribute("contenteditable", true);
         }
     };
     const handleLeaveEvent = (event: any) => {
         const tipText = event.target.querySelector(".tip-text");
         if (tipText) {
-            tipText.setAttribute("contenteditable", false);
-            tipText.querySelector("button") &&
-                tipText.removeChild(tipText.querySelector("button"));
-            if (tipText.innerText === "" || tipText.innerText === " ") {
-                tipText.innerHTML = "....";
+            const editableSpan = tipText.querySelector(".tip-editable");
+            editableSpan &&
+                editableSpan?.setAttribute("contenteditable", false);
+            if (editableSpan?.innerText === "" || editableSpan?.innerText === " ") {
+                editableSpan.innerHTML = "....";
             }
         }
     };
-    
+
     /* -------------------- REGISTER TOOLTIP MANAGER LISTENER ------------------- */
     if (element) {
         element.querySelectorAll(".tooltip").forEach((node: any) => {
@@ -445,7 +442,8 @@ export const configureTipManager = (element: any) => {
             node.addEventListener("mouseleave", handleLeaveEvent);
         });
     }
-    return () => {
+
+    const removeListeners = () => {
         if (element) {
             element.querySelectorAll(".tooltip").forEach((node: any) => {
                 node.removeEventListener("mouseenter", handleEnterEvent);
@@ -453,6 +451,7 @@ export const configureTipManager = (element: any) => {
             });
         }
     };
+    return removeListeners;
 };
 
 export const focusOnTipEditable = (element: HTMLElement) => {

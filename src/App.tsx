@@ -72,15 +72,13 @@ function App() {
   const fetchTextbook = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8085/open/textbook/22"
+        "http://localhost:8085/open/textbook/2"
       );
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-
       if (!data.error) {
         setBookData(data.data);
         console.log(data.data);
@@ -157,7 +155,7 @@ function App() {
               bookData ? <LessonPage
                 textbook={bookData}
                 chapters={bookData.chapters}
-                lesson={bookData.chapters[0]?.lessons[1]}
+                lesson={bookData.chapters[0]?.lessons[0]}
                 retake={false}
                 back={() => console.log("back")}
               /> : <></>
