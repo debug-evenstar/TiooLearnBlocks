@@ -188,9 +188,9 @@ export const handleAnswerQuestion = (data: any) => {
         textFill.style.setProperty("transition-timing-function", "linear");
         textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
         parent?.replaceChild(textFill, linkedInput);
-        setTimeout(() => {
-            animate(textFill);
-        }, 300);
+        // setTimeout(() => {
+        //     animate(textFill);
+        // }, 300);
     }
 };
 
