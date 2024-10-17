@@ -19,12 +19,13 @@ export declare const resizeBox: (editableRef: React.RefObject<HTMLDivElement>, v
 export declare const formatText: (type: TextFormatType, tag: string | HTMLElement, styles?: {
     [key: string]: string;
 } | undefined) => HTMLElement | undefined;
-export declare const handleAddTip: (tip: string) => void;
 export declare const handleInsertMath: (mathHtml: string) => void;
 export declare const toggleList: (listType: string) => void;
 export declare const verifySelectionProperty: () => void;
+export declare const handleSelectionChange: () => void;
+export declare const handleAddTip: (tip: string) => void;
 export declare const configureTipManager: (element: any) => () => void;
-export declare const focusOnTipEditable: (element: HTMLElement) => void;
+export declare const resizeTipBoxes: (editableElement: HTMLElement | null) => void;
 export declare function removePx(value: string): string;
 export declare function selectNode(node: any): void;
 export declare function setState(key: string, data: any): void;
