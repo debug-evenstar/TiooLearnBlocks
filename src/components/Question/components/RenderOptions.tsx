@@ -32,7 +32,7 @@ const RenderOptions: FC<{
 }) => {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [locked, setLocked] = useState<any[]>([]);
-    const optionFontSizeFraction = 2;
+    const optionFontSizeFraction = 2.3;
     const lessonContext = useLessonContext();
     const optionColor = (option: OptionInterface, questionIndex: number) => {
         if (selectedOptions.includes(option.hash)) {

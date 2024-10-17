@@ -7,6 +7,8 @@ import {
     removePx,
     initializeParentTag,
     configureTipManager,
+    resizeTipBoxes,
+    handleSelectionChange,
 } from "./handler";
 import { CurrentStylesState } from "apps/Editorial/Base/StateInterface";
 import { InputInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
@@ -14,7 +16,6 @@ import {
     QuestionInterface,
     QuestionTypes,
 } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
-import MathInput from "components/MathInput";
 
 const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     const editableRef = useRef<HTMLDivElement>(null);
@@ -32,9 +33,11 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         //     textareaRowCount,
         //     setTextareaRowCount /*event*/
         // );
+
         // Wrap in parent paragraph if not present
         initializeParentTag(editableRef);
-        resizeTipBoxes();
+        // Handle tool tip resizing
+        resizeTipBoxes(editableRef?.current);
     };
 
     const appendInput = (data: {
@@ -85,17 +88,6 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         setIsDraggedOver(false);
     };
 
-    const resizeTipBoxes = () => {
-        if (editableRef?.current){
-            editableRef.current.querySelectorAll(".tip-text").forEach((node : any) => {
-                const text = node.innerText;
-                const width = (text.length < 10 ? 100 : (text.length * 7) + 15);
-                node.style.width = `${Math.min(width, 300)}px`;
-                node.nextSibling.style.width = `${Math.min(width, 300)}px`;
-            });
-        }
-    }
-
     useEffect(() => {
         const textComponentData =
             manager.canvasManager.canvas.getComponentData(id);
@@ -116,36 +108,6 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     }, [textareaRowCount, id, textValue, editableRef.current?.innerHTML]);
 
     useEffect(() => {
-        const handleSelectionChange = () => {
-            const range = getRange();
-            if (range) {
-                const element = range.commonAncestorContainer.parentElement;
-
-                if (element) {
-                    const styles = getComputedStyle(element);
-
-                    manager.setState(
-                        "currentStyles",
-                        (prev: CurrentStylesState) => {
-                            return {
-                                ...prev,
-                                ...({
-                                    textColor: styles.color,
-                                    textSize: removePx(styles.fontSize),
-                                    textSpacing: removePx(styles.lineHeight),
-                                    font: styles.fontFamily,
-                                } as CurrentStylesState),
-                            };
-                        }
-                    );
-                }
-                //setSelectedText(selectedText);
-            } else {
-                return;
-            }
-        };
-
-        document.addEventListener("selectionchange", handleSelectionChange);
 
         // Receive math input data
         manager.event.listen("insertMath", (data: string) => {
@@ -153,6 +115,8 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                 editableRef.current.innerHTML = data;
             }
         });
+
+        document.addEventListener("selectionchange", handleSelectionChange);
 
         return () => {
             document.removeEventListener(
@@ -228,9 +192,7 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                     dangerouslySetInnerHTML={{ __html: textValue }}
                 />
                 {isDraggedOver && (
-                    <div
-                        className="w-full h-full border-[1px] border-gray-400 absolute z-10 -top-[0.5px] -left-[0.5px] rounded-[5px] flex justify-center items-center"
-                    >
+                    <div className="w-full h-full border-[1px] border-gray-400 absolute z-10 -top-[0.5px] -left-[0.5px] rounded-[5px] flex justify-center items-center">
                         <div className="bg-gray-100 opacity-[95%] w-full h-full rounded-[5px] absolute"></div>
                         <div className="text-[13px] text-gray-500 bg-gray-300 relative p-[5px] border-[1px] border-gray-200">
                             Link to Text

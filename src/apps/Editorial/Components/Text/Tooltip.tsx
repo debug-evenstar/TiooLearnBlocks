@@ -1,7 +1,5 @@
 import { _getManager } from "apps/Editorial/Base/Manager";
-import React, { createRef, useRef, useState } from "react";
-import { FaCheck, FaEdit } from "react-icons/fa";
-import { focusOnTipEditable } from "./handler";
+import React from "react";
 
 interface TooltipProps {
     text: string;

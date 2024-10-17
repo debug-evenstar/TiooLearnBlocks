@@ -6,6 +6,7 @@ import ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 import { objectsAreIdentical } from "utilities/object";
 import Tooltip from "./Tooltip";
+import { CurrentStylesState } from "apps/Editorial/Base/StateInterface";
 
 /* -------------------------------------------------------------------------- */
 /*                             INTERFACE FOR TEXT                             */
@@ -79,7 +80,7 @@ const setDefaultStyles = (element: HTMLElement) => {
     element.className = "main outline-none";
     const canvasView = document.getElementById("editorial-canvas")
         ?.clientWidth as number;
-    element.style.fontSize = "16px";
+    element.style.fontSize = "20px";
     element.setAttribute("data-type", "text");
     element.setAttribute("data-container-pixel", canvasView.toString());
 };
@@ -250,33 +251,6 @@ const createElementWithStyles = (
     return element;
 };
 
-export const handleAddTip = (tip: string) => {
-    const range = getRange();
-    const manager = _getManager();
-    if (range && range.toString()) {
-        const value = range.toString();
-        range.deleteContents();
-        const tipComponent = <Tooltip text={value} tip={tip} />;
-        var span = document.createElement("span");
-        range.surroundContents(span);
-        const root = createRoot(span);
-        root.render(tipComponent);
-        const textElement = manager.canvasManager.activeComponentElement();
-        const editableArea = textElement.querySelector(
-            "div[contenteditable=true]"
-        );
-        clearSelection();
-        if (editableArea) {
-            setTimeout(() => {
-                manager.canvasManager.canvas.updateActiveComponentData(
-                    textComponentData(editableArea.innerHTML)
-                );
-                configureTipManager(editableArea);
-            }, 1000);
-        }
-    }
-};
-
 export const handleInsertMath = (mathHtml: string) => {
     const manager = _getManager();
     const textElement = manager.canvasManager.activeComponentElement();
@@ -409,6 +383,65 @@ export const verifySelectionProperty = () => {
     }
 };
 
+export const handleSelectionChange = () => {
+    const manager = _getManager();
+    const range = getRange();
+    if (range) {
+        const element = range.commonAncestorContainer.parentElement;
+
+        if (element) {
+            const styles = getComputedStyle(element);
+
+            manager.setState("currentStyles", (prev: CurrentStylesState) => {
+                return {
+                    ...prev,
+                    ...({
+                        textColor: styles.color,
+                        textSize: removePx(styles.fontSize),
+                        textSpacing: removePx(styles.lineHeight),
+                        font: styles.fontFamily,
+                    } as CurrentStylesState),
+                };
+            });
+        }
+    } else {
+        return;
+    }
+};
+
+/* -------------------------------------------------------------------------- */
+/*                             TOOL TIP FUNCTIONS                             */
+/* -------------------------------------------------------------------------- */
+
+export const handleAddTip = (tip: string) => {
+    const range = getRange();
+    const manager = _getManager();
+    if (range && range.toString()) {
+        const value = range.toString();
+        range.deleteContents();
+        const tipComponent = <Tooltip text={value} tip={tip} />;
+        var span = document.createElement("span");
+        range.surroundContents(span);
+        const root = createRoot(span);
+        root.render(tipComponent);
+        const textElement = manager.canvasManager.activeComponentElement();
+        const editableArea = textElement.querySelector(
+            "div[contenteditable=true]"
+        );
+        clearSelection();
+        if (editableArea) {
+            setTimeout(() => {
+                manager.canvasManager.canvas.updateActiveComponentData(
+                    textComponentData(editableArea.innerHTML)
+                );
+                configureTipManager(editableArea);
+            }, 1000);
+        }
+    }
+};
+
+/* - HANDLE EDITABLE STATE AND INNER SPAN OF TIP COMPONENT ON MOUSE ACTIONS - */
+
 export const configureTipManager = (element: any) => {
     const handleEnterEvent = (event: any) => {
         const tipText = event.target.querySelector(".tip-text");
@@ -429,13 +462,17 @@ export const configureTipManager = (element: any) => {
             const editableSpan = tipText.querySelector(".tip-editable");
             editableSpan &&
                 editableSpan?.setAttribute("contenteditable", false);
-            if (editableSpan?.innerText === "" || editableSpan?.innerText === " ") {
+            if (
+                editableSpan?.innerText === "" ||
+                editableSpan?.innerText === " "
+            ) {
                 editableSpan.innerHTML = "....";
             }
         }
     };
 
     /* -------------------- REGISTER TOOLTIP MANAGER LISTENER ------------------- */
+
     if (element) {
         element.querySelectorAll(".tooltip").forEach((node: any) => {
             node.addEventListener("mouseenter", handleEnterEvent);
@@ -454,16 +491,22 @@ export const configureTipManager = (element: any) => {
     return removeListeners;
 };
 
-export const focusOnTipEditable = (element: HTMLElement) => {
-    const position = element.innerText.length;
-    let range = document.createRange();
-    let sel = window.getSelection();
-    range.setStart(element.childNodes[0], position);
-    range.collapse(true);
-    sel?.removeAllRanges();
-    sel?.addRange(range);
-    element.focus();
+/* -------------------- RESIZE TIP BOX ON CONTENT CHANGE -------------------- */
+
+export const resizeTipBoxes = (editableElement: HTMLElement | null) => {
+    if (editableElement) {
+        editableElement.querySelectorAll(".tip-text").forEach((node: any) => {
+            const text = node.innerText;
+            const width = text.length < 10 ? 100 : text.length * 7 + 15;
+            node.style.width = `${Math.min(width, 300)}px`;
+            node.nextSibling.style.width = `${Math.min(width, 300)}px`;
+        });
+    }
 };
+
+/* -------------------------------------------------------------------------- */
+/*                           TOOL TIP FUNCTIONS END                           */
+/* -------------------------------------------------------------------------- */
 
 /* ---------------------------- HELPER FUNCTIONS ---------------------------- */
 
