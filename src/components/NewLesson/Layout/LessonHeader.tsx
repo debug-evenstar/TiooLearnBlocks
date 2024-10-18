@@ -2,6 +2,7 @@ import { FaBars } from "react-icons/fa";
 import clockImg from "../../../img/clock.svg";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { IndexKind } from "typescript";
+import { BsChevronLeft } from "react-icons/bs";
 
 interface SlideListProps {
   activeIndex: number;
@@ -83,6 +84,7 @@ const LessonHeader = forwardRef(
       setActiveSlide,
       sideBarOpen,
       toggleSidebar,
+      back,
       manager,
       isChatOpen,
     }: any,
@@ -155,7 +157,7 @@ const LessonHeader = forwardRef(
                         isCurrentColumn && "rounded-r-full"
                       } flex items-center justify-end`}
                     >
-                      <div className='relative'>
+                      <div className="relative">
                         <div
                           className={`h-[5px] w-[5px] rotate-45 ${
                             isCurrentColumn
@@ -199,9 +201,17 @@ const LessonHeader = forwardRef(
     return (
       <div className="relative w-full">
         <div className="w-full sm:border-b h-[90px] px-5 sm:px-10 flex justify-between items-center relative">
-          <p className="font-[500] text-[18px] hidden sm:block">
-            {currentLesson?.topic ?? ""}
-          </p>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={back}
+              className="px-2 outline-none active:scale-[0.98] h-12 border border-gray-300 rounded text-gray-700 items-center justify-center"
+            >
+              <BsChevronLeft size={17} />
+            </button>
+            <p className="font-[500] text-[18px] hidden sm:block">
+              {currentLesson?.topic ?? ""}
+            </p>
+          </div>
           {currentLesson && <LessonProgress />}
         </div>
       </div>
