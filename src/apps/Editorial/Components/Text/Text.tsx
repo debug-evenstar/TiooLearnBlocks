@@ -79,11 +79,11 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     const handleDrop = (e: any) => {
         const data = JSON.parse(e.dataTransfer.getData("text/plain"));
         if (data.type === "question.input") {
-            appendInput({ input: data.input, question: data.question });
             manager.event.emit("linkQuestionInput", {
                 questionHash: data.question.hash,
                 hash: data.input.hash,
             });
+            appendInput({ input: data.input, question: data.question });
         }
         setIsDraggedOver(false);
     };

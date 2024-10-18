@@ -68,7 +68,7 @@ const InactiveSidebar: FC<Props> = ({
         "Dual Choice",
     ];
 
-    const activeSlideData = slides && slides[activeSlide];
+    const [activeSlideData, setActiveSlideData] = useState<any>( slides && slides[activeSlide]);
     const [comps, setComps] = useState<any[]>();
     const [activeQuestion, setActiveQuestion] = useState<any>(null);
     const scrRef = useRef<any>(null);
@@ -187,6 +187,13 @@ const InactiveSidebar: FC<Props> = ({
             }),
         ]);
     }, [questions, manager.states]);
+
+    useEffect(() => {
+        if (slides[activeSlide]) {
+            setActiveSlideData([...slides[activeSlide]])
+        }
+    },[slides])
+
 
     const Item = () => {
         const [isOpen, setIsOpen] = useState(true);
