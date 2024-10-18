@@ -7,6 +7,8 @@ import {
     removePx,
     initializeParentTag,
     configureTipManager,
+    resizeTipBoxes,
+    handleSelectionChange,
 } from "./handler";
 import { CurrentStylesState } from "apps/Editorial/Base/StateInterface";
 import { InputInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
@@ -14,7 +16,6 @@ import {
     QuestionInterface,
     QuestionTypes,
 } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
-import MathInput from "components/MathInput";
 
 const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     const editableRef = useRef<HTMLDivElement>(null);
@@ -32,8 +33,11 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         //     textareaRowCount,
         //     setTextareaRowCount /*event*/
         // );
+
         // Wrap in parent paragraph if not present
         initializeParentTag(editableRef);
+        // Handle tool tip resizing
+        resizeTipBoxes(editableRef?.current);
     };
 
     const appendInput = (data: {
@@ -62,14 +66,24 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         }
     };
 
+    const handleDragOver = (event: any, status: boolean) => {
+        const element = event.target;
+        const isDragAreaElement = () => element.getAttribute("id") == id;
+        if (isDragAreaElement()) {
+            status && element.classList.add("no-pointer");
+            !status && element.classList.remove("no-pointer");
+        }
+        setIsDraggedOver(status);
+    };
+
     const handleDrop = (e: any) => {
         const data = JSON.parse(e.dataTransfer.getData("text/plain"));
         if (data.type === "question.input") {
-            appendInput({ input: data.input, question: data.question });
             manager.event.emit("linkQuestionInput", {
                 questionHash: data.question.hash,
                 hash: data.input.hash,
             });
+            appendInput({ input: data.input, question: data.question });
         }
         setIsDraggedOver(false);
     };
@@ -94,36 +108,6 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     }, [textareaRowCount, id, textValue, editableRef.current?.innerHTML]);
 
     useEffect(() => {
-        const handleSelectionChange = () => {
-            const range = getRange();
-            if (range) {
-                const element = range.commonAncestorContainer.parentElement;
-
-                if (element) {
-                    const styles = getComputedStyle(element);
-
-                    manager.setState(
-                        "currentStyles",
-                        (prev: CurrentStylesState) => {
-                            return {
-                                ...prev,
-                                ...({
-                                    textColor: styles.color,
-                                    textSize: removePx(styles.fontSize),
-                                    textSpacing: removePx(styles.lineHeight),
-                                    font: styles.fontFamily,
-                                } as CurrentStylesState),
-                            };
-                        }
-                    );
-                }
-                //setSelectedText(selectedText);
-            } else {
-                return;
-            }
-        };
-
-        document.addEventListener("selectionchange", handleSelectionChange);
 
         // Receive math input data
         manager.event.listen("insertMath", (data: string) => {
@@ -131,6 +115,8 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                 editableRef.current.innerHTML = data;
             }
         });
+
+        document.addEventListener("selectionchange", handleSelectionChange);
 
         return () => {
             document.removeEventListener(
@@ -190,9 +176,8 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                 className={`flex flex-col justify-between p-1 h-full w-full relative border-2 border-[#F8F7F7] ${
                     (!isEditable || !active) && "handle cursor-move"
                 }`}
-                onDragEnter={(e) => setIsDraggedOver(true)}
-                onDragOver={(e) => setIsDraggedOver(true)}
-                onDragLeave={(e) => setIsDraggedOver(false)}
+                onDragEnter={(e) => handleDragOver(e, true)}
+                onDragLeave={(e) => handleDragOver(e, false)}
                 onDrop={handleDrop}
                 onDoubleClick={() => setIsEditable(!isEditable)}
             >
