@@ -68,11 +68,12 @@ function App() {
       console.error("Error fetching data:", error);
     }
   };
-
+  
   const fetchTextbook = async () => {
+    const textbook_id = process.env.REACT_APP_TEXTBOOK_ID;
     try {
       const response = await fetch(
-        "http://localhost:8085/open/textbook/2"
+        `http://localhost:8085/open/textbook/${textbook_id}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -123,13 +124,14 @@ function App() {
   useEffect(() => {
     ConfigureLibrary.save({
       baseUrl: "http://localhost:8085",
-      // token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJwcmFpc2Vpa2UxMjNAZ21haWwuY29tIiwiYWNjb3VudF90eXBlIjoic3R1ZGVudCJ9LCJpYXQiOjE3MjkxMTQ2NTQsImV4cCI6MTczNjg5MDY1NH0.q0OsgYuqWM01zzFkAezr3URRRjWv-M_A-dYcZVE64tw",
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyZGF0YSI6eyJpZCI6MzEsImVtYWlsIjoiZ2FtZXJAZ21haWwuY29tIiwiYWNjb3VudF90eXBlIjoic3R1ZGVudCJ9LCJpYXQiOjE3MjkxOTY4ODQsImV4cCI6MTczNjk3Mjg4NH0.980kgZ1TyalgJrGc5qKqG7eiTWNnofZcW2ISeGMAr4U",
-      // token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyZGF0YSI6eyJpZCI6NCwiZW1haWwiOiJwcmFpc2Vpa2UxMjNAZ21haWwuY29tIiwiYWNjb3VudF90eXBlIjoic2Nob29sIn0sImlhdCI6MTcyNTQxNDgzNywiZXhwIjoxNzMzMTkwODM3fQ.XhoKL5q30UfFGMJsOkO0uozGDzciRLQOSEiZv8-QiNQ",
+      token: process.env.REACT_APP_API_TOKEN ?? "",
       authType: "student"
     });
   }, []);
 
+  const lesson_index = 4 || (Number.parseInt(`${process.env.REACT_APP_LESSON_INDEX}`) ?? 0);
+  const chapter_index = Number.parseInt(`${process.env.REACT_APP_CHAPTER_INDEX}`) ?? 0;
+  console.log(process.env)
 
   return (
     <div>
@@ -159,7 +161,7 @@ function App() {
               bookData ? <LessonPage
                 textbook={bookData}
                 chapters={bookData.chapters}
-                lesson={bookData.chapters[0]?.lessons[5]}
+                lesson={bookData.chapters[chapter_index]?.lessons[lesson_index]}
                 retake={false}
                 back={() => console.log("back")}
               /> : <></>
