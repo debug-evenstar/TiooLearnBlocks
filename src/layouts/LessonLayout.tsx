@@ -215,15 +215,7 @@ export default function LessonLayout({
 
     return (
         <>
-            <div
-                className={`${
-                    !lesson
-                        ? "opactity-100"
-                        : "opactity-0 pointer-events-none translate-x-full"
-                } flex duration-1000 items-center justify-center fixed z-[1000000000] w-screen h-screen inset-0 bg-white`}
-            >
-                {!lesson && <PulseLoader />}
-            </div>
+
             <FeedbackPopup
                 ref={feedbackRef}
                 footerRef={lessonFooterRef}
@@ -265,12 +257,8 @@ export default function LessonLayout({
                                     </button>
                                 </div>
                             )}
-                            <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_170px)] overflow-y-auto">
+                            <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_230px)] sm:h-[calc(100vh_-_170px)]  overflow-y-auto">
                                 <AudioButton />
-                                {/* <ToggleNavBtn
-                  sideBarRef={lessonSidebarRef}
-                  handleClick={() => toggleSidebar()}
-                /> */}
                                 {currentLesson ? (
                                     <LessonContext.Provider
                                         value={{
@@ -288,19 +276,9 @@ export default function LessonLayout({
                                     <StartScreen />
                                 )}
                             </div>
-                            <div className="relative w-full h-[80px]">
+                            <div className="relative w-full lg:h-[80px]">
                                 {/* {!showAI && <button onClick={handleShowAI} className="text-[#7E1593] px-4 font-[500] text-sm rounded-full border-[#7E1593] border py-1 absolute right-10 -top-10"> Explain this screen</button>} */}
-                                {currentLesson && (
-                                    <div className="absolute left-10 -top-8">
-                                        <TransitionButton
-                                            strings={[
-                                                "AI TUTOR",
-                                                "Explain this screen",
-                                            ]}
-                                            handleShowAI={handleShowAI}
-                                        />
-                                    </div>
-                                )}
+
 
                                 <LessonFooter
                                     ref={lessonFooterRef}

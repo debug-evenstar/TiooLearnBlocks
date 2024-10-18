@@ -151,16 +151,48 @@ const FeedbackPopup: FC<FeedbackPopupProps> = forwardRef(
     }));
 
     return (
+      // <div
+      //   ref={divRef}
+      //   style={{
+      //     bottom: 0,
+      //     right: isVisible ? 0 : "-50%",
+      //     animationTimingFunction: "ease-in-out"
+      //   }}
+      //   // className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
+      //   className={`w-full sm:w-[430px] min-h-[12rem] text-white py-4 z-[2000] flex items-center rounded-xl duration-300 m-10 fixed
+      //      ${isWrong ? "popup-bg-error" : "popup-bg-success"}`}
+      // >
+      //   <button className="absolute z-[2001] top-0 m-5 font-[500] text-xl right-0" onClick={onClose}>
+      //     <MdClose />
+      //   </button>
+      //   <img alt=""
+      //     src={isWrong ? wrongTipImg : correctTipImg}
+      //     className="absolute w-[2rem] -top-4 right-20"
+      //   />
+      //   <div className="relative w-full">
+      //     <div className="relative">
+      //       {/* <img src={isWrong ? errorBg : successBg} alt="" /> */}
+      //       <div className="w-full px-3 h-full">
+      //         {isWrong ? (
+      //           <ErrorLayout {...{ title, content, feedbackContinue }} />
+      //         ) : (
+      //           <SuccessLayout {...{ title, content, feedbackContinue, onContinue }} />
+      //         )}
+      //       </div>
+      //     </div>
+      //   </div>
+      // </div>
+
       <div
         ref={divRef}
         style={{
           bottom: 0,
-          right: isVisible ? 0 : "-50%",
+          // right: isVisible ? 0 : "-50%",
           animationTimingFunction: "ease-in-out"
         }}
         // className={`w-[430px] h-[250px] h-fit text-white ease-in z-[20000] duration-300 m-10 fixed`}
-        className={`w-full sm:w-[430px] min-h-[12rem] text-white py-4 z-[2000] flex items-center rounded-xl duration-300 m-10 fixed
-           ${isWrong ? "popup-bg-error" : "popup-bg-success"}`}
+        className={`${isVisible ? "right-0":"-right-full"} bottom-0 ease-in-out w-full sm:w-[430px] min-h-[12rem] text-white py-4 z-[2000] flex items-center sm:rounded-xl duration-300 sm:m-10 fixed
+          ${isWrong ? "popup-bg-error" : "popup-bg-success"}`}
       >
         <button className="absolute z-[2001] top-0 m-5 font-[500] text-xl right-0" onClick={onClose}>
           <MdClose />
