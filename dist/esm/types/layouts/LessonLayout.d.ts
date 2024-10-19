@@ -25,5 +25,5 @@ export interface LessonSlideProps {
     slides: any[];
     stateActions: LessonStateActions;
 }
-export default function LessonLayout({ textbook, chapters, retake, children, lesson, sideBar, closePreview, lessonSlides, }: LessonLayoutProps): import("react/jsx-runtime").JSX.Element;
+export default function LessonLayout({ textbook, chapters, retake, children, lesson, back, sideBar, closePreview, lessonSlides, }: LessonLayoutProps): import("react/jsx-runtime").JSX.Element;
 export {};
