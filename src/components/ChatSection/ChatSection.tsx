@@ -1,6 +1,6 @@
 import { FC, useState, useRef, useEffect } from "react";
 
-import { FaMicrophone } from "react-icons/fa";
+import { FaMicrophone, FaTimes } from "react-icons/fa";
 import { PiPaperPlaneRightFill } from "react-icons/pi";
 import { ThreeDots } from "react-loader-spinner";
 import Configuration from "setup/configure";
@@ -16,6 +16,7 @@ interface ChatSectionProps {
     slideData?: any;
     lesson: any;
     slide: number;
+    close: Function;
 }
 
 const ChatMessage: FC<MessageProps> = ({ content, role }) => {
@@ -41,6 +42,7 @@ const ChatSection: FC<ChatSectionProps> = ({
     slideData,
     lesson,
     slide,
+    close
 }) => {
     const [message, setMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -146,9 +148,12 @@ const ChatSection: FC<ChatSectionProps> = ({
     return (
         <div
             className={`${
-                visible ? "w-[50%]" : "w-0"
+                visible ? "w-[100%] bg-white sm:bg-transparent sm:w-[70%] md:w-[65%] lg:w-[50%]" : "w-0"
             } overflow-hidden relative border-l flex flex-col z-[1500]`}
         >
+            <button className="flex justify-center items-center w-[36px] h-[36px] bg-[#7e1593] absolute right-2 rounded-[20px]" onClick={() =>close()}>
+                <FaTimes size={21} color="#fff"/>
+            </button>
             {visible && (
                 <div
                     id="chat-box"

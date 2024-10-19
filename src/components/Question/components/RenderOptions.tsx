@@ -103,10 +103,10 @@ const RenderOptions: FC<{
                     >
                         <button
                             style={{
-                                fontSize: `${
+                                fontSize: `${Math.max(
                                     (optionFontSizeFraction * viewArea.width) /
                                     100
-                                }px`,
+                                ,15)}px`,
                             }}
                             className={
                                 `w-full h-full absolute border-[2px] inherit-font overflow-hidden
