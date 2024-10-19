@@ -226,7 +226,7 @@ export default function LessonLayout({
             {...{ chapters, textbook, setCurrentLesson }}
           />
         } */}
-        <div className="flex flex-col w-full relative justify-between border-l h-screen">
+        <div className="flex flex-col w-full relative border-l h-screen">
           <LessonHeader
             back={back}
             ref={lessonHeaderRef}
@@ -237,11 +237,11 @@ export default function LessonLayout({
             manager={slideManagerRef}
             currentLesson={currentLesson}
           />
-          <div className="flex min-h-0 w-full">
+          <div className="flex grow min-h-0 w-full">
             <div
               className={`${
-                showAI ? "w-[65%] pointer-events-none" : "w-full"
-              } relative z-[1200]`}
+                showAI ? "w-0 sm:w-[30%] md:w-[35%] lg:w-[50%] pointer-events-none" : "w-full"
+              } flex flex-col relative z-[1200]`}
             >
               {showAI && (
                 <div className="w-full transition-none inset-0 z-[120000] absolute pointer-events-auto bg-[#00000033] flex justify-center items-end ">
@@ -253,7 +253,7 @@ export default function LessonLayout({
                   </button>
                 </div>
               )}
-              <div className="relative px-28 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_230px)] sm:h-[calc(100vh_-_170px)]  overflow-y-auto">
+              <div className="relative px-5 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_230px)] sm:h-[calc(100vh_-_170px)] sm:px-12 md:px-2ZZ  overflow-y-auto">
                 <AudioButton />
                 {currentLesson ? (
                   <LessonContext.Provider
@@ -293,6 +293,7 @@ export default function LessonLayout({
               visible={showAI}
               lesson={currentLesson}
               slide={activeSlide}
+              close={handlecloseAI}
             />
           </div>
         </div>

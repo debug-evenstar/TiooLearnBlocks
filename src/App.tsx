@@ -129,9 +129,8 @@ function App() {
     });
   }, []);
 
-  const lesson_index = 4 || (Number.parseInt(`${process.env.REACT_APP_LESSON_INDEX}`) ?? 0);
+  const lesson_index = (Number.parseInt(`${process.env.REACT_APP_LESSON_INDEX}`) ?? 0);
   const chapter_index = Number.parseInt(`${process.env.REACT_APP_CHAPTER_INDEX}`) ?? 0;
-  console.log(process.env)
 
   return (
     <div>

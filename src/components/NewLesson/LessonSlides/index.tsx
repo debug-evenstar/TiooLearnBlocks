@@ -53,20 +53,29 @@ const LessonSlides = ({
   const [calculatedArea, setCalculatedArea] = useState<{width : number, height : number}>({width : 0 , height : 0})
   const contRef : React.RefObject<any> = createRef();
 
+  const getResponsiveWidth = () => {
+    const availableWidth = contRef?.current.clientWidth;
+    const screenWidth = document.documentElement.clientWidth;
+    const mobileWidth = availableWidth;
+    const desktopWidth = contRef?.current.clientHeight * (
+      screenWidth < 1250 ? 1.1 :  1.4
+    );
+    return screenWidth < 1024 ? mobileWidth : desktopWidth;
+  }
 
   useEffect(()=>{
     setCalculatedArea({
-      width : contRef?.current ? contRef?.current.clientHeight * 1.4 : 0,
+      width : contRef?.current ? getResponsiveWidth() : 0,
       height : contRef?.current?.clientHeight ?? 0
     })
   }, [contRef?.current])
 
   return (
     <div className="w-full relative flex items-center gap-3">
-      <div ref={contRef} className=" w-10/12 h-full relative mx-auto min-h-[calc(100vh_-_170px)] text-black">
+      <div ref={contRef} className="w-[85%] md:w-[90%] h-full relative mx-auto min-h-[calc(100vh_-_170px)] text-black">
         <div className="absolute z-10 top-5 right-5"></div>
         {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}
-        <div 
+        <div
           style={{
             width : calculatedArea.width,
           }}

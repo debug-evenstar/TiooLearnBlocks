@@ -204,7 +204,7 @@ const LessonHeader = forwardRef(
           <div className="flex items-center gap-3">
             <button
               onClick={back}
-              className="px-2 outline-none active:scale-[0.98] h-12 border border-gray-300 rounded text-gray-700 items-center justify-center"
+              className="px-2 mr-3 sm:mr-0 outline-none active:scale-[0.98] h-12 border border-gray-300 rounded text-gray-700 items-center justify-center"
             >
               <BsChevronLeft size={17} />
             </button>

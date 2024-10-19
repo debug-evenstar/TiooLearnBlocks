@@ -202,7 +202,17 @@ export const formatTextContent = (content: string) => {
     return handleFormatting(content);
 };
 
-const pixelDependentStyles = ["fontSize"];
+
+interface PixelDependentStyle {
+    name : string;
+    min? : number;
+    max? : number;
+}
+
+const pixelDependentStyles : PixelDependentStyle[] = [{
+    name : "fontSize",
+    min : 16,
+}];
 
 // To be expanded
 export const buildTextData = (data: string, viewArea: any) => {
@@ -211,13 +221,13 @@ export const buildTextData = (data: string, viewArea: any) => {
     const textNodeList = abstractBody.querySelectorAll("*[data-type=text]");
     textNodeList.forEach((node: Element | any) => {
         // For parsing pixel dependent styles
-        pixelDependentStyles.forEach((styleName: string) => {
+        pixelDependentStyles.forEach((styleData : PixelDependentStyle) => {
             if (
                 node &&
                 node.hasAttribute("data-container-pixel") &&
-                node.style[styleName]
+                node.style[styleData.name]
             ) {
-                const style: string = node.style[styleName];
+                const style: string = node.style[styleData.name];
                 // Some work left here
                 const parseFontSize: number = Number.parseInt(
                     style.replace("px", "")
@@ -226,9 +236,9 @@ export const buildTextData = (data: string, viewArea: any) => {
                     "data-container-pixel"
                 ) as number;
                 if (viewArea) {
-                    node.style[styleName] = `${
-                        (parseFontSize / relativeContainerPixel) *
-                        viewArea.width
+                    node.style[styleData.name] = `${
+                        Math.max((parseFontSize / relativeContainerPixel) *
+                        viewArea.width, styleData.min ?? 0)
                     }px`;
                 }
             }
