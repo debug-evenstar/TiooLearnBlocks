@@ -192,7 +192,7 @@ const InactiveSidebar: FC<Props> = ({
         if (slides[activeSlide]) {
             setActiveSlideData([...slides[activeSlide]])
         }
-    },[slides])
+    },[slides, activeSlide]);
 
 
     const Item = () => {
