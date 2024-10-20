@@ -50,7 +50,7 @@ function App() {
   const fetchLess = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8085/open/lesson/2/template"
+        `http://localhost:8085/open/lesson/${process.env.REACT_APP_TEXTBOOK_ID}/template`
       );
 
       if (!response.ok) {

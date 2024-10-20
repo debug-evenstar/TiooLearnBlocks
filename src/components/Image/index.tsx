@@ -22,7 +22,7 @@ const ImageComponent: FC<ImageComponentProps> = ({ data, slide }) => {
     return (
         <>
             <div
-                className={ "w-full h-full mx-auto rounded-lg cursor-pointer relative"}
+                className={ "w-full h-auto sm:h-full mx-auto rounded-lg cursor-pointer relative"}
             >
                 <img
                     src={data.url}
