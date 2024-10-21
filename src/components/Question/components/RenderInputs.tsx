@@ -49,7 +49,7 @@ const RenderInputs: FC<{
     const handleInputChange = (e: any) => {
         const val = e.target.value;
         if (question.answer && val) {
-            if (question.answer.substring(0, val.length) === val) {
+            if (question.answer.substring(0, val.length).toLowerCase() === val.toLowerCase()) {
                 setIsCorrect(true);
                 if (question.answer?.length === val.length) {
                     setAnswered((prev: any) => [...prev, question.answer]);
@@ -78,7 +78,7 @@ const RenderInputs: FC<{
                         {answered.length <= questionIndex && (
                             <input
                                 disabled={
-                                    question.type === QuestionTypes.Multichoice
+                                    question.type === QuestionTypes.Multichoice || answered.length !== questionIndex
                                 }
                                 className={`w-full h-full relative bg-white text-[16px] text-center font-bold border-[0.5px] border-[#E5E5E5] rounded-[8px] p-[3px] shadow-md z-[50] shadow-[inset_0_0_6px_2px_rgba(155,41,178,0.6)]
                                     ${

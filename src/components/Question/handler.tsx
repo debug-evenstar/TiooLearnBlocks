@@ -34,15 +34,16 @@ export const attachTextInputHandler = (
     onAnswer: Function
 ) => {
     if (element) {
-        element
-            .querySelectorAll("input[data-link=Questions]")
-            .forEach((input: any) => {
+        const inputs  = element
+        .querySelectorAll("input[data-link=Questions]");
+        
+            inputs.forEach((input: any, index : number) => {
                 const questionHash = input.getAttribute("data-question-hash");
                 input.addEventListener("input", (e: any) => {
                     const val = e.target.value;
                     const question = getQuestionsComponent(slide, questionHash);
                     if (question && question.answer && val) {
-                        if (question.answer.substring(0, val.length) === val) {
+                        if (question.answer.substring(0, val.length).toLowerCase() === val.toLowerCase()) {
                             input.classList.add("text-green-500");
                             input.classList.remove("text-red-500");
                             if (question.answer?.length === val.length) {
@@ -60,4 +61,5 @@ export const attachTextInputHandler = (
 
 export const decorateActiveInput = (input: HTMLInputElement) => {
     input.classList.add("input-is-active");
+    input.focus();
 };
