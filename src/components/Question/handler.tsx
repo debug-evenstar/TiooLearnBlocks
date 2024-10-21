@@ -34,9 +34,10 @@ export const attachTextInputHandler = (
     onAnswer: Function
 ) => {
     if (element) {
-        element
-            .querySelectorAll("input[data-link=Questions]")
-            .forEach((input: any) => {
+        const inputs  = element
+        .querySelectorAll("input[data-link=Questions]");
+        
+            inputs.forEach((input: any, index : number) => {
                 const questionHash = input.getAttribute("data-question-hash");
                 input.addEventListener("input", (e: any) => {
                     const val = e.target.value;
