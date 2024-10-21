@@ -68,10 +68,15 @@ const LessonSlides = ({
       width : contRef?.current ? getResponsiveWidth() : 0,
       height : contRef?.current?.clientHeight ?? 0
     })
+    contRef?.current && contRef.current.addEventListener("selectstart", (e:any) => {
+      e.preventDefault();
+      return false;
+    });
   }, [contRef?.current])
 
+
   return (
-    <div className="w-full relative flex items-center gap-3">
+    <div className="w-full relative flex items-center gap-3" onContextMenu={(e) => e.preventDefault()}>
       <div ref={contRef} className="w-[85%] md:w-[90%] h-full relative mx-auto min-h-[calc(100vh_-_170px)] text-black">
         <div className="absolute z-10 top-5 right-5"></div>
         {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}
