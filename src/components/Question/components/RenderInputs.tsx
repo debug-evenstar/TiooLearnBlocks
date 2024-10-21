@@ -49,7 +49,7 @@ const RenderInputs: FC<{
     const handleInputChange = (e: any) => {
         const val = e.target.value;
         if (question.answer && val) {
-            if (question.answer.substring(0, val.length) === val) {
+            if (question.answer.substring(0, val.length).toLowerCase() === val.toLowerCase()) {
                 setIsCorrect(true);
                 if (question.answer?.length === val.length) {
                     setAnswered((prev: any) => [...prev, question.answer]);

@@ -42,7 +42,7 @@ export const attachTextInputHandler = (
                     const val = e.target.value;
                     const question = getQuestionsComponent(slide, questionHash);
                     if (question && question.answer && val) {
-                        if (question.answer.substring(0, val.length) === val) {
+                        if (question.answer.substring(0, val.length).toLowerCase() === val.toLowerCase()) {
                             input.classList.add("text-green-500");
                             input.classList.remove("text-red-500");
                             if (question.answer?.length === val.length) {
