@@ -59,7 +59,15 @@ export const attachTextInputHandler = (
     }
 };
 
-export const decorateActiveInput = (input: HTMLInputElement) => {
+export const decorateActiveInput = (input: HTMLInputElement, isSubjectiveQuestion : boolean = false) => {
+    console.log(isSubjectiveQuestion);
+    isSubjectiveQuestion && (input.disabled = false);
     input.classList.add("input-is-active");
     input.focus();
+};
+
+export const disableInactiveInputs = (inputs: HTMLInputElement[]) => {
+    inputs.forEach((input : HTMLInputElement) => {
+        input.disabled = true;
+    });
 };
