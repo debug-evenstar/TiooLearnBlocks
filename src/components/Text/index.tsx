@@ -62,6 +62,10 @@ const TextComponent: FC<TextComponentProps> = ({
     useEffect(() => {
         slide.on("answerQuestion", (data: any) => {
             handleAnswerQuestion(data);
+            if ( textContainerRef?.current ) {
+                const input = textContainerRef.current.querySelector("input");
+                input && input.focus();
+            }
         });
     }, [slide]);
 

@@ -8,6 +8,7 @@ import { decorateActiveInput } from "./handler";
 import RenderOptions from "./components/RenderOptions";
 import RenderInputs from "./components/RenderInputs";
 import { LessonSlideInterface } from "components/SlideManager/handler";
+import { audioManager } from "components/NewLesson/AudioManager/AudioManager";
 
 interface QuestionComponentProps {
     data: any;
@@ -61,7 +62,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
         const input = document.querySelector(
             ".active-slide .text-render input"
         );
-        if ( !!input ) {
+        if (!!input) {
             setTimeout(() => {
                 decorateActiveInput(allInputs()[0] as HTMLInputElement);
             }, 200);
@@ -69,12 +70,13 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
     }, [answered]);
 
     useEffect(() => {
-      slide.on("answerQuestion" ,(data : any) => {
-        if ( data.answer ) {
-          setAnswered((prev:any) => [...prev, data.answer])
-        }
-      });
-    },[slide]);
+        slide.on("answerQuestion", (data: any) => {
+            if (data.answer) {
+                audioManager.playCorrect();
+                setAnswered((prev: any) => [...prev, data.answer]);
+            }
+        });
+    }, [slide]);
 
     return (
         <>

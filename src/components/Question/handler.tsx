@@ -60,4 +60,5 @@ export const attachTextInputHandler = (
 
 export const decorateActiveInput = (input: HTMLInputElement) => {
     input.classList.add("input-is-active");
+    input.focus();
 };
