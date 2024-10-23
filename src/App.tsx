@@ -50,7 +50,7 @@ function App() {
   const fetchLess = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8085/open/lesson/${process.env.REACT_APP_TEXTBOOK_ID}/template`
+        `http://192.168.79.222:8085/open/lesson/${process.env.REACT_APP_TEXTBOOK_ID}/template`
       );
 
       if (!response.ok) {
@@ -73,7 +73,7 @@ function App() {
     const textbook_id = process.env.REACT_APP_TEXTBOOK_ID;
     try {
       const response = await fetch(
-        `http://localhost:8085/open/textbook/${textbook_id}`
+        `http://192.168.79.222:8085/open/textbook/${textbook_id}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -123,7 +123,7 @@ function App() {
 
   useEffect(() => {
     ConfigureLibrary.save({
-      baseUrl: "http://localhost:8085",
+      baseUrl: "http://192.168.79.222:8085",
       token: process.env.REACT_APP_API_TOKEN ?? "",
       authType: "student"
     });

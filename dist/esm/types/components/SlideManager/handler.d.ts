@@ -103,5 +103,8 @@ export declare const formatTextColor: (target: any, status: boolean) => void;
 export declare const pageContainsYoutubeScript: () => boolean;
 export declare const youtubeInit: () => void;
 export declare const LessonSlideScope: (parent?: any) => LessonSlide;
+export declare const ResponsiveComponentOptions: {
+    [key: string]: any;
+};
 export declare const loadComponent: (componentData: any) => any;
 export {};
