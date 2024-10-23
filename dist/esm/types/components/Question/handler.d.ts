@@ -2,4 +2,5 @@ import { OptionInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/
 export declare const triggerFeedback: (option: OptionInterface, lessonContext: any, shouldContinue?: boolean) => void;
 export declare const getQuestionsComponent: (slide: any, hash: string) => any;
 export declare const attachTextInputHandler: (element: HTMLElement, slide: any, onAnswer: Function) => void;
-export declare const decorateActiveInput: (input: HTMLInputElement) => void;
+export declare const decorateActiveInput: (input: HTMLInputElement, isSubjectiveQuestion?: boolean) => void;
+export declare const disableInactiveInputs: (inputs: HTMLInputElement[]) => void;
