@@ -33,6 +33,7 @@ const RenderOptions: FC<{
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [locked, setLocked] = useState<any[]>([]);
     const optionFontSizeFraction = 2.3;
+    const deviceWidth = document.documentElement.clientWidth;
     const lessonContext = useLessonContext();
     const optionColor = (option: OptionInterface, questionIndex: number) => {
         if (selectedOptions.includes(option.hash)) {
@@ -110,7 +111,7 @@ const RenderOptions: FC<{
                             }}
                             className={
                                 `w-full h-full absolute border-[2px] inherit-font overflow-hidden
-                                                border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow ` +
+                                                border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow` +
                                 optionColor(option, questionIndex) +
                                 ` ` +
                                 showOptionShadow(questionIndex)

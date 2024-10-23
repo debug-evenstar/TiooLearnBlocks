@@ -14,6 +14,7 @@ import {
     LessonSlideInterface,
     LessonSlideScope,
     loadComponent,
+    ResponsiveComponentOptions,
     setPageTheme,
     SlideData,
     youtubeInit,
@@ -157,7 +158,6 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
 
         const beginLesson = () => {
             navigateSlide(1);
-            // setSlides((prev: any) =>  prev.slice(1));
         };
 
 
@@ -254,6 +254,7 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                             <LayoutComponent
                                 key={index}
                                 layout={component.layout}
+                                responsiveOptions={ResponsiveComponentOptions[component.component] ?? {}}
                             >
                                 <Component
                                     key={index}

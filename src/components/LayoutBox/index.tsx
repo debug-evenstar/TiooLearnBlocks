@@ -1,11 +1,11 @@
 import { FC, useEffect, useState } from "react";
-import { LayoutComponentProps } from "./handler";
+import { LayoutComponentProps, responsiveTopOffset, responsiveWidth } from "./handler";
 import {
   ComponentPositionInterface,
   ComponentSizeInterface,
 } from "components/interface";
 
-const LayoutComponent: FC<LayoutComponentProps> = ({ layout, children }) => {
+const LayoutComponent: FC<LayoutComponentProps> = ({ layout, children, responsiveOptions }) => {
   const [position, setPosition] = useState<ComponentPositionInterface>();
   const [size, setSize] = useState<ComponentSizeInterface>();
   const [positionStyles, setPositionStyles] = useState<{
@@ -18,7 +18,7 @@ const LayoutComponent: FC<LayoutComponentProps> = ({ layout, children }) => {
     if (layout?.position) {
       setPosition(layout.position);
       setPositionStyles(() => ({
-        top: `${layout.position?.yAxis.offsetPercent}%`,
+        top: `${responsiveTopOffset(layout.position?.yAxis.offsetPercent)}%`,
         left: `${layout.position?.xAxis.offsetPercent}%`,
       }));
     }
@@ -26,7 +26,7 @@ const LayoutComponent: FC<LayoutComponentProps> = ({ layout, children }) => {
     if (layout?.size) {
       setSize(layout.size);
       setSizeStyles(() => ({
-        width: `${layout.size?.widthPercent}%`,
+        width: `${responsiveWidth(layout.size?.widthPercent, responsiveOptions)}%`,
         height: `${layout.size?.heightPercent}%`,
       }));
     }
