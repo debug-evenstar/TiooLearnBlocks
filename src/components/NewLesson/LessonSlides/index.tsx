@@ -73,7 +73,12 @@ const LessonSlides = ({
       width : contRef?.current ? getResponsiveWidth() : 0,
       height : getResponsiveHeight() ?? 0
     })
-  }, [contRef?.current]);
+    contRef?.current && contRef.current.addEventListener("selectstart", (e:any) => {
+      e.preventDefault();
+      return false;
+    });
+  }, [contRef?.current])
+
 
   return (
     <div className="w-full relative flex items-center gap-3">

@@ -4,7 +4,7 @@ import {
     OptionInterface,
 } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import { FC, useEffect, useState } from "react";
-import { decorateActiveInput } from "./handler";
+import { decorateActiveInput, disableInactiveInputs } from "./handler";
 import RenderOptions from "./components/RenderOptions";
 import RenderInputs from "./components/RenderInputs";
 import { LessonSlideInterface } from "components/SlideManager/handler";
@@ -59,21 +59,40 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
                 hasFeedback: !!answered[answered.length - 1].feedback,
             });
         }
+    }, [answered]);
+
+    useEffect(() => {
         const input = document.querySelector(
             ".active-slide .text-render input"
         );
         if (!!input) {
             setTimeout(() => {
-                decorateActiveInput(allInputs()[0] as HTMLInputElement);
+                const activeInput = allInputs()[0] as HTMLInputElement;
+                const activeQuestion = questions[activeQuestionIndex];
+                decorateActiveInput(
+                    activeInput,
+                    activeQuestion.type == "subjective" &&
+                        activeInput.getAttribute("data-question-hash") ==
+                            activeQuestion.hash
+                );
+                allInputs().length > 1 &&
+                    disableInactiveInputs(
+                        allInputs().slice(1) as HTMLInputElement[]
+                    );
             }, 200);
         }
-    }, [answered]);
+    }, [answered, activeQuestionIndex]);
 
     useEffect(() => {
         slide.on("answerQuestion", (data: any) => {
             if (data.answer) {
                 audioManager.playCorrect();
-                setAnswered((prev: any) => [...prev, data.answer]);
+                setAnswered((prev: any) => [
+                    ...prev.filter(
+                        (ans: any) => ans?.question.hash !== data.question.hash
+                    ),
+                    { ...data },
+                ]);
             }
         });
     }, [slide]);
