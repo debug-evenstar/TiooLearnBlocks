@@ -481,6 +481,9 @@ const keyToComponentMapper: { [key: string]: any } = {
     Questions: QuestionComponent,
 };
 
+export const ResponsiveComponentOptions : {[key : string] : any} = {
+    "Text" : { width : true }
+}
 export const loadComponent = (componentData: any) => {
     return keyToComponentMapper[componentData.component];
 };

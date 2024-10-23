@@ -50,10 +50,10 @@ const LessonSlides = ({
     }, 400);
   };
 
-  const [calculatedArea, setCalculatedArea] = useState<{width : number | string, height : number | string}>({width : 0 , height : 0})
+  const [calculatedArea, setCalculatedArea] = useState<{width : number, height : number | string}>({width : 0 , height : 0})
   const contRef : React.RefObject<any> = createRef();
 
-  const getResponsiveWidth = () => {
+  const getResponsiveWidth = () : number => {
     const availableWidth = contRef?.current.clientWidth;
     const screenWidth = document.documentElement.clientWidth;
     const mobileWidth = availableWidth;
@@ -65,7 +65,8 @@ const LessonSlides = ({
 
   const getResponsiveHeight = () => {
     const availableHeight = contRef?.current?.clientHeight;
-    return availableHeight < 800 ? Math.max(availableHeight, 700) : "auto";
+    // return availableHeight < 800 ? Math.max(availableHeight, 600) : "auto";
+    return availableHeight;
   }
 
   useEffect(()=>{
@@ -88,7 +89,7 @@ const LessonSlides = ({
         <div
           style={{
             width : calculatedArea.width,
-            height : calculatedArea.height
+            height : calculatedArea.height,
           }}
           className="h-full relative mx-auto"
         >

@@ -970,3 +970,9 @@ input[type="file"] {
     line-height: 35px;
   }
 }
+
+@media screen and (max-width : 480px) {
+  .text-render p, .text-render span {
+    font-size: 17px !important;
+  }
+}
