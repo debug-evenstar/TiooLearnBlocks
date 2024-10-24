@@ -218,7 +218,7 @@ export default function LessonLayout({
         footerRef={lessonFooterRef}
         onContinue={handleContinue}
       />
-      <div className="flex bg-white z-[1000] w-full overflow-hidden urbanist">
+      <div className="lesson-layout flex bg-white z-[1000] w-full overflow-hidden urbanist">
         {/* {
           <LessonSidebar
             extToggle={() => toggleSidebar()}
@@ -226,7 +226,7 @@ export default function LessonLayout({
             {...{ chapters, textbook, setCurrentLesson }}
           />
         } */}
-        <div className="flex flex-col w-full relative border-l h-screen">
+        <div className="flex flex-col w-full relative border-l bg-red h-full">
           <LessonHeader
             back={back}
             ref={lessonHeaderRef}

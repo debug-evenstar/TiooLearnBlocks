@@ -33,6 +33,7 @@ const RenderOptions: FC<{
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [locked, setLocked] = useState<any[]>([]);
     const optionFontSizeFraction = 2.3;
+    const deviceWidth = document.documentElement.clientWidth;
     const lessonContext = useLessonContext();
     const optionColor = (option: OptionInterface, questionIndex: number) => {
         if (selectedOptions.includes(option.hash)) {
@@ -93,38 +94,57 @@ const RenderOptions: FC<{
             : "hover:shadow-[0_0_6px_2px_rgba(155,41,178,0.6)] hover:border-[0.5px]";
     };
     const valueIsUrl = (value: string) => value.includes("https://");
+    const optionsList = () => {
+        return options?.map((option: OptionInterface, optionIndex: number) => {
+            return (
+                <LayoutComponent
+                    key={questionIndex + option.title}
+                    layout={option.layout ?? {}}
+                    responsiveOptions={{
+                        width: "auto",
+                        minWidth: "120px",
+                        minHeight: "50px",
+                        margin : "5px 0px"
+                    }}
+                >
+                    <button
+                        style={{
+                            fontSize: `${Math.max(
+                                (optionFontSizeFraction * viewArea.width) / 100,
+                                15
+                            )}px`,
+                        }}
+                        className={
+                            `${
+                                deviceWidth < 640
+                                    ? "h-full min-h-[50px] w-full"
+                                    : "w-full h-full"
+                            } absolute border-[2px] inherit-font overflow-hidden
+                                            border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow` +
+                            optionColor(option, questionIndex) +
+                            ` ` +
+                            showOptionShadow(questionIndex)
+                        }
+                        onClick={() => selectOption(option, question)}
+                        dangerouslySetInnerHTML={{
+                            __html: valueIsUrl(option.title)
+                                ? `<img className='h-full' src="${option.title}" alt="Option" draggable="false"/>`
+                                : option.title,
+                        }}
+                    ></button>
+                </LayoutComponent>
+            );
+        });
+    };
     return (
         <>
-            {options?.map((option: OptionInterface, optionIndex: number) => {
-                return (
-                    <LayoutComponent
-                        key={questionIndex + option.title}
-                        layout={option.layout ?? {}}
-                    >
-                        <button
-                            style={{
-                                fontSize: `${Math.max(
-                                    (optionFontSizeFraction * viewArea.width) /
-                                    100
-                                ,15)}px`,
-                            }}
-                            className={
-                                `w-full h-full absolute border-[2px] inherit-font overflow-hidden
-                                                border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow ` +
-                                optionColor(option, questionIndex) +
-                                ` ` +
-                                showOptionShadow(questionIndex)
-                            }
-                            onClick={() => selectOption(option, question)}
-                            dangerouslySetInnerHTML={{
-                                __html: valueIsUrl(option.title)
-                                    ? `<img className='h-full' src="${option.title}" alt="Option" draggable="false"/>`
-                                    : option.title,
-                            }}
-                        ></button>
-                    </LayoutComponent>
-                );
-            })}
+            {deviceWidth < 640 ? (
+                <div className="w-full h-auto flex flex-wrap justify-evenly">
+                    {optionsList()}
+                </div>
+            ) : (
+                optionsList()
+            )}
         </>
     );
 };

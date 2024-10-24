@@ -14,6 +14,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 
+html {
+  height: -webkit-fill-available;
+  min-height: -webkit-fill-available;
+}
+
+body {
+  height: 100%;
+}
+
+#root, #root > div {
+  height: 100%;
+}
 
 
 .popover>.triangle, .popover>.triangle:after {
@@ -616,77 +628,7 @@ input[type="file"] {
   background: #030036bd;
   border: 5px solid #030036bd;
 }
-.polygon-small {
-  font-size: 23px;
-  width: 140px;
-  position: absolute;
-  top: 5;
-  left: 5;
-  padding: 20px 5px;
-  clip-path: polygon(
-    2.491% 10.909%,
-    2.491% 10.909%,
-    2.556% 9.729%,
-    2.745% 8.61%,
-    3.047% 7.567%,
-    3.452% 6.614%,
-    3.95% 5.766%,
-    4.53% 5.04%,
-    5.183% 4.448%,
-    5.898% 4.007%,
-    6.664% 3.732%,
-    7.472% 3.636%,
-    78.692% 3.636%,
-    78.692% 3.636%,
-    79.222% 3.678%,
-    79.74% 3.799%,
-    80.243% 3.998%,
-    80.727% 4.271%,
-    81.187% 4.614%,
-    81.62% 5.026%,
-    82.023% 5.502%,
-    82.392% 6.039%,
-    82.723% 6.635%,
-    83.011% 7.285%,
-    100% 50.443%,
-    100% 50.443%,
-    100.248% 51.162%,
-    100.438% 51.908%,
-    100.57% 52.672%,
-    100.644% 53.449%,
-    100.661% 54.23%,
-    100.62% 55.01%,
-    100.522% 55.781%,
-    100.367% 56.536%,
-    100.154% 57.268%,
-    99.884% 57.97%,
-    83.042% 96.63%,
-    83.042% 96.63%,
-    82.749% 97.234%,
-    82.418% 97.787%,
-    82.053% 98.284%,
-    81.659% 98.723%,
-    81.237% 99.102%,
-    80.791% 99.418%,
-    80.326% 99.669%,
-    79.843% 99.851%,
-    79.346% 99.962%,
-    78.839% 100%,
-    7.472% 100%,
-    7.472% 100%,
-    6.664% 99.905%,
-    5.898% 99.629%,
-    5.183% 99.188%,
-    4.53% 98.597%,
-    3.95% 97.87%,
-    3.452% 97.022%,
-    3.047% 96.069%,
-    2.745% 95.026%,
-    2.556% 93.907%,
-    2.491% 92.727%,
-    2.491% 10.909%
-  );
-}
+
 .polygon-clip-next {
   font-size: 20px;
   top: 5;
@@ -905,6 +847,11 @@ input[type="file"] {
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
+.lesson-layout {
+  height: -webkit-fill-available;
+  min-height: -webkit-fill-available;
+}
+
 #LessonPage {
   transition: background-color 2s;
 }
@@ -1030,4 +977,19 @@ input[type="file"] {
 
 .no-pointer * {
   pointer-events: none;
+}
+
+@media screen and (max-width:768px) {
+  .text-render input {
+    height: 28px;
+  }
+  .text-render:has(input) p , .text-render:has(input) span{
+    line-height: 35px;
+  }
+}
+
+@media screen and (max-width : 480px) {
+  .text-render p, .text-render span {
+    font-size: 17px !important;
+  }
 }

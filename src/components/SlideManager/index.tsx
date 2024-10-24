@@ -14,6 +14,7 @@ import {
     LessonSlideInterface,
     LessonSlideScope,
     loadComponent,
+    ResponsiveComponentOptions,
     setPageTheme,
     SlideData,
     youtubeInit,
@@ -157,9 +158,14 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
 
         const beginLesson = () => {
             navigateSlide(1);
-            // setSlides((prev: any) =>  prev.slice(1));
         };
 
+        const organizeSlide = (slide: any) => {
+            return [
+                ...slide.filter((c: any) => !c.abstract),
+                ...slide.filter((c: any) => !!c.abstract),
+            ];
+        };
 
         // Core effects
         useEffect(() => {
@@ -168,13 +174,10 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             SlideScope.setAttribute("lessonTitle", lessonTitle);
         }, []);
 
-
-
         useEffect(() => {
-            SlideScope.on('showContinue', (data: any) => {
+            SlideScope.on("showContinue", (data: any) => {
                 canProceed(true, data);
             });
-
         }, [SlideScope]);
 
         useEffect(() => {
@@ -227,66 +230,72 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
             setSlides(() => lessonSlides);
         }, [lessonSlides]);
 
-
         const RenderComponent: FC<{
-            index: number,
-            component: any,
-            viewAreaRef: any,
-            slideIndex: number
+            index: number;
+            component: any;
+            viewAreaRef: any;
+            slideIndex: number;
         }> = ({ index, component, viewAreaRef, slideIndex }) => {
-
             const Component = loadComponent(component);
             const [viewArea, setViewArea] = useState<any>();
 
             useEffect(() => {
                 // Temporary solution
                 const containerElement = viewAreaRef?.current;
-                setViewArea(containerElement ? { width: containerElement?.clientWidth, height: containerElement?.clientHeight } : null);
+                setViewArea(
+                    containerElement
+                        ? {
+                              width: containerElement?.clientWidth,
+                              height: containerElement?.clientHeight,
+                          }
+                        : null
+                );
                 setTimeout(() => {
-                    setViewArea(containerElement ? { width: containerElement?.clientWidth, height: containerElement?.clientHeight } : null);
+                    setViewArea(
+                        containerElement
+                            ? {
+                                  width: containerElement?.clientWidth,
+                                  height: containerElement?.clientHeight,
+                              }
+                            : null
+                    );
                 }, 1000);
-            }, [viewAreaRef])
+            }, [viewAreaRef]);
 
             return (
                 <>
-                    {
-                        component.layout ? (
-                            <LayoutComponent
-                                key={index}
-                                layout={component.layout}
-                            >
-                                <Component
-                                    key={index}
-                                    data={component}
-                                    slide={loadSlideManager(
-                                        slideIndex
-                                    )}
-                                    altHeaderStyle={altHeaderStyle}
-                                    activeSlideIndex={
-                                        activeSlideIndex
-                                    }
-                                    viewArea={viewArea}
-                                />
-                            </LayoutComponent>
-                        ) : (
+                    {component.layout ? (
+                        <LayoutComponent
+                            key={index}
+                            layout={component.layout}
+                            responsiveOptions={
+                                ResponsiveComponentOptions[
+                                    component.component
+                                ] ?? {}
+                            }
+                        >
                             <Component
                                 key={index}
                                 data={component}
-                                slide={loadSlideManager(
-                                    slideIndex
-                                )}
+                                slide={loadSlideManager(slideIndex)}
                                 altHeaderStyle={altHeaderStyle}
-                                activeSlideIndex={
-                                    activeSlideIndex
-                                }
+                                activeSlideIndex={activeSlideIndex}
                                 viewArea={viewArea}
                             />
-                        )
-                    }
+                        </LayoutComponent>
+                    ) : (
+                        <Component
+                            key={index}
+                            data={component}
+                            slide={loadSlideManager(slideIndex)}
+                            altHeaderStyle={altHeaderStyle}
+                            activeSlideIndex={activeSlideIndex}
+                            viewArea={viewArea}
+                        />
+                    )}
                 </>
             );
-        }
-
+        };
 
         return (
             <div
@@ -298,17 +307,25 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
                         {slides.map((slide: any, slideIndex: number) => (
                             <div
                                 key={slideIndex}
-                                className={`w-auto h-auto grid gap-y-4 my-5 ${activeSlideIndex === slideIndex ? 'active-slide': ''}`}
+                                className={`w-auto h-auto grid gap-y-4 my-5 ${
+                                    activeSlideIndex === slideIndex
+                                        ? "active-slide"
+                                        : ""
+                                }`}
                             >
-                                {slide.map((component: any, index: number) => {
-                                    return <RenderComponent
-                                        key={index}
-                                        index={index}
-                                        component={component}
-                                        slideIndex={slideIndex}
-                                        viewAreaRef={containerRef}
-                                    />
-                                })}
+                                {organizeSlide(slide).map(
+                                    (component: any, index: number) => {
+                                        return (
+                                            <RenderComponent
+                                                key={index}
+                                                index={index}
+                                                component={component}
+                                                slideIndex={slideIndex}
+                                                viewAreaRef={containerRef}
+                                            />
+                                        );
+                                    }
+                                )}
                             </div>
                         ))}
                     </CarouselEffect>
