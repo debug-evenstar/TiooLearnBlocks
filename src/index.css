@@ -14,6 +14,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 
+html {
+  height: -webkit-fill-available;
+  min-height: -webkit-fill-available;
+}
+
+body {
+  height: 100%;
+}
+
+#root, #root > div {
+  height: 100%;
+}
 
 
 .popover>.triangle, .popover>.triangle:after {
@@ -833,6 +845,11 @@ input[type="file"] {
 
 .rhombus {
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.lesson-layout {
+  height: -webkit-fill-available;
+  min-height: -webkit-fill-available;
 }
 
 #LessonPage {
