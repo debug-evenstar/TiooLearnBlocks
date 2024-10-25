@@ -266,7 +266,7 @@ export const handleInsertMath = (mathHtml: string) => {
     } else {
         const parentTag = document.createElement("p");
         setDefaultStyles(parentTag);
-        parentTag.innerHTML = mathHtml;
+        parentTag.innerHTML = `<span contenteditable="false">${mathHtml}</span>`;
         updatedHtml = editableArea.innerHTML + parentTag.outerHTML;
     }
 
