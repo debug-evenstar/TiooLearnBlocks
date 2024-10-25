@@ -79,7 +79,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
                     disableInactiveInputs(
                         allInputs().slice(1) as HTMLInputElement[]
                     );
-            }, 200);
+            }, 100);
         }
     }, [answered, activeQuestionIndex]);
 

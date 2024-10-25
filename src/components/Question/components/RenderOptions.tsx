@@ -104,7 +104,7 @@ const RenderOptions: FC<{
                         width: "auto",
                         minWidth: "120px",
                         minHeight: "50px",
-                        margin : "5px 0px"
+                        margin: "5px 0px",
                     }}
                 >
                     <button
@@ -120,7 +120,7 @@ const RenderOptions: FC<{
                                     ? "h-full min-h-[50px] w-full"
                                     : "w-full h-full"
                             } absolute border-[2px] inherit-font overflow-hidden
-                                            border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow` +
+                                            border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow ` +
                             optionColor(option, questionIndex) +
                             ` ` +
                             showOptionShadow(questionIndex)
@@ -143,7 +143,7 @@ const RenderOptions: FC<{
                     {optionsList()}
                 </div>
             ) : (
-                optionsList()
+                <>{optionsList()}</>
             )}
         </>
     );

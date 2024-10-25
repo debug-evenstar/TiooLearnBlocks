@@ -15,6 +15,7 @@ import { GoRocket } from "react-icons/go";
 import catImg from "../img/popup/cat.webp";
 import GlobalResource from "services/api/resources/GlobalResource";
 import { PulseLoader } from "react-spinners";
+import { audioManager } from "components/NewLesson/AudioManager/AudioManager";
 
 function StartScreen() {
   return (
@@ -145,7 +146,6 @@ export default function LessonLayout({
 
     GlobalResource.updateLessonProgress(payload)
       .then((response) => {
-        //console.log("Updated lesson progress",response.data);
         lessonHeaderRef?.current?.updateLessonProgress(response.data);
       })
       .catch((error) => {
@@ -154,7 +154,7 @@ export default function LessonLayout({
   };
 
   const handleContinue = () => {
-    //console.log("clicking next")
+    audioManager.playContinue();
     const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
     if (
       currentLesson &&
