@@ -288,13 +288,13 @@ const MathInput: FC<{ close: Function; callback: Function }> = ({
                             10<sup>x</sup>
                         </button>
                         <button
-                            onClick={() => handleKeyboardButton("x^{@0}")}
+                            onClick={() => handleKeyboardButton("{@0}^{@1}")}
                             className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
                         >
                             x<sup>y</sup>
                         </button>
                         <button
-                            onClick={() => handleKeyboardButton("x_{@0}")}
+                            onClick={() => handleKeyboardButton("{@0}_{@1}")}
                             className="bg-gray-100 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
                         >
                             x<sub>y</sub>

@@ -45,6 +45,7 @@ const LessonSlides = ({
     slides,
 }: any) => {
     const [manager, setManager] = useState(CreateManager(slides));
+    let isCtrlPressed = false;
 
     const changeSlide = (index: number) => {
         setTimeout(() => {
@@ -73,16 +74,34 @@ const LessonSlides = ({
         return clientWidth < 640 ? "auto" : availableHeight;
     };
 
-    useEffect(() => {
-        setCalculatedArea({
-            width: contRef?.current ? getResponsiveWidth() : 0,
-            height: contRef?.current?.clientHeight ?? 0,
-        });
-        contRef?.current &&
+    const blockCopyAndSelect = () => {
+        if (contRef?.current) {
             contRef.current.addEventListener("selectstart", (e: any) => {
                 e.preventDefault();
                 return false;
             });
+            document.addEventListener("keydown", (e: any) => {
+                if (e.key == "Meta" || e.key == "Control") {
+                    isCtrlPressed = true;
+                }
+                if (e.key == "a" && isCtrlPressed) {
+                    e.preventDefault();
+                }
+            });
+            document.addEventListener("keyup", (e: any) => {
+                if (e.key == "Meta" || e.key == "Control") {
+                    isCtrlPressed = false;
+                }
+            });
+        }
+    };
+
+    useEffect(() => {
+        setCalculatedArea({
+            width: contRef?.current ? getResponsiveWidth() : 0,
+            height: getResponsiveHeight() ?? 0,
+        });
+        blockCopyAndSelect();
     }, [contRef?.current]);
 
     return (

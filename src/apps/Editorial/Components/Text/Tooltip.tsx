@@ -6,9 +6,7 @@ interface TooltipProps {
     tip: string;
 }
 
-
 const Tooltip: React.FC<TooltipProps> = ({ text, tip }) => {
-
     return (
         <span className="tooltip relative group inline-block">
             <span
@@ -18,11 +16,11 @@ const Tooltip: React.FC<TooltipProps> = ({ text, tip }) => {
             </span>
             <span
                 className={`absolute opacity-0 hidden group-hover:flex -top-1 -translate-y-[30%] -translate-x-1/2 left-1/2 p-2`}
-            >
-            </span>
-            <span className="group relative inline-block text-blue-500 underline hover:text-red-500 duration-300">
-                {text}
-            </span>
+            ></span>
+            <span
+                className="group relative inline-block text-blue-500 underline hover:text-red-500 duration-300"
+                dangerouslySetInnerHTML={{ __html: text }}
+            ></span>
         </span>
     );
 };
