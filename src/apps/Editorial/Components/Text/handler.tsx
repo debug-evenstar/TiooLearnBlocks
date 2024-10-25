@@ -259,7 +259,10 @@ export const handleInsertMath = (mathHtml: string) => {
     // Assume existing text ends in closing </p> tag, insert into existing
     let closing = editableArea.innerHTML.slice(-4);
     if (closing === "</p>") {
-        updatedHtml = editableArea.innerHTML.slice(0, -4) + mathHtml + "</p>";
+        updatedHtml =
+            editableArea.innerHTML.slice(0, -4) +
+            `<span contenteditable="false">${mathHtml}</span>` +
+            "</p>";
     } else {
         const parentTag = document.createElement("p");
         setDefaultStyles(parentTag);
