@@ -420,7 +420,15 @@ export const handleAddTip = (tip: string) => {
     const range = getRange();
     const manager = _getManager();
     if (range && range.toString()) {
-        const value = range.toString();
+        const children = (range.cloneContents() as any).children;
+        let value = "";
+        if (children.length > 0) {
+            Array.from(children).forEach(
+                (child: any) => (value += child.outerHTML)
+            );
+        } else {
+            value = range.toString();
+        }
         range.deleteContents();
         const tipComponent = <Tooltip text={value} tip={tip} />;
         var span = document.createElement("span");
