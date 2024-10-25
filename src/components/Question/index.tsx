@@ -75,10 +75,10 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
                         activeInput.getAttribute("data-question-hash") ==
                             activeQuestion.hash
                 );
-                allInputs().length > 1 &&
-                    disableInactiveInputs(
-                        allInputs().slice(1) as HTMLInputElement[]
-                    );
+                // allInputs().length > 1 &&
+                //     disableInactiveInputs(
+                //         allInputs().slice(1) as HTMLInputElement[]
+                //     );
             }, 100);
         }
     }, [answered, activeQuestionIndex]);
