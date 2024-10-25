@@ -60,8 +60,6 @@ const SuccessLayout = ({
   };
 
   const handleContinueClick = (e: any) => {
-    audioManager.playContinue();
-    // console.log("moving to next slide ")
     onContinue(e);
   };
 

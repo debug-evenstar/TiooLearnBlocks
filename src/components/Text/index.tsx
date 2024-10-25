@@ -64,7 +64,6 @@ const TextComponent: FC<TextComponentProps> = ({
             handleAnswerQuestion(data);
             if ( textContainerRef?.current ) {
                 const input = textContainerRef.current.querySelector("input");
-                input && input.focus();
             }
         });
     }, [slide]);
