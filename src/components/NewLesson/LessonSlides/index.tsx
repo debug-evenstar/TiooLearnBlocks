@@ -76,7 +76,7 @@ const LessonSlides = ({
     useEffect(() => {
         setCalculatedArea({
             width: contRef?.current ? getResponsiveWidth() : 0,
-            height: contRef?.current?.clientHeight ?? 0,
+            height: getResponsiveHeight() ?? 0,
         });
         contRef?.current &&
             contRef.current.addEventListener("selectstart", (e: any) => {
