@@ -170,29 +170,6 @@ const animate = (element: HTMLElement) => {
     }
 };
 
-export const handleAnswerQuestion = (data: any) => {
-    // Check if any linked inputs exists and populate them
-    const linkedInput = document.querySelector(
-        `.text-render input[data-question-hash='${data.question.hash}']`
-    );
-    if (linkedInput) {
-        const parent = linkedInput.parentElement;
-        const textFill = document.createElement("span");
-        textFill.className =
-            "relative inline-block font-bold text-[#089c28] text-[20px] mx-[3px] -bottom-[0.5px]";
-        textFill.innerHTML = ` ${data.option?.title ?? data.answer } `;
-        textFill.style.setProperty(
-            "transition",
-            "transform 0.4s, text-shadow 0.4s"
-        );
-        textFill.style.setProperty("transition-timing-function", "linear");
-        textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
-        parent?.replaceChild(textFill, linkedInput);
-        // setTimeout(() => {
-        //     animate(textFill);
-        // }, 300);
-    }
-};
 
 export const processTextStyles = () => {
     // Some Data Here
