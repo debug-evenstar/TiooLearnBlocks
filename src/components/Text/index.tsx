@@ -3,11 +3,10 @@ import {
     TextComponentProps,
     buildTextData,
     formatTextContent,
-    handleAnswerQuestion,
 } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
 import { TextFields } from "../extensions/TextFields";
-import { attachTextInputHandler } from "components/Question/handler";
+import { attachTextInputHandler, handleAnswerQuestion } from "components/Question/handler";
 
 const TextComponent: FC<TextComponentProps> = ({
     styles,
@@ -52,21 +51,12 @@ const TextComponent: FC<TextComponentProps> = ({
         setProcessed(() => processText);
         setTimeout(() => {
             attachTextInputHandler(textContainerRef.current, slide.slide, (data:any)=>{
-                handleAnswerQuestion(data);
+                handleAnswerQuestion(data,{parentType : "text"});
                 slide.dispatch("answerQuestion", data);
             });  
         }, 1000);
     }, [formatted, data.content, slide]);
 
-    // Can be optimized
-    useEffect(() => {
-        slide.on("answerQuestion", (data: any) => {
-            handleAnswerQuestion(data);
-            if ( textContainerRef?.current ) {
-                const input = textContainerRef.current.querySelector("input");
-            }
-        });
-    }, [slide]);
 
 
     return (

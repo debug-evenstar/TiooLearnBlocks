@@ -6,7 +6,7 @@ import {
 import LayoutComponent from "components/LayoutBox";
 import { useLessonContext } from "contexts/LessonContext";
 import { FC, useState } from "react";
-import { triggerFeedback } from "../handler";
+import { handleAnswerQuestion, triggerFeedback } from "../handler";
 import { QuestionInterface } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 import { LessonSlideInterface } from "components/SlideManager/handler";
 import { audioManager } from "components/NewLesson/AudioManager/AudioManager";
@@ -35,6 +35,7 @@ const RenderOptions: FC<{
     const optionFontSizeFraction = 2.3;
     const deviceWidth = document.documentElement.clientWidth;
     const lessonContext = useLessonContext();
+    const linkableComponents = ["text", "image"];
     const optionColor = (option: OptionInterface, questionIndex: number) => {
         if (selectedOptions.includes(option.hash)) {
             if (
@@ -73,7 +74,14 @@ const RenderOptions: FC<{
         if (option.isAnswer) {
             audioManager.playCorrect();
             setAnswered(updatedAnsweredList);
-            slideManager.dispatch("answerQuestion", { question, option });
+
+            linkableComponents.forEach((type: string) => {
+                handleAnswerQuestion(
+                    { question, option },
+                    { parentType: type }
+                );
+            });
+
             setTimeout(() => {
                 setLocked([...locked, option]);
             }, 1500);

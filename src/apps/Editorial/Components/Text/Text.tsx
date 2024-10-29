@@ -192,7 +192,7 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                     dangerouslySetInnerHTML={{ __html: textValue }}
                 />
                 {isDraggedOver && (
-                    <div className="w-full h-full border-[1px] border-gray-400 absolute z-10 -top-[0.5px] -left-[0.5px] rounded-[5px] flex justify-center items-center">
+                    <div className="w-full h-full border-[1px] border-gray-400 absolute z-10 -top-[0.5px] -left-[0.5px] rounded-[5px] flex justify-center items-center pointer-events-none">
                         <div className="bg-gray-100 opacity-[95%] w-full h-full rounded-[5px] absolute"></div>
                         <div className="text-[13px] text-gray-500 bg-gray-300 relative p-[5px] border-[1px] border-gray-200">
                             Link to Text
