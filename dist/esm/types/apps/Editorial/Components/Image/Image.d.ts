@@ -7,6 +7,7 @@ export default Image;
 export interface UploadIconProps {
     handleChange: (e: any) => void;
     handleDrop: (e: any) => void;
+    isLinking?: boolean;
     manager: ManagerInterface;
 }
 export declare const UploadIcon: FC<UploadIconProps>;
