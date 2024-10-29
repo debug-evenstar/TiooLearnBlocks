@@ -88,7 +88,9 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     }, [id]);
 
     useEffect(() => {
-        setInputList(data.extensions);
+        if( data.extensions ) {
+            setInputList(data.extensions);
+        }
     }, [data]);
 
     const updateLayout = (data: any, hash: string) => {

@@ -689,6 +689,7 @@ const ActiveQuestion: FC<Props> = ({
                                 <FaStickyNote className="text-[15px] text-blue-400 mr-1" />
                             }
                             richText={true}
+                            max={1}
                         />
                     </div>
                 </div>
