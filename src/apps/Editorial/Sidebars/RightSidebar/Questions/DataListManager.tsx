@@ -25,6 +25,7 @@ interface Props {
     canToggle?: boolean;
     onToggle?: Function;
     toggleStates?: boolean[];
+    max?: number;
 }
 
 enum DataType {
@@ -45,6 +46,7 @@ const DataListManager: FC<Props> = ({
     canToggle = false,
     onToggle = () => {},
     toggleStates = [],
+    max,
 }) => {
     const [isListOpen, setIsListOpen] = useState<boolean>(false);
     const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
@@ -73,9 +75,7 @@ const DataListManager: FC<Props> = ({
 
     const deleteData = (item: any) => {
         setIsHidden(isHidden.slice(0, -1));
-        setData([
-            ...data.filter((d: any, i: number) => d.hash != item.hash)
-        ]);
+        setData([...data.filter((d: any, i: number) => d.hash != item.hash)]);
     };
 
     const titleIsUrl = (title: string) => title.includes("https://");
@@ -234,7 +234,7 @@ const DataListManager: FC<Props> = ({
                             </div>
                         </div>
                     )}
-                    {!isAddingItem && (
+                    {!isAddingItem && data.length < (max ?? 100) && (
                         <button
                             className="px-3 cursor-pointer text-[14px] flex items-center"
                             onClick={() => setIsAddingItem(true)}
