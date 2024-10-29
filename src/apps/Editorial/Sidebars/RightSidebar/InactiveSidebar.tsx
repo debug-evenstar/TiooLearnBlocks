@@ -157,7 +157,11 @@ const InactiveSidebar: FC<Props> = ({
             } as any;
             if (existing.length) {
                 const questionIndex = updated.indexOf(existing[0]);
-                updated[questionIndex] = questionsData;
+                if (questionsData.data.length == 0){
+                    updated.splice(questionIndex, 1);
+                } else {
+                    updated[questionIndex] = questionsData;
+                }
             } else {
                 updated.push(questionsData);
             }
