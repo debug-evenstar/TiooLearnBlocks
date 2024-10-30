@@ -285,7 +285,7 @@ const QuestionEditorialComponent: FC<QuestionComponentProps> = ({ data }) => {
                                     }
                                     // data={`JSON.stringify(More structured data)`} // Switch to this format later
                                 >
-                                    <input className="relative bg-white text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md" />
+                                    <input className="relative bg-white text-[14px] border-[2px] border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md" />
                                     {/* <button
                                 className="relative text-[14px] border-[2px] border-[#E5E5E5] rounded-[16px] p-[5px] shadow-md shadow"
                             >

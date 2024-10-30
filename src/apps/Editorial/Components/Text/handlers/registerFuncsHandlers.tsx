@@ -62,7 +62,6 @@ export const registerFunctions = (
             toggleWrapper(range, "span", style, styleType, "");
             const active =
                 manager.canvasManager.activeComponentElement()?.children[0];
-            console.log(active);
             manager.canvasManager.canvas.functions.updateActiveComponentData(
                 textComponentData(active.innerHTML)
             );

@@ -202,7 +202,7 @@ const MovableResizer: FC<MovableResizerProps> = ({
                 <Resizable
                     width={dimensions.width}
                     height={dimensions.height}
-                    minConstraints={[0, 30]}
+                    minConstraints={[0, 20]}
                     onResize={handleResize(dimensions, nodeRef)}
                     resizeHandles={hasHandles ? ["s", "e", "n", "w"] : []}
                 >

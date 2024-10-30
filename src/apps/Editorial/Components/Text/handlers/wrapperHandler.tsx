@@ -122,7 +122,7 @@ export const replaceContent = (range: Range, id: string) => {
     const parentElement = element.parentElement; // Assuming input is the input element
 
     if (parentElement) {
-        // console.log(parentElement.offsetHeight, "start");
+        // (parentElement.offsetHeight, "start");
 
         const newHeight = parseInt(getComputedStyle(parentElement).height) + 20;
         parentElement.style.height = newHeight + "px";
