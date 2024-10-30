@@ -6,6 +6,7 @@ interface Props {
     data: any;
     isBusy: boolean;
     manager: ManagerInterface;
+    previewSlide: Function;
 }
 declare const ActiveEditSlide: FC<Props>;
 export default ActiveEditSlide;
