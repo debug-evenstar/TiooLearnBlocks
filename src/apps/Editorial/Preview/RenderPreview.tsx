@@ -46,7 +46,7 @@ const RenderPreview: FC<{
             style={{
                 width: calculatedArea.width,
             }}
-            className={`mx-auto h-full relative ${raw ? "" : "bg-[#fafafa]"}`}
+            className={`mx-auto h-full relative ${raw ? "" : "bg-[#fefefe]"}`}
         >
             {slide && slide.map(
                 (component: ComponentBaseDataInterface, index: number) => {

@@ -88,7 +88,7 @@ const Image: FC<CanvasMedia> = ({ id, manager, viewBoxRef }) => {
     }, [id]);
 
     useEffect(() => {
-        if( data.extensions ) {
+        if( data && data?.extensions ) {
             setInputList(data.extensions);
         }
     }, [data]);

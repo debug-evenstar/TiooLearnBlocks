@@ -104,7 +104,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
                     <>
                         {viewArea && activeQuestionIndex === index && (
                             <RenderOptions
-                                key={"option" + index}
+                                key={"option" + question.hash + index}
                                 options={question.options ?? []}
                                 answered={answered}
                                 setAnswered={setAnswered}
@@ -116,7 +116,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
                             />
                         )}
                         <RenderInputs
-                            key={"input" + index}
+                            key={"input" + question.hash + index}
                             inputs={question.inputs ?? []}
                             answered={answered}
                             questionIndex={index}
