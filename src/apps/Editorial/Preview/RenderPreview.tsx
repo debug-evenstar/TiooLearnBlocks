@@ -101,7 +101,7 @@ const RenderPreview: FC<{
             sideBar={false}
             chapters={chapters}
         >
-            <div ref={contRef} className="w-full h-full relative">
+            <div ref={contRef} className="lesson-slide w-full h-full relative">
                 <RenderComponents/>
             </div>
         </LessonLayout>

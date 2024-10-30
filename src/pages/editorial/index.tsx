@@ -101,6 +101,12 @@ const EditorialComp: FC<Props> = ({
         manager.slideManager.slides = parseSlides;
     }, [parseSlides]);
 
+    useEffect(() => {
+        if (parseSlides.length) {
+            activeSlide && SlideScope.registerSlideData(parseSlides[activeSlide]);
+        }
+    },[activeSlide, parseSlides]);
+
     if (!data) {
         return (
             <div className="w-full h-screen grid place-content-center">

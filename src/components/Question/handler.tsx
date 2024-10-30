@@ -69,7 +69,7 @@ interface fillOptions {
 export const handleAnswerQuestion = (data: any, options: fillOptions) => {
     // Check if any linked inputs exists and populate them
     const linkedInput = document.querySelector(
-        `.${options.parentType}-render input[data-question-hash='${data.question.hash}']`
+        `.lesson-slide .${options.parentType}-render input[data-question-hash='${data.question.hash}']`
     );
     if (linkedInput) {
         const { top, left } = (linkedInput as HTMLElement).style;
