@@ -22,6 +22,7 @@ interface Props {
     data: any;
     isBusy: boolean;
     manager: ManagerInterface;
+    previewSlide: Function;
 }
 const ActiveEditSlide: FC<Props> = ({
     active,
@@ -29,11 +30,9 @@ const ActiveEditSlide: FC<Props> = ({
     data,
     isBusy,
     manager,
+    previewSlide
 }) => {
-    const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
     const [activeSlide, setActiveSlide] = useState<any[]>([]);
-    const [previewSlideData, setPreviewSlideData] = useState<any[]>([]);
-    const [previewSlide, setPreviewSlide] = useState(false);
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const pluginRef = useRef<any>(null);
 
@@ -65,7 +64,6 @@ const ActiveEditSlide: FC<Props> = ({
     }, [active, slides]);
 
     useEffect(() => {
-        setPreviewSlideData(() => slides[active]);
         setActiveSlide(slides[active]);
     }, [slides[active]]);
 
@@ -95,7 +93,7 @@ const ActiveEditSlide: FC<Props> = ({
                     </div>
                     <div
                         className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold"
-                        onClick={() => setPreviewSlide(true)}
+                        onClick={() => previewSlide()}
                     >
                         Preview
                     </div>
@@ -103,26 +101,6 @@ const ActiveEditSlide: FC<Props> = ({
                 <div className="pb-16"></div>
             </div>
 
-            {previewSlide && (
-                <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0">
-                    <div className="w-full h-full bg-cover flex justify-center items-center">
-                        <div className="w-full h-full">
-                            <RenderPreview
-                                slide={previewSlideData}
-                                subject={data.Subject?.naming}
-                                title={data.topic}
-                                lesson={data}
-                                setPreviewSlide={setPreviewSlide}
-                                slideScope={SlideScope}
-                            />
-                        </div>
-                    </div>
-                    {/* <FaTimes
-            className="absolute text-[40px] top-10 right-10 text-white bg-orange-400 cursor-pointer hover:scale-110 duration-100"
-            onClick={() => setPreviewSlide(false)}
-          /> */}
-                </div>
-            )}
             <SetupPlugins
                 ref={pluginRef}
                 plugins={[

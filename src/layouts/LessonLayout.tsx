@@ -236,6 +236,7 @@ export default function LessonLayout({
             sideBarOpen={sideBarOpen}
             manager={slideManagerRef}
             currentLesson={currentLesson}
+            closePreview={closePreview}
           />
           <div className="flex grow min-h-0 w-full">
             <div

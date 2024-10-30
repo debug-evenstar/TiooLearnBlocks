@@ -87,6 +87,7 @@ const LessonHeader = forwardRef(
       back,
       manager,
       isChatOpen,
+      closePreview
     }: any,
     ref
   ) => {
@@ -203,7 +204,7 @@ const LessonHeader = forwardRef(
         <div className="w-full sm:border-b h-[90px] px-5 sm:px-10 flex justify-between items-center relative">
           <div className="flex items-center gap-3">
             <button
-              onClick={back}
+              onClick={closePreview ?? back}
               className="px-2 mr-3 sm:mr-0 outline-none active:scale-[0.98] h-12 border border-gray-300 rounded text-gray-700 items-center justify-center"
             >
               <BsChevronLeft size={17} />

@@ -94,7 +94,6 @@ function App() {
   useEffect(() => {
     fetchLess();
     fetchTextbook();
-    console.log(bookData?.chapters);
   }, []);
 
   const layout = {
@@ -119,7 +118,6 @@ function App() {
     // navigate('/')
   };
 
-  console.log(bookData);
 
   useEffect(() => {
     ConfigureLibrary.save({

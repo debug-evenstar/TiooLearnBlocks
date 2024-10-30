@@ -6,6 +6,11 @@ import { SidebarFunctions } from "apps/Editorial/interfaces";
 import { CreateManager } from "apps/Editorial/Base/Manager";
 import StateManager from "apps/Editorial/Base/StateManager";
 import { ScaleLoader } from "react-spinners";
+import RenderPreview from "apps/Editorial/Preview/RenderPreview";
+import {
+    LessonSlideInterface,
+    LessonSlideScope,
+} from "components/SlideManager/handler";
 
 interface Props {
     data?: any;
@@ -31,10 +36,10 @@ const EditorialComp: FC<Props> = ({
     const [showEdit, setShowEdit] = useState(false);
     const [overlay, setOverlay] = useState(false);
     const [manager, setManager] = useState(
-        CreateManager(
-            lessonSlides?.map((slide: any) => slide?.slide_data)
-        )
+        CreateManager(lessonSlides?.map((slide: any) => slide?.slide_data))
     );
+    const [previewSlide, setPreviewSlide] = useState(false);
+    const [SlideScope] = useState<LessonSlideInterface>(LessonSlideScope());
 
     const handleContinue = () => {
         const currentSlideIndex = slideManagerRef?.current?.activeSlideIndex();
@@ -77,8 +82,7 @@ const EditorialComp: FC<Props> = ({
     }, [lessonSlides]);
 
     useEffect(() => {
-        if (data)
-            setLessonSlides(data.lesson_slides);
+        if (data) setLessonSlides(data.lesson_slides);
         manager.lesson = data;
     }, [data]);
 
@@ -95,14 +99,17 @@ const EditorialComp: FC<Props> = ({
 
     useEffect(() => {
         manager.slideManager.slides = parseSlides;
-    }, [parseSlides])
+    }, [parseSlides]);
 
     if (!data) {
-
         return (
             <div className="w-full h-screen grid place-content-center">
                 <span>
-                    <ScaleLoader height={30} speedMultiplier={1.3} color=" #9c29b2" />
+                    <ScaleLoader
+                        height={30}
+                        speedMultiplier={1.3}
+                        color=" #9c29b2"
+                    />
                 </span>
             </div>
         );
@@ -140,11 +147,14 @@ const EditorialComp: FC<Props> = ({
                                 <ActiveEditSlide
                                     active={activeSlide}
                                     slides={parseSlides}
-                                    data={{ ...data, lesson_slides: lessonSlides }}
+                                    data={{
+                                        ...data,
+                                        lesson_slides: lessonSlides,
+                                    }}
                                     isBusy={isBusy}
                                     manager={manager}
+                                    previewSlide={() => setPreviewSlide(true)}
                                 />
-
                             )}
                             {/* {
               overlay && <><CreateOverlaySlide isBusy={isBusy} createOverlay={createOverlay} slideLength={parseSlides.length}/></>
@@ -156,7 +166,10 @@ const EditorialComp: FC<Props> = ({
                                     <div className="w-[140px] rounded-[8px] border border-[#4F46E5] text-[#4F46E5] flex items-center justify-center py-3 cursor-pointer text-semibold">
                                         Save
                                     </div>
-                                    <div className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold">
+                                    <div
+                                        className="w-[140px] rounded-[8px] border bg-[#4F46E5] text-white flex items-center justify-center py-3 cursor-pointer text-semibold"
+                                        onClick={() => setPreviewSlide(true)}
+                                    >
                                         Preview
                                     </div>
                                 </div>
@@ -164,6 +177,22 @@ const EditorialComp: FC<Props> = ({
                             </div>
                         )}
 
+                        {previewSlide && (
+                            <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0">
+                                <div className="w-full h-full bg-cover flex justify-center items-center">
+                                    <div className="w-full h-full">
+                                        <RenderPreview
+                                            slide={parseSlides[activeSlide]}
+                                            subject={data.Subject?.naming}
+                                            title={data.topic}
+                                            lesson={data}
+                                            setPreviewSlide={setPreviewSlide}
+                                            slideScope={SlideScope}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </MainLayout>
             )}
