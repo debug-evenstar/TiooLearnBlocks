@@ -29,8 +29,8 @@ const ImageComponent: FC<ImageComponentProps> = ({ data, slide }) => {
                 imageContainer?.current,
                 slide.slide,
                 (data: any) => {
-                    handleAnswerQuestion(data, { 
-                        parentType: "image"
+                    handleAnswerQuestion(data, {
+                        parentType: "image",
                     });
                     slide.dispatch("answerQuestion", data);
                 }
@@ -50,7 +50,9 @@ const ImageComponent: FC<ImageComponentProps> = ({ data, slide }) => {
                     src={data.url}
                     alt="images"
                     className={"w-full h-full rounded-lg"}
-                    onClick={() => setPreviewImage(!previewImage)}
+                    onClick={() =>
+                        !inputs.length && setPreviewImage(!previewImage)
+                    }
                 />
                 {fieldItems}
             </div>

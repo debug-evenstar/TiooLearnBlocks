@@ -62,7 +62,6 @@ function App() {
       if (!data.error) {
         setDate(data.data);
       } else {
-        console.log(data);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -82,7 +81,6 @@ function App() {
       const data = await response.json();
       if (!data.error) {
         setBookData(data.data);
-        console.log(data.data);
       } else {
         // console.log(data);
       }

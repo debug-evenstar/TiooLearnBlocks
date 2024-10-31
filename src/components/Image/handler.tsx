@@ -35,8 +35,8 @@ export const renderInputsAsOverlay = (
                         input.data.questionType == QuestionTypes.Multichoice
                     }
                     style={{
-                        top : input.layout.position.yAxis.offsetPercent + "%",
-                        left : input.layout.position.xAxis.offsetPercent + "%",
+                        top : (input.layout?.position?.yAxis?.offsetPercent ?? 0) + "%",
+                        left : (input.layout?.position?.xAxis?.offsetPercent ?? 0) + "%",
                         ...( input.layout?.size?.widthPercent ? {width : input.layout?.size?.widthPercent + "%"} : {}),
                         ...( input.layout?.size?.heightPercent ? {height : input.layout?.size?.heightPercent + "%"} : {}),
                         minWidth: 20,

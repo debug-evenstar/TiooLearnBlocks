@@ -46,7 +46,7 @@ const RenderPreview: FC<{
             style={{
                 width: calculatedArea.width,
             }}
-            className={`mx-auto h-full relative ${raw ? "" : "bg-[#fefefe]"}`}
+            className={`active-slide mx-auto h-full relative ${raw ? "" : "bg-[#fefefe]"}`}
         >
             {slide && slide.map(
                 (component: ComponentBaseDataInterface, index: number) => {
@@ -101,7 +101,7 @@ const RenderPreview: FC<{
             sideBar={false}
             chapters={chapters}
         >
-            <div ref={contRef} className="w-full h-full relative">
+            <div ref={contRef} className="lesson-slide w-full h-full relative">
                 <RenderComponents/>
             </div>
         </LessonLayout>

@@ -27,7 +27,10 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
 
     const allInputs = () =>
         Array.from(
-            document.querySelectorAll(".active-slide .text-render input")
+            document.querySelectorAll(`
+                .lesson-slide .active-slide .text-render input, 
+                .lesson-slide .active-slide .image-render input
+            `)
         );
 
     useEffect(() => {
@@ -63,22 +66,24 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
 
     useEffect(() => {
         const input = document.querySelector(
-            ".active-slide .text-render input"
+            ".active-slide .text-render input, .active-slide .image-render input"
         );
         if (!!input) {
             setTimeout(() => {
-                const activeInput = allInputs()[0] as HTMLInputElement;
-                const activeQuestion = questions[activeQuestionIndex];
-                decorateActiveInput(
-                    activeInput,
-                    activeQuestion.type == "subjective" &&
-                        activeInput.getAttribute("data-question-hash") ==
-                            activeQuestion.hash
-                );
-                // allInputs().length > 1 &&
-                //     disableInactiveInputs(
-                //         allInputs().slice(1) as HTMLInputElement[]
-                //     );
+                if (allInputs().length) {
+                    const activeInput = allInputs()[0] as HTMLInputElement;
+                    const activeQuestion = questions[activeQuestionIndex];
+                    decorateActiveInput(
+                        activeInput,
+                        activeQuestion.type == "subjective" &&
+                            activeInput.getAttribute("data-question-hash") ==
+                                activeQuestion.hash
+                    );
+                    // allInputs().length > 1 &&
+                    //     disableInactiveInputs(
+                    //         allInputs().slice(1) as HTMLInputElement[]
+                    //     );
+                }
             }, 100);
         }
     }, [answered, activeQuestionIndex]);
