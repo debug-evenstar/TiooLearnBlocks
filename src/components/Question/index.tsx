@@ -4,11 +4,16 @@ import {
     OptionInterface,
 } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import { FC, useEffect, useState } from "react";
-import { decorateActiveInput, disableInactiveInputs } from "./handler";
+import {
+    decorateActiveInput,
+    disableInactiveInputs,
+    triggerFeedback,
+} from "./handler";
 import RenderOptions from "./components/RenderOptions";
 import RenderInputs from "./components/RenderInputs";
 import { LessonSlideInterface } from "components/SlideManager/handler";
 import { audioManager } from "components/NewLesson/AudioManager/AudioManager";
+import { useLessonContext } from "contexts/LessonContext";
 
 interface QuestionComponentProps {
     data: any;
@@ -24,6 +29,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
     const [questions, setQuestions] = useState<any>(data?.data ?? []);
     const [answered, setAnswered] = useState<OptionInterface[]>([]);
     const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
+    const lessonContext = useLessonContext();
 
     const allInputs = () =>
         Array.from(
@@ -58,8 +64,11 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
             }, 1500);
         }
         if (questions.length === answered.length && questions.length !== 0) {
+            const question = questions[answered.length - 1];
             slide.dispatch("showContinue", {
-                hasFeedback: !!answered[answered.length - 1].feedback,
+                hasFeedback:
+                    !!answered[answered.length - 1].feedback ||
+                    !!question.feedback,
             });
         }
     }, [answered]);
@@ -91,13 +100,22 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
     useEffect(() => {
         slide.on("answerQuestion", (data: any) => {
             if (data.answer) {
+                console.log(data);
                 audioManager.playCorrect();
-                setAnswered((prev: any) => [
-                    ...prev.filter(
+                const updatedAnsweredList = [
+                    ...answered.filter(
                         (ans: any) => ans?.question.hash !== data.question.hash
                     ),
                     { ...data },
-                ]);
+                ];
+                setAnswered(updatedAnsweredList);
+                setTimeout(() => {
+                    triggerFeedback(
+                        data.question,
+                        lessonContext,
+                        updatedAnsweredList.length === questions.length
+                    );
+                }, 500);
             }
         });
     }, [slide]);
@@ -127,6 +145,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
                             questionIndex={index}
                             question={question}
                             setAnswered={setAnswered}
+                            totalQuestions={questions.length}
                         />
                     </>
                 );

@@ -1,17 +1,25 @@
+import {
+    QuestionInterface,
+    QuestionTypes,
+} from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 import { OptionInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import { FeedbackType } from "components/NewLesson/Popups";
 
 export const triggerFeedback = (
-    option: OptionInterface,
+    initiator: OptionInterface | QuestionInterface,
     lessonContext: any,
     shouldContinue = true
 ) => {
-    if (option.feedback && lessonContext) {
-        const feedback = option.feedback;
+    if (initiator.feedback && lessonContext) {
+        const feedback = initiator.feedback;
         lessonContext.feedbackRef.current.showFeedback(
             feedback.title,
             feedback.content,
-            option.isAnswer ? FeedbackType.CORRECT : FeedbackType.WRONG,
+            (initiator as OptionInterface).isAnswer ||
+                (initiator as QuestionInterface).type ==
+                    QuestionTypes.Subjective
+                ? FeedbackType.CORRECT
+                : FeedbackType.WRONG,
             shouldContinue
         );
     }
@@ -83,10 +91,10 @@ export const handleAnswerQuestion = (data: any, options: fillOptions) => {
         );
         textFill.style.setProperty("transition-timing-function", "linear");
         textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
-        if (top || left){
-            textFill.style.setProperty("position", "absolute" )
-            textFill.style.setProperty("top", top ?? 0 )
-            textFill.style.setProperty("left", left ?? 0 )
+        if (top || left) {
+            textFill.style.setProperty("position", "absolute");
+            textFill.style.setProperty("top", top ?? 0);
+            textFill.style.setProperty("left", left ?? 0);
         }
         parent?.replaceChild(textFill, linkedInput);
         // setTimeout(() => {

@@ -104,6 +104,13 @@ const ActiveQuestion: FC<Props> = ({
             direction: "horizontal",
             alignment: "left",
         });
+    const [questionFeedback, setQuestionFeedback] = useState<{
+        current: Feedback;
+        previous: Feedback;
+    }>({
+        previous: {} as Feedback,
+        current: {} as Feedback,
+    });
     const manager = _getManager();
 
     const optionBulletIcon = (item: any) =>
@@ -171,6 +178,12 @@ const ActiveQuestion: FC<Props> = ({
     const queryCanSave = () =>
         questionQuery.current !== "" &&
         questionQuery.current !== questionQuery.previous;
+
+    const feedbackCanSave = () =>
+        questionFeedback.current.content !== "" &&
+        (questionFeedback.current.title !== questionFeedback.previous.title ||
+            questionFeedback.current.content !==
+                questionFeedback.previous.content);
 
     const saveQuestionQuery = () => {
         setQuestionQuery((prev: any) => ({
@@ -249,6 +262,12 @@ const ActiveQuestion: FC<Props> = ({
         setOptionLayoutSettings({ ...optionLayoutSettings, ...data });
     };
 
+    const saveQuestionFeedback = () => {
+        updateQuestion(question, {
+            feedback: questionFeedback.current ?? question.feedback,
+        });
+    };
+
     useEffect(() => {
         searchTopic(topicSearchValue);
     }, [linkedTopics]);
@@ -281,6 +300,15 @@ const ActiveQuestion: FC<Props> = ({
             );
         }
         question.useOptionLayout && setIsUsingLayout(true);
+        const feedback = {
+            title: question.feedback?.title ?? "",
+            content: question.feedback?.content ?? "",
+        };
+        question.feedback &&
+            setQuestionFeedback({
+                current: feedback,
+                previous: feedback,
+            });
         loadTopics();
     }, [question]); //Possible loop
 
@@ -693,6 +721,56 @@ const ActiveQuestion: FC<Props> = ({
                         />
                     </div>
                 </div>
+                {questionType === QuestionTypes.Subjective && (
+                    <div className="mt-[15px] px-2">
+                        <p className="text-[13px] font-bold">Feedback</p>
+                        <div className="flex flex-col rounded-[5px] my-2">
+                            <span className="text-[12px] font-bold">Title</span>
+                            <textarea
+                                className="w-full h-[40px] text-[14px] border-[2px] border-[#f2f2f2] rounded-[5px] p-1"
+                                value={questionFeedback.current.title}
+                                onChange={(e) =>
+                                    setQuestionFeedback((prev: any) => ({
+                                        ...prev,
+                                        current: {
+                                            ...prev.current,
+                                            title: e.target.value,
+                                        },
+                                    }))
+                                }
+                            ></textarea>
+                            <span className="text-[12px] font-bold">
+                                Content
+                            </span>
+                            <textarea
+                                className="w-full h-[90px] text-[14px] border-[2px] border-[#f2f2f2] rounded-[5px] p-1"
+                                value={questionFeedback.current.content}
+                                onChange={(e) =>
+                                    setQuestionFeedback((prev: any) => ({
+                                        ...prev,
+                                        current: {
+                                            ...prev.current,
+                                            content: e.target.value,
+                                        },
+                                    }))
+                                }
+                            ></textarea>
+                            <button
+                                className={
+                                    "w-full text-white text-[14px] px-3 py-1 rounded-[5px] mt-2 " +
+                                    (!feedbackCanSave()
+                                        ? "bg-[#d5d5d5]"
+                                        : "bg-green-500")
+                                }
+                                disabled={!feedbackCanSave()}
+                                onClick={() => saveQuestionFeedback()}
+                            >
+                                {" "}
+                                Save feedback
+                            </button>
+                        </div>
+                    </div>
+                )}
                 <div className="px-2 mt-[15px]">
                     <p className="text-[14px] font-bold">Query</p>
                     <p className="text-[12px] mb-1">
