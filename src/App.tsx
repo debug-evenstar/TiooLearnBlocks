@@ -120,7 +120,7 @@ function App() {
   useEffect(() => {
     ConfigureLibrary.save({
       baseUrl: "http://localhost:8085",
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyZGF0YSI6eyJpZCI6MzUsImVtYWlsIjoiZ2FtZXI1QGdtYWlsLmNvbSIsImFjY291bnRfdHlwZSI6InNjaG9vbCJ9LCJpYXQiOjE3MzAyMzkzODQsImV4cCI6MTczODAxNTM4NH0.Qm4DKdsTOPKk0-6P_vuAObXgqe25Y-XChMvKvgo2nHo",// process.env.REACT_APP_API_TOKEN ?? "",
+      token: process.env.REACT_APP_API_TOKEN ?? "",
       authType: "student"
     });
   }, []);
@@ -157,7 +157,7 @@ function App() {
                 textbook={bookData}
                 chapters={bookData.chapters}
                 lesson={bookData.chapters[chapter_index]?.lessons[lesson_index]}
-                retake={true}
+                retake={false}
                 back={() => console.log("back")}
               /> : <></>
             }
