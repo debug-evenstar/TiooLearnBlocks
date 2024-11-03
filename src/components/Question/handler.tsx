@@ -117,3 +117,20 @@ export const disableInactiveInputs = (inputs: HTMLInputElement[]) => {
         input.disabled = true;
     });
 };
+
+export const tooltipListener = (container: HTMLElement) => {
+    if (container) {
+        container.querySelectorAll(".tooltip").forEach((element: any) => {
+            element.addEventListener("mouseenter", () => {
+                document
+                    .getElementsByClassName("slide-area")[0]
+                    .classList.add("tip-visible");
+            });
+            element.addEventListener("mouseleave", () => {
+                document
+                    .getElementsByClassName("slide-area")[0]
+                    .classList.remove("tip-visible");
+            });
+        });
+    }
+};

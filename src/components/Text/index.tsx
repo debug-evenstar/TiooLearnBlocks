@@ -6,7 +6,7 @@ import {
 } from "./handler";
 import { ToolTipTypes, ToolTips } from "../extensions/ToolTip";
 import { TextFields } from "../extensions/TextFields";
-import { attachTextInputHandler, handleAnswerQuestion } from "components/Question/handler";
+import { attachTextInputHandler, handleAnswerQuestion, tooltipListener } from "components/Question/handler";
 
 const TextComponent: FC<TextComponentProps> = ({
     styles,
@@ -30,13 +30,6 @@ const TextComponent: FC<TextComponentProps> = ({
         textContainerRef.current.style.display = "block";
     };
 
-    // useEffect(() => {
-    //     // Handle initial text formatting
-    //     setFormatted(formatTextContent(data.content));
-    //     slide.setFunction("hideText", hideText);
-    //     slide.setFunction("showText", showText);
-
-    // }, [data.content, slide]);
 
     useEffect(() => {
         let processText: any[] = formatted;
@@ -53,7 +46,8 @@ const TextComponent: FC<TextComponentProps> = ({
             attachTextInputHandler(textContainerRef.current, slide.slide, (data:any)=>{
                 handleAnswerQuestion(data,{parentType : "text"});
                 slide.dispatch("answerQuestion", data);
-            });  
+            });
+            tooltipListener(textContainerRef?.current)
         }, 1000);
     }, [formatted, data.content, slide]);
 

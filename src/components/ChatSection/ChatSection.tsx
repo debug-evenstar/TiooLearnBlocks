@@ -151,7 +151,7 @@ const ChatSection: FC<ChatSectionProps> = ({
                 visible ? "w-[100%] bg-white sm:bg-transparent sm:w-[70%] md:w-[65%] lg:w-[50%]" : "w-0"
             } overflow-hidden relative border-l flex flex-col z-[1500]`}
         >
-            <button className="flex justify-center items-center w-[36px] h-[36px] bg-[#7e1593] absolute right-2 rounded-[20px]" onClick={() =>close()}>
+            <button className="flex justify-center items-center w-[36px] h-[36px] bg-[#7e1593] absolute right-2 rounded-[20px] md:hidden" onClick={() =>close()}>
                 <FaTimes size={21} color="#fff"/>
             </button>
             {visible && (
