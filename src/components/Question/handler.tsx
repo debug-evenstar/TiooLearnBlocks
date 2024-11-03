@@ -45,6 +45,9 @@ export const attachTextInputHandler = (
         const inputs = element.querySelectorAll("input[data-link=Questions]");
         inputs.forEach((input: any, index: number) => {
             const questionHash = input.getAttribute("data-question-hash");
+            if (!input.style?.width) {
+                input.style.width = "30px";
+            }
             input.addEventListener("input", (e: any) => {
                 const val = e.target.value;
                 const question = getQuestionsComponent(slide, questionHash);
