@@ -482,7 +482,7 @@ const keyToComponentMapper: { [key: string]: any } = {
 };
 
 export const ResponsiveComponentOptions : {[key : string] : any} = {
-    "Text" : { width : "90%", height : "auto" },
+    "Text" : { width : "100%", height : "auto" },
     "Image" : { width : "85%", height : "auto" }
 }
 export const loadComponent = (componentData: any) => {
