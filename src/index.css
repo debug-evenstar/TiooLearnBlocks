@@ -986,7 +986,7 @@ input[type="file"] {
     }
     .text-render:has(input) p,
     .text-render:has(input) span {
-        line-height: 35px;
+        line-height: 32px;
     }
 }
 
