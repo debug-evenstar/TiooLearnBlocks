@@ -6,5 +6,6 @@ declare const RenderInputs: FC<{
     setAnswered: Function;
     questionIndex: number;
     question: QuestionInterface;
+    totalQuestions: number;
 }>;
 export default RenderInputs;

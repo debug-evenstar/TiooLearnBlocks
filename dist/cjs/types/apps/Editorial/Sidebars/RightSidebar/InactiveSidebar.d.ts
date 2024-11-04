@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { InputInterface, OptionInterface, OptionTypes } from "./Questions/ActiveQuestion";
+import { Feedback } from "apps/Editorial/interfaces";
 interface Props {
     data: any;
     showComp: boolean;
@@ -21,6 +22,7 @@ export interface QuestionInterface {
     options?: OptionInterface[];
     inputs?: InputInterface[];
     answer?: string;
+    feedback?: Feedback;
     topics?: any[];
     useOptionLayout?: boolean;
     layoutBoxConfig?: any;
