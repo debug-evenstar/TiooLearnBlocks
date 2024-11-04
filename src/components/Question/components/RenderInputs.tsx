@@ -9,6 +9,8 @@ import {
 } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import LayoutComponent from "components/LayoutBox";
 import { CSSProperties, FC, useEffect, useRef, useState } from "react";
+import { triggerFeedback } from "../handler";
+import { useLessonContext } from "contexts/LessonContext";
 
 const RenderInputs: FC<{
     inputs: any[];
@@ -16,7 +18,15 @@ const RenderInputs: FC<{
     setAnswered: Function;
     questionIndex: number;
     question: QuestionInterface;
-}> = ({ inputs, answered, questionIndex, question, setAnswered }) => {
+    totalQuestions: number;
+}> = ({
+    inputs,
+    answered,
+    questionIndex,
+    question,
+    setAnswered,
+    totalQuestions,
+}) => {
     const textFillRef = useRef<HTMLParagraphElement>(null);
     const animationStyle: CSSProperties = {
         transition: "transform 0.4s, text-shadow 0.4s",
@@ -24,6 +34,7 @@ const RenderInputs: FC<{
         textShadow: "0px 0px 0px #fff",
     };
     const [isCorrect, setIsCorrect] = useState<any>(null);
+    const lessonContext = useLessonContext();
     const animate = () => {
         if (textFillRef?.current) {
             textFillRef?.current.style.setProperty("transform", "scale(1.5)");
@@ -49,10 +60,21 @@ const RenderInputs: FC<{
     const handleInputChange = (e: any) => {
         const val = e.target.value;
         if (question.answer && val) {
-            if (question.answer.substring(0, val.length).toLowerCase() === val.toLowerCase()) {
+            if (
+                question.answer.substring(0, val.length).toLowerCase() ===
+                val.toLowerCase()
+            ) {
                 setIsCorrect(true);
                 if (question.answer?.length === val.length) {
-                    setAnswered((prev: any) => [...prev, question.answer]);
+                    const updatedAnsweredList = [...answered, question.answer];
+                    setAnswered(updatedAnsweredList);
+                    setTimeout(() => {
+                        triggerFeedback(
+                            question,
+                            lessonContext,
+                            updatedAnsweredList.length === totalQuestions
+                        );
+                    }, 500);
                 }
             } else {
                 setIsCorrect(false);
@@ -62,9 +84,9 @@ const RenderInputs: FC<{
 
     useEffect(() => {
         if (answered.length - 1 === questionIndex) {
-            setTimeout(() => {
-                animate();
-            }, 50);
+            // setTimeout(() => {
+            //     animate();
+            // }, 50);
         }
     }, [answered, questionIndex]);
     return (
@@ -78,7 +100,9 @@ const RenderInputs: FC<{
                         {answered.length <= questionIndex && (
                             <input
                                 disabled={
-                                    question.type === QuestionTypes.Multichoice || answered.length !== questionIndex
+                                    question.type ===
+                                        QuestionTypes.Multichoice ||
+                                    answered.length !== questionIndex
                                 }
                                 className={`w-full h-full relative bg-white text-[16px] text-center font-bold border-[0.5px] border-[#E5E5E5] rounded-[8px] p-[3px] shadow-md z-[50] shadow-[inset_0_0_6px_2px_rgba(155,41,178,0.6)]
                                     ${

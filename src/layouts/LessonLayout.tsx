@@ -254,7 +254,7 @@ export default function LessonLayout({
                   </button>
                 </div>
               )}
-              <div className="relative px-5 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_230px)] sm:h-[calc(100vh_-_170px)] sm:px-12 md:px-2ZZ  overflow-y-auto">
+              <div className="slide-area relative px-5 flex grow flex-col overflow-x-hidden h-[calc(100vh_-_230px)] sm:h-[calc(100vh_-_170px)] sm:px-12 md:px-2ZZ  overflow-y-auto">
                 <AudioButton />
                 {currentLesson ? (
                   <LessonContext.Provider

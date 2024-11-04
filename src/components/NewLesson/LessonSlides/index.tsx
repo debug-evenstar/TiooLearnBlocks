@@ -108,7 +108,7 @@ const LessonSlides = ({
         <div className="lesson-slide w-full relative flex items-center gap-3">
             <div
                 ref={contRef}
-                className="w-[85%] md:w-[90%] h-full relative mx-auto min-h-[calc(100vh_-_170px)] text-black"
+                className="w-full md:w-[90%] h-full relative mx-auto min-h-[calc(100vh_-_170px)] text-black"
             >
                 <div className="absolute z-10 top-5 right-5"></div>
                 {/* <RenderComponent slides={parsedSlides} back={() => false}/> */}

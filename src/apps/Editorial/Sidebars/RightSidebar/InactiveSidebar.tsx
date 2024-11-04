@@ -19,6 +19,7 @@ import ActiveQuestion, {
 import DataListManager from "./Questions/DataListManager";
 import { _getManager, ManagerStates } from "apps/Editorial/Base/Manager";
 import { CanvasStates } from "apps/Editorial/Base/CanvasManager";
+import { Feedback } from "apps/Editorial/interfaces";
 
 interface Props {
     data: any;
@@ -43,6 +44,7 @@ export interface QuestionInterface {
     options?: OptionInterface[];
     inputs?: InputInterface[];
     answer? : string;
+    feedback? : Feedback;
     topics?: any[];
     useOptionLayout?: boolean;
     layoutBoxConfig?: any;

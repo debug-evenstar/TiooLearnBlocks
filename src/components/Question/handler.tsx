@@ -1,17 +1,25 @@
+import {
+    QuestionInterface,
+    QuestionTypes,
+} from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 import { OptionInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
 import { FeedbackType } from "components/NewLesson/Popups";
 
 export const triggerFeedback = (
-    option: OptionInterface,
+    initiator: OptionInterface | QuestionInterface,
     lessonContext: any,
     shouldContinue = true
 ) => {
-    if (option.feedback && lessonContext) {
-        const feedback = option.feedback;
+    if (initiator.feedback && lessonContext) {
+        const feedback = initiator.feedback;
         lessonContext.feedbackRef.current.showFeedback(
             feedback.title,
             feedback.content,
-            option.isAnswer ? FeedbackType.CORRECT : FeedbackType.WRONG,
+            (initiator as OptionInterface).isAnswer ||
+                (initiator as QuestionInterface).type ==
+                    QuestionTypes.Subjective
+                ? FeedbackType.CORRECT
+                : FeedbackType.WRONG,
             shouldContinue
         );
     }
@@ -37,6 +45,9 @@ export const attachTextInputHandler = (
         const inputs = element.querySelectorAll("input[data-link=Questions]");
         inputs.forEach((input: any, index: number) => {
             const questionHash = input.getAttribute("data-question-hash");
+            if (!input.style?.width) {
+                input.style.width = "30px";
+            }
             input.addEventListener("input", (e: any) => {
                 const val = e.target.value;
                 const question = getQuestionsComponent(slide, questionHash);
@@ -83,10 +94,10 @@ export const handleAnswerQuestion = (data: any, options: fillOptions) => {
         );
         textFill.style.setProperty("transition-timing-function", "linear");
         textFill.style.setProperty("text-shadow", "0px 0px 0px #fff");
-        if (top || left){
-            textFill.style.setProperty("position", "absolute" )
-            textFill.style.setProperty("top", top ?? 0 )
-            textFill.style.setProperty("left", left ?? 0 )
+        if (top || left) {
+            textFill.style.setProperty("position", "absolute");
+            textFill.style.setProperty("top", top ?? 0);
+            textFill.style.setProperty("left", left ?? 0);
         }
         parent?.replaceChild(textFill, linkedInput);
         // setTimeout(() => {
@@ -108,4 +119,21 @@ export const disableInactiveInputs = (inputs: HTMLInputElement[]) => {
     inputs.forEach((input: HTMLInputElement) => {
         input.disabled = true;
     });
+};
+
+export const tooltipListener = (container: HTMLElement) => {
+    if (container) {
+        container.querySelectorAll(".tooltip").forEach((element: any) => {
+            element.addEventListener("mouseenter", () => {
+                document
+                    .getElementsByClassName("slide-area")[0]
+                    .classList.add("tip-visible");
+            });
+            element.addEventListener("mouseleave", () => {
+                document
+                    .getElementsByClassName("slide-area")[0]
+                    .classList.remove("tip-visible");
+            });
+        });
+    }
 };
