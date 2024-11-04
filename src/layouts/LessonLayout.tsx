@@ -105,19 +105,20 @@ export default function LessonLayout({
 
           // force the first slide if it's a retake
           // it's a retake if the slide_index
-          if (retake == true) {
+          if (retake) {
             savedIndex = 0;
           }
 
           if (savedIndex > 1) {
-            setActiveSlide(savedIndex + 1);
-            slideManagerRef?.current?.navigator(0, savedIndex + 1);
+            setActiveSlide(savedIndex);
+            slideManagerRef?.current?.navigator(0, savedIndex );
           }
           lessonHeaderRef?.current?.updateLessonProgress(response.data);
         }
       });
     }
   }, [currentLesson]);
+
 
   const slideHasQuestion = (lesson: any) => {
     const slides = lesson.lesson_slides;
@@ -136,13 +137,13 @@ export default function LessonLayout({
 
   const handleUpdateProgress = () => {
     const currentSlide = slideManagerRef?.current?.activeSlide();
-
     const payload = {
       textbooks_id: textbook.id,
       lesson_id: currentLesson?.id,
       slide_index: activeSlide,
       slide_id: currentSlide.id,
     };
+
 
     GlobalResource.updateLessonProgress(payload)
       .then((response) => {
@@ -241,7 +242,9 @@ export default function LessonLayout({
           <div className="flex grow min-h-0 w-full">
             <div
               className={`${
-                showAI ? "w-0 sm:w-[30%] md:w-[35%] lg:w-[50%] pointer-events-none" : "w-full"
+                showAI
+                  ? "w-0 sm:w-[30%] md:w-[35%] lg:w-[50%] pointer-events-none"
+                  : "w-full"
               } flex flex-col relative z-[1200]`}
             >
               {showAI && (
