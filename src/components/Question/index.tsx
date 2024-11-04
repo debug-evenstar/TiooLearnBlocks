@@ -100,7 +100,6 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
     useEffect(() => {
         slide.on("answerQuestion", (data: any) => {
             if (data.answer) {
-                console.log(data);
                 audioManager.playCorrect();
                 const updatedAnsweredList = [
                     ...answered.filter(
@@ -118,7 +117,7 @@ const QuestionComponent: FC<QuestionComponentProps> = ({
                 }, 500);
             }
         });
-    }, [slide]);
+    }, [slide, answered]);
 
     return (
         <>
