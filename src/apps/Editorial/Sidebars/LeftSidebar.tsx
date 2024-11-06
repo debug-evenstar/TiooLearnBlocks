@@ -13,6 +13,7 @@ import { ComponentBaseDataInterface } from "components/interface";
 import LayoutComponent from "components/LayoutBox";
 import RenderPreview from "../Preview/RenderPreview";
 import { createRoot } from "react-dom/client";
+import Swal from "sweetalert2";
 
 interface Props {
     slides: any;
@@ -68,10 +69,29 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
     };
 
     const deleteSlide = (index: number) => {
-        manager.slideManager.deleteSlide(index, (response: any) => {});
-        if (activeSlideIndex !== 0 && activeSlideIndex == index) {
-            handleChangeSlide(activeSlideIndex - 1);
-        }
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Delete",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                manager.slideManager.deleteSlide(index, (response: any) => {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    });
+                });
+                if (activeSlideIndex !== 0 && activeSlideIndex == index) {
+                    handleChangeSlide(activeSlideIndex - 1);
+                }
+            }
+        });
     };
 
     useEffect(() => {
@@ -120,13 +140,12 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                                 className={`slide-${index}-preview-box w-full h-full flex justify-center items-center`}
                             ></div>
                         </div>
-                        <a
-                            href="#"
+                        <button
                             onClick={() => deleteSlide(index)}
                             className="absolute z-20 top-0 right-0 bg-white p-3 opacity-[0.3] rounded-lg hover:opacity-[1] hover:bg-gray-200 "
                         >
                             <FaTrash size={12} color="red" />
-                        </a>
+                        </button>
                     </div>
                 ))}
                 <div

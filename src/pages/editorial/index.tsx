@@ -99,7 +99,7 @@ const EditorialComp: FC<Props> = ({
                 lessonSlides: updatedLessonSlides,
             };
         };
-    }, [manager, manager.slideManager]);
+    }, [manager, manager.slideManager, lessonSlides]);
 
     useEffect(() => {
         manager.slideManager.slides = parseSlides;
