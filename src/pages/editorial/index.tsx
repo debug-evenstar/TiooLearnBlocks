@@ -61,6 +61,7 @@ const EditorialComp: FC<Props> = ({
         setOverlay(false);
         setTimeout(() => {
             slideManagerRef?.current?.navigator(1, index);
+            manager.slideManager.setActiveSlide(index);
         }, 400);
     };
 
@@ -93,9 +94,12 @@ const EditorialComp: FC<Props> = ({
         manager.slideManager.updateLessonSlides = (generator: Function) => {
             const updatedLessonSlides = generator(lessonSlides);
             setLessonSlides([...updatedLessonSlides]);
+            manager.lesson = {
+                ...data,
+                lesson_slides: updatedLessonSlides,
+            };
         };
-        manager.lesson = data;
-    }, [manager, manager.slideManager]);
+    }, [manager, manager.slideManager, lessonSlides]);
 
     useEffect(() => {
         manager.slideManager.slides = parseSlides;
