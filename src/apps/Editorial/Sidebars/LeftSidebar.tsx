@@ -4,7 +4,7 @@ import {
     LessonSlideScope,
     loadComponent,
 } from "components/SlideManager/handler";
-import { FaPlus } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaPlus } from "react-icons/fa";
 import { ManagerInterface } from "../Base/Manager";
 import { useDispatch } from "react-redux";
 import { refreshActiveViewbox } from "provider/activeViewboxSlice";
@@ -13,7 +13,6 @@ import { ComponentBaseDataInterface } from "components/interface";
 import LayoutComponent from "components/LayoutBox";
 import RenderPreview from "../Preview/RenderPreview";
 import { createRoot } from "react-dom/client";
-
 
 interface Props {
     slides: any;
@@ -54,14 +53,27 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             const createDivRoot = createRoot(div);
             createDivRoot.render(previewBox());
             document.body.appendChild(div);
-            let boxElement = () => document.querySelector(`.slide-${slideIndex}-preview-box`) as HTMLElement;
-            if ( boxElement() )  {
-                const scaleFraction = boxElement().clientWidth / div.clientWidth;
-                div.style.setProperty("transform", `scale(${scaleFraction})`)
+            let boxElement = () =>
+                document.querySelector(
+                    `.slide-${slideIndex}-preview-box`
+                ) as HTMLElement;
+            if (boxElement()) {
+                const scaleFraction =
+                    boxElement().clientWidth / div.clientWidth;
+                div.style.setProperty("transform", `scale(${scaleFraction})`);
                 boxElement().innerHTML = "";
                 boxElement().appendChild(div);
             }
         }
+    };
+
+    const moveSlide = (direction: number, slideIndex: number) => {
+        direction == -1 &&
+            slideIndex > 0 &&
+            manager.slideManager.reorderSlide(slideIndex);
+        direction == 1 &&
+            slideIndex < slides.length - 1 &&
+            manager.slideManager.reorderSlide(slideIndex);
     };
 
     useEffect(() => {
@@ -69,8 +81,10 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             setSlideRefs(() => slides.map((slide: any) => React.createRef()));
         }
         setTimeout(() => {
-            slides.forEach((slide : any, index : number) => generateSlidePreview(index));
-        },1000)
+            slides.forEach((slide: any, index: number) =>
+                generateSlidePreview(index)
+            );
+        }, 1000);
         // Regenerate previews when no of slides changes
         // if (slidePreviews.length !== slides.length) {
         //     setSlidePreviews(
@@ -93,75 +107,35 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                 {slides.map((item: any, index: number) => (
                     <div
                         className="relative h-[200px] border-[0.25px] border-[#4F46E5] mb-5 rounded-lg cursor-pointer hover:scale-105 duration-100"
-                        onClick={() => handleChangeSlide(index)}
                         key={index}
                         ref={slideRefs[index]}
                     >
                         <p className="absolute text-[#030036BD] text-sm -top-1 -left-[14px]">
                             {index + 1}
                         </p>
-                        <div className="absolute w-full h-full opacity-0 bg-gray-400 z-10"></div>
+                        <a
+                            onClick={() => handleChangeSlide(index)}
+                            className="absolute w-full h-full opacity-0 bg-gray-400 z-10"
+                        ></a>
                         <div className="text-preview relative z-0 shadow p-2 py-3 h-[198px] overflow-hidden rounded-lg cursor-pointer hover:scale-105 duration-100">
-                                <div
-                                    className={`slide-${index}-preview-box w-full h-full flex justify-center items-center`}
-                                >
-                                </div>
-                            {/* {(!slidePreviews.length ||
-                                !slidePreviews[index]) && (
-                                <div className="w-full h-full flex justify-center items-center">
-                                    <Rings
-                                        visible={true}
-                                        height="50"
-                                        width="50"
-                                        color="#4F46E5"
-                                        ariaLabel="rings-loading"
-                                        wrapperStyle={{}}
-                                        wrapperClass=""
-                                    />
-                                </div>
-                            )} */}
-                            {/* {item.map(
-                                (
-                                    component: ComponentBaseDataInterface,
-                                    componentIndex: number
-                                ) => {
-                                    const Component = loadComponent(component);
-                                    const containerElement =
-                                        slideRefs[index]?.current;
-                                    const viewArea = containerElement
-                                        ? {
-                                              width: containerElement?.clientWidth,
-                                              height: containerElement?.clientHeight,
-                                          }
-                                        : null;
-                                    return component.layout ? (
-                                        <LayoutComponent
-                                            layout={component.layout}
-                                            key={
-                                                componentIndex +
-                                                component.component
-                                            }
-                                        >
-                                            <Component
-                                                data={component}
-                                                slide={SlideScope}
-                                                viewArea={viewArea}
-                                            />
-                                        </LayoutComponent>
-                                    ) : (
-                                        <Component
-                                            key={
-                                                componentIndex +
-                                                component.component
-                                            }
-                                            data={component}
-                                            slide={SlideScope}
-                                            viewArea={viewArea}
-                                        />
-                                    );
-                                }
-                            )} */}
+                            <div
+                                className={`slide-${index}-preview-box w-full h-full flex justify-center items-center`}
+                            ></div>
                         </div>
+                        <button
+                            onClick={() => moveSlide(-1, index)}
+                            title="Move Up"
+                            className="absolute z-20 top-0 right-0 bg-white p-3 opacity-[0.3] rounded-lg hover:opacity-[1] hover:bg-gray-200 "
+                        >
+                            <FaArrowUp size={12} color="##354e8c" />
+                        </button>
+                        <button
+                            onClick={() => moveSlide(1, index)}
+                            title="Move Down"
+                            className="absolute z-20 top-0 right-[16%] bg-white p-3 opacity-[0.3] rounded-lg hover:opacity-[1] hover:bg-gray-200 "
+                        >
+                            <FaArrowDown size={12} color="##354e8c" />
+                        </button>
                     </div>
                 ))}
                 <div
