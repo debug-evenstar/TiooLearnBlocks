@@ -5,7 +5,7 @@ import { deepClone } from "utilities/array";
 
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
 const SAVE_SLIDE_URL = (id: number) => `open/lesson/${id}/slide`;
-const REORDER_SLIDE_URL = (id: number) => `open/lesson/${id}/reorder`;
+const REORDER_SLIDE_URL = (id: number) => `slides/${id}/reorder`;
 const DELETE_SLIDE_URL = (id: number) => `slides/${id}`;
 
 export interface SlideManagerInterface {
@@ -122,8 +122,8 @@ export class SlideManager implements SlideManagerInterface {
                         };
                         return updated;
                     });
+                    callback && callback(json.data);
                 });
-                callback && callback();
                 //Add a function to update the lessonSlides object with the created slide id
             })
             .then((data) => {})
@@ -157,24 +157,30 @@ export class SlideManager implements SlideManagerInterface {
                 slideId = initialSlides[slideIndex].id;
             }
         }
-        // const url: string = `${baseApiHost()}/${REORDER_SLIDE_URL(slideId)}`;
-        // return fetch(url, {
-        //     method: "POST",
-        // })
-        //     .then(async (response) => {
-        //         if (!response.ok) {
-        //             callback();
-        //             throw new Error(`HTTP error! status: ${response.status}`);
-        //         }
-        //         const lessonSlides = await response.json();
-        //         callback && callback(lessonSlides.data);
-        //         this.updateLessonSlides(() => lessonSlides.data);
-        //         return lessonSlides;
-        //     })
-        //     .then((data) => {})
-        //     .catch((error) => {
-        //         console.error("Update failed:", error);
-        //     });
+        const url: string = `${baseApiHost()}/${REORDER_SLIDE_URL(slideId)}`;
+        return fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                direction,
+            }),
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    callback();
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const lessonSlides = await response.json();
+                callback && callback(lessonSlides.data);
+                this.updateLessonSlides(() => lessonSlides.data);
+                return lessonSlides;
+            })
+            .then((data) => {})
+            .catch((error) => {
+                console.error("Update failed:", error);
+            });
     }
 
     async deleteSlide(slideIndex: number, callback: Function = () => {}) {

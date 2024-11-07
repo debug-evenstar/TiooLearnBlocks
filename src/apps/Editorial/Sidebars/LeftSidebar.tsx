@@ -14,6 +14,7 @@ import LayoutComponent from "components/LayoutBox";
 import RenderPreview from "../Preview/RenderPreview";
 import { createRoot } from "react-dom/client";
 import Swal from "sweetalert2";
+import { Puff } from "react-loader-spinner";
 
 interface Props {
     slides: any;
@@ -26,7 +27,14 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
     const [slideRefs, setSlideRefs] = useState<React.RefObject<any>[]>([]);
     const [slidePreviews, setSlidePreviews] = useState<string[]>([]);
     const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
+    const [slideIsLoading, setSlideIsLoading] = useState<boolean[]>([]);
 
+    const toggleSlideLoader = (index: number, status: boolean) => {
+        setSlideIsLoading((prev: any) => {
+            prev[index] = status;
+            return [...prev];
+        });
+    };
     const handleChangeSlide = (index: number) => {
         changeTo(index);
         setActiveSlideIndex(index);
@@ -69,12 +77,15 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
     };
 
     const moveSlide = (direction: number, slideIndex: number) => {
+        toggleSlideLoader(slideIndex, true);
+        let callback = () =>
+            setTimeout(() => toggleSlideLoader(slideIndex, false), 1000);
         direction == -1 &&
             slideIndex > 0 &&
-            manager.slideManager.reorderSlide(slideIndex);
+            manager.slideManager.reorderSlide(slideIndex, direction, callback);
         direction == 1 &&
             slideIndex < slides.length - 1 &&
-            manager.slideManager.reorderSlide(slideIndex);
+            manager.slideManager.reorderSlide(slideIndex, direction, callback);
     };
 
     const deleteSlide = (index: number) => {
@@ -91,7 +102,7 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                 manager.slideManager.deleteSlide(index, (response: any) => {
                     Swal.fire({
                         title: "Deleted!",
-                        text: "Your file has been deleted.",
+                        text: "Slide has been deleted.",
                         icon: "success",
                         confirmButtonColor: "#3085d6",
                     });
@@ -107,6 +118,9 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
         if (slides.length !== slideRefs.length) {
             setSlideRefs(() => slides.map((slide: any) => React.createRef()));
         }
+        setSlideIsLoading((prev: boolean[]) => {
+            return slides.map((s: any, i: number) => prev[i] ?? false);
+        });
         setTimeout(() => {
             slides.forEach((slide: any, index: number) =>
                 generateSlidePreview(index)
@@ -169,6 +183,19 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                         >
                             <FaTrash size={12} color="red" />
                         </button>
+                        {slideIsLoading && slideIsLoading[index] && (
+                            <div className="absolute flex justify-center items-center w-full h-full top-0 opacity-20 bg-black z-11 rounded-lg">
+                                <Puff
+                                    visible={true}
+                                    height="45"
+                                    width="45"
+                                    color="#ffffff"
+                                    ariaLabel="puff-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClass=""
+                                />
+                            </div>
+                        )}
                     </div>
                 ))}
                 <div

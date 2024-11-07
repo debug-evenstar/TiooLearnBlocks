@@ -96,7 +96,7 @@ const EditorialComp: FC<Props> = ({
             setLessonSlides([...updatedLessonSlides]);
             manager.lesson = {
                 ...data,
-                lessonSlides: updatedLessonSlides,
+                lesson_slides: updatedLessonSlides,
             };
         };
     }, [manager, manager.slideManager, lessonSlides]);
