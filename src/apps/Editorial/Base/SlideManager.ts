@@ -6,6 +6,7 @@ import { deepClone } from "utilities/array";
 const UPDATE_SLIDE_URL = (id: number) => `open/lesson/template/${id}`; // Can be moved later
 const SAVE_SLIDE_URL = (id: number) => `open/lesson/${id}/slide`;
 const REORDER_SLIDE_URL = (id: number) => `open/lesson/${id}/reorder`;
+const DELETE_SLIDE_URL = (id: number) => `slides/${id}`;
 
 export interface SlideManagerInterface {
     manager: ManagerInterface;
@@ -13,6 +14,7 @@ export interface SlideManagerInterface {
     activeSlide: number;
     saveSlide: Function;
     createSlide: Function;
+    deleteSlide: Function;
     setActiveSlide: Function;
     saveComponentData: Function;
     handleSlidesUpdate: Function;
@@ -67,7 +69,7 @@ export class SlideManager implements SlideManagerInterface {
 
     async saveSlide(slideId: number, payload: SlideData, callback: Function) {
         const url: string = `${baseApiHost()}/${UPDATE_SLIDE_URL(slideId)}`;
-        fetch(url, {
+        return fetch(url, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -89,7 +91,7 @@ export class SlideManager implements SlideManagerInterface {
             });
     }
 
-    createSlide(
+    async createSlide(
         index: number,
         lessonId: number,
         payload: SlideData,
@@ -120,9 +122,8 @@ export class SlideManager implements SlideManagerInterface {
                         };
                         return updated;
                     });
-                    callback && callback(json.data);
                 });
-
+                callback && callback();
                 //Add a function to update the lessonSlides object with the created slide id
             })
             .then((data) => {})
@@ -174,5 +175,45 @@ export class SlideManager implements SlideManagerInterface {
         //     .catch((error) => {
         //         console.error("Update failed:", error);
         //     });
+    }
+
+    async deleteSlide(slideIndex: number, callback: Function = () => {}) {
+        //Save active slide before deleting
+        if (this.activeSlide !== slideIndex) {
+            const activeSlide =
+                this.manager.lesson.lesson_slides[this.activeSlide];
+            await this.saveSlide(
+                activeSlide.id,
+                this.activeSlideData(),
+                () => {}
+            );
+        }
+        let slide;
+        slide =
+            this.manager.lesson.lesson_slides.length > slideIndex
+                ? this.manager.lesson.lesson_slides[slideIndex]
+                : null;
+        if (!slide) {
+            this.handleSlidesUpdate(this.slides.slice(0, -1));
+            return;
+        }
+        const url: string = `${baseApiHost()}/${DELETE_SLIDE_URL(slide.id)}`;
+        return fetch(url, {
+            method: "DELETE",
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    callback();
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const lessonSlides = await response.json();
+                callback && callback(lessonSlides.data);
+                this.updateLessonSlides(() => lessonSlides.data);
+                return lessonSlides;
+            })
+            .then((data) => {})
+            .catch((error) => {
+                console.error("Update failed:", error);
+            });
     }
 }

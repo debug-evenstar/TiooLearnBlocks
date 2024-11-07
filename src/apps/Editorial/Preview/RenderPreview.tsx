@@ -96,7 +96,7 @@ const RenderPreview: FC<{
     return (
         <LessonLayout
             textbook={{}}
-            lesson={lesson}
+            lesson={false}
             closePreview={() => setPreviewSlide && setPreviewSlide(false)}
             sideBar={false}
             chapters={chapters}

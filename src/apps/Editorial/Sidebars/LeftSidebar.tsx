@@ -4,7 +4,7 @@ import {
     LessonSlideScope,
     loadComponent,
 } from "components/SlideManager/handler";
-import { FaArrowDown, FaArrowUp, FaPlus } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaPlus, FaTrash } from "react-icons/fa";
 import { ManagerInterface } from "../Base/Manager";
 import { useDispatch } from "react-redux";
 import { refreshActiveViewbox } from "provider/activeViewboxSlice";
@@ -13,6 +13,7 @@ import { ComponentBaseDataInterface } from "components/interface";
 import LayoutComponent from "components/LayoutBox";
 import RenderPreview from "../Preview/RenderPreview";
 import { createRoot } from "react-dom/client";
+import Swal from "sweetalert2";
 
 interface Props {
     slides: any;
@@ -76,6 +77,32 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
             manager.slideManager.reorderSlide(slideIndex);
     };
 
+    const deleteSlide = (index: number) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Delete",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                manager.slideManager.deleteSlide(index, (response: any) => {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    });
+                });
+                if (activeSlideIndex !== 0 && activeSlideIndex == index) {
+                    handleChangeSlide(activeSlideIndex - 1);
+                }
+            }
+        });
+    };
+
     useEffect(() => {
         if (slides.length !== slideRefs.length) {
             setSlideRefs(() => slides.map((slide: any) => React.createRef()));
@@ -123,18 +150,24 @@ const LeftSidebar: FC<Props> = ({ slides, changeTo, data, manager }) => {
                             ></div>
                         </div>
                         <button
+                            onClick={() => moveSlide(1, index)}
+                            title="Move Down"
+                            className="absolute z-20 top-0 right-[26%] bg-white p-2 opacity-[0.3] rounded-lg hover:opacity-[1] hover:bg-gray-200 "
+                        >
+                            <FaArrowDown size={12} color="##354e8c" />
+                        </button>
+                        <button
                             onClick={() => moveSlide(-1, index)}
                             title="Move Up"
-                            className="absolute z-20 top-0 right-0 bg-white p-3 opacity-[0.3] rounded-lg hover:opacity-[1] hover:bg-gray-200 "
+                            className="absolute z-20 top-0 right-[13%] bg-white p-2 opacity-[0.3] rounded-lg hover:opacity-[1] hover:bg-gray-200 "
                         >
                             <FaArrowUp size={12} color="##354e8c" />
                         </button>
                         <button
-                            onClick={() => moveSlide(1, index)}
-                            title="Move Down"
-                            className="absolute z-20 top-0 right-[16%] bg-white p-3 opacity-[0.3] rounded-lg hover:opacity-[1] hover:bg-gray-200 "
+                            onClick={() => deleteSlide(index)}
+                            className="absolute z-20 top-0 right-0 bg-white p-2 opacity-[0.3] rounded-lg hover:opacity-[1] hover:bg-gray-200 "
                         >
-                            <FaArrowDown size={12} color="##354e8c" />
+                            <FaTrash size={12} color="red" />
                         </button>
                     </div>
                 ))}

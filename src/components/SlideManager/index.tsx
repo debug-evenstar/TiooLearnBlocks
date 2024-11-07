@@ -161,10 +161,13 @@ const SlideManager: FC<SlideManagerProps> = forwardRef(
         };
 
         const organizeSlide = (slide: any) => {
-            return [
-                ...slide.filter((c: any) => !c.abstract),
-                ...slide.filter((c: any) => !!c.abstract),
-            ];
+            if ( slide ) {
+                return [
+                    ...slide.filter((c: any) => !c.abstract),
+                    ...slide.filter((c: any) => !!c.abstract),
+                ];
+            }
+            return [];
         };
 
         // Core effects
