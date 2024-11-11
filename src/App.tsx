@@ -13,6 +13,7 @@ import {
 } from "./constants/library";
 import { ConfigureLibrary } from "setup";
 import Test from "pages/Test";
+import AssessmentPage from "pages/CBT/AssessmentPage";
 
 function App() {
   const datas = {
@@ -149,6 +150,9 @@ function App() {
             }
           />
           <Route path="/test" element={<Test/>}/>
+
+
+          <Route path="/cbt" element={<AssessmentPage/>} />
 
           <Route
             path="/study"
