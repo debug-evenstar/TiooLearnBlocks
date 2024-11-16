@@ -76,6 +76,8 @@ const RenderPreview: FC<{
         </div>
     );
 
+    
+
     useEffect(() => {
         if (contRef?.current || container?.current) {
             const containerRef = container?.current ?? contRef?.current;

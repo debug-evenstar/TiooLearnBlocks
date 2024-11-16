@@ -188,7 +188,7 @@ const EditorialComp: FC<Props> = ({
                         )}
 
                         {previewSlide && (
-                            <div className="fixed w-full h-screen flex justify-center items-center z-40 top-0 left-0">
+                            <div className="fixed w-full h-screen flex justify-center items-center z-50 top-0 left-0">
                                 <div className="w-full h-full bg-cover flex justify-center items-center">
                                     <div className="w-full h-full">
                                         <RenderPreview
