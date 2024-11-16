@@ -13,3 +13,4 @@ export declare class EventManager implements EventManagerInterface {
     emit(eventName: string, data: any): void;
     listen(eventName: string, callback: Function): void;
 }
+export declare const onKeyCombination: (element: HTMLElement, keys: string[], callback: Function) => void;
