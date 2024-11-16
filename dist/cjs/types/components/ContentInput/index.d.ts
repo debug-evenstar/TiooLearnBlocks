@@ -1,4 +1,4 @@
-import React from "react";
+import React, { KeyboardEventHandler } from "react";
 interface ContentInputProps {
     className?: string;
     placeholder?: string;
@@ -6,6 +6,7 @@ interface ContentInputProps {
     onChange?: Function;
     content?: any;
     ref: any;
+    onKeyDown?: KeyboardEventHandler;
 }
 declare const ContentInput: React.FC<ContentInputProps>;
 export default ContentInput;
