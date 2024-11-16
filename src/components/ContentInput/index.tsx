@@ -1,5 +1,12 @@
 import { padding } from "@mui/system";
-import React, { useEffect, useImperativeHandle, useState } from "react";
+import React, {
+    createRef,
+    KeyboardEventHandler,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from "react";
 
 interface ContentInputProps {
     className?: string;
@@ -8,6 +15,7 @@ interface ContentInputProps {
     onChange?: Function;
     content?: any;
     ref: any;
+    onKeyDown?: KeyboardEventHandler;
 }
 
 const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
@@ -18,12 +26,14 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
             disabled = false,
             content = "",
             onChange,
+            onKeyDown,
         },
         ref
     ) => {
         const [value, setValue] = useState<string>("");
         const [isEditing, setIsEditing] = useState<boolean>(false);
         const valueIsEmpty = () => value === "";
+        const containerRef = createRef<any>();
         const defaultContainerStyle: any = {
             display: "flex",
             flexDirection: "column",
@@ -69,11 +79,23 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
             }
         };
 
+        const updateValue = (newValue: string, isMath = false) => {
+            if (containerRef?.current) {
+                containerRef.current.innerHTML += isMath
+                    ? `<span contenteditable="false">${newValue}</span>`
+                    : newValue;
+            }
+            setValue(newValue);
+            onChange && onChange(newValue);
+        };
+
         useEffect(() => {
             content && setValue(content);
         }, [content]);
 
         useImperativeHandle(ref, () => ({
+            ...(containerRef ?? {}),
+            updateValue,
             value,
         }));
 
@@ -81,22 +103,27 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
             if (!disabled) {
                 setIsEditing(true);
             }
-        },[disabled])
+        }, [disabled]);
 
         return (
-            <div className={className + `${disabled && ' bg-gray-100 cursor-default'}`} style={defaultContainerStyle}>
+            <div
+                className={
+                    className + `${disabled && " bg-gray-100 cursor-default"}`
+                }
+                style={defaultContainerStyle}
+            >
                 <div
                     className={`content-input w-full h-full whitespace-nowrap overflow-x-scroll hide-scroll`}
                     style={editableContentStyle}
+                    ref={containerRef}
                     contentEditable={!disabled}
                     onInput={handleInput}
                     onClick={handleClickOutside}
-                    dangerouslySetInnerHTML={{ __html : content ?? ""}}
+                    dangerouslySetInnerHTML={{ __html: content ?? "" }}
+                    onKeyDown={onKeyDown}
                 ></div>
                 {placeholder && !isEditing && valueIsEmpty() && (
-                    <p 
-                        className="h-fit mt-auto mb-auto text-[#a9a9a9] absolute left-1 cursor-text"
-                    >
+                    <p className="h-fit mt-auto mb-auto text-[#a9a9a9] absolute left-1 cursor-text">
                         {placeholder}
                     </p>
                 )}

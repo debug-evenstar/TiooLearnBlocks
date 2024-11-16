@@ -1,3 +1,4 @@
+import { _getManager } from "apps/Editorial/Base/Manager";
 import ContentInput from "components/ContentInput";
 import React, { FC, useEffect, useRef, useState } from "react";
 import {
@@ -6,11 +7,14 @@ import {
     FaCheckCircle,
     FaEye,
     FaEyeSlash,
+    FaPercentage,
     FaPlusCircle,
+    FaSquareRootAlt,
     FaTimesCircle,
     FaTrash,
 } from "react-icons/fa";
 import GlobalResource from "services/api/resources/GlobalResource";
+import { onKeyCombination } from "utilities/event";
 
 interface Props {
     title: string;
@@ -54,6 +58,7 @@ const DataListManager: FC<Props> = ({
     const [isHidden, setIsHidden] = useState<boolean[]>(data.map(() => false));
     const DataTypes: string[] = [...Object.values(DataType)];
     const newItemRef = useRef<any>();
+    const manager = _getManager();
 
     const addNewItem = async () => {
         let title;
@@ -80,10 +85,31 @@ const DataListManager: FC<Props> = ({
 
     const titleIsUrl = (title: string) => title.includes("https://");
 
+    const handleMathInput = () => {
+        manager.event.emit("togglePlugin", {
+            name: "MathInput",
+            callback: (mathHtml: string) => {
+                newItemRef?.current?.updateValue &&
+                    newItemRef?.current?.updateValue(mathHtml, true);
+            },
+        });
+    };
+
     useEffect(() => {
         if (canToggle) {
             setIsHidden(toggleStates.map((t: boolean) => !t));
         }
+        // if (newItemRef.current) {
+        //     const element = newItemRef?.current?.current ?? newItemRef?.current; // Handle nested ref
+        //     onKeyCombination(element, ['meta','k'], () => {
+        //         manager.event.emit("togglePlugin", {
+        //             name: "MathInput",
+        //             callback: (mathHtml: string) => {
+        //                 newItemRef?.current?.updateValue && newItemRef?.current?.updateValue(mathHtml)
+        //             },
+        //         });
+        //     })
+        // }
     }, [toggleStates]);
 
     return (
@@ -226,6 +252,10 @@ const DataListManager: FC<Props> = ({
                                 <FaCheckCircle
                                     className="text-[16px] text-green-500 mr-1 cursor-pointer"
                                     onClick={() => addNewItem()}
+                                />
+                                <FaSquareRootAlt
+                                    className="text-[16px] text-blue-500 mr-1 cursor-pointer"
+                                    onClick={() => handleMathInput()}
                                 />
                                 <FaTimesCircle
                                     className="text-[16px] text-red-500 mr-1 cursor-pointer"
