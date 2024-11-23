@@ -10,6 +10,7 @@ import {
     resizeTipBoxes,
     handleSelectionChange,
     setCursorPosition,
+    appendInput,
 } from "./handler";
 import { CurrentStylesState } from "apps/Editorial/Base/StateInterface";
 import { InputInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
@@ -42,32 +43,6 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
         resizeTipBoxes(editableRef?.current);
     };
 
-    const appendInput = (data: {
-        input: InputInterface;
-        question: QuestionInterface;
-    }) => {
-        // Initialize editable if not initialized
-        initializeParentTag(editableRef, true);
-        const editableChildren = editableRef.current?.children;
-        const mainElement = editableChildren?.length
-            ? editableChildren[editableChildren.length - 1]
-            : null;
-        if (mainElement) {
-            const input = document.createElement("input");
-            input.setAttribute("data-link", "Questions");
-            input.setAttribute("data-hash", data.input.hash);
-            input.setAttribute("data-question-hash", data.question.hash);
-            if (data.question.type === QuestionTypes.Multichoice) {
-                input.setAttribute("disabled", "");
-            }
-            input.className = `w-[90px] relative left-[5px] mr-[10px]
-                 bg-white text-[16px] border-[0.5px] border-[#E5E5E5] 
-                 rounded-[8px] p-[5px] shadow-md shadow-[inset_0_0_6px_2px_rgba(155,41,178,0.6)]`;
-            mainElement.appendChild(input);
-            handleTextChange({ target: editableRef.current }, manager);
-        }
-    };
-
     const handleDragOver = (event: any, status: boolean) => {
         const element = event.target;
         const isDragAreaElement = () => element.getAttribute("id") == id;
@@ -85,7 +60,10 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                 questionHash: data.question.hash,
                 hash: data.input.hash,
             });
-            appendInput({ input: data.input, question: data.question });
+            appendInput(
+                { input: data.input, question: data.question },
+                editableRef
+            );
         }
         setIsDraggedOver(false);
     };
@@ -110,7 +88,6 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     }, [textareaRowCount, id, textValue, editableRef.current?.innerHTML]);
 
     useEffect(() => {
-
         // Receive math input data
         manager.event.listen("insertMath", (data: string) => {
             if (editableRef?.current) {
@@ -192,7 +169,10 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                     contentEditable={isEditable && active}
                     onInput={(e) => onChange(e)}
                     onChange={(e) => onChange(e)}
-                    onClick={(e) => !!(isEditable && active) && setCursorPosition(e.target, setLastCursorPosition)}
+                    onClick={(e) =>
+                        !!(isEditable && active) &&
+                        setCursorPosition(e.target, setLastCursorPosition)
+                    }
                     dangerouslySetInnerHTML={{ __html: textValue }}
                 />
                 {isDraggedOver && (
