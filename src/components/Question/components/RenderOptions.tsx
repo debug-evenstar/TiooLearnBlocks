@@ -110,6 +110,7 @@ const RenderOptions: FC<{
                     layout={option.layout ?? {}}
                     responsiveOptions={{
                         width: "auto",
+                        height : "auto",
                         minWidth: "120px",
                         minHeight: "50px",
                         margin: "5px 0px",
@@ -125,7 +126,7 @@ const RenderOptions: FC<{
                         className={
                             `${
                                 deviceWidth < 640
-                                    ? "h-full min-h-[50px] w-full"
+                                    ? "h-auto min-h-[50px] w-auto"
                                     : "w-full h-full"
                             } absolute border-[2px] inherit-font overflow-hidden
                                             border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md shadow ` +
