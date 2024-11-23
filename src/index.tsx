@@ -2,6 +2,8 @@
 // import ReactDOM from "react-dom/client";
 import "./index.css";
 import "katex/dist/katex.min.css"
+import { includeScript } from "utilities/dom";
+includeScript("https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js")
 // import App from "./App";
 // import reportWebVitals from "./reportWebVitals";
 // import store, { persistor } from "provider/store";
