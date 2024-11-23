@@ -34,6 +34,7 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
         const [isEditing, setIsEditing] = useState<boolean>(false);
         const valueIsEmpty = () => value === "";
         const containerRef = createRef<any>();
+        const [inputContent, setInputContent] = useState<string>("");
         const defaultContainerStyle: any = {
             display: "flex",
             flexDirection: "column",
@@ -47,7 +48,7 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
         };
         const handleInput = (event: any) => {
             setValue(event.target.innerHTML);
-            onChange && onChange(event.target.innerHTML);
+            onChange && onChange(event.target.innerHTML, false);
         };
 
         const handleClickOutside = () => {
@@ -109,6 +110,10 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
             }
         }, [disabled]);
 
+        useEffect(() => {
+            setInputContent(content);
+        },[]);
+
         return (
             <div
                 className={
@@ -123,7 +128,7 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
                     contentEditable={!disabled}
                     onInput={handleInput}
                     onClick={handleClickOutside}
-                    dangerouslySetInnerHTML={{ __html: content ?? "" }}
+                    dangerouslySetInnerHTML={{ __html: inputContent ?? "" }}
                     onKeyDown={onKeyDown}
                 ></div>
                 {placeholder && !isEditing && valueIsEmpty() && (
