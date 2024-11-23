@@ -34,6 +34,7 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
         const [isEditing, setIsEditing] = useState<boolean>(false);
         const valueIsEmpty = () => value === "";
         const containerRef = createRef<any>();
+        const [inputContent, setInputContent] = useState<string>("");
         const defaultContainerStyle: any = {
             display: "flex",
             flexDirection: "column",
@@ -47,7 +48,7 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
         };
         const handleInput = (event: any) => {
             setValue(event.target.innerHTML);
-            onChange && onChange(event.target.innerHTML);
+            onChange && onChange(event.target.innerHTML, false);
         };
 
         const handleClickOutside = () => {
@@ -80,13 +81,17 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
         };
 
         const updateValue = (newValue: string, isMath = false) => {
+            let valueToUpdate = "";
+            let currentValue = containerRef.current.innerHTML;
             if (containerRef?.current) {
-                containerRef.current.innerHTML += isMath
-                    ? `<span contenteditable="false">${newValue}</span>`
-                    : newValue;
+                valueToUpdate = isMath
+                    ? currentValue +
+                      `<span contenteditable="false">${newValue}</span>`
+                    : currentValue + newValue;
+                containerRef.current.innerHTML = valueToUpdate;
             }
-            setValue(newValue);
-            onChange && onChange(newValue);
+            setValue(valueToUpdate);
+            onChange && onChange(valueToUpdate);
         };
 
         useEffect(() => {
@@ -105,6 +110,10 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
             }
         }, [disabled]);
 
+        useEffect(() => {
+            setInputContent(content);
+        },[]);
+
         return (
             <div
                 className={
@@ -119,7 +128,7 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
                     contentEditable={!disabled}
                     onInput={handleInput}
                     onClick={handleClickOutside}
-                    dangerouslySetInnerHTML={{ __html: content ?? "" }}
+                    dangerouslySetInnerHTML={{ __html: inputContent ?? "" }}
                     onKeyDown={onKeyDown}
                 ></div>
                 {placeholder && !isEditing && valueIsEmpty() && (
