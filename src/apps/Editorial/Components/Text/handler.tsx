@@ -255,21 +255,30 @@ export const handleInsertMath = (mathHtml: string) => {
     const manager = _getManager();
     const textElement = manager.canvasManager.activeComponentElement();
     const editableArea = textElement.querySelector("div.editable-text");
+    const cursorPosition = editableArea.getAttribute("data-cursor-position");
     let updatedHtml;
+    let currentHtml = editableArea.innerHTML;
     // Assume existing text ends in closing </p> tag, insert into existing
-    let closing = editableArea.innerHTML.slice(-4);
-    if (closing === "</p>") {
-        updatedHtml =
-            editableArea.innerHTML.slice(0, -4) +
-            `<span contenteditable="false">${mathHtml}</span>` +
-            "</p>";
+    let closing = currentHtml.slice(-4);
+    // if (cursorPosition) {} // Come back to this later
+    if (currentHtml.includes('%%')) {
+        updatedHtml = currentHtml.replace(/(%%)/, `<span contenteditable="false">${mathHtml}</span>`);
     } else {
-        const parentTag = document.createElement("p");
-        setDefaultStyles(parentTag);
-        parentTag.innerHTML = `<span contenteditable="false">${mathHtml}</span>`;
-        updatedHtml = editableArea.innerHTML + parentTag.outerHTML;
+        if (closing === "</p>") {  
+            updatedHtml =
+                editableArea.innerHTML.slice(0, -4) +
+                `<span contenteditable="false">${mathHtml}</span>` +
+                "</p>";
+        } else {
+            const parentTag = document.createElement("p");
+            setDefaultStyles(parentTag);
+            parentTag.innerHTML = `<span contenteditable="false">${mathHtml}</span>`;
+            updatedHtml = editableArea.innerHTML + parentTag.outerHTML;
+        }
     }
 
+
+    
     // Send event to text component
     manager.event.emit("insertMath", updatedHtml);
     // Update in slide data
@@ -590,4 +599,17 @@ const startsWithHtmlTextTag = (text: string) => {
         /(<)([A-Za-z]+)(>)/.test(trimStart) ||
         /(<)([A-Za-z]+)(\/>)/.test(trimStart)
     );
+};
+
+export const setCursorPosition = (element: any, setter: Function) => {
+    setTimeout(() => {
+        const selection = document.getSelection();
+        if (selection && element.contentEditable) {
+            let _range = selection.getRangeAt(0);
+            let range = _range.cloneRange();
+            range.selectNodeContents(element);
+            range.setEnd(_range.endContainer, _range.endOffset);
+            setter(range.toString().length);
+        }
+    }, 200);
 };

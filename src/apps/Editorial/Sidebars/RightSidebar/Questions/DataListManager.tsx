@@ -30,6 +30,7 @@ interface Props {
     onToggle?: Function;
     toggleStates?: boolean[];
     max?: number;
+    enableMath?: boolean
 }
 
 enum DataType {
@@ -51,6 +52,7 @@ const DataListManager: FC<Props> = ({
     onToggle = () => {},
     toggleStates = [],
     max,
+    enableMath = false
 }) => {
     const [isListOpen, setIsListOpen] = useState<boolean>(false);
     const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
@@ -253,10 +255,10 @@ const DataListManager: FC<Props> = ({
                                     className="text-[16px] text-green-500 mr-1 cursor-pointer"
                                     onClick={() => addNewItem()}
                                 />
-                                <FaSquareRootAlt
+                                {enableMath && <FaSquareRootAlt
                                     className="text-[16px] text-blue-500 mr-1 cursor-pointer"
                                     onClick={() => handleMathInput()}
-                                />
+                                />}
                                 <FaTimesCircle
                                     className="text-[16px] text-red-500 mr-1 cursor-pointer"
                                     onClick={() => setIsAddingItem(false)}

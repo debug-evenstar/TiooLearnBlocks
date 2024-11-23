@@ -80,13 +80,17 @@ const ContentInput: React.FC<ContentInputProps> = React.forwardRef(
         };
 
         const updateValue = (newValue: string, isMath = false) => {
+            let valueToUpdate = "";
+            let currentValue = containerRef.current.innerHTML;
             if (containerRef?.current) {
-                containerRef.current.innerHTML += isMath
-                    ? `<span contenteditable="false">${newValue}</span>`
-                    : newValue;
+                valueToUpdate = isMath
+                    ? currentValue +
+                      `<span contenteditable="false">${newValue}</span>`
+                    : currentValue + newValue;
+                containerRef.current.innerHTML = valueToUpdate;
             }
-            setValue(newValue);
-            onChange && onChange(newValue);
+            setValue(valueToUpdate);
+            onChange && onChange(valueToUpdate);
         };
 
         useEffect(() => {

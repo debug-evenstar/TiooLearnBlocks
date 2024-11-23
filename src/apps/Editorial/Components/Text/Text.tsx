@@ -9,6 +9,7 @@ import {
     configureTipManager,
     resizeTipBoxes,
     handleSelectionChange,
+    setCursorPosition,
 } from "./handler";
 import { CurrentStylesState } from "apps/Editorial/Base/StateInterface";
 import { InputInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
@@ -24,6 +25,7 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
     const [textValue, setTextValue] = useState("");
     const [isDraggedOver, setIsDraggedOver] = useState<boolean>(false);
     const [isEditable, setIsEditable] = useState<boolean>(false);
+    const [lastCursorPosition, setLastCursorPosition] = useState<number>(0);
 
     const onChange = (event: any) => {
         handleTextChange(event, manager);
@@ -186,9 +188,11 @@ const Text: FC<CanvasText> = ({ id, manager, active, data }) => {
                     className={`editable-text w-full h-full outline-none resize-none no-scrollbar ${
                         (!isEditable || !active) && "cursor-move"
                     }`}
+                    data-cursor-position={lastCursorPosition}
                     contentEditable={isEditable && active}
                     onInput={(e) => onChange(e)}
                     onChange={(e) => onChange(e)}
+                    onClick={(e) => !!(isEditable && active) && setCursorPosition(e.target, setLastCursorPosition)}
                     dangerouslySetInnerHTML={{ __html: textValue }}
                 />
                 {isDraggedOver && (

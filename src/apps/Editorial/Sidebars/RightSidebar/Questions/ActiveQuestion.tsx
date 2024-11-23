@@ -666,6 +666,7 @@ const ActiveQuestion: FC<Props> = ({
                                     setOptionAsAnswer(item)
                                 }
                                 richText={true}
+                                enableMath={true}
                             />
                         </div>
                     </div>
