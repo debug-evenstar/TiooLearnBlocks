@@ -1,6 +1,8 @@
 import { ManagerInterface } from "apps/Editorial/Base/Manager";
 import { ComponentBaseDataInterface } from "components/interface";
 import { RefObject } from "react";
+import { InputInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/ActiveQuestion";
+import { QuestionInterface } from "apps/Editorial/Sidebars/RightSidebar/InactiveSidebar";
 interface TextComponentDataInterface extends ComponentBaseDataInterface {
     content: string;
     tips?: string[];
@@ -19,6 +21,10 @@ export declare const resizeBox: (editableRef: React.RefObject<HTMLDivElement>, v
 export declare const formatText: (type: TextFormatType, tag: string | HTMLElement, styles?: {
     [key: string]: string;
 } | undefined) => HTMLElement | undefined;
+export declare const appendInput: (data: {
+    input: InputInterface;
+    question: QuestionInterface;
+}, editableRef: any) => void;
 export declare const handleInsertMath: (mathHtml: string) => void;
 export declare const toggleList: (listType: string) => void;
 export declare const verifySelectionProperty: () => void;
@@ -30,4 +36,5 @@ export declare function removePx(value: string): string;
 export declare function selectNode(node: any): void;
 export declare function setState(key: string, data: any): void;
 export declare function cleanEmptyNodes(parent: HTMLElement): void;
+export declare const setCursorPosition: (element: any, setter: Function) => void;
 export {};

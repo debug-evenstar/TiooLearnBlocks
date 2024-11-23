@@ -13,6 +13,7 @@ interface Props {
     onToggle?: Function;
     toggleStates?: boolean[];
     max?: number;
+    enableMath?: boolean;
 }
 declare const DataListManager: FC<Props>;
 export default DataListManager;
