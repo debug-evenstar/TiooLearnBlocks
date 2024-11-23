@@ -1,170 +1,124 @@
 import katex from "katex";
-import { range } from "utilities/array";
-import { randomString } from "utilities/string";
+import MathStructure from "./MathStructure";
 
-type InputState = { activeInput: any; setActiveInput: Function };
+export type InputState = {
+    activeInput: any;
+    setActiveInput: Function;
+    inputData?: any;
+    setInputData?: Function;
+};
 
-export const processInputCharacter = (
-    expression: any,
-    index: number,
-    setList: Function,
+export type MathState = {
+    currentValue: any;
+    setCurrentValue: Function;
+    latexData: any;
+    setLatexData: Function;
+};
+export const processExpression = (
+    expression: string,
+    mathState: MathState,
     inputState: InputState
 ) => {
-    const base = expression;
-    const html = convertLatex(expression, index);
-    let inputs = base.matchAll(/(@[0-9])/g);
-    inputs = Array.from(inputs).map((a: any) => {
-        return a[0];
-    });
-    const converted = applyInputs([], base);
-    if (inputState.activeInput.current) {
-        const inputNode = inputState.activeInput.current;
-        inputNode.value += expression;
-        setTimeout(() => {
-            inputNode.focus();
-            handleInputChange(inputNode, setList);
-        }, 500);
+    if (inputState.activeInput) {
+        const inputNode = inputState.activeInput;
+        const parentStructure: MathStructure = mathState.latexData.find(
+            (mathStructure: MathStructure) => {
+                return (
+                    mathStructure.id ==
+                    inputNode.getAttribute("data-structure-id")
+                );
+            }
+        );
+        // Check if expression is single character input
+        if (expression.length == 1) {
+            // This check can be improved later
+            inputNode.innerHTML += expression;
+            parentStructure.appendToInputData(expression, inputNode.id);
+            setTimeout(() => {
+                inputNode.focus();
+                setCursor(inputNode);
+            }, 100);
+        } else {
+            const math = new MathStructure(
+                expression,
+                inputState,
+                parentStructure.level + 1
+            );
+            mathState.setLatexData((prev: any) => [...prev, math]);
+            parentStructure.appendToInputData(math, inputNode.id);
+            inputNode.innerHTML += `<span contenteditable="false">${math.extractDeepHtml()}</span>`;
+            setTimeout(() => {
+                inputNode.focus();
+                setCursor(inputNode);
+            }, 100);
+        }
         return;
     }
-    setList((prev: any) => {
-        return [...prev, { base, converted, html, inputs }];
-    });
+    const math = new MathStructure(expression, inputState);
+    mathState.setLatexData((prev: any) => [...prev, math]);
+    mathState.setCurrentValue((prev: string) => prev + math.toHtml());
 };
 
-export const convertLatex = (math: string, dataIndex: number, inputs: any = null) => {
-    var html = katex.renderToString(math, {
+const setCursor = (element: HTMLElement) => {
+    var range = document.createRange();
+    var sel: any = window.getSelection();
+    const lastNode: any = element.childNodes[element.childNodes.length - 1];
+    range.setStart(lastNode, lastNode.length);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+};
+
+export const extractFinalMath = (latexData: any[], level: number = 1) => {
+    let latexCode = "";
+    latexData
+        .filter((l: any) => l.level == 1)
+        .forEach((data: any) => {
+            if (data instanceof MathStructure) {
+                const math = data as MathStructure;
+                latexCode += math.fillInputSlots();
+            } else {
+                latexCode += data;
+            }
+        });
+    let html = katex.renderToString(latexCode, {
         throwOnError: false,
+        displayMode: false,
     });
-
-    if (inputs === false) {
-        return html;
-    }
-
-    html = replaceInputAreas(html, dataIndex, inputs);
-    return html;
+    return `<span contenteditable="false">${html}</span>`;
 };
 
-const generateInput = (
-    inputIndex: number,
-    dataIndex: number,
-    inputs: any[]
+export const registerInputHandlers = (
+    inputState: InputState,
+    mathState: MathState
 ) => {
-    const input = document.createElement("input");
-    const id = randomString(10);
-    input.className =
-        `math-input w-[16px] h-[16px] relative z-[10]
-        bg-white text-[14px] text-center text-black mx-auto 
-        my-[1px] border-[0.5px] !border-gray-500`;
-    input.id = id;
-    input.setAttribute("data-input-index", inputIndex.toString());
-    input.setAttribute("data-latex-index", dataIndex.toString());
-
-    if (
-        inputs &&
-        inputs[inputIndex] != null &&
-        !inputs[inputIndex].includes("@")
-    ) {
-        input.setAttribute("value", inputs[inputIndex]);
-    }
-    return input.outerHTML;
-};
-
-const replaceInputAreas = (
-    html: string,
-    dataIndex: number,
-    inputs: any = null
-) => {
-    html = html.replace(/(@)([0-9])/g, (match, s1, s2, offset, string) =>
-        generateInput(s2, dataIndex, inputs)
-    );
-    return html;
-};
-
-const applyInputs = (inputs: any[], latexCode: string) => {
-    latexCode = latexCode.replace(
-        /(@)([0-9])/g,
-        (match, s1, s2, string) => inputs[s2] ?? `${s1}${s2}`
-    );
-    return latexCode;
-};
-
-export const processMathValue = (
-    latexDataObject: {
-        base: string;
-        converted: string;
-        inputs: any[];
-        html: string;
-    },
-    index: number
-) => {
-    var latex = applyInputs(latexDataObject.inputs, latexDataObject.base);
-    latexDataObject.converted = latex;
-    const html = convertLatex(
-        latexDataObject.base,
-        index,
-        latexDataObject.inputs
-    );
-    latexDataObject.html = html;
-    return latexDataObject;
-};
-
-const handleInputBlur = (inputState: InputState) => {
-    return (event: any) => {
-        const input = event.target as HTMLInputElement;
+    (window as any).handleMathInput = (element: any, event: any) => {
+        const activeInput: any = document.activeElement;
+        const elementStructureId = element.getAttribute("data-structure-id");
+        const activeStructureId = activeInput.getAttribute("data-structure-id");
+        if (elementStructureId == activeStructureId) {
+            const math = mathState.latexData.find(
+                (m: MathStructure) => m.id == elementStructureId
+            );
+            if (math) {
+                math.appendToInputData(event.data, activeInput.id);
+            }
+        }
+    };
+    (window as any).handleMathInputFocus = (element: any, event: any) => {
+        inputState.setActiveInput(element);
+        element.setAttribute("oninput", "window.handleMathInput(this, event)");
+    };
+    (window as any).handleMathInputBlur = (element: any, event: any) => {
         setTimeout(() => {
             if (
-                inputState.activeInput.current &&
-                inputState.activeInput.current.id == input.id
+                document.activeElement !== element &&
+                !document.activeElement?.classList.contains("math-button") &&
+                !document.activeElement?.id.includes("input")
             ) {
                 inputState.setActiveInput(null);
-                input.removeEventListener("blur", handleInputBlur(inputState));
+                element.setAttribute("oninput", "null;");
             }
-        }, 300);
+        }, 100);
     };
-};
-
-const handleInputFocus = (inputState: InputState) => {
-    return (event: any) => {
-        const input = event.target;
-        inputState.setActiveInput(input);
-        input.addEventListener("blur", handleInputBlur(inputState));
-    };
-};
-
-const handleInputChange = (element: HTMLInputElement, setList: Function) => {
-    const value = element.value;
-    let dataIndex = element.getAttribute("data-latex-index") as string;
-    if (dataIndex) {
-        let inputIndex: number = parseInt(
-            element.getAttribute("data-input-index") as string
-        );
-        setList((prev: any) => {
-            return prev.map((data: any, index: number) => {
-                if (index == parseInt(dataIndex)) {
-                    const inputCount = data.inputs.length;
-                    data.inputs = range(inputCount).map((n: number) => {
-                        return n - 1 == inputIndex ? value : data.inputs[n - 1];
-                    });
-                    return data;
-                }
-                return data;
-            });
-        });
-    }
-};
-
-export const addInputEventHandlers = (
-    setList: Function,
-    inputState: InputState
-) => {
-    document.querySelectorAll(".math-input").forEach((node: any) => {
-        node.addEventListener("change", (event: any) => {
-            const element: HTMLInputElement = event.target;
-            handleInputChange(element, setList);
-            // setTimeout(() => {
-            //     addInputEventHandlers(setList, inputState);
-            // }, 500);
-        });
-        node.addEventListener("focus", handleInputFocus(inputState));
-    });
 };

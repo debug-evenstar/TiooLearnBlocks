@@ -7,6 +7,8 @@ import reportWebVitals from "./reportWebVitals";
 import store, { persistor } from "provider/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { includeScript } from "utilities/dom";
+includeScript("https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js")
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
