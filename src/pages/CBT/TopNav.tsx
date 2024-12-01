@@ -1,31 +1,57 @@
-import { useState } from "react";
+import { FC, useEffect, useState } from "react";
 import CountdownTimer from "./Countdown";
+import { SubjectLesson } from "./types";
 
-const TopNav = () => {
-  const subjects = ["Mathematitcs", "English", "Chemistry", "Physics"];
-  const [activeIndex, setActive] = useState(0);
-  const isActive = (index: number) => index === activeIndex;
+interface TopNavProps {
+  data: SubjectLesson[] | null;
+  setCurrent: any;
+}
+
+const TopNav: FC<TopNavProps> = ({ data, setCurrent }) => {
+  const [activeId, setActiveId] = useState(0);
+  const subjects = data?.map((i) => i.subject);
+  const isActive = (id: number) => id === activeId;
+
+  const handleSubjectClick = (id: number) => {
+    const target = data?.find((d) => d.subject.id == id);
+
+    setActiveId(id);
+    if (target) setCurrent(target);
+  };
+
+  useEffect(() => {
+    if (subjects && subjects.length) {
+      setActiveId(subjects[0].id);
+    }
+  }, [data]);
+
   return (
     <div className="relative w-full ">
       <div className="w-full sm:border-b items-center  h-[90px] px-5 sm:px-10 flex justify-between relative">
         <div className="flex items-end pb-2 gap-3 h-full">
           <ul className="flex items-center gap-x-12 ">
-            {subjects.map((subject: string, index: number) => (
+            {subjects?.map((item, idx: number) => (
               <li>
                 <button
-                  onClick={() => setActive(index)}
+                  onClick={() => handleSubjectClick(item.id)}
                   className={`${
-                    isActive(index) ? "bg-[#F9DAFF]" : "bg-white"
+                    isActive(item.id) ? "bg-[#F9DAFF]" : "bg-white"
                   } text-[13px] quicksand px-3 rounded-[27px] py-1 font-[600]`}
                 >
-                  {subject}
+                  {item.name}
                 </button>
               </li>
             ))}
           </ul>
         </div>
-        <div>
-          <CountdownTimer targetTime={3600} onTimeUp={() => console.log("timeup")}/>
+        <div className="flex items-center gap-2">
+          <CountdownTimer
+            targetTime={3600}
+            onTimeUp={() => console.log("timeup")}
+          />
+          <button className="bg-[#9C29B2] rounded-md px-3 font-semibold text-[20px] flex items-center gap-2 py-3 quicksand text-white">
+            Submit
+          </button>
         </div>
       </div>
     </div>

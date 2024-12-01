@@ -11,3 +11,5 @@ export const GET_TEXTBOOK_PROGRESS_URL = (
 ) => `library/textbooks/progress/${textbook_id}/${lesson_id}`;
 
 export const UPDATE_TEXTBOOK_PROGRESS_URL = () => `library/textbooks/progress`;
+
+export const GET_EXAM_SET_URL = (set_id: number) => `exam-set/${set_id}`;

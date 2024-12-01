@@ -57,7 +57,7 @@ const CountdownTimer: React.FC<CountdownProps> = ({ targetTime, onTimeUp }) => {
 
   if (!start) {
     return (
-      <button onClick={() => setStart(true)} className="bg-[#9C29B2] rounded-md px-3 flex items-center gap-4 py-3 quicksand text-white">
+      <button onClick={() => setStart(true)} className="bg-[#9C29B2] rounded-md px-3 flex items-center gap-2 py-3 quicksand text-white">
         <span className="inline-block text-[10px]">
           <svg
             width="34"

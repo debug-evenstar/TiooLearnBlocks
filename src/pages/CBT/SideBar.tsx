@@ -2,19 +2,33 @@ import logoImg from "../../img/logo.png";
 
 import LeftArrow from "FigmaIcons/LeftArrow";
 
-import { useState } from "react";
+import { FC, useState } from "react";
 import { BiLeftArrow } from "react-icons/bi";
 
-const QuestionNav = () => {
+const QuestionNav: FC<any> = ({
+  lesson,
+  setActiveSlide,
+  activeSlide,
+  onItemClick,
+}) => {
+  const slidesCount = lesson?.lesson_slides.length;
+
+  const isActive = (index: number) => activeSlide == index;
+
   return (
     <>
       <p>Question Navigation</p>
       <ul className="grid-cols-8 grid gap-1 mt-3 w-full">
-        {Array(23)
+        {Array(slidesCount)
           .fill(null)
           .map((_, i: number) => (
             <li>
-              <button className="px-1 flex items-center justify-center py-2 focus:border-purple-400 outline-none border w-[30px] h-[30px] rounded-md text-sm">
+              <button
+                onClick={() => onItemClick(i)}
+                className={`px-1 flex items-center justify-center py-2 focus:border-purple-400 outline-none border w-[30px] h-[30px] rounded-md text-sm
+                    ${isActive(i) ? "bg-green-700 text-white" : ""}
+                  `}
+              >
                 {i + 1}
               </button>
             </li>
@@ -24,12 +38,22 @@ const QuestionNav = () => {
   );
 };
 
-const SideBar = () => {
+const SideBar: FC<any> = ({
+  lesson,
+  subject,
+  setActiveSlide,
+  activeSlide,
+  slideManagerRef,
+}) => {
   const [sideBarOpen, setSideBarOpen] = useState(true);
 
   const close = () => setSideBarOpen(false);
 
-  const enableAnswers = false;
+  const handleSetSlide = (index: number) => {
+    slideManagerRef?.current.navigator(0, index);
+  };
+
+
   const getClassName = () =>
     sideBarOpen
       ? `w-0 sm:w-[390px] fixed sm:relative ease-in-out relative duration-1000 transition-all overflow-y-auto max-h-screen h-screen`
@@ -59,10 +83,10 @@ const SideBar = () => {
                     <b>Student's Name:</b>
                     <span> Praxeum Ani</span>
                   </li>
-                  <li className="">
+                  {/* <li className="">
                     <b>Subject:</b>
-                    <span> Mathematics</span>
-                  </li>
+                    <span>{subject.name}</span>
+                  </li> */}
                   <li className="">
                     <b>Exam Title: </b>
                     <span> JAMB</span>
@@ -70,14 +94,16 @@ const SideBar = () => {
                 </ul>
                 <p className="mt-8">
                   <span>Current Subject: </span>
-                  <b>Mathematics</b>
+                  <b>{subject?.name}</b>
                 </p>
               </div>
               <div className="mt-5 w-full">
-                <QuestionNav />
-                <button disabled={!enableAnswers} className={`${ enableAnswers ? "text-[#9C29B2] border-[#9C29B2]":"bg-[#A9A9A9] text-white"} px-4  border mt-4 text-sm py-1 rounded-full`}>
-                  See your answers
-                </button>
+                <QuestionNav
+                  onItemClick={handleSetSlide}
+                  lesson={lesson}
+                  activeSlide={activeSlide}
+                  setActiveSlide={setActiveSlide}
+                />
               </div>
             </div>
           </div>

@@ -1,15 +1,43 @@
-import submitImg from './submit.png';
-import submitDisImg from './submit-disabled.png';
+import nextImg from "./assets/next-main.png";
+import prevImg from "./assets/previous-main.png";
+import { FC } from "react";
 
+interface FooterProps {
+  canProceed: boolean;
+  setCanProceed: Function;
+  sliderRef: any;
+  hasPrevious: boolean;
+}
 
-const Footer = () => {
+const Footer: FC<FooterProps> = ({ canProceed, hasPrevious, setCanProceed, sliderRef }) => {
 
-  const allowSubmit = false;
+  const handleNextClick = () => {
+    sliderRef && sliderRef.current && sliderRef.current?.handleContinue();
+  };
+  const handlePrevClick = () => {
+    sliderRef && sliderRef.current && sliderRef.current?.handlePrevious();
+  };
+
   return (
-    <div className="w-full h-[90px] border-t px-5 sm:px-10 flex shrink-0 justify-end items-center relative">
-      <button disabled={!allowSubmit}>
-        <img src={allowSubmit ? submitImg : submitDisImg} alt="" className="w-[11rem]" />
-      </button>
+    <div className="w-full h-[90px] border-t px-5 sm:px-10 flex shrink-0 justify-between items-center relative">
+      <div>
+        { hasPrevious && 
+          <button className="outline-none" onClick={handlePrevClick}>
+            <img src={prevImg} alt="" className="w-[11rem]" />
+          </button>
+        }
+      </div>
+      <div>
+        {canProceed && (
+          <button
+            className="outline-none"
+            disabled={!canProceed}
+            onClick={handleNextClick}
+          >
+            <img src={nextImg} alt="" className="w-[11rem]" />
+          </button>
+        )}
+      </div>
     </div>
   );
 };

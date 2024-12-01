@@ -57,7 +57,7 @@ function App() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
 
       if (!data.error) {
@@ -68,7 +68,7 @@ function App() {
       console.error("Error fetching data:", error);
     }
   };
-  
+
   const fetchTextbook = async () => {
     const textbook_id = process.env.REACT_APP_TEXTBOOK_ID;
     try {
@@ -111,23 +111,22 @@ function App() {
     },
   };
 
-
-
   const handleBack = () => {
     // navigate('/')
   };
-
 
   useEffect(() => {
     ConfigureLibrary.save({
       baseUrl: "http://192.168.79.222:8085",
       token: process.env.REACT_APP_API_TOKEN ?? "",
-      authType: "student"
+      authType: "student",
     });
   }, []);
 
-  const lesson_index = (Number.parseInt(`${process.env.REACT_APP_LESSON_INDEX}`) ?? 0);
-  const chapter_index = Number.parseInt(`${process.env.REACT_APP_CHAPTER_INDEX}`) ?? 0;
+  const lesson_index =
+    Number.parseInt(`${process.env.REACT_APP_LESSON_INDEX}`) ?? 0;
+  const chapter_index =
+    Number.parseInt(`${process.env.REACT_APP_CHAPTER_INDEX}`) ?? 0;
 
   return (
     <div>
@@ -149,21 +148,26 @@ function App() {
               />
             }
           />
-          <Route path="/test" element={<Test/>}/>
+          <Route path="/test" element={<Test />} />
 
-
-          <Route path="/cbt" element={<AssessmentPage/>} />
+          <Route path="/cbt" element={<AssessmentPage set_id={1} />} />
 
           <Route
             path="/study"
             element={
-              bookData ? <LessonPage
-                textbook={bookData}
-                chapters={bookData.chapters}
-                lesson={bookData.chapters[chapter_index]?.lessons[lesson_index]}
-                retake={false}
-                back={() => console.log("back")}
-              /> : <></>
+              bookData ? (
+                <LessonPage
+                  textbook={bookData}
+                  chapters={bookData.chapters}
+                  lesson={
+                    bookData.chapters[chapter_index]?.lessons[lesson_index]
+                  }
+                  retake={false}
+                  back={() => console.log("back")}
+                />
+              ) : (
+                <></>
+              )
             }
           />
         </Routes>
