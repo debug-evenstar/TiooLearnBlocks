@@ -85,7 +85,7 @@ export const extractFinalMath = (latexData: any[], level: number = 1) => {
         throwOnError: false,
         displayMode: false,
     });
-    return `<span contenteditable="false">${html}</span>`;
+    return `<span class="latex-math" contenteditable="false" data-latex-code="${latexCode}">${html}</span>`;
 };
 
 export const registerInputHandlers = (

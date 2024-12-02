@@ -34,7 +34,6 @@ const ActiveEditSlide: FC<Props> = ({
 }) => {
     const [activeSlide, setActiveSlide] = useState<any[]>([]);
     const [isSaving, setIsSaving] = useState<boolean>(false);
-    const pluginRef = useRef<any>(null);
 
     const saveSlide = () => {
         const slideId: number = data.lesson_slides[active]?.id ?? null;
@@ -67,12 +66,6 @@ const ActiveEditSlide: FC<Props> = ({
         setActiveSlide(slides[active]);
     }, [slides[active]]);
 
-    useEffect(() => {
-        // Event Listeners
-        manager.event.listen("togglePlugin", (data : { name : string, callback : Function}) => {
-            pluginRef.current && pluginRef.current.togglePlugin(data.name, data.callback);
-        });
-    }, [manager]);
 
     return (
         <div>
@@ -100,16 +93,6 @@ const ActiveEditSlide: FC<Props> = ({
                 </div>
                 <div className="pb-16"></div>
             </div>
-
-            <SetupPlugins
-                ref={pluginRef}
-                plugins={[
-                    {
-                        name: "MathInput",
-                        element: (props: any) => <MathInput {...props} />,
-                    },
-                ]}
-            />
         </div>
     );
 };

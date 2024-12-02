@@ -43,11 +43,12 @@ export interface QuestionInterface {
     optionType: OptionTypes;
     options?: OptionInterface[];
     inputs?: InputInterface[];
-    answer? : string;
-    feedback? : Feedback;
+    answer?: string;
+    feedback?: Feedback;
     topics?: any[];
     useOptionLayout?: boolean;
     layoutBoxConfig?: any;
+    explanation? : string | string[];
 }
 
 const InactiveSidebar: FC<Props> = ({
@@ -70,7 +71,9 @@ const InactiveSidebar: FC<Props> = ({
         "Dual Choice",
     ];
 
-    const [activeSlideData, setActiveSlideData] = useState<any>( slides && slides[activeSlide]);
+    const [activeSlideData, setActiveSlideData] = useState<any>(
+        slides && slides[activeSlide]
+    );
     const [comps, setComps] = useState<any[]>();
     const [activeQuestion, setActiveQuestion] = useState<any>(null);
     const scrRef = useRef<any>(null);
@@ -159,7 +162,7 @@ const InactiveSidebar: FC<Props> = ({
             } as any;
             if (existing.length) {
                 const questionIndex = updated.indexOf(existing[0]);
-                if (questionsData.data.length == 0){
+                if (questionsData.data.length == 0) {
                     updated.splice(questionIndex, 1);
                 } else {
                     updated[questionIndex] = questionsData;
@@ -171,6 +174,10 @@ const InactiveSidebar: FC<Props> = ({
             manager.canvasManager.updateSlides();
         }
     };
+
+    const hasSavedExplanation = () => {
+        return questions.length && questions[0].explanation;
+    }
 
     useEffect(() => {
         getActiveComps();
@@ -196,10 +203,9 @@ const InactiveSidebar: FC<Props> = ({
 
     useEffect(() => {
         if (slides[activeSlide]) {
-            setActiveSlideData([...slides[activeSlide]])
+            setActiveSlideData([...slides[activeSlide]]);
         }
-    },[slides, activeSlide]);
-
+    }, [slides, activeSlide]);
 
     const Item = () => {
         const [isOpen, setIsOpen] = useState(true);
@@ -322,6 +328,26 @@ const InactiveSidebar: FC<Props> = ({
                                 onToggle={toggleQuestion}
                                 toggleStates={questionToggleStates}
                             />
+                            <div className="px-2 mt-[15px]">
+                                <button
+                                    className={
+                                        "w-full text-white text-[14px] px-3 py-1 rounded-[5px] bg-green-500"
+                                    }
+                                    onClick={() => {
+                                        manager.event.emit("togglePlugin", {
+                                            name: "QuestionManager",
+                                            props: {
+                                                slide: manager.lesson.lesson_slides[activeSlide],
+                                                questions,
+                                                updateSlideQuestions
+                                            },
+                                            callback: () => {},
+                                        });
+                                    }}
+                                >
+                                    {hasSavedExplanation() ? 'Edit Explanation' : 'Generate Explanation'}
+                                </button>
+                            </div>
                         </div>
                     )}
                     {activeQuestion && (

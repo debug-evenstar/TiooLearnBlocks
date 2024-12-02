@@ -15,6 +15,7 @@ const SetupPlugins: FC<{
             return prev;
         }, {})
     );
+    const [props, setProps] = useState<any>({});
     const [callbacks, setCallbacks] = useState<any>({});
 
     const togglePluginState = (pluginName: string) => {
@@ -28,8 +29,9 @@ const SetupPlugins: FC<{
     };
 
     useImperativeHandle(ref, () => ({
-        togglePlugin(pluginName: string, callback: Function = () => {}) {
+        togglePlugin(pluginName: string, props: any, callback: Function = () => {}) {
             togglePluginState(pluginName);
+            setProps((prev: any) => ({ ...prev, [pluginName]: {...props} }));
             setCallbacks((prev: any) => ({ ...prev, [pluginName]: callback }));
         },
     }));
@@ -45,6 +47,7 @@ const SetupPlugins: FC<{
                             <PluginElement
                                 close={() => togglePluginState(pluginName)}
                                 callback={callbacks[pluginName] ?? (() => {})}
+                                {...props[pluginName]}
                             />
                         )}
                     </>

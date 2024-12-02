@@ -12,6 +12,7 @@ import {
     FaFill,
     FaStar,
     FaStickyNote,
+    FaTrash,
 } from "react-icons/fa";
 import { ComponentLayoutInterface } from "components/interface";
 import OptionSideModal from "./OptionSideModal";
@@ -95,6 +96,7 @@ const ActiveQuestion: FC<Props> = ({
     const [isUsingLayout, setIsUsingLayout] = useState<boolean>(false);
     const [isEditingAnswer, setIsEditingAnswer] = useState<boolean>(false);
     const [answer, setAnswer] = useState<string>("");
+    const [prompterIsOpen, setPrompterIsOpen] = useState<boolean>(false);
     const answerInputRef: React.RefObject<any> = createRef();
     const [optionLayoutSettings, setOptionLayoutSettings] =
         useState<OptionLayoutInterface>({
@@ -213,8 +215,21 @@ const ActiveQuestion: FC<Props> = ({
     };
 
     const linkTopic = (topic: any) => {
-        setLinkedTopics((prev: any) => [...prev, topic]);
+        updateQuestion(question, {
+            topics: [...(question.topics ?? []), topic],
+        });
+        // setLinkedTopics((prev: any) => [...prev, topic]);
         setTopicSearchValue("");
+    };
+
+    const unlinkTopic = (topic: any) => {
+        updateQuestion(question, {
+            topics: [
+                ...(question.topics ?? []).filter(
+                    (t: any) => t.id !== topic.id
+                ),
+            ],
+        });
     };
 
     const loadTopics = async () => {
@@ -222,11 +237,16 @@ const ActiveQuestion: FC<Props> = ({
         if (subjectId) {
             const topics = await QuestionsResource.getTopics(subjectId);
             setSubjectTopics(topics.data);
-            if (question.topics && question.topics.length) {
+            if (question.topics) {
                 setLinkedTopics(
-                    topics.data.filter((topic: any) =>
-                        question.topics?.includes(topic.id)
-                    )
+                    question.topics.length
+                        ? topics.data.filter(
+                              (topic: any) =>
+                                  !!question.topics?.find(
+                                      (t: any) => t.id == topic.id
+                                  )
+                          )
+                        : []
                 );
             }
         }
@@ -343,7 +363,7 @@ const ActiveQuestion: FC<Props> = ({
             prev[questionIndex] = question;
             return [...prev];
         });
-    }, [linkedTopics, questionQuery.previous, isUsingLayout]);
+    }, [questionQuery.previous, isUsingLayout]);
 
     useEffect(() => {
         manager.event.listen("linkQuestionInput", (data: any) => {
@@ -805,9 +825,15 @@ const ActiveQuestion: FC<Props> = ({
                             return (
                                 <p
                                     key={topic.name}
-                                    className="px-[3px] py-[2px] rounded-[6px] border-[#e1deff] border-[2px] text-center text-[12px]"
+                                    className="relative group px-[3px] py-[2px] rounded-[6px] border-[#e1deff] border-[2px] text-center text-[12px]"
                                 >
                                     {topic.name}
+                                    <button
+                                        onClick={() => unlinkTopic(topic)}
+                                        className="absolute h-full z-20 top-0 right-0 bg-white p-1 opacity-[0] rounded-[6px] group-hover:opacity-[1] hover:opacity-[1] hover:bg-gray-200 "
+                                    >
+                                        <FaTrash size={12} color="red" />
+                                    </button>
                                 </p>
                             );
                         })}

@@ -121,7 +121,7 @@ function App() {
     ConfigureLibrary.save({
       baseUrl: "http://192.168.79.222:8085",
       token: process.env.REACT_APP_API_TOKEN ?? "",
-      authType: "student"
+      authType: "admin"
     });
   }, []);
 
