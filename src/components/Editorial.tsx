@@ -1,4 +1,4 @@
-import EditorialComp from "pages/editorial";
+import EditorialComp from "apps/Editorial/Pages";
 import { FC, useState } from "react";
 interface UserProps {
   name: string;
