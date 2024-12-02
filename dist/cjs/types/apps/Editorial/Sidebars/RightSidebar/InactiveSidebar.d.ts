@@ -26,6 +26,7 @@ export interface QuestionInterface {
     topics?: any[];
     useOptionLayout?: boolean;
     layoutBoxConfig?: any;
+    explanation?: string | string[];
 }
 declare const InactiveSidebar: FC<Props>;
 export default InactiveSidebar;
