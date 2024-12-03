@@ -12,7 +12,7 @@ export const triggerFeedback = (
 ) => {
     if (initiator.feedback && lessonContext) {
         const feedback = initiator.feedback;
-        lessonContext.feedbackRef.current.showFeedback(
+        lessonContext.feedbackRef.current?.showFeedback(
             feedback.title,
             feedback.content,
             (initiator as OptionInterface).isAnswer ||

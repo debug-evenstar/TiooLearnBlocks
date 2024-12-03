@@ -58,6 +58,7 @@ export interface LessonSlideProps {
     navigationHandles: NavigationHandles;
     slides: any[];
     stateActions: LessonStateActions;
+    answerActions?: any;
 }
 
 export default function LessonLayout({

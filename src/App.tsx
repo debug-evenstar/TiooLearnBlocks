@@ -13,7 +13,7 @@ import {
 } from "./constants/library";
 import { ConfigureLibrary } from "setup";
 import Test from "pages/Test";
-import AssessmentPage from "pages/CBT/AssessmentPage";
+import AssessmentPage from "pages/CBT";
 
 function App() {
   const datas = {
@@ -117,7 +117,7 @@ function App() {
 
   useEffect(() => {
     ConfigureLibrary.save({
-      baseUrl: "http://192.168.79.222:8085",
+      baseUrl: "http://localhost:8085",
       token: process.env.REACT_APP_API_TOKEN ?? "",
       authType: "student",
     });
@@ -150,7 +150,17 @@ function App() {
           />
           <Route path="/test" element={<Test />} />
 
-          <Route path="/cbt" element={<AssessmentPage set_id={1} />} />
+          <Route
+            path="/cbt"
+            element={
+              <AssessmentPage
+                duration={10} // in minutes
+                goHome={() => alert("going home")}
+                goBack={() => console.log("back")}
+                set_id={1}
+              />
+            }
+          />
 
           <Route
             path="/study"

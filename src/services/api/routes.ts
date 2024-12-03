@@ -12,4 +12,6 @@ export const GET_TEXTBOOK_PROGRESS_URL = (
 
 export const UPDATE_TEXTBOOK_PROGRESS_URL = () => `library/textbooks/progress`;
 
-export const GET_EXAM_SET_URL = (set_id: number) => `exam-set/${set_id}`;
+export const GET_EXAM_SET_URL = (set_id: number | string) => `exam-set/${set_id}`;
+
+export const SAVE_EXAM_SESSION = (set_id: number | string) => `exams/session/${set_id}`
