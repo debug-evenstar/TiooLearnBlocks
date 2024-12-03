@@ -38,6 +38,7 @@ const QuestionManager: FC<Props> = ({
     const [isEditable, setIsEditable] = useState<boolean>(false);
     const [contentEdit, setContentEdit] = useState<string>("");
     const chatRef = useRef<any>();
+    const manager = _getManager();
     const promptAI = async () => {
         setIsLoading(true);
         const updatedConversation: any = [
@@ -129,6 +130,37 @@ const QuestionManager: FC<Props> = ({
         return questions.length ? contentEdit ? contentEdit : questions[0].explanation : "";
     };
 
+    const handleInsertMath = (mathHtml : string) => {
+        let currentHtml = "";
+        let updatedHtml = "";
+        if (contentEdit) {
+            currentHtml = contentEdit;
+        }
+        let closing = currentHtml.slice(-4);
+        if (currentHtml.includes("%%")) {
+            updatedHtml = currentHtml.replace(
+                /(%%)/,
+                `<span contenteditable="false">${mathHtml}</span>`
+            );
+        } else {
+            if (closing === "</p>") {
+                updatedHtml =
+                    currentHtml.slice(0, -4) +
+                    `<span contenteditable="false">${mathHtml}</span>` +
+                    "</p>";
+            } else {
+                const parentTag = document.createElement("p");
+                parentTag.innerHTML = `<span contenteditable="false">${mathHtml}</span>`;
+                updatedHtml = currentHtml + parentTag.outerHTML;
+            }
+        }
+        setContentEdit(updatedHtml);
+        setMessages((prev:any) => {
+            prev[prev.length - 1].content = updatedHtml;
+            return [...prev];
+        });
+    }
+
     useEffect(() => {
         if (questions.length && questions[0].explanation) {
             setMessages([
@@ -148,7 +180,7 @@ const QuestionManager: FC<Props> = ({
         setIsEditable(false);
         setContentEdit("");
     },[messages]);
-    
+
     return (
         <div className="w-screen h-screen absolute top-0 left-0 z-[30] flex justify-center items-center">
             <div className="overlay absolute w-full h-full bg-black opacity-[0.4]"></div>
@@ -195,7 +227,7 @@ const QuestionManager: FC<Props> = ({
                                                 </button>
                                             )}
                                     </div>
-                                    <div className="px-[5px] h-full flex items-center">
+                                    <div className="px-[5px] h-full flex flex-col items-center">
                                         <button
                                             disabled={
                                                 index <
@@ -219,6 +251,20 @@ const QuestionManager: FC<Props> = ({
                                                 ? "Saved"
                                                 : "Save"}
                                         </button>
+                                        {isEditable &&
+                                            index ==
+                                                assistantMessages().length -
+                                                    1 && <button
+                                            className={`p-2 rounded-r-md bg-blue-400 text-white mt-2`}
+                                            onClick={() =>
+                                                manager.event.emit("togglePlugin", {
+                                                    name: "MathInput",
+                                                    callback: handleInsertMath,
+                                                })
+                                            }
+                                        >
+                                            Math
+                                        </button>}
                                     </div>
                                 </div>
                             ))}

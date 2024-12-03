@@ -37,7 +37,7 @@ const MathInput: FC<{ close: Function; callback: Function }> = ({
     }, [latexData]);
 
     return (
-        <div className="absolute w-screen h-screen z-[30] top-0">
+        <div className="absolute w-screen h-screen z-[31] top-0">
             <div className="w-screen h-screen absolute bg-black opacity-[0.7] top-0"></div>
             <div className="w-[100%] absolute top-[100px] h-auto p-3">
                 <div className="w-[60%] bg-white mx-auto border-[1px] rounded-t-md">
