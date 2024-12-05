@@ -97,7 +97,7 @@ const SlideContainer: FC<SlideContainerProps> = forwardRef(
       />
     );
     return (
-      <div className="flex h-full grow overflow-y-auto pt-4">
+      <div className="flex h-full grow overflow-y-auto pt-8 relative">
         <LessonContext.Provider
           value={{
             lesson,
