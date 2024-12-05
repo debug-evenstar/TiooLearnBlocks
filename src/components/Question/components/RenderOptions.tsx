@@ -41,7 +41,7 @@ const RenderOptions: FC<{
     if (selectedOptions.includes(option.hash)) {
       if (isAssessment) {
         // highlight whatever the person picks in assessment mode as the answer
-        return "cursor-pointer shadow-[0_0_6px_2px_rgba(155,41,178,0.6)] cursor-pointer";
+        return "cursor-pointer shadow-[0_0_6px_2px_rgba(155,41,178,0.6)] border-2 border-[#9B29B299] cursor-pointer";
       }
       if (locked.map((o: OptionInterface) => o.hash).includes(option.hash))
         return "bg-[#2D6A4F] text-white cursor-pointer";
