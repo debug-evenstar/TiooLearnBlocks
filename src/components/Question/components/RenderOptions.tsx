@@ -48,13 +48,13 @@ const RenderOptions: FC<{
       if (option.isAnswer) {
         return "bg-[#2C7721] text-white cursor-pointer";
       }
-      return "bg-[#FC8B52] text-white cursor-pointer";
+      return "bg-[#FC8B52]  text-white cursor-pointer";
     }
-    // if (!isAssessment) {
+    if (!isAssessment) {
       if (answered.length > questionIndex)
         return "bg-gray-100 text-gray-300 cursor-not-allowed";
       return "cursor-pointer";
-    // }
+    }
   };
 
   const processAssesmentAnswer = (option: OptionInterface) => {
@@ -143,7 +143,8 @@ const RenderOptions: FC<{
                   ? "h-auto min-h-[50px] w-auto"
                   : "w-full h-full"
               } absolute border-[2px] inherit-font overflow-hidden
-                                            border-[#E5E5E5] rounded-[10px] p-[5px] shadow-md ` +
+                  border-[#E5E5E5] rounded-[10px] p-[5px] ` +
+              (!isAssessment ? "shadow-md " : "") + // Exclude shadow-md in assessment mode
               optionColor(option, questionIndex) +
               ` ` +
               showOptionShadow(questionIndex)
