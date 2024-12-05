@@ -1,4 +1,4 @@
-import react, { FC } from 'react';
+import React, { FC } from 'react';
 import { ButtonGroupData as ButtonGroupData$1 } from 'components/ButtonGroup/handler';
 import { FlashCardData as FlashCardData$1 } from 'components/FlashCards/handler';
 import { GridStepsData as GridStepsData$1 } from 'components/GridSteps/handler';
@@ -87,12 +87,12 @@ declare const ButtonGroupComponent: FC<ButtonGroupProps>;
 
 interface ButtonProps {
     title: string | JSX.Element;
-    onClick?: react.MouseEventHandler<HTMLButtonElement> | undefined;
+    onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
     disabled?: boolean;
     index: number;
     status?: string;
 }
-declare const ButtonComponent: react.FC<ButtonProps>;
+declare const ButtonComponent: React.FC<ButtonProps>;
 
 interface FlashCardData {
     component: string;
@@ -127,7 +127,7 @@ interface OptionsComponentProps {
     slide: LessonSlideInterface;
 }
 
-declare const OptionsComponent: react.FC<OptionsComponentProps>;
+declare const OptionsComponent: React.FC<OptionsComponentProps>;
 
 interface TextStyles {
     color?: string;
@@ -216,7 +216,7 @@ interface GridStepsComponentProps {
     slide: LessonSlideInterface$1;
 }
 
-declare const GridSteps: react.FC<GridStepsComponentProps>;
+declare const GridSteps: React.FC<GridStepsComponentProps>;
 
 interface PrefaceData {
     component: string;
@@ -240,6 +240,14 @@ interface PostfaceComponentProps {
 
 declare const PostfaceComponent: FC<PostfaceComponentProps>;
 
+interface AssessmentPageProps {
+    set_id: string | number;
+    goHome: Function;
+    goBack: Function;
+    duration: number;
+}
+declare const AssessmentPage: React.FC<AssessmentPageProps>;
+
 interface LessonPageProps {
     textbook: any;
     chapters: any;
@@ -259,4 +267,4 @@ declare const Configuration: {
     load(): ConfigurationOptions | null;
 };
 
-export { ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Configuration as ConfigureLibrary, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, LessonPage, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };
+export { AssessmentPage, ButtonComponent as Button, ButtonGroupComponent as ButtonGroup, Configuration as ConfigureLibrary, Editorial, FlashCardsComponent as FlashCards, GridSteps, ImageComponent as Image, LessonPage, OptionsComponent as Options, PostfaceComponent as Postface, PrefaceComponent as Preface, SlideManager, SliderComponent as Slider, TextComponent as Text, VideoComponent as Video, WordMatchComponent as WordMatch };

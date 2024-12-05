@@ -2,6 +2,7 @@
 // import ReactDOM from "react-dom/client";
 import "./index.css";
 import "katex/dist/katex.min.css"
+import AssessmentPage from "pages/CBT";
 import { includeScript } from "utilities/dom";
 // import App from "./App";
 // import reportWebVitals from "./reportWebVitals";
