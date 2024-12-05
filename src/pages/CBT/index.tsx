@@ -10,7 +10,6 @@ import { OptionInterface } from "apps/Editorial/Sidebars/RightSidebar/Questions/
 import SlideContainer from "./components/SlideContainter";
 import AssessmentResult from "./AssessmentResult";
 
-
 interface MainProps {
   children: React.ReactNode;
 }
@@ -169,7 +168,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
       score: total,
     };
 
-    const result = { ...payload, answers: answers}
+    const result = { ...payload, answers: answers };
 
     // Uncomment this to save the session when ready
     GlobalResource.saveExamSession(examSetData.id, payload)
@@ -235,6 +234,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
               }}
             />
             <Footer
+              hasNext={activeSlide < current?.lesson.lesson_slides?.length - 1}
               sliderRef={sliderRef}
               canProceed={canProceed}
               hasPrevious={activeSlide > 0}

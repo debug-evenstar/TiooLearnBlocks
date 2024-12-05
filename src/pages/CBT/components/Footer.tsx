@@ -6,9 +6,10 @@ interface FooterProps {
   canProceed: boolean;
   sliderRef: any;
   hasPrevious: boolean;
+  hasNext: boolean;
 }
 
-const Footer: FC<FooterProps> = ({ canProceed, hasPrevious, sliderRef }) => {
+const Footer: FC<FooterProps> = ({ canProceed,hasNext, hasPrevious, sliderRef }) => {
 
   const handleNextClick = () => {
     sliderRef && sliderRef.current && sliderRef.current?.handleContinue();
@@ -27,7 +28,7 @@ const Footer: FC<FooterProps> = ({ canProceed, hasPrevious, sliderRef }) => {
         }
       </div>
       <div>
-        {canProceed && (
+        {canProceed && hasNext && (
           <button
             className="outline-none active:scale-95"
             disabled={!canProceed}
