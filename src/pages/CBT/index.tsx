@@ -116,12 +116,12 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
   const findSubjectById = (id: string | number) =>
     data?.find((subjectLesson) => subjectLesson.subject.id == id);
 
-  const processSubjectScore = (subjectId: string | number) => {
+  const getCorrectAnswerCount = (subjectId: string | number) => {
     const answers = answersRef.current[subjectId] || {};
-    const correctAnswers = Object.values(answers).filter(
+    const correctAnswersCount = Object.values(answers).filter(
       (ans) => ans.isAnswer
     ).length;
-    return correctAnswers;
+    return correctAnswersCount;
   };
 
   const generateReport = () => {
@@ -131,18 +131,20 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
       const subjectLesson = findSubjectById(subjectId);
       const slides = subjectLesson?.lesson.lesson_slides;
       const slideCount = slides?.length;
-      const score = processSubjectScore(subjectId);
-      const subjectScore = (100 / slideCount) * score;
+      const correctAnswersCount = getCorrectAnswerCount(subjectId);
+      const subjectScore = slideCount != 0 ? (100 / slideCount) * correctAnswersCount : 0
       return {
         subject: subjectLesson?.subject,
         scores: {
-          correctCount: score,
+          correctCount: correctAnswersCount,
           subjectScore,
           over: slideCount,
         },
       };
     });
   };
+
+
 
   const handleSubmit = (payload: any) => {
     resultsRef.current = payload;
@@ -153,8 +155,8 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
 
     const total =
       answers?.reduce(
-        (acc: number, value: { scores: { correctCount: number } }) => {
-          return acc + value.scores.correctCount;
+        (acc: number, value: { scores: { subjectScore: number} }) => {
+          return acc + value.scores.subjectScore;
         },
         0
       ) || 0;
@@ -168,9 +170,9 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
       score: total,
     };
 
+    // this is important. please don't move it.
     const result = { ...payload, answers: answers };
 
-    // Uncomment this to save the session when ready
     GlobalResource.saveExamSession(examSetData.id, payload)
       .then((response) => {
         if (!response.data.error) {
@@ -181,6 +183,29 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
       .catch((error) => console.log(error));
   };
 
+
+  const hasNextSubject = () => {
+    if (!data || !current) return false;
+  
+    const currentIndex = data.findIndex(
+      (subjectLesson) => subjectLesson.subject.id === current.subject.id
+    );
+  
+    return currentIndex >= 0 && currentIndex < data.length - 1;
+  };
+  
+  const goToNextSubject = () => {
+    if (!data || !current) return;
+  
+    const currentIndex = data.findIndex(
+      (subjectLesson) => subjectLesson.subject.id === current.subject.id
+    );
+  
+    if (currentIndex >= 0 && currentIndex < data.length - 1) {
+      setCurrent(data[currentIndex + 1]);
+    }
+  };
+  
   return (
     <div className="flex">
       {submitModal && (
@@ -205,6 +230,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
         back={goBack}
         lesson={current?.lesson}
         subject={current?.subject}
+        answersRef={answersRef}
         activeSlide={activeSlide}
         setActiveSlide={setActiveSlide}
         slideManagerRef={slideManagerRef}
@@ -216,6 +242,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
           duration={duration}
           inSession={inSession}
           setInSession={setInSession}
+          currentSubjectId={current?.subject.id}
           openSubmitModal={() => setSubmitModal(true)}
           setCurrent={setCurrent}
         />
@@ -236,13 +263,16 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
             <Footer
               hasNext={activeSlide < current?.lesson.lesson_slides?.length - 1}
               sliderRef={sliderRef}
+              openSubmitModal={() => setSubmitModal(true)}
+              hasNextSubject={hasNextSubject()}
+              goToNextSubject={goToNextSubject}
               canProceed={canProceed}
               hasPrevious={activeSlide > 0}
             />
           </>
         ) : (
           <div className="grow flex items-center justify-center">
-            <p>Please click on start time to get started</p>
+            <p className="text-3xl outfit-font">Please click on 'start time' to get started</p>
           </div>
         )}
       </Main>

@@ -10,7 +10,9 @@ export default function AssessmentResult({
   home: any;
 }) {
   const answers = resultRef?.current?.answers || [];
-  const totalScore = resultRef.current?.score;
+  const totalScore = resultRef.current?.answers
+    ?.map((a) => a.scores.subjectScore)
+    .reduce((acc, val) => acc + val);
 
   return (
     <div className="h-screen fixed w-full z-[100] bg-white">
@@ -28,17 +30,17 @@ export default function AssessmentResult({
             {answers.map(
               ({
                 subject: { name },
-                scores: { correctCount, over },
+                scores: { subjectScore },
               }: ResultInterface) => (
                 <li className="flex gap-3 items-center">
                   <span>{name}:</span>
-                  <span className="text-[#9C29B2]">{`${correctCount}/${over}`}</span>
+                  <span className="text-[#9C29B2]">{`${Math.round(subjectScore || 0)}/${100}`}</span>
                 </li>
               )
             )}
             <li className="flex gap-3 items-center">
               <span>Total:</span>
-              <span className="text-[#9C29B2]">{totalScore}</span>
+              <span className="text-[#9C29B2]">{Math.round(totalScore || 0)}</span>
             </li>
           </ul>
         </div>
