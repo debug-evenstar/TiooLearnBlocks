@@ -7,6 +7,7 @@ interface TopNavProps {
     inSession: boolean;
     setInSession: any;
     handleTimeUp: any;
+    currentSubjectId?: number | null;
     duration: number;
 }
 declare const TopNav: FC<TopNavProps>;
