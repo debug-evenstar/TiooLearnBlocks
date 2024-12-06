@@ -2,32 +2,37 @@ import logoImg from "../../../img/logo.png";
 
 import LeftArrow from "FigmaIcons/LeftArrow";
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { BiLeftArrow } from "react-icons/bi";
 
 const QuestionNav: FC<any> = ({
   lesson,
+  answers,
   setActiveSlide,
   activeSlide,
   onItemClick,
   back
 }) => {
-  const slidesCount = lesson?.lesson_slides.length;
 
+
+  const slides = lesson?.lesson_slides;
+
+  const answeredSlides = Object.keys(answers ?? {});
   const isActive = (index: number) => activeSlide == index;
+  const isAnswered = (slide_id: number) => answeredSlides.includes(String(slide_id))
+
 
   return (
     <>
       <p>Question Navigation</p>
       <ul className="grid-cols-8 grid gap-1 mt-3 w-full">
-        {Array(slidesCount)
-          .fill(null)
-          .map((_, i: number) => (
-            <li key={i}>
+        {slides?.map(({id}: any, i: number) => (
+            <li key={id}>
               <button
                 onClick={() => onItemClick(i)}
                 className={`px-1 flex items-center justify-center py-2 focus:border-purple-400 outline-none border w-[30px] h-[30px] rounded-md text-sm
-                    ${isActive(i) ? "bg-green-700 text-white" : ""}
+                    ${isActive(i) ? "bg-green-700 text-white" : isAnswered(id) ? "bg-[#9C29B2] text-white" : "" }
+                    
                   `}
               >
                 {i + 1}
@@ -44,6 +49,7 @@ const SideBar: FC<any> = ({
   subject,
   setActiveSlide,
   activeSlide,
+  answersRef,
   slideManagerRef,
 }) => {
   const [sideBarOpen, setSideBarOpen] = useState(true);
@@ -54,6 +60,17 @@ const SideBar: FC<any> = ({
     slideManagerRef?.current?.navigator(0, index);
   };
 
+
+  const [ answers, setAnswers] = useState<any>();
+
+
+  useEffect(() => {
+    if(answersRef.current && subject?.id){
+      const subjectAnswers = answersRef.current[subject.id]
+      setAnswers(subjectAnswers);
+    }
+
+  },[answersRef.current,lesson]);
 
   const getClassName = () =>
     sideBarOpen
@@ -90,7 +107,7 @@ const SideBar: FC<any> = ({
                   </li> */}
                   <li className="">
                     <b>Exam Title: </b>
-                    <span> JAMB</span>
+                    <span> UTME</span>
                   </li>
                 </ul>
                 <p className="mt-8">
@@ -100,6 +117,7 @@ const SideBar: FC<any> = ({
               </div>
               <div className="mt-5 w-full">
                 <QuestionNav
+                  answers={answers}
                   onItemClick={handleSetSlide}
                   lesson={lesson}
                   activeSlide={activeSlide}
