@@ -154,6 +154,7 @@ function App() {
             path="/cbt"
             element={
               <AssessmentPage
+                studentName={"Praise Ike"}
                 duration={10} // in minutes
                 goHome={() => alert("going home")}
                 goBack={() => console.log("back")}
