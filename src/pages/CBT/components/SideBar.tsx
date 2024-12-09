@@ -47,6 +47,7 @@ const QuestionNav: FC<any> = ({
 const SideBar: FC<any> = ({
   lesson,
   subject,
+  studentName,
   setActiveSlide,
   activeSlide,
   answersRef,
@@ -99,7 +100,7 @@ const SideBar: FC<any> = ({
                 <ul className="flex  flex-col gap-2 ">
                   <li className="">
                     <b>Student's Name:</b>
-                    <span> Praxeum Ani</span>
+                    <span>{studentName}</span>
                   </li>
                   {/* <li className="">
                     <b>Subject:</b>

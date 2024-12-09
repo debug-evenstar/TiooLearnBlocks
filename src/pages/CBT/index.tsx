@@ -34,6 +34,7 @@ interface AssessmentPageProps {
   goHome: Function;
   goBack: Function;
   duration: number;
+  studentName: string;
 }
 
 export interface ResultInterface {
@@ -54,6 +55,7 @@ export interface AssessmentResultInterface {
 const AssessmentPage: React.FC<AssessmentPageProps> = ({
   set_id,
   goHome,
+  studentName,
   goBack,
   duration,
 }) => {
@@ -227,6 +229,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
       )}
       {showResult && <AssessmentResult home={goHome} resultRef={resultsRef} />}
       <SideBar
+        studentName={studentName}
         back={goBack}
         lesson={current?.lesson}
         subject={current?.subject}
