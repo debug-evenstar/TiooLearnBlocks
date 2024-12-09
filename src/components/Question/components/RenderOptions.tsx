@@ -30,6 +30,7 @@ const RenderOptions: FC<{
   slideManager,
   viewArea,
 }) => {
+  
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [locked, setLocked] = useState<any[]>([]);
   const optionFontSizeFraction = 2.3;
@@ -37,6 +38,7 @@ const RenderOptions: FC<{
   const lessonContext = useLessonContext();
   const { isAssessment, answerProps } = lessonContext;
   const linkableComponents = ["text", "image"];
+
   const optionColor = (option: OptionInterface, questionIndex: number) => {
     if (selectedOptions.includes(option.hash)) {
       if (isAssessment) {
