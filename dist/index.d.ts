@@ -245,6 +245,7 @@ interface AssessmentPageProps {
     goHome: Function;
     goBack: Function;
     duration: number;
+    studentName: string;
 }
 declare const AssessmentPage: React.FC<AssessmentPageProps>;
 
