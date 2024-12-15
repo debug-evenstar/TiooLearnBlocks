@@ -47,12 +47,9 @@ export default function AssessmentResult({
         <div className="flex items-center gap-6">
           <button
             onClick={home}
-            className="px-12 py-2 rounded-[20px]  text-[#9C29B2] border border-[#9C29B2]"
+            className="px-12 py-2 rounded-[20px] w-fit mx-auto text-[#9C29B2] border border-[#9C29B2]"
           >
             Home page
-          </button>
-          <button className="px-12 py-2 rounded-[20px] text-white bg-[#9C29B2]">
-            See analysis
           </button>
         </div>
       </div>
