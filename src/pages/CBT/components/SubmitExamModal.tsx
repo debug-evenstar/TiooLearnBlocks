@@ -19,13 +19,10 @@ export default function SubmitExamModal({
     setLoading(true);
     const answers: ResultInterface[] = generateReport();
 
-    const total =
-      answers?.reduce(
-        (acc: number, value: { scores: { correctCount: number } }) => {
-          return acc + value.scores.correctCount;
-        },
-        0
-      ) || 0;
+    const totalScore = answers
+      ?.map((a) => a.scores.subjectScore)
+      .reduce((acc, val) => acc + val);
+
 
     const payload = {
       answers: answersRef?.current,
@@ -33,7 +30,7 @@ export default function SubmitExamModal({
         subject: s.subject,
         slides: s.lesson.lesson_slides.map((ls: any) => ls.id),
       })),
-      score: total,
+      score: totalScore,
     };
 
     const result = { ...payload, answers: answers}
