@@ -146,8 +146,6 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
     });
   };
 
-
-
   const handleSubmit = (payload: any) => {
     resultsRef.current = payload;
   };
@@ -155,13 +153,10 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
   const handleTimeUp = () => {
     const answers = generateReport();
 
-    const total =
-      answers?.reduce(
-        (acc: number, value: { scores: { subjectScore: number} }) => {
-          return acc + value.scores.subjectScore;
-        },
-        0
-      ) || 0;
+    const totalScore = answers
+      ?.map((a) => a.scores.subjectScore)
+      .reduce((acc, val) => acc + val);
+
 
     const payload = {
       answers: answersRef.current,
@@ -169,7 +164,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
         subject: s.subject,
         slides: s.lesson.lesson_slides.map((ls: any) => ls.id),
       })),
-      score: total,
+      score: totalScore,
     };
 
     // this is important. please don't move it.

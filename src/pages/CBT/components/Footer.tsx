@@ -22,6 +22,7 @@ const Footer: FC<FooterProps> = ({
   hasPrevious,
   sliderRef,
 }) => {
+  
   const handleNavigation = (type: "next" | "previous") => {
     if (sliderRef?.current) {
       if (type === "next") sliderRef.current.handleContinue();
