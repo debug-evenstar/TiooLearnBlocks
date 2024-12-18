@@ -8,10 +8,10 @@ export interface AssessmentAnswerInterface {
     };
 }
 interface AssessmentPageProps {
-    set_id: string | number;
     goHome: Function;
     goBack: Function;
     duration: number;
+    examData: any;
     studentName: string;
 }
 export interface ResultInterface {

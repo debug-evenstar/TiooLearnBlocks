@@ -241,10 +241,10 @@ interface PostfaceComponentProps {
 declare const PostfaceComponent: FC<PostfaceComponentProps>;
 
 interface AssessmentPageProps {
-    set_id: string | number;
     goHome: Function;
     goBack: Function;
     duration: number;
+    examData: any;
     studentName: string;
 }
 declare const AssessmentPage: React.FC<AssessmentPageProps>;
