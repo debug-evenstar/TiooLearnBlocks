@@ -14,6 +14,7 @@ import {
 import { ConfigureLibrary } from "setup";
 import Test from "pages/Test";
 import AssessmentPage from "pages/CBT";
+import GlobalResource from "services/api/resources/GlobalResource";
 
 function App() {
   const datas = {
@@ -47,7 +48,7 @@ function App() {
   // const [data, setData] = useState<any>();
   const [date, setDate] = useState<any>();
   const [bookData, setBookData] = useState<any>();
-
+  const [ examData, setExamData] = useState<any>(null);
   const fetchLess = async () => {
     try {
       const response = await fetch(
@@ -90,9 +91,15 @@ function App() {
     }
   };
 
+  const fetchExamSet = () => {
+    GlobalResource.getExamSet(1)
+    .then((response) => setExamData(response.data));
+  }
+
   useEffect(() => {
     fetchLess();
     fetchTextbook();
+    fetchExamSet();
   }, []);
 
   const layout = {
@@ -158,7 +165,7 @@ function App() {
                 duration={10} // in minutes
                 goHome={() => alert("going home")}
                 goBack={() => console.log("back")}
-                set_id={1}
+                examData={examData}
               />
             }
           />
