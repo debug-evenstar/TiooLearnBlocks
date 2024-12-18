@@ -30,10 +30,10 @@ export interface AssessmentAnswerInterface {
 }
 
 interface AssessmentPageProps {
-  set_id: string | number;
   goHome: Function;
   goBack: Function;
   duration: number;
+  examData: any;
   studentName: string;
 }
 
@@ -53,10 +53,10 @@ export interface AssessmentResultInterface {
 }
 
 const AssessmentPage: React.FC<AssessmentPageProps> = ({
-  set_id,
   goHome,
   studentName,
   goBack,
+  examData,
   duration,
 }) => {
   const [data, setData] = useState<SubjectLesson[] | null>(null);
@@ -103,13 +103,13 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
   };
 
   useEffect(() => {
-    GlobalResource.getExamSet(set_id).then((response) => {
-      const { subjectLessonMap, set } = response.data;
+    if (examData) {
+      const { subjectLessonMap, set } = examData;
       setData(subjectLessonMap);
       setExamSet(set);
       if (subjectLessonMap.length > 0) setCurrent(subjectLessonMap[0]);
-    });
-  }, [set_id]);
+    }
+  }, [examData]);
 
   useEffect(() => {
     setActiveSlide(0);
@@ -134,7 +134,8 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
       const slides = subjectLesson?.lesson.lesson_slides;
       const slideCount = slides?.length;
       const correctAnswersCount = getCorrectAnswerCount(subjectId);
-      const subjectScore = slideCount != 0 ? (100 / slideCount) * correctAnswersCount : 0
+      const subjectScore =
+        slideCount != 0 ? (100 / slideCount) * correctAnswersCount : 0;
       return {
         subject: subjectLesson?.subject,
         scores: {
@@ -156,7 +157,6 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
     const totalScore = answers
       ?.map((a) => a.scores.subjectScore)
       .reduce((acc, val) => acc + val);
-
 
     const payload = {
       answers: answersRef.current,
@@ -180,29 +180,28 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
       .catch((error) => console.log(error));
   };
 
-
   const hasNextSubject = () => {
     if (!data || !current) return false;
-  
+
     const currentIndex = data.findIndex(
       (subjectLesson) => subjectLesson.subject.id === current.subject.id
     );
-  
+
     return currentIndex >= 0 && currentIndex < data.length - 1;
   };
-  
+
   const goToNextSubject = () => {
     if (!data || !current) return;
-  
+
     const currentIndex = data.findIndex(
       (subjectLesson) => subjectLesson.subject.id === current.subject.id
     );
-  
+
     if (currentIndex >= 0 && currentIndex < data.length - 1) {
       setCurrent(data[currentIndex + 1]);
     }
   };
-  
+
   return (
     <div className="flex">
       {submitModal && (
@@ -270,7 +269,9 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
           </>
         ) : (
           <div className="grow flex items-center justify-center">
-            <p className="text-3xl outfit-font">Please click on 'start time' to get started</p>
+            <p className="text-3xl outfit-font">
+              Please click on 'start time' to get started
+            </p>
           </div>
         )}
       </Main>
