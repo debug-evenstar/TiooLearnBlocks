@@ -87,6 +87,7 @@ const SlideContainer: FC<SlideContainerProps> = forwardRef(
 
     const lessonSlides = (slideProps: LessonSlideProps) => (
       <LessonSlides
+        isAssessment
         slideManagerRef={slideProps.managerRef}
         handlePrevious={slideProps.navigationHandles.previous}
         handleContinue={slideProps.navigationHandles.continue}
