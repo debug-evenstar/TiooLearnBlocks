@@ -40,6 +40,7 @@ const LessonSlides = ({
     handleContinue,
     setFeedbackCanProceed,
     slideManagerRef,
+    isAssessment,
     setCanProceed,
     setActiveSlide,
     slides,

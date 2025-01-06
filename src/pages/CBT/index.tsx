@@ -73,6 +73,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
   const resultsRef = useRef<AssessmentResultInterface | null>(null);
   const sliderRef = useRef<any>(null);
   const slideManagerRef = useRef<any>(null);
+  const sidebarRef = useRef<any>(null);
 
   const getCurrentSlide = () => {
     const slideIndex = sliderRef.current?.getActiveSlideIndex() || 0;
@@ -225,6 +226,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
       <SideBar
         studentName={studentName}
         back={goBack}
+        ref={sidebarRef}
         lesson={current?.lesson}
         subject={current?.subject}
         answersRef={answersRef}
@@ -238,6 +240,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
           data={data}
           duration={duration}
           inSession={inSession}
+          sidebarRef={sidebarRef}
           setInSession={setInSession}
           currentSubjectId={current?.subject.id}
           openSubmitModal={() => setSubmitModal(true)}
@@ -269,7 +272,7 @@ const AssessmentPage: React.FC<AssessmentPageProps> = ({
           </>
         ) : (
           <div className="grow flex items-center justify-center">
-            <p className="text-3xl outfit-font">
+            <p className="text-2xl lg:text-3xl outfit-font text-center ">
               Please click on 'start time' to get started
             </p>
           </div>
