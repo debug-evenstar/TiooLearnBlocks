@@ -5,6 +5,7 @@ interface TopNavProps {
     setCurrent: any;
     openSubmitModal: Function;
     inSession: boolean;
+    sidebarRef?: any;
     setInSession: any;
     handleTimeUp: any;
     currentSubjectId?: number | null;
